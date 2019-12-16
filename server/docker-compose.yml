@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  app:
+    container_name: reqwise-server
+    restart: always
+    build: .
+    image: 'reqwise-server:1.0.0'
+    ports:
+      - '3000:3000'
+    expose:
+      - '3000'
+    links:
+      - postgres
+  postgres:
+    image: 'postgres:10.4'
+    container_name: reqwise-server-postgres
+    ports:
+      - '3211:5432'
+    expose:
+      - '3211'
+    environment:
+      POSTGRES_DATABASE: reqwise
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: YDf!z9D*b^J84Z7gN(Jq
