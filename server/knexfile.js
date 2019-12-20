@@ -2,17 +2,17 @@
 
 module.exports = {
   development: {
-    client: "postgresql",
+    client: "pg",
     connection: {
       database: "reqwise",
       user: "postgres",
       password: "4MXc5(_inRsJV54J$Ac5",
       port: 5432,
-      host: "db-dev-1.cr0vlp9alyoi.us-east-2.rds.amazonaws.com"
+      host: "database-dev-1.cr0vlp9alyoi.us-east-2.rds.amazonaws.com"
     },
     pool: {
       min: 2,
-      max: 10
+      max: 12
     },
     migrations: {
       tableName: "knex_migrations"
