@@ -2,8 +2,14 @@ exports.up = function(knex) {
   return Promise.all([
     knex.schema.createTable("account", table => {
       table.increments("id").primary();
-      table.string("username").notNullable();
-      table.string("email").notNullable();
+      table
+        .string("username")
+        .notNullable()
+        .unique();
+      table
+        .string("email")
+        .notNullable()
+        .unique();
       table.string("password_hash").notNullable();
     }),
     knex.schema.createTable("project", table => {

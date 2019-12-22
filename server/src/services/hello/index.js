@@ -1,7 +1,12 @@
-'use strict'
-
-module.exports = async function (fastify, opts) {
-  fastify.get('/hello', async function (request, reply) {
-    return ['hello, world!']
-  })
-}
+module.exports = async function(fastify, opts) {
+  /* This is a protected route */
+  fastify.get(
+    "/hello",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      return request.user;
+    }
+  );
+};

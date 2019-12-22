@@ -4,11 +4,11 @@ module.exports = {
   development: {
     client: "pg",
     connection: {
-      database: "reqwise",
-      user: "postgres",
-      password: "4MXc5(_inRsJV54J$Ac5",
-      port: 5432,
-      host: "database-dev-1.cr0vlp9alyoi.us-east-2.rds.amazonaws.com"
+      database: process.env.DB_NAME,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      port: process.env.DB_PORT,
+      host: process.env.DB_HOST
     },
     pool: {
       min: 2,
