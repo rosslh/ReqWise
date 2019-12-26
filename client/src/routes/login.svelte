@@ -1,24 +1,24 @@
 <script>
+  import { jwt } from "../stores.js";
   import { post } from "../api";
 
-  let name = "";
   let email = "";
   let password = "";
 
   const submit = () => {
-    post("/auth/user", { name, email, password })
-      .then(r => alert(JSON.stringify(r)))
-      .catch(err => alert(JSON.stringify(err)));
+    post("/auth/token", { email, password })
+      .then(r => {
+        alert("here");
+        jwt.set(r.token);
+      })
+      .catch(err => alert("Incorrect email or password"));
   };
 </script>
 
-<h2>Sign up</h2>
+<h2>Log in</h2>
 
 <label for="email">Email</label>
 <input bind:value={email} type="text" id="email" />
-<br />
-<label for="name">Name</label>
-<input bind:value={name} type="text" id="name" />
 <br />
 <label for="pwd">Password</label>
 <input bind:value={password} type="password" id="pwd" />

@@ -2,37 +2,35 @@ exports.up = function(knex) {
   return Promise.all([
     knex.schema.createTable("account", table => {
       table.increments("id").primary();
-      table
-        .string("username")
-        .notNullable()
-        .unique();
+      table.string("name").notNullable();
       table
         .string("email")
         .notNullable()
         .unique();
       table.string("password_hash").notNullable();
     }),
-    knex.schema.createTable("project", table => {
+    knex.schema.createTable("team", table => {
       table.increments("id").primary();
       table.string("name").notNullable();
       table.string("description");
     }),
-    knex.schema.createTable("account_project", table => {
+    knex.schema.createTable("account_team", table => {
       table.increments("id").primary();
       table
         .integer("account_id")
         .unsigned()
         .notNullable();
       table
-        .integer("project_id")
+        .integer("team_id")
         .unsigned()
         .notNullable();
+      table.boolean("is_admin").notNullable();
     }),
-    knex.schema.createTable("srs", table => {
+    knex.schema.createTable("project", table => {
       table.increments("id").primary();
       table.string("name");
       table
-        .integer("project_id")
+        .integer("team_id")
         .unsigned()
         .notNullable();
     }),
@@ -40,7 +38,7 @@ exports.up = function(knex) {
       // aka feature
       table.increments("id").primary();
       table
-        .integer("srs_id")
+        .integer("project_id")
         .unsigned()
         .notNullable();
       table.string("name").notNullable();
@@ -95,9 +93,9 @@ exports.up = function(knex) {
 exports.down = function(knex) {
   return Promise.all([
     knex.schema.dropTable("account"),
+    knex.schema.dropTable("team"),
+    knex.schema.dropTable("account_team"),
     knex.schema.dropTable("project"),
-    knex.schema.dropTable("account_project"),
-    knex.schema.dropTable("srs"),
     knex.schema.dropTable("reqgroup"),
     knex.schema.dropTable("requirement"),
     knex.schema.dropTable("reqversion"),
