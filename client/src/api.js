@@ -1,46 +1,39 @@
+import { get as getValue } from "svelte/store";
+import { jwt } from "./stores";
+
 const host = "http://localhost:3000";
-const commonOptions = {
+const commonOptions = () => ({
   mode: "cors",
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getValue(jwt)}`
   }
-};
+});
 
 const throwError = httpMethod => {
   throw new Error(`Failed ${httpMethod} request`);
 };
 
-export const get = endpoint =>
+const fetcher = (endpoint, options) =>
   fetch(`${host}${endpoint}`, {
-    ...commonOptions
+    ...commonOptions(),
+    ...options
   })
     .then(r => {
       if (r.ok) {
         return r.json();
       } else {
-        throwError("GET");
+        throwError(options.method || "GET");
       }
     })
     .catch(() => {
-      throwError("GET");
+      throwError(options.method || "GET");
     });
 
+export const get = endpoint => fetcher(endpoint, {});
+
 export const post = (endpoint, body) =>
-  fetch(`${host}${endpoint}`, {
-    ...commonOptions,
-    method: "POST",
-    body: JSON.stringify(body)
-  })
-    .then(r => {
-      if (r.ok) {
-        return r.json();
-      } else {
-        throwError("POST");
-      }
-    })
-    .catch(() => {
-      throwError("POST");
-    });
+  fetcher(endpoint, { method: "POST", body: JSON.stringify(body) });
 
 export const put = () => {};
 export const del = () => {};

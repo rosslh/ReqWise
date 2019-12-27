@@ -8,12 +8,6 @@ module.exports = async function(fastify, opts) {
     async function(request, reply) {
       const { name, description } = request.body;
 
-      const { id: account_id } = await fastify
-        .knex("account")
-        .select("id")
-        .where("email", request.user.email)
-        .first();
-
       const [team_id] = await fastify
         .knex("team")
         .insert({
@@ -23,7 +17,7 @@ module.exports = async function(fastify, opts) {
         .returning("id");
 
       await fastify.knex("account_team").insert({
-        account_id: account_id,
+        account_id: request.user.id,
         team_id,
         is_admin: true
       });
@@ -33,35 +27,23 @@ module.exports = async function(fastify, opts) {
   );
 
   fastify.get(
-    "/teams",
+    "/teams/:teamId",
     {
-      preValidation: [fastify.authenticate]
-    },
-    async function(request, reply) {
-      return await fastify.knex
-        .from("team")
-        .select("id", "name", "description");
-    }
-  );
-
-  fastify.get(
-    "/teams/:id",
-    {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate, fastify.isTeamMember]
     },
     async function(request, reply) {
       return await fastify.knex
         .from("team")
         .select("id", "name", "description")
-        .where("id", request.params.id)
+        .where("id", request.params.teamId)
         .first();
     }
   );
 
   fastify.put(
-    "/teams/:id",
+    "/teams/:teamId",
     {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin]
     },
     async function(request, reply) {
       const { name, description } = request.body;
@@ -72,15 +54,23 @@ module.exports = async function(fastify, opts) {
       return await fastify
         .knex("team")
         .update({ name, description })
-        .where("id", request.params.id)
+        .where("id", request.params.teamId)
         .returning(["name", "description"]);
     }
   );
 
-  fastify.get(
-    "/teams/:id/members",
+  fastify.delete(
+    "/teams/:teamId",
     {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin]
+    },
+    async function(request, reply) {}
+  );
+
+  fastify.get(
+    "/teams/:teamId/members",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember]
     },
     async function(request, reply) {
       return await fastify.knex
@@ -91,7 +81,7 @@ module.exports = async function(fastify, opts) {
           "account.email",
           "account_team.is_admin"
         )
-        .where("team_id", request.params.id)
+        .where("team_id", request.params.teamId)
         .join("account", "account.id", "=", "account_team.account_id");
     }
   );

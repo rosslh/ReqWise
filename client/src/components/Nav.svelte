@@ -1,8 +1,9 @@
 <script>
-  import { jwt } from "../stores.js";
+  import { jwt, userId } from "../stores.js";
 
   const logout = () => {
     jwt.set("");
+    userId.set(-1);
   };
 </script>
 

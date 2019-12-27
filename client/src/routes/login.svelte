@@ -1,5 +1,5 @@
 <script>
-  import { jwt } from "../stores.js";
+  import { jwt, userId } from "../stores.js";
   import { post } from "../api";
 
   let email = "";
@@ -8,8 +8,8 @@
   const submit = () => {
     post("/auth/token", { email, password })
       .then(r => {
-        alert("here");
         jwt.set(r.token);
+        userId.set(r.userId);
       })
       .catch(err => alert("Incorrect email or password"));
   };
