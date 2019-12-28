@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { get } from "../../api.js";
+  import { get, post } from "../../api.js";
 
   import { stores } from "@sapper/app";
   const { page } = stores();
@@ -11,24 +11,35 @@
   let projects = [];
   let members = [];
 
+  let createProject = false;
+  let newProjectName = "";
+
   let loaded = false;
 
-  onMount(async () => {
-    const { id } = $page.params;
+  const { id } = $page.params;
+
+  const update = async () => {
     ({ name, description } = await get(`/teams/${id}`));
     projects = await get(`/teams/${id}/projects`);
     members = await get(`/teams/${id}/members`);
     loaded = true;
-  });
+  };
+
+  onMount(update);
+
+  const submitNewProject = async () => {
+    await post(`/teams/${id}/projects`, { name: newProjectName });
+    await update();
+  };
 </script>
 
 <style lang="scss">
-  $red: #ff0000;
-  div {
-    label {
-      color: $red;
-    }
-  }
+  // $red: #ff0000;
+  // div {
+  //   label {
+  //     color: $red;
+  //   }
+  // }
 </style>
 
 <h1>{name}</h1>
@@ -58,7 +69,9 @@
       <tbody>
         {#each projects as project}
           <tr>
-            <td>{project.name}</td>
+            <td>
+              <a href={`/project/${project.id}`}>{project.name}</a>
+            </td>
             <td>Description here</td>
           </tr>
         {/each}
@@ -66,6 +79,30 @@
     </table>
   {:else}Loading{/if}
 </div>
+{#if createProject}
+  <div class="projectDetails">
+    <div class="inputWrapper">
+      <label for="projectName">Project name</label>
+      <input type="text" bind:value={newProjectName} />
+    </div>
+    <div class="buttonWrapper">
+      <button on:click={submitNewProject}>Create</button>
+      <button
+        on:click={() => {
+          createProject = false;
+        }}>
+        Cancel
+      </button>
+    </div>
+  </div>
+{:else}
+  <button
+    on:click={() => {
+      createProject = true;
+    }}>
+    Create project
+  </button>
+{/if}
 <div>
   <h2>Members</h2>
   {#if loaded}
