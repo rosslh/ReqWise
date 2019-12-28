@@ -85,4 +85,17 @@ module.exports = async function(fastify, opts) {
         .join("account", "account.id", "=", "account_team.account_id");
     }
   );
+
+  fastify.get(
+    "/teams/:teamId/projects",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember]
+    },
+    async function(request, reply) {
+      return await fastify.knex
+        .from("project")
+        .select("id", "name")
+        .where("team_id", request.params.teamId);
+    }
+  );
 };

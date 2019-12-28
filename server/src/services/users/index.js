@@ -19,7 +19,7 @@ module.exports = async (fastify, opts) => {
   fastify.put(
     "/users/:id",
     {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate] //, fastify.isCorrectUser]
     },
     async function(request, reply) {
       const { name, email } = request.body;
@@ -39,7 +39,7 @@ module.exports = async (fastify, opts) => {
   fastify.get(
     "/users/:id",
     {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate] //, fastify.isCorrectUser]
     },
     async function(request, reply) {
       return await fastify
@@ -54,7 +54,7 @@ module.exports = async (fastify, opts) => {
   fastify.get(
     "/users/:id/teams",
     {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate] //, fastify.isCorrectUser]
     },
     async function(request, reply) {
       return await fastify

@@ -14,8 +14,11 @@ const throwError = httpMethod => {
   throw new Error(`Failed ${httpMethod} request`);
 };
 
-const fetcher = (endpoint, options) =>
-  fetch(`${host}${endpoint}`, {
+const fetcher = (endpoint, options) => {
+  if (endpoint.charAt(0) !== "/") {
+    endpoint = `/${endpoint}`;
+  }
+  return fetch(`${host}${endpoint}`, {
     ...commonOptions(),
     ...options
   })
@@ -29,6 +32,7 @@ const fetcher = (endpoint, options) =>
     .catch(() => {
       throwError(options.method || "GET");
     });
+};
 
 export const get = endpoint => fetcher(endpoint, {});
 
