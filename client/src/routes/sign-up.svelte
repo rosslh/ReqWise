@@ -16,11 +16,8 @@
 
 <label for="email">Email</label>
 <input bind:value={email} type="text" id="email" />
-<br />
 <label for="name">Name</label>
 <input bind:value={name} type="text" id="name" />
-<br />
 <label for="pwd">Password</label>
 <input bind:value={password} type="password" id="pwd" />
-<br />
 <button on:click={submit}>Submit</button>

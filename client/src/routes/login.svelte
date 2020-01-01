@@ -5,7 +5,8 @@
   let email = "";
   let password = "";
 
-  const submit = () => {
+  const submit = e => {
+    e.preventDefault();
     post("/auth/token", { email, password })
       .then(r => {
         jwt.set(r.token);
@@ -16,11 +17,12 @@
 </script>
 
 <h2>Log in</h2>
-
-<label for="email">Email</label>
-<input bind:value={email} type="text" id="email" />
-<br />
-<label for="pwd">Password</label>
-<input bind:value={password} type="password" id="pwd" />
-<br />
-<button on:click={submit}>Submit</button>
+<form>
+  <fieldset>
+    <label for="email">Email</label>
+    <input bind:value={email} type="text" id="email" />
+    <label for="pwd">Password</label>
+    <input bind:value={password} type="password" id="pwd" />
+    <button class="btn btn-primary" on:click={submit}>Submit</button>
+  </fieldset>
+</form>

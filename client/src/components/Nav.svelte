@@ -11,7 +11,7 @@
   div.contentWrapper {
     display: flex;
     justify-content: space-between;
-    height: 3.5rem;
+    height: 5rem;
     align-items: center;
   }
   ul {
@@ -27,7 +27,7 @@
 
   a.logoWrapper {
     display: inline-block;
-    height: 1.3rem;
+    height: 3rem;
   }
 
   a.logoWrapper img {
@@ -39,7 +39,7 @@
 <nav>
   <div class="contentWrapper">
     <a class="logoWrapper" href=".">
-      <img src={'logo.svg'} alt="ReqWise" />
+      <img src={'logo.png'} alt="ReqWise" />
     </a>
     {#if $jwt === ''}
       <ul>
@@ -56,7 +56,9 @@
           <a href="/teams">My Teams</a>
         </li>
         <li>
-          <button on:click={logout}>Log out</button>
+          <button class="button button-small button-outline" on:click={logout}>
+            Log out
+          </button>
         </li>
       </ul>
     {/if}

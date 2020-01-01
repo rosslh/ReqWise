@@ -1,28 +1,44 @@
 <script>
   import { onMount } from "svelte";
-  import { get, post } from "../../api.js";
-
+  import { get, post, put } from "../../api.js";
   import { stores } from "@sapper/app";
   const { page } = stores();
+
+  import Skeleton from "../../components/Skeleton.svelte";
 
   let name = "";
   let description = "";
 
-  let projects = [];
-  let members = [];
+  let projects = null;
+  let members = null;
 
   let createProject = false;
   let newProjectName = "";
 
-  let loaded = false;
-
   const { id } = $page.params;
 
+  let title = "";
+
   const update = async () => {
-    ({ name, description } = await get(`/teams/${id}`));
-    projects = await get(`/teams/${id}/projects`);
-    members = await get(`/teams/${id}/members`);
-    loaded = true;
+    get(`/teams/${id}`).then(r => {
+      ({ name, description } = r);
+      title = name;
+    });
+    get(`/teams/${id}/projects`).then(r => {
+      projects = r;
+    });
+    get(`/teams/${id}/members`).then(r => {
+      members = r;
+    });
+  };
+
+  const updateTeam = async () => {
+    await put(`/teams/${id}`, { name, description })
+      .then(() => {
+        alert("Success");
+        update();
+      })
+      .catch(() => alert("Failure"));
   };
 
   onMount(update);
@@ -33,32 +49,31 @@
   };
 </script>
 
-<style lang="scss">
-  // $red: #ff0000;
-  // div {
-  //   label {
-  //     color: $red;
-  //   }
-  // }
-</style>
-
-<h1>{name}</h1>
-{#if loaded}
+{#if title}
+  <h1>{title}</h1>
+{:else}
+  <Skeleton title />
+{/if}
+<section>
+  {#if name || description}
+    <div>
+      <label for="name">Team name</label>
+      <input id="name" type="text" bind:value={name} />
+    </div>
+    <div>
+      <label for="description">Description</label>
+      <input id="description" type="text" bind:value={description} />
+    </div>
+  {:else}
+    <Skeleton rows={2} />
+  {/if}
   <div>
-    <label for="name">Team name</label>
-    <input id="name" type="text" bind:value={name} />
+    <button on:click={updateTeam}>Update</button>
   </div>
-  <div>
-    <label for="description">Description</label>
-    <input id="description" type="text" bind:value={description} />
-  </div>
-  <div>
-    <button>Update</button>
-  </div>
-{:else}Loading{/if}
-<div>
+</section>
+<section>
   <h2>Projects</h2>
-  {#if loaded}
+  {#if projects}
     <table>
       <thead>
         <tr>
@@ -77,35 +92,39 @@
         {/each}
       </tbody>
     </table>
-  {:else}Loading{/if}
-</div>
-{#if createProject}
-  <div class="projectDetails">
-    <div class="inputWrapper">
-      <label for="projectName">Project name</label>
-      <input type="text" bind:value={newProjectName} />
+  {:else}
+    <Skeleton rows={2} />
+  {/if}
+  {#if createProject}
+    <div class="projectDetails">
+      <div class="inputWrapper">
+        <label for="projectName">Project name</label>
+        <input type="text" bind:value={newProjectName} />
+      </div>
+      <div class="buttonWrapper">
+        <button on:click={submitNewProject}>Create</button>
+        <button
+          on:click={() => {
+            createProject = false;
+          }}>
+          Cancel
+        </button>
+      </div>
     </div>
-    <div class="buttonWrapper">
-      <button on:click={submitNewProject}>Create</button>
+  {:else}
+    <div>
       <button
         on:click={() => {
-          createProject = false;
+          createProject = true;
         }}>
-        Cancel
+        Create project
       </button>
     </div>
-  </div>
-{:else}
-  <button
-    on:click={() => {
-      createProject = true;
-    }}>
-    Create project
-  </button>
-{/if}
-<div>
+  {/if}
+</section>
+<section>
   <h2>Members</h2>
-  {#if loaded}
+  {#if members}
     <table>
       <thead>
         <tr>
@@ -124,5 +143,10 @@
         {/each}
       </tbody>
     </table>
-  {:else}Loading{/if}
-</div>
+  {:else}
+    <Skeleton rows={3} />
+  {/if}
+  <div>
+    <button>Add member</button>
+  </div>
+</section>

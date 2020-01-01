@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "reqwise-client",
+  "description": "A beautiful svelte app",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
@@ -37,6 +37,8 @@
     "sapper": "^0.27.0",
     "sass": "^1.24.0",
     "svelte": "^3.0.0",
+    "svelte-icons": "^1.1.0",
+    "svelte-loading-skeleton": "^1.0.1",
     "svelte-persistent-store": "^0.1.1",
     "svelte-preprocess": "^3.3.0"
   }
