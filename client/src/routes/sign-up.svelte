@@ -6,7 +6,7 @@
   let password = "";
 
   const submit = () => {
-    post("/auth/user", { name, email, password })
+    post("/users", { name, email, password })
       .then(r => alert(JSON.stringify(r)))
       .catch(err => alert(JSON.stringify(err)));
   };

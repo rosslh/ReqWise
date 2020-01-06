@@ -18,11 +18,10 @@ html {
 }
 
 body {
-  color: #606c76;
+  color: var(--grey);
   font-family: "Roboto", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 1.6em;
   font-weight: 300;
-  letter-spacing: 0.01em;
   line-height: 1.6;
 }
 
@@ -42,15 +41,14 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-  background-color: #20b04c;
-  border: 0.1rem solid #20b04c;
+  background-color: var(--themeColor);
+  border: 0.1rem solid var(--themeColor);
   border-radius: 0.4rem;
   color: #fff;
   cursor: pointer;
   font-size: 1.3rem;
   font-weight: 700;
   height: 3.8rem;
-  letter-spacing: 0.1rem;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -66,8 +64,8 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
-  background-color: #606c76;
-  border-color: #606c76;
+  background-color: var(--grey);
+  border-color: var(--grey);
   color: #fff;
   outline: 0;
 }
@@ -86,8 +84,8 @@ button[disabled]:hover,
 input[type="button"][disabled]:hover,
 input[type="reset"][disabled]:hover,
 input[type="submit"][disabled]:hover {
-  background-color: #20b04c;
-  border-color: #20b04c;
+  background-color: var(--themeColor);
+  border-color: var(--themeColor);
 }
 
 .button.button-outline,
@@ -96,7 +94,7 @@ input[type="button"].button-outline,
 input[type="reset"].button-outline,
 input[type="submit"].button-outline {
   background-color: transparent;
-  color: #20b04c;
+  color: var(--themeColor);
 }
 
 .button.button-outline:hover,
@@ -105,8 +103,8 @@ input[type="button"].button-outline:hover,
 input[type="reset"].button-outline:hover,
 input[type="submit"].button-outline:hover {
   background-color: transparent;
-  border-color: #606c76;
-  color: #606c76;
+  border-color: var(--grey);
+  color: var(--grey);
 }
 
 .button.button-outline[disabled]:hover,
@@ -115,7 +113,7 @@ input[type="button"].button-outline[disabled]:hover,
 input[type="reset"].button-outline[disabled]:hover,
 input[type="submit"].button-outline[disabled]:hover {
   border-color: inherit;
-  color: #20b04c;
+  color: var(--themeColor);
 }
 
 .button.button-clear,
@@ -125,7 +123,7 @@ input[type="reset"].button-clear,
 input[type="submit"].button-clear {
   background-color: transparent;
   border-color: transparent;
-  color: #20b04c;
+  color: var(--themeColor);
 }
 
 .button.button-clear:hover,
@@ -135,7 +133,7 @@ input[type="reset"].button-clear:hover,
 input[type="submit"].button-clear:hover {
   background-color: transparent;
   border-color: transparent;
-  color: #606c76;
+  color: var(--grey);
 }
 
 .button.button-clear[disabled]:hover,
@@ -143,7 +141,7 @@ button.button-clear[disabled]:hover,
 input[type="button"].button-clear[disabled]:hover,
 input[type="reset"].button-clear[disabled]:hover,
 input[type="submit"].button-clear[disabled]:hover {
-  color: #20b04c;
+  color: var(--themeColor);
 }
 
 code {
@@ -157,7 +155,7 @@ code {
 
 pre {
   background: #f4f5f6;
-  border-left: 0.3rem solid #20b04c;
+  border-left: 0.3rem solid var(--themeColor);
   overflow-y: hidden;
 }
 
@@ -205,7 +203,7 @@ input[type="text"]:focus,
 input[type="url"]:focus,
 textarea:focus,
 select:focus {
-  border-color: #20b04c;
+  border-color: var(--themeColor);
   outline: 0;
 }
 
@@ -216,7 +214,7 @@ select {
 }
 
 select:focus {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="#20B04C" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="var(--themeColor)" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>');
 }
 
 textarea {
@@ -423,12 +421,12 @@ input[type="radio"] {
 }
 
 a {
-  color: #20b04c;
+  color: var(--themeColor);
   text-decoration: none;
 }
 
 a:hover {
-  color: #606c76;
+  color: var(--grey);
 }
 
 dl,
@@ -460,8 +458,6 @@ ul {
   list-style: circle inside;
 }
 
-.button,
-button,
 dd,
 dt,
 li {
@@ -525,7 +521,6 @@ h4,
 h5,
 h6 {
   font-weight: 300;
-  letter-spacing: -0.1rem;
   margin-bottom: 2rem;
   margin-top: 0;
 }
@@ -547,19 +542,16 @@ h3 {
 
 h4 {
   font-size: 2.2rem;
-  letter-spacing: -0.08rem;
   line-height: 1.35;
 }
 
 h5 {
   font-size: 1.8rem;
-  letter-spacing: -0.05rem;
   line-height: 1.5;
 }
 
 h6 {
   font-size: 1.6rem;
-  letter-spacing: 0;
   line-height: 1.4;
 }
 

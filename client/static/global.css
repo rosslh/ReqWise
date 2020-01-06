@@ -1,5 +1,10 @@
+:root {
+  --themeColor: #20b04c;
+  --grey: #606c76;
+}
+
 .contentWrapper {
-  max-width: 1200px;
+  max-width: 120rem;
   margin: 0 auto;
   padding: 0 5%;
 }
@@ -17,11 +22,16 @@ body {
 .button-outline {
   background-color: none;
   border: 0.2rem solid;
-  border-color: #20b04c;
+  border-color: var(--themeColor);
 }
 
 section {
   padding-bottom: 4rem;
   border-bottom: 0.1rem solid #eee;
   margin-bottom: 4rem;
+}
+
+form {
+  padding: 0;
+  margin: 0;
 }

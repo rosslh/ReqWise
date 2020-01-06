@@ -52,7 +52,7 @@
 {#if title}
   <h1>{title}</h1>
 {:else}
-  <Skeleton title />
+  <Skeleton inline />
 {/if}
 <section>
   {#if name || description}

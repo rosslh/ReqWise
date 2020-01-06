@@ -1,4 +1,6 @@
-import { writable } from "svelte-persistent-store/session";
+import { writable as persist } from "svelte-persistent-store/session";
+import { writable } from "svelte/store";
 
-export const jwt = writable("jwt", "");
-export const userId = writable("userId", -1);
+export const jwt = persist("jwt", "");
+export const userId = persist("userId", -1);
+export const currentProject = writable({});
