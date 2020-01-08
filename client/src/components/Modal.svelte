@@ -1,0 +1,36 @@
+<script>
+  export let isModalShown;
+</script>
+
+<style>
+  div.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+  }
+  div.contentWrapper {
+    z-index: 20;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.4rem;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>
+
+<div
+  class="backdrop"
+  on:click={() => {
+    isModalShown = false;
+  }} />
+<div class="modal">
+  <div class="contentWrapper">
+    <slot />
+  </div>
+</div>

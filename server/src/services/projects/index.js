@@ -33,14 +33,15 @@ module.exports = async function(fastify, opts) {
       preValidation: [fastify.authenticate]
     },
     async function(request, reply) {
-      const { name } = request.body;
+      const { name, pretty_id } = request.body;
       const { projectId: project_id } = request.params;
       return await fastify
         .knex("reqgroup")
         .insert({
           project_id,
           name,
-          type: "feature"
+          type: "feature",
+          pretty_id
         })
         .returning("id");
     }
@@ -65,7 +66,7 @@ module.exports = async function(fastify, opts) {
       preValidation: [fastify.authenticate]
     },
     async function(request, reply) {
-      const { pretty_id, description } = request.body;
+      const { pretty_id, description, priority, status } = request.body;
       const { featureId: reqgroup_id } = request.params;
       const requirement_id = (
         await fastify
@@ -73,7 +74,9 @@ module.exports = async function(fastify, opts) {
           .insert({
             reqgroup_id,
             pretty_id,
-            description
+            description,
+            priority,
+            status
           })
           .returning("id")
       )[0];

@@ -42,6 +42,7 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable();
       table.string("name").notNullable();
+      table.string("pretty_id").notNullable();
       table.string("description");
       table
         .enu("type", [
@@ -59,8 +60,12 @@ exports.up = function(knex) {
         .integer("reqgroup_id")
         .unsigned()
         .notNullable();
-      table.string("pretty_id");
-      table.string("description");
+      table.string("pretty_id").notNullable();
+      table.enu("priority", ["high", "medium", "low"]).notNullable();
+      table
+        .enu("status", ["implemented", "inProgress", "accepted", "proposed"])
+        .notNullable();
+      table.string("description").notNullable();
     }),
     knex.schema.createTable("reqversion", table => {
       table.increments("id").primary();

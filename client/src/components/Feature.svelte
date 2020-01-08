@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import FaGithub from "svelte-icons/fa/FaGithub.svelte";
   import Requirement from "../components/Requirement.svelte";
+  import AddRequirement from "../components/AddRequirement.svelte";
   import { get, post } from "../api.js";
   export let feature;
   export let uri;
@@ -15,15 +16,9 @@
 
   import Skeleton from "../components/Skeleton.svelte";
   import FeatureStatus from "../components/FeatureStatus.svelte";
-
-  let newReq = "";
-  const addReq = async e => {
-    e.preventDefault();
-    await post(`${uri}/requirements`, { id: "prettyId", description: newReq });
-  };
 </script>
 
-<style lang="scss">
+<style>
   div.feature {
     border: 0.1rem solid #d1d1d1;
     border-radius: 0.4rem;
@@ -53,30 +48,6 @@
     width: 1.5rem;
     margin-right: 0.5rem;
     box-sizing: border-box;
-  }
-
-  input.newReqInput {
-    width: calc(100% - 10rem);
-    background-color: none;
-    z-index: 2;
-  }
-  form {
-    border-top: 1px solid #eee;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    fieldset {
-      display: flex;
-      align-items: center;
-      margin: 0 -0.2rem;
-      position: relative;
-    }
-    fieldset > * {
-      margin: 0 0.2rem;
-    }
-
-    button {
-      width: 10rem;
-    }
   }
 </style>
 
@@ -119,16 +90,5 @@
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
-  <form>
-    <label for="newReq">Add a requirement</label>
-    <fieldset>
-      <input
-        type="text"
-        id="newReq"
-        name="newReq"
-        class="newReqInput"
-        bind:value={newReq} />
-      <button on:click={addReq}>+ Add</button>
-    </fieldset>
-  </form>
+  <AddRequirement />
 </div>

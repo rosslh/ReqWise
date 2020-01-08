@@ -23,7 +23,8 @@
   const addTeam = async e => {
     e.preventDefault();
     await post(`/projects/${id}/features`, {
-      name: newFeature
+      name: newFeature,
+      pretty_id: newFeature // TODO: change this
     });
     update();
   };

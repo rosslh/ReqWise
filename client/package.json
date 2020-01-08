@@ -40,6 +40,7 @@
     "svelte-icons": "^1.1.0",
     "svelte-loading-skeleton": "^1.0.1",
     "svelte-persistent-store": "^0.1.1",
-    "svelte-preprocess": "^3.3.0"
+    "svelte-preprocess": "^3.3.0",
+    "svelte-select": "^3.3.5"
   }
 }
