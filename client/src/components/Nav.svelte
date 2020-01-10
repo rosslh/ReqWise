@@ -8,23 +8,15 @@
 </script>
 
 <style>
+  nav {
+    border-bottom: 0.1rem solid #ececec;
+  }
   div.contentWrapper {
     display: flex;
     justify-content: space-between;
-    height: 5rem;
     align-items: center;
+    height: 5rem;
   }
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  ul li {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-  }
-
   a.logoWrapper {
     display: inline-block;
     height: 3rem;
@@ -34,6 +26,17 @@
     max-height: 100%;
     max-width: 100%;
   }
+
+  div.right {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  div.right > * {
+    display: inline-block;
+    margin: 0 0.75rem;
+  }
 </style>
 
 <nav>
@@ -41,26 +44,18 @@
     <a class="logoWrapper" href=".">
       <img src={'logo.png'} alt="ReqWise" />
     </a>
-    {#if $jwt === ''}
-      <ul>
-        <li>
-          <a href="/sign-up">Sign Up</a>
-        </li>
-        <li>
-          <a href="/login">Login</a>
-        </li>
-      </ul>
-    {:else}
-      <ul>
-        <li>
-          <a href="/teams">My Teams</a>
-        </li>
-        <li>
-          <button class="button button-small button-outline" on:click={logout}>
-            Log out
-          </button>
-        </li>
-      </ul>
-    {/if}
+    <div class="right">
+      {#if $jwt === ''}
+        <a href="/sign-up">Sign Up</a>
+
+        <a href="/login">Login</a>
+      {:else}
+        <a href="/teams">My Teams</a>
+
+        <button class="button button-small button-outline" on:click={logout}>
+          Log out
+        </button>
+      {/if}
+    </div>
   </div>
 </nav>

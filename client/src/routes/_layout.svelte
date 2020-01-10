@@ -4,7 +4,7 @@
 
 <style>
   main {
-    padding-top: 3rem;
+    padding-top: 4.5rem;
   }
 </style>
 
