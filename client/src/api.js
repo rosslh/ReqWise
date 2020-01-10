@@ -42,4 +42,4 @@ export const post = (endpoint, body) =>
 export const put = (endpoint, body) =>
   fetcher(endpoint, { method: "PUT", body: JSON.stringify(body) });
 
-export const del = () => {};
+export const del = (endpoint, body) => fetcher(endpoint, { method: "DELETE" });

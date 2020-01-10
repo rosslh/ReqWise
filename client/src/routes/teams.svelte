@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { userId } from "../stores.js";
   import { get, post } from "../api.js";
+  import Modal from "../components/Modal.svelte";
   import Skeleton from "../components/Skeleton.svelte";
   let teams = null;
 
@@ -11,7 +12,7 @@
 
   onMount(update);
 
-  let createTeam = false;
+  let isModalShown = false;
   let teamName = "";
   let teamDesc = "";
 
@@ -45,30 +46,24 @@
 {:else}
   <Skeleton rows={3} />
 {/if}
-{#if createTeam}
-  <div class="teamDetails">
-    <div class="inputWrapper">
+{#if isModalShown}
+  <Modal bind:isModalShown>
+    <fieldset>
       <label for="teamName">Team name</label>
       <input type="text" bind:value={teamName} />
-    </div>
-    <div class="inputWrapper">
+    </fieldset>
+    <fieldset>
       <label for="teamDesc">Description</label>
       <textarea bind:value={teamDesc} />
-    </div>
-    <div class="buttonWrapper">
+    </fieldset>
+    <fieldset>
       <button on:click={submitNewTeam}>Create</button>
-      <button
-        on:click={() => {
-          createTeam = false;
-        }}>
-        Cancel
-      </button>
-    </div>
-  </div>
+    </fieldset>
+  </Modal>
 {:else}
   <button
     on:click={() => {
-      createTeam = true;
+      isModalShown = true;
     }}>
     Create team
   </button>

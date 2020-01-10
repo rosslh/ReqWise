@@ -16,6 +16,21 @@ module.exports = async function(fastify, opts) {
     }
   );
 
+  fastify.delete(
+    "/projects/:projectId",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      // TODO: Ensure you also delete dependent entities
+      await fastify
+        .knex("project")
+        .where("id", request.params.projectId)
+        .del();
+      return ["success"];
+    }
+  );
+
   fastify.get(
     "/projects/:projectId/features",
     {

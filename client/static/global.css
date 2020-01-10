@@ -25,7 +25,8 @@ fieldset {
   position: relative;
 }
 
-fieldset input {
+fieldset input,
+fieldset textarea {
   margin-bottom: 0;
 }
 

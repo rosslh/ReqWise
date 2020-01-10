@@ -1,10 +1,11 @@
 <script>
   import { onMount } from "svelte";
-  import { get, post, put } from "../../api.js";
-  import { stores } from "@sapper/app";
+  import { get, post, put, del } from "../../api.js";
+  import { stores, goto } from "@sapper/app";
   const { page } = stores();
 
   import Skeleton from "../../components/Skeleton.svelte";
+  import Modal from "../../components/Modal.svelte";
 
   let name = "";
   let description = "";
@@ -12,7 +13,7 @@
   let projects = null;
   let members = null;
 
-  let createProject = false;
+  let isModalShown = false;
   let newProjectName = "";
 
   const { id } = $page.params;
@@ -48,7 +49,10 @@
     await update();
   };
 
-  const deleteTeam = () => {};
+  const deleteTeam = async () => {
+    await del(`/teams/${id}`);
+    goto("/teams");
+  };
 </script>
 
 {#if title}
@@ -80,7 +84,6 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Description</th>
         </tr>
       </thead>
       <tbody>
@@ -89,7 +92,6 @@
             <td>
               <a href={`/project/${project.id}`}>{project.name}</a>
             </td>
-            <td>Description here</td>
           </tr>
         {/each}
       </tbody>
@@ -97,27 +99,19 @@
   {:else}
     <Skeleton rows={2} />
   {/if}
-  {#if createProject}
-    <div class="projectDetails">
-      <div class="inputWrapper">
+  {#if isModalShown}
+    <Modal bind:isModalShown>
+      <fieldset>
         <label for="projectName">Project name</label>
         <input type="text" bind:value={newProjectName} />
-      </div>
-      <div class="buttonWrapper">
-        <button on:click={submitNewProject}>Create</button>
-        <button
-          on:click={() => {
-            createProject = false;
-          }}>
-          Cancel
-        </button>
-      </div>
-    </div>
+      </fieldset>
+      <button on:click={submitNewProject}>Create</button>
+    </Modal>
   {:else}
     <div>
       <button
         on:click={() => {
-          createProject = true;
+          isModalShown = true;
         }}>
         Create project
       </button>

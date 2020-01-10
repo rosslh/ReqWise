@@ -17,12 +17,6 @@
   });
 </script>
 
-<style>
-  :global(.projectColumnRight h2) {
-    font-size: 2rem;
-  }
-</style>
-
 <div class="container">
   <div class="row">
     <div class="column column-25">
