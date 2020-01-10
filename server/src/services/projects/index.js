@@ -1,3 +1,5 @@
+const slugify = require("slugify");
+
 module.exports = async function(fastify, opts) {
   /* This is a protected route */
   fastify.get(
@@ -41,7 +43,7 @@ module.exports = async function(fastify, opts) {
           project_id,
           name,
           type: "feature",
-          pretty_id
+          pretty_id: slugify(pretty_id, { lower: true })
         })
         .returning("id");
     }
@@ -56,7 +58,16 @@ module.exports = async function(fastify, opts) {
       return await fastify.knex
         .from("requirement")
         .select("*")
-        .where("reqgroup_id", request.params.featureId);
+        .where("reqgroup_id", request.params.featureId)
+        .join("reqversion", function() {
+          this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+            "reqversion.created_at",
+            "=",
+            fastify.knex.raw(
+              "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+            )
+          );
+        });
     }
   );
 
@@ -73,10 +84,7 @@ module.exports = async function(fastify, opts) {
           .knex("requirement")
           .insert({
             reqgroup_id,
-            pretty_id,
-            description,
-            priority,
-            status
+            pretty_id: slugify(pretty_id, { lower: true })
           })
           .returning("id")
       )[0];
@@ -85,8 +93,9 @@ module.exports = async function(fastify, opts) {
         .insert({
           requirement_id,
           account_id: request.user.id,
-          old_value: "",
-          new_value: description
+          description,
+          priority,
+          status
         })
         .returning("id");
 

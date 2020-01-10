@@ -1,4 +1,3 @@
 <div>
-  <div>12% implemented</div>
-  <div>30% ready to implement</div>
+  <em>12% Implemented</em>
 </div>

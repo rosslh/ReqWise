@@ -21,8 +21,10 @@
   <fieldset>
     <label for="email">Email</label>
     <input bind:value={email} type="text" id="email" />
+  </fieldset>
+  <fieldset>
     <label for="pwd">Password</label>
     <input bind:value={password} type="password" id="pwd" />
-    <button class="btn btn-primary" on:click={submit}>Submit</button>
   </fieldset>
+  <button class="btn btn-primary" on:click={submit}>Submit</button>
 </form>

@@ -61,11 +61,6 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable();
       table.string("pretty_id").notNullable();
-      table.enu("priority", ["high", "medium", "low"]).notNullable();
-      table
-        .enu("status", ["implemented", "inProgress", "accepted", "proposed"])
-        .notNullable();
-      table.string("description").notNullable();
     }),
     knex.schema.createTable("reqversion", table => {
       table.increments("id").primary();
@@ -77,8 +72,12 @@ exports.up = function(knex) {
         .integer("account_id")
         .unsigned()
         .notNullable();
-      table.string("new_value").notNullable();
-      table.string("old_value");
+      table.enu("priority", ["high", "medium", "low"]).notNullable();
+      table
+        .enu("status", ["implemented", "inProgress", "accepted", "proposed"])
+        .notNullable();
+      table.string("description").notNullable();
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("comment", table => {
       table.increments("id").primary();

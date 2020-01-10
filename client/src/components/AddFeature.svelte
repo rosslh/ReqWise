@@ -1,99 +1,62 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
-  export let newFeature;
-  export let addTeam;
+  import Select from "svelte-select";
+  import { get, post } from "../api.js";
+  import Modal from "./Modal.svelte";
 
-  let exampleVisible = true;
-  let inputActive = false;
-  let interval;
+  export let id;
+  export let update;
 
-  let exampleFeatureIndex = 0;
-  $: currentExampleFeature = exampleFeatures[exampleFeatureIndex];
+  let isModalShown = false;
 
-  const exampleFeatures = [
-    "Users can post photos",
-    "Admins can add members to teams",
-    "The system will generate weekly performance reports",
-    "Users will receive daily update emails"
-  ];
+  let description = "";
+  let pretty_id = "";
 
-  onDestroy(() => {
-    clearInterval(interval);
-  });
-
-  onMount(() => {
-    interval = setInterval(() => {
-      exampleVisible = false;
-      setTimeout(() => {
-        exampleFeatureIndex =
-          (exampleFeatureIndex + 1) % exampleFeatures.length;
-        exampleVisible = true;
-      }, 400);
-    }, 8000);
-    return () => {
-      clearInterval(interval);
-    };
-  });
+  $: addTeam = async e => {
+    e.preventDefault();
+    await post(`/projects/${id}/features`, {
+      name: description,
+      pretty_id
+    });
+    update();
+    isModalShown = false;
+  };
 </script>
 
 <style>
-  input.newFeatureInput {
-    width: calc(100% - 10rem);
-    background-color: none;
-    z-index: 2;
-  }
-  fieldset {
-    display: flex;
-    align-items: center;
-    margin: 0 -0.2rem;
-    position: relative;
-  }
-  fieldset > * {
-    margin: 0 0.2rem;
-  }
 
-  button {
-    width: 10rem;
-  }
-
-  .example {
-    position: absolute;
-    top: 1.9rem;
-    left: 1rem;
-    transform: translateY(-50%);
-    z-index: 1;
-    transition: opacity 0.3s ease;
-  }
-
-  .example.hidden {
-    opacity: 0;
-  }
-
-  .example.hideInstantly {
-    transition: none;
-    opacity: 0;
-  }
 </style>
 
-<form>
-  <label for="newFeature">Add a feature</label>
-  <fieldset>
-    <div
-      class={`example ${inputActive || newFeature ? 'hideInstantly' : ''} ${exampleVisible ? '' : 'hidden'}`}>
-      e.g. {currentExampleFeature}
-    </div>
-    <input
-      type="text"
-      id="newFeature"
-      name="newFeature"
-      class="newFeatureInput"
-      on:focus={() => {
-        inputActive = true;
-      }}
-      on:blur={() => {
-        inputActive = false;
-      }}
-      bind:value={newFeature} />
-    <button on:click={addTeam}>+ Add</button>
-  </fieldset>
-</form>
+{#if isModalShown}
+  <Modal bind:isModalShown>
+    <h3>Add a Feature</h3>
+    <form>
+      <fieldset>
+        <label for="desc">Description</label>
+        <input
+          type="text"
+          id="desc"
+          name="desc"
+          class="newReqInput"
+          bind:value={description} />
+      </fieldset>
+      <fieldset class="inline">
+        <label for="prettyId">Unique ID</label>
+        <input
+          type="text"
+          id="prettyId"
+          name="prettyId"
+          class="newReqInput"
+          bind:value={pretty_id} />
+      </fieldset>
+      <button on:click={addTeam}>+ Add</button>
+    </form>
+  </Modal>
+{/if}
+<div>
+  <button
+    on:click={() => {
+      isModalShown = true;
+    }}>
+    + Add Feature
+  </button>
+</div>

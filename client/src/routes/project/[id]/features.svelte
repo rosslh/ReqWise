@@ -17,22 +17,11 @@
   };
 
   onMount(update);
-
-  let newFeature = "";
-
-  const addTeam = async e => {
-    e.preventDefault();
-    await post(`/projects/${id}/features`, {
-      name: newFeature,
-      pretty_id: newFeature // TODO: change this
-    });
-    update();
-  };
 </script>
 
 <h1>Features</h1>
 <section>
-  <AddFeature {addTeam} bind:newFeature />
+  <AddFeature {update} {id} />
 </section>
 <section>
   {#if features}
@@ -40,7 +29,6 @@
       <Feature {feature} uri={`/projects/${id}/features/${feature.id}`} />
     {/each}
   {:else}
-    <Feature />
     <Feature />
   {/if}
 </section>

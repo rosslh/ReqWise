@@ -2,14 +2,21 @@
   import Select from "svelte-select";
   import { get, post } from "../api.js";
   import Modal from "./Modal.svelte";
+
+  export let uri;
   let isModalShown = false;
 
-  let newReqText = "";
-  let newReqId = "";
+  let description = "";
+  let pretty_id = "";
 
-  const addReq = async e => {
+  $: addReq = async e => {
     e.preventDefault();
-    await post(`${uri}/requirements`, { id: "prettyId", description: newReq });
+    await post(`${uri}/requirements`, {
+      pretty_id,
+      description,
+      priority: priority.value,
+      status: status.value
+    });
   };
 
   const priorityOptions = [
@@ -25,52 +32,65 @@
     { value: "implemented", label: "Implemented" }
   ];
 
-  let newReqPriority = priorityOptions[1];
-  let newReqStatus = statusOptions[0];
+  let priority = priorityOptions[1];
+  let status = statusOptions[0];
 </script>
 
-<style lang="scss">
-  input.newReqInput {
-    width: 100%;
-  }
+<style>
+
 </style>
 
 {#if isModalShown}
   <Modal bind:isModalShown>
     <h3>Add a Requirement</h3>
     <form>
-      <label for="desc">Description</label>
-      <input
-        type="text"
-        id="desc"
-        name="desc"
-        class="newReqInput"
-        bind:value={newReqText} />
-      <label for="prettyId">Unique ID</label>
-      <input
-        type="text"
-        id="prettyId"
-        name="prettyId"
-        class="newReqInput"
-        bind:value={newReqId} />
-      <label for="priority">Priority</label>
-      <Select items={priorityOptions} bind:selectedValue={newReqPriority} />
-      <label for="status">Status</label>
-      <Select items={statusOptions} bind:selectedValue={newReqStatus} />
-      <button
-        on:click={() => {
-          alert('Create req');
-        }}>
-        + Add
-      </button>
+      <fieldset>
+        <label for="desc">Description</label>
+        <input
+          type="text"
+          id="desc"
+          name="desc"
+          class="newReqInput"
+          bind:value={description} />
+      </fieldset>
+      <fieldset class="inline">
+        <label for="prettyId">Unique ID</label>
+        <input
+          type="text"
+          id="prettyId"
+          name="prettyId"
+          class="newReqInput"
+          bind:value={pretty_id} />
+      </fieldset>
+      <fieldset class="inline">
+        <label for="priority">Priority</label>
+        <div class="selectWrapper">
+          <Select
+            inputAttributes={{ id: 'priority' }}
+            isClearable={false}
+            isSearchable={false}
+            items={priorityOptions}
+            bind:selectedValue={priority} />
+        </div>
+      </fieldset>
+      <fieldset class="inline">
+        <label for="status">Status</label>
+        <div class="selectWrapper">
+          <Select
+            inputAttributes={{ id: 'status' }}
+            isClearable={false}
+            isSearchable={false}
+            items={statusOptions}
+            bind:selectedValue={status} />
+        </div>
+      </fieldset>
+      <button on:click={addReq}>+ Add</button>
     </form>
   </Modal>
 {/if}
-<div>
-  <button
-    on:click={() => {
-      isModalShown = true;
-    }}>
-    + Add
-  </button>
-</div>
+<button
+  on:click={() => {
+    isModalShown = true;
+  }}>
+  + Add Requirement
+</button>

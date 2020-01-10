@@ -47,6 +47,8 @@
     await post(`/teams/${id}/projects`, { name: newProjectName });
     await update();
   };
+
+  const deleteTeam = () => {};
 </script>
 
 {#if title}
@@ -149,4 +151,8 @@
   <div>
     <button>Add member</button>
   </div>
+</section>
+<section>
+  <h2>Danger Zone</h2>
+  <button class="button-danger" on:click={deleteTeam}>Delete team</button>
 </section>

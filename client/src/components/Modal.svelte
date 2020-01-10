@@ -15,12 +15,14 @@
   div.contentWrapper {
     z-index: 20;
     background-color: white;
-    padding: 2rem;
+    padding: 3rem;
     border-radius: 0.4rem;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 70rem;
+    max-width: 95%;
   }
 </style>
 

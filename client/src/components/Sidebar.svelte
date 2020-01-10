@@ -3,6 +3,7 @@
   import IoMdCheckmarkCircleOutline from "svelte-icons/io/IoMdCheckmarkCircleOutline.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
+  import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
   export let name;
   export let id;
   export let tab;
@@ -29,6 +30,11 @@
       label: "Activity",
       slug: "activity",
       icon: MdHistory
+    },
+    {
+      label: "Settings",
+      slug: "settings",
+      icon: IoIosSettings
     }
   ];
 </script>

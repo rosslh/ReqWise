@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import FaGithub from "svelte-icons/fa/FaGithub.svelte";
+  import FaEdit from "svelte-icons/fa/FaEdit.svelte";
   import Requirement from "../components/Requirement.svelte";
   import AddRequirement from "../components/AddRequirement.svelte";
   import { get, post } from "../api.js";
@@ -16,6 +17,8 @@
 
   import Skeleton from "../components/Skeleton.svelte";
   import FeatureStatus from "../components/FeatureStatus.svelte";
+
+  const editFeature = () => {};
 </script>
 
 <style>
@@ -41,9 +44,20 @@
     display: inline;
     margin: 0;
     max-width: 50%;
+    color: #333;
   }
 
-  div.githubIconWrapper {
+  div.featureHeader button {
+    margin: 0;
+  }
+
+  div.featureFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  div.iconWrapper {
     height: 1.5rem;
     width: 1.5rem;
     margin-right: 0.5rem;
@@ -62,7 +76,7 @@
     </h2>
     <FeatureStatus {feature} />
     <button class="button-small button-outline">
-      <div class="githubIconWrapper">
+      <div class="iconWrapper">
         <FaGithub />
       </div>
       Implement
@@ -82,7 +96,7 @@
     {#if requirements}
       <tbody>
         {#each requirements as requirement}
-          <Requirement {requirement} />
+          <Requirement {requirement} featureId={feature.pretty_id} />
         {/each}
       </tbody>
     {/if}
@@ -90,5 +104,13 @@
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
-  <AddRequirement />
+  <div class="featureFooter">
+    <AddRequirement {uri} />
+    <button on:click={editFeature} class="button-outline button-small">
+      <div class="iconWrapper">
+        <FaEdit />
+      </div>
+      Edit
+    </button>
+  </div>
 </div>
