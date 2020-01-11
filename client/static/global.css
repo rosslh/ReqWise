@@ -1,9 +1,10 @@
 :root {
   --themeColor: #2fb250;
-  --grey: #515c64;
-  --orange: #ef7c2b;
-  --red: #eb3d54;
+  --grey: #545245;
+  --orange: #ff7f00;
+  --red: #ff323d;
   --green: var(--themeColor);
+  --blue: #02afce;
 
   /* Svelte-Select styling */
   --border: 0.1rem solid #d1d1d1;
@@ -66,12 +67,38 @@ body {
 .button-outline {
   background-color: none;
   border: 0.2rem solid;
-  border-color: var(--themeColor);
+}
+
+.button-primary {
+  background-color: var(--blue);
+  border-color: var(--blue);
+}
+.button-outline.button-primary {
+  color: var(--blue);
+}
+
+.button-create {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+.button-outline.button-create {
+  color: var(--green);
+}
+
+.button-caution {
+  background-color: var(--orange);
+  border-color: var(--orange);
+}
+.button-outline.button-caution {
+  color: var(--orange);
 }
 
 .button-danger {
   background-color: var(--red);
   border-color: var(--red);
+}
+.button-outline.button-danger {
+  color: var(--red);
 }
 
 section {
@@ -93,5 +120,10 @@ input:hover {
 }
 
 table {
-  font-size: 95%;
+  font-size: 90%;
+}
+
+button:hover,
+.button:hover {
+  opacity: 0.8;
 }

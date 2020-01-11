@@ -41,8 +41,8 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-  background-color: var(--themeColor);
-  border: 0.1rem solid var(--themeColor);
+  background-color: var(--grey);
+  border: 0.1rem solid var(--grey);
   border-radius: 0.4rem;
   color: #fff;
   cursor: pointer;
@@ -65,8 +65,6 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
-  background-color: var(--grey);
-  border-color: var(--grey);
   color: #fff;
   outline: 0;
 }
@@ -85,8 +83,8 @@ button[disabled]:hover,
 input[type="button"][disabled]:hover,
 input[type="reset"][disabled]:hover,
 input[type="submit"][disabled]:hover {
-  background-color: var(--themeColor);
-  border-color: var(--themeColor);
+  background-color: var(--grey);
+  border-color: var(--grey);
 }
 
 .button.button-outline,
@@ -95,7 +93,7 @@ input[type="button"].button-outline,
 input[type="reset"].button-outline,
 input[type="submit"].button-outline {
   background-color: transparent;
-  color: var(--themeColor);
+  color: var(--grey);
 }
 
 .button.button-outline:hover,
@@ -104,8 +102,6 @@ input[type="button"].button-outline:hover,
 input[type="reset"].button-outline:hover,
 input[type="submit"].button-outline:hover {
   background-color: transparent;
-  border-color: var(--grey);
-  color: var(--grey);
 }
 
 .button.button-outline[disabled]:hover,
@@ -114,7 +110,7 @@ input[type="button"].button-outline[disabled]:hover,
 input[type="reset"].button-outline[disabled]:hover,
 input[type="submit"].button-outline[disabled]:hover {
   border-color: inherit;
-  color: var(--themeColor);
+  color: var(--grey);
 }
 
 .button.button-clear,
@@ -124,7 +120,7 @@ input[type="reset"].button-clear,
 input[type="submit"].button-clear {
   background-color: transparent;
   border-color: transparent;
-  color: var(--themeColor);
+  color: var(--grey);
 }
 
 .button.button-clear:hover,
@@ -142,7 +138,7 @@ button.button-clear[disabled]:hover,
 input[type="button"].button-clear[disabled]:hover,
 input[type="reset"].button-clear[disabled]:hover,
 input[type="submit"].button-clear[disabled]:hover {
-  color: var(--themeColor);
+  color: var(--grey);
 }
 
 code {
@@ -427,7 +423,7 @@ a {
 }
 
 a:hover {
-  color: var(--grey);
+  text-decoration: underline;
 }
 
 dl,

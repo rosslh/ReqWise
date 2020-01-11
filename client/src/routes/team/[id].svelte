@@ -74,7 +74,7 @@
     <Skeleton rows={2} />
   {/if}
   <div>
-    <button on:click={updateTeam}>Update</button>
+    <button class="button-primary" on:click={updateTeam}>Update</button>
   </div>
 </section>
 <section>
@@ -105,11 +105,12 @@
         <label for="projectName">Project name</label>
         <input type="text" bind:value={newProjectName} />
       </fieldset>
-      <button on:click={submitNewProject}>Create</button>
+      <button class="button-create" on:click={submitNewProject}>Create</button>
     </Modal>
   {:else}
     <div>
       <button
+        class="button-create"
         on:click={() => {
           isModalShown = true;
         }}>
@@ -143,7 +144,7 @@
     <Skeleton rows={3} />
   {/if}
   <div>
-    <button>Add member</button>
+    <button class="button-create">Add member</button>
   </div>
 </section>
 <section>

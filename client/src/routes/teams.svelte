@@ -57,11 +57,12 @@
       <textarea bind:value={teamDesc} />
     </fieldset>
     <fieldset>
-      <button on:click={submitNewTeam}>Create</button>
+      <button class="button-create" on:click={submitNewTeam}>Create</button>
     </fieldset>
   </Modal>
 {:else}
   <button
+    class="button-create"
     on:click={() => {
       isModalShown = true;
     }}>

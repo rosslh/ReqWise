@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import FaGithub from "svelte-icons/fa/FaGithub.svelte";
   import FaEdit from "svelte-icons/fa/FaEdit.svelte";
+  import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import Requirement from "../components/Requirement.svelte";
   import AddRequirement from "../components/AddRequirement.svelte";
   import { get, post } from "../api.js";
@@ -19,6 +21,18 @@
   import FeatureStatus from "../components/FeatureStatus.svelte";
 
   const editFeature = () => {};
+
+  let showSelectTools = true;
+
+  let selectedReqs = [];
+
+  const toggleReq = id => {
+    if (selectedReqs.includes(id)) {
+      selectedReqs = selectedReqs.filter(x => x !== id);
+    } else {
+      selectedReqs = [...selectedReqs, id]; // push doesn't update state
+    }
+  };
 </script>
 
 <style>
@@ -44,7 +58,7 @@
     display: inline;
     margin: 0;
     max-width: 50%;
-    color: #333;
+    /* color: #333; */
   }
 
   div.featureHeader button {
@@ -58,10 +72,37 @@
   }
 
   div.iconWrapper {
-    height: 1.5rem;
-    width: 1.5rem;
-    margin-right: 0.5rem;
+    height: 1.4rem;
+    width: 1.4rem;
+    margin-right: 0.4rem;
     box-sizing: border-box;
+  }
+
+  .rotate90 {
+    transform: rotate(90deg);
+  }
+
+  div.selectTools {
+    height: 5.7rem;
+    max-height: 5.7rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.1s linear;
+    background-color: #fafafa;
+    border-bottom: 0.1rem solid #ddd;
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem;
+    opacity: 1;
+  }
+
+  div.selectTools > * {
+    margin-right: 0.5rem;
+    margin-top: 0;
+  }
+  div.selectTools.hidden {
+    transform: scaleY(0%);
+    max-height: 0;
+    opacity: 0;
   }
 </style>
 
@@ -75,11 +116,25 @@
       {/if}
     </h2>
     <FeatureStatus {feature} />
-    <button class="button-small button-outline">
+    <button class="button-small button-outline button-create">
       <div class="iconWrapper">
         <FaGithub />
       </div>
       Implement
+    </button>
+  </div>
+  <div class={`selectTools ${selectedReqs.length ? '' : 'hidden'}`}>
+    <button class="button-small button-primary">
+      <div class="iconWrapper rotate90">
+        <FaExchangeAlt />
+      </div>
+      Move to feature
+    </button>
+    <button class="button-small button-danger">
+      <div class="iconWrapper">
+        <FaRegTrashAlt />
+      </div>
+      Delete
     </button>
   </div>
   <table>
@@ -96,7 +151,11 @@
     {#if requirements}
       <tbody>
         {#each requirements as requirement}
-          <Requirement {requirement} featureId={feature.pretty_id} />
+          <Requirement
+            selected={selectedReqs.includes(requirement.id)}
+            {toggleReq}
+            {requirement}
+            featureId={feature.pretty_id} />
         {/each}
       </tbody>
     {/if}
@@ -106,7 +165,7 @@
   {/if}
   <div class="featureFooter">
     <AddRequirement {uri} />
-    <button on:click={editFeature} class="button-outline button-small">
+    <button on:click={editFeature} class="button-clear button-small">
       <div class="iconWrapper">
         <FaEdit />
       </div>

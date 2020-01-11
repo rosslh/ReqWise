@@ -48,12 +48,13 @@
           class="newReqInput"
           bind:value={pretty_id} />
       </fieldset>
-      <button on:click={addTeam}>+ Add</button>
+      <button class="button-create" on:click={addTeam}>+ Add</button>
     </form>
   </Modal>
 {/if}
 <div>
   <button
+    class="button-create"
     on:click={() => {
       isModalShown = true;
     }}>

@@ -52,9 +52,10 @@
     height: 5rem;
     padding: 0 1rem;
     border: 0.1rem solid white;
+    text-decoration: none !important;
   }
   a span {
-    line-height: 1.5rem;
+    line-height: 2rem;
   }
 
   a.selected {

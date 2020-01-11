@@ -1,12 +1,15 @@
 <script>
-  import FaComment from "svelte-icons/fa/FaComment.svelte";
+  import FaRegComment from "svelte-icons/fa/FaRegComment.svelte";
+  import FaEdit from "svelte-icons/fa/FaEdit.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaRegClock from "svelte-icons/fa/FaRegClock.svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   export let requirement;
   export let featureId;
+  export let toggleReq;
+  export let selected;
 
-  const getColor = status => {
+  const getStatusColor = status => {
     switch (status) {
       case "proposed":
         return "var(--red)";
@@ -19,6 +22,17 @@
     }
   };
 
+  const getPriorityColor = status => {
+    switch (status) {
+      case "high":
+        return "var(--red)";
+      case "medium":
+        return "var(--orange)";
+      default:
+        return "var(--grey)";
+    }
+  };
+
   // \u2011 = non-breaking hyphen
   // \u200B = zero width space
   const normalizeString = str =>
@@ -27,36 +41,41 @@
 
 <style>
   div.commentIconWrapper {
-    height: 1.8rem;
-    width: 1.8rem;
-    color: #bfbfbf;
+    height: 1.6rem;
+    width: 1.6rem;
   }
 
   span.iconWrapper {
-    height: 1.4rem;
-    width: 1.4rem;
+    height: 1.3rem;
+    width: 1.3rem;
     display: inline-block;
+    transform: translateY(8%);
   }
 
-  td.status {
-    line-height: 1.5rem;
+  td.priority {
+    text-transform: capitalize;
   }
 
-  td.desc {
-    color: #333;
+  td.checkbox > input {
+    margin: 0;
+    transform: scale(1.2);
+    outline: none;
   }
 </style>
 
 <tr>
-  <td>
-    <input type="checkbox" />
+  <td class="checkbox">
+    <input
+      type="checkbox"
+      on:click={() => toggleReq(requirement.id)}
+      checked={selected} />
   </td>
-  <td class="status" style={`color:${getColor(requirement.status)}`}>
+  <td class="status" style={`color:${getStatusColor(requirement.status)}`}>
     {#if requirement.status === 'proposed'}
       <span class="iconWrapper">
         <FaExclamation />
       </span>
-      Proposed
+      <span>Proposed</span>
     {:else if requirement.status === 'accepted'}
       Accepted
     {:else if requirement.status === 'inProgress'}
@@ -73,10 +92,18 @@
   </td>
   <td>{normalizeString(`${featureId}.${requirement.pretty_id}`)}</td>
   <td class="desc">{requirement.description}</td>
-  <td>{requirement.priority}</td>
+  <td
+    class="priority"
+    style={`color:${getPriorityColor(requirement.priority)}`}>
+    {requirement.priority}
+  </td>
   <td>
     <div class="commentIconWrapper">
-      <FaComment />
+      {#if requirement.status === 'proposed'}
+        <FaRegComment />
+      {:else}
+        <FaEdit />
+      {/if}
     </div>
   </td>
 </tr>

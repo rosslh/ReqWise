@@ -84,11 +84,12 @@
             bind:selectedValue={status} />
         </div>
       </fieldset>
-      <button on:click={addReq}>+ Add</button>
+      <button class="button-create" on:click={addReq}>+ Add</button>
     </form>
   </Modal>
 {/if}
 <button
+  class="button-create"
   on:click={() => {
     isModalShown = true;
   }}>
