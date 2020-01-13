@@ -19,7 +19,7 @@
   onMount(update);
 </script>
 
-<h1>Features</h1>
+<h2>Features</h2>
 <section>
   <AddFeature {update} {id} />
 </section>

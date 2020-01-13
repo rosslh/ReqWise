@@ -1,16 +1,26 @@
 :root {
-  --themeColor: #2fb250;
-  --grey: #545245;
-  --orange: #ff7f00;
-  --red: #ff323d;
+  --themeColor: #38a169;
+
+  --orange: #f0922e;
+  --red: #ea4b4b;
   --green: var(--themeColor);
-  --blue: #02afce;
+  --blue: #3182ce;
+
+  --offwhite1: #fefefe;
+  --offwhite2: #fcfcfc;
+
+  --grey1: #eaeef2;
+  --grey2: #d7dfe8;
+  --grey3: #a0aec0;
+  --grey4: #718096;
+
+  --charcoal1: #4a5568;
 
   /* Svelte-Select styling */
-  --border: 0.1rem solid #d1d1d1;
+  --border: 0.1rem solid var(--grey2);
   --borderFocusColor: var(--themeColor);
-  --borderHoverColor: #aaa;
-  --inputColor: var(--grey);
+  --borderHoverColor: var(--grey3);
+  --inputColor: var(--charcoal1);
   --borderRadius: 0.4rem;
 }
 
@@ -19,6 +29,11 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 5%;
+}
+
+input,
+textarea {
+  max-width: 48rem;
 }
 
 fieldset {
@@ -59,9 +74,23 @@ body {
 }
 
 .button-small {
-  height: 2.8rem;
-  padding: 0 1.5rem;
-  border-radius: 2.8rem;
+  height: 2.4rem;
+  padding: 0 1.1rem;
+  border-radius: 2.4rem;
+  font-size: 1.1rem;
+}
+
+.button-small .iconWrapper {
+  height: 1.1rem;
+  width: 1.1rem;
+}
+
+.iconWrapper {
+  height: 1.4rem;
+  width: 1.4rem;
+  margin-right: 0.4rem;
+  display: inline-block;
+  box-sizing: border-box;
 }
 
 .button-outline {
@@ -69,12 +98,8 @@ body {
   border: 0.2rem solid;
 }
 
-.button-primary {
-  background-color: var(--blue);
-  border-color: var(--blue);
-}
-.button-outline.button-primary {
-  color: var(--blue);
+.button-outline {
+  color: var(--grey4);
 }
 
 .button-create {
@@ -103,7 +128,7 @@ body {
 
 section {
   padding-bottom: 4rem;
-  border-bottom: 0.1rem solid #eee;
+  border-bottom: 0.1rem solid var(--grey1);
   margin-bottom: 4rem;
 }
 
@@ -113,14 +138,14 @@ form {
 }
 input,
 textarea {
-  color: var(--grey);
+  color: var(--charcoal1);
 }
 input:hover {
-  border-color: #aaa;
+  border-color: var(--grey3);
 }
 
 table {
-  font-size: 90%;
+  font-size: 93%;
 }
 
 button:hover,

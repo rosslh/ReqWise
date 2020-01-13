@@ -1,9 +1,11 @@
 <script>
   import FaRegComment from "svelte-icons/fa/FaRegComment.svelte";
-  import FaEdit from "svelte-icons/fa/FaEdit.svelte";
+  import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaRegClock from "svelte-icons/fa/FaRegClock.svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
+  import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
+
   export let requirement;
   export let featureId;
   export let toggleReq;
@@ -14,7 +16,7 @@
       case "proposed":
         return "var(--red)";
       case "accepted":
-        return "var(--grey)";
+        return "var(--grey4)";
       case "inProgress":
         return "var(--orange)";
       default:
@@ -29,7 +31,7 @@
       case "medium":
         return "var(--orange)";
       default:
-        return "var(--grey)";
+        return "var(--green)";
     }
   };
 
@@ -45,13 +47,6 @@
     width: 1.6rem;
   }
 
-  span.iconWrapper {
-    height: 1.3rem;
-    width: 1.3rem;
-    display: inline-block;
-    transform: translateY(8%);
-  }
-
   td.priority {
     text-transform: capitalize;
   }
@@ -61,9 +56,20 @@
     transform: scale(1.2);
     outline: none;
   }
+
+  td:first-child {
+    padding-left: 1rem;
+  }
+  td:last-child {
+    padding-right: 1rem;
+  }
+  tr.requirement:hover {
+    background-color: var(--offwhite2);
+    cursor: pointer;
+  }
 </style>
 
-<tr>
+<tr class="requirement">
   <td class="checkbox">
     <input
       type="checkbox"
@@ -77,6 +83,9 @@
       </span>
       <span>Proposed</span>
     {:else if requirement.status === 'accepted'}
+      <span class="iconWrapper">
+        <FaThumbsUp />
+      </span>
       Accepted
     {:else if requirement.status === 'inProgress'}
       <span class="iconWrapper">
@@ -102,7 +111,7 @@
       {#if requirement.status === 'proposed'}
         <FaRegComment />
       {:else}
-        <FaEdit />
+        <FaRegEdit />
       {/if}
     </div>
   </td>

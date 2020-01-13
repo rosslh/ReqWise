@@ -4,12 +4,12 @@
 
 <style>
   main {
-    padding-top: 4.5rem;
+    position: relative;
   }
 </style>
 
 <Nav />
 
-<main class="contentWrapper">
+<main>
   <slot />
 </main>

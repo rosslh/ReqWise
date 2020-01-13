@@ -9,7 +9,7 @@
 
 <style>
   nav {
-    border-bottom: 0.1rem solid #ececec;
+    border-bottom: 0.1rem solid var(--grey1);
   }
   div.contentWrapper {
     display: flex;

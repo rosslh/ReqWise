@@ -1,11 +1,14 @@
 <script>
   import { onMount } from "svelte";
   import FaGithub from "svelte-icons/fa/FaGithub.svelte";
+  import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaEdit from "svelte-icons/fa/FaEdit.svelte";
+  import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import Requirement from "../components/Requirement.svelte";
   import AddRequirement from "../components/AddRequirement.svelte";
+  import Skeleton from "../components/Skeleton.svelte";
   import { get, post } from "../api.js";
   export let feature;
   export let uri;
@@ -16,9 +19,6 @@
       requirements = await get(`${uri}/requirements`);
     }
   });
-
-  import Skeleton from "../components/Skeleton.svelte";
-  import FeatureStatus from "../components/FeatureStatus.svelte";
 
   const editFeature = () => {};
 
@@ -36,6 +36,9 @@
 </script>
 
 <style>
+  :global(.feature button) {
+    margin-top: 0;
+  }
   div.feature {
     border: 0.1rem solid #d1d1d1;
     border-radius: 0.4rem;
@@ -88,8 +91,8 @@
     display: flex;
     align-items: center;
     transition: all 0.1s linear;
-    background-color: #fafafa;
-    border-bottom: 0.1rem solid #ddd;
+    background-color: var(--offwhite1);
+    border-bottom: 0.1rem solid var(--grey1);
     margin: 0 -1.5rem;
     padding: 0 1.5rem;
     opacity: 1;
@@ -115,7 +118,6 @@
         <Skeleton noPadding inline height="1.7rem" />
       {/if}
     </h2>
-    <FeatureStatus {feature} />
     <button class="button-small button-outline button-create">
       <div class="iconWrapper">
         <FaGithub />
@@ -129,6 +131,18 @@
         <FaExchangeAlt />
       </div>
       Move to feature
+    </button>
+    <button class="button-small button-primary">
+      <div class="iconWrapper">
+        <FaEdit />
+      </div>
+      Change status
+    </button>
+    <button class="button-small button-caution">
+      <div class="iconWrapper">
+        <FaArchive />
+      </div>
+      Archive
     </button>
     <button class="button-small button-danger">
       <div class="iconWrapper">
@@ -167,7 +181,7 @@
     <AddRequirement {uri} />
     <button on:click={editFeature} class="button-clear button-small">
       <div class="iconWrapper">
-        <FaEdit />
+        <FaRegEdit />
       </div>
       Edit
     </button>

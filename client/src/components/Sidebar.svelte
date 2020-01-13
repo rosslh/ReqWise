@@ -40,11 +40,6 @@
 </script>
 
 <style>
-  span.iconWrapper {
-    height: 1.5rem;
-    width: 1.5rem;
-    margin-right: 0.5rem;
-  }
   a {
     list-style-type: none;
     display: flex;
@@ -59,13 +54,13 @@
   }
 
   a.selected {
-    background-color: #fafafa;
-    border: 0.1rem solid #eee;
+    background-color: var(--offwhite2);
+    border: 0.1rem solid var(--grey2);
     border-radius: 0.6rem;
   }
 
   a:not(.selected) {
-    color: var(--grey);
+    color: var(--charcoal1);
   }
 
   a:hover {

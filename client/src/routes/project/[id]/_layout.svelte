@@ -17,12 +17,44 @@
   });
 </script>
 
-<div class="container">
-  <div class="row">
-    <div class="column column-25">
-      <Sidebar {tab} {id} name={$currentProject.name} />
-    </div>
-    <div class="column column-35 projectColumnRight">
+<style>
+  @media (min-width: 700px) {
+    div.projectColumnLeft {
+      position: fixed;
+      top: 5rem; /* nav height */
+      left: 0;
+      bottom: 0;
+      width: 25%;
+      /* overflow-y: scroll; */
+    }
+
+    div.projectColumnRight {
+      position: fixed;
+      top: 5rem; /* nav height */
+      right: 0;
+      bottom: 0;
+      width: 75%;
+      overflow-y: scroll;
+    }
+
+    div.wrapper > * {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 699px) {
+    div.wrapper > * {
+      padding-top: 0;
+    }
+  }
+</style>
+
+<div class="wrapper">
+  <div class="projectColumnLeft">
+    <Sidebar {tab} {id} name={$currentProject.name} />
+  </div>
+  <div class="projectColumnRight">
+    <div class="contentWrapper">
       <slot />
     </div>
   </div>

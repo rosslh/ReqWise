@@ -61,6 +61,7 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable();
       table.string("pretty_id").notNullable();
+      table.boolean("is_archived").defaultTo(false);
     }),
     knex.schema.createTable("reqversion", table => {
       table.increments("id").primary();
