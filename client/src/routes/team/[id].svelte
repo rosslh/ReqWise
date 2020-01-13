@@ -55,99 +55,103 @@
   };
 </script>
 
-{#if title}
-  <h1>{title}</h1>
-{:else}
-  <Skeleton inline />
-{/if}
-<section>
-  {#if name || description}
-    <div>
-      <label for="name">Team name</label>
-      <input id="name" type="text" bind:value={name} />
-    </div>
-    <div>
-      <label for="description">Description</label>
-      <input id="description" type="text" bind:value={description} />
-    </div>
+<div class="contentWrapper">
+  {#if title}
+    <h1>{title}</h1>
   {:else}
-    <Skeleton rows={2} />
+    <Skeleton inline />
   {/if}
-  <div>
-    <button class="button-primary" on:click={updateTeam}>Update</button>
-  </div>
-</section>
-<section>
-  <h2>Projects</h2>
-  {#if projects}
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each projects as project}
+  <section>
+    {#if name || description}
+      <div>
+        <label for="name">Team name</label>
+        <input id="name" type="text" bind:value={name} />
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <input id="description" type="text" bind:value={description} />
+      </div>
+    {:else}
+      <Skeleton rows={2} />
+    {/if}
+    <div>
+      <button on:click={updateTeam}>Update</button>
+    </div>
+  </section>
+  <section>
+    <h2>Projects</h2>
+    {#if projects}
+      <table>
+        <thead>
           <tr>
-            <td>
-              <a href={`/project/${project.id}`}>{project.name}</a>
-            </td>
+            <th>Name</th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-  {:else}
-    <Skeleton rows={2} />
-  {/if}
-  {#if isModalShown}
-    <Modal bind:isModalShown>
-      <fieldset>
-        <label for="projectName">Project name</label>
-        <input type="text" bind:value={newProjectName} />
-      </fieldset>
-      <button class="button-create" on:click={submitNewProject}>Create</button>
-    </Modal>
-  {:else}
-    <div>
-      <button
-        class="button-create"
-        on:click={() => {
-          isModalShown = true;
-        }}>
-        Create project
-      </button>
-    </div>
-  {/if}
-</section>
-<section>
-  <h2>Members</h2>
-  {#if members}
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Is admin</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each members as member}
+        </thead>
+        <tbody>
+          {#each projects as project}
+            <tr>
+              <td>
+                <a href={`/project/${project.id}`}>{project.name}</a>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:else}
+      <Skeleton rows={2} />
+    {/if}
+    {#if isModalShown}
+      <Modal bind:isModalShown>
+        <fieldset>
+          <label for="projectName">Project name</label>
+          <input type="text" bind:value={newProjectName} />
+        </fieldset>
+        <button class="button-create" on:click={submitNewProject}>
+          Create
+        </button>
+      </Modal>
+    {:else}
+      <div>
+        <button
+          class="button-create"
+          on:click={() => {
+            isModalShown = true;
+          }}>
+          Create project
+        </button>
+      </div>
+    {/if}
+  </section>
+  <section>
+    <h2>Members</h2>
+    {#if members}
+      <table>
+        <thead>
           <tr>
-            <td>{member.name}</td>
-            <td>{member.email}</td>
-            <td>{member.is_admin}</td>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Is admin</th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-  {:else}
-    <Skeleton rows={3} />
-  {/if}
-  <div>
-    <button class="button-create">Add member</button>
-  </div>
-</section>
-<section>
-  <h2>Danger Zone</h2>
-  <button class="button-danger" on:click={deleteTeam}>Delete team</button>
-</section>
+        </thead>
+        <tbody>
+          {#each members as member}
+            <tr>
+              <td>{member.name}</td>
+              <td>{member.email}</td>
+              <td>{member.is_admin}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:else}
+      <Skeleton rows={3} />
+    {/if}
+    <div>
+      <button class="button-create">Add member</button>
+    </div>
+  </section>
+  <section>
+    <h2>Danger Zone</h2>
+    <button class="button-danger" on:click={deleteTeam}>Delete team</button>
+  </section>
+</div>

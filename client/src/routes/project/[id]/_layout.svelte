@@ -24,8 +24,9 @@
       top: 5rem; /* nav height */
       left: 0;
       bottom: 0;
-      width: 25%;
-      /* overflow-y: scroll; */
+      width: 20%;
+      border-right: 0.1rem solid var(--grey2);
+      border-top: 0.1rem solid var(--grey1);
     }
 
     div.projectColumnRight {
@@ -33,12 +34,14 @@
       top: 5rem; /* nav height */
       right: 0;
       bottom: 0;
-      width: 75%;
+      width: 80%;
       overflow-y: scroll;
+      background-color: var(--offwhite2);
+      border-top: 0.1rem solid var(--grey1);
     }
 
     div.wrapper > * {
-      padding: 1.5rem;
+      padding: 3.5rem 1.5rem 1.5rem;
     }
   }
 

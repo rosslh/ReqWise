@@ -14,24 +14,24 @@
   const getStatusColor = status => {
     switch (status) {
       case "proposed":
-        return "var(--red)";
+        return "red";
       case "accepted":
-        return "var(--grey4)";
+        return "grey4";
       case "inProgress":
-        return "var(--orange)";
+        return "orange";
       default:
-        return "var(--green)";
+        return "green";
     }
   };
 
   const getPriorityColor = status => {
     switch (status) {
       case "high":
-        return "var(--red)";
+        return "red";
       case "medium":
-        return "var(--orange)";
+        return "orange";
       default:
-        return "var(--green)";
+        return "green";
     }
   };
 
@@ -76,7 +76,9 @@
       on:click={() => toggleReq(requirement.id)}
       checked={selected} />
   </td>
-  <td class="status" style={`color:${getStatusColor(requirement.status)}`}>
+  <td
+    class="status"
+    style={`color:var(--${getStatusColor(requirement.status)})`}>
     {#if requirement.status === 'proposed'}
       <span class="iconWrapper">
         <FaExclamation />
@@ -103,7 +105,7 @@
   <td class="desc">{requirement.description}</td>
   <td
     class="priority"
-    style={`color:${getPriorityColor(requirement.priority)}`}>
+    style={`color:var(--${getPriorityColor(requirement.priority)})`}>
     {requirement.priority}
   </td>
   <td>

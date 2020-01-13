@@ -8,9 +8,6 @@
 </script>
 
 <style>
-  nav {
-    border-bottom: 0.1rem solid var(--grey1);
-  }
   div.contentWrapper {
     display: flex;
     justify-content: space-between;

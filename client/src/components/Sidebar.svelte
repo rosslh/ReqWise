@@ -44,6 +44,7 @@
     list-style-type: none;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 5rem;
     padding: 0 1rem;
     border: 0.1rem solid white;
@@ -75,6 +76,12 @@
     align-items: center;
     padding: 0 1rem;
   }
+
+  span.icon {
+    float: right;
+    height: 2rem;
+    width: 2rem;
+  }
 </style>
 
 <h1>
@@ -89,10 +96,10 @@
     <a
       href={`/project/${id}/${item.slug}`}
       class={tab === item.slug ? 'selected' : ''}>
-      <span class="iconWrapper">
+      <span>{item.label}</span>
+      <span class="icon">
         <svelte:component this={item.icon} />
       </span>
-      <span>{item.label}</span>
     </a>
   {/each}
 </div>

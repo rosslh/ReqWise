@@ -95,13 +95,22 @@ body {
 
 .button-outline {
   background-color: none;
-  border: 0.2rem solid;
+  border: 0.15rem solid;
 }
 
 .button-outline {
+  color: var(--themeColor);
+}
+
+.button-secondary {
+  background-color: var(--grey4);
+  border-color: var(--grey4);
+}
+.button-outline.button-secondary {
   color: var(--grey4);
 }
 
+/* Leave this in case theme color changes from green */
 .button-create {
   background-color: var(--green);
   border-color: var(--green);

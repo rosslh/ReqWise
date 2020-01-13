@@ -22,50 +22,51 @@
   };
 </script>
 
-<h1>My Teams</h1>
-
-{#if teams}
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each teams as team}
+<div class="contentWrapper">
+  <h1>My Teams</h1>
+  {#if teams}
+    <table>
+      <thead>
         <tr>
-          <td>
-            <a href={`/team/${team.id}`}>{team.name}</a>
-          </td>
-          <td>{team.description}</td>
+          <th>Name</th>
+          <th>Description</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
-{:else}
-  <Skeleton rows={3} />
-{/if}
-{#if isModalShown}
-  <Modal bind:isModalShown>
-    <fieldset>
-      <label for="teamName">Team name</label>
-      <input type="text" bind:value={teamName} />
-    </fieldset>
-    <fieldset>
-      <label for="teamDesc">Description</label>
-      <textarea bind:value={teamDesc} />
-    </fieldset>
-    <fieldset>
-      <button class="button-create" on:click={submitNewTeam}>Create</button>
-    </fieldset>
-  </Modal>
-{:else}
-  <button
-    class="button-create"
-    on:click={() => {
-      isModalShown = true;
-    }}>
-    Create team
-  </button>
-{/if}
+      </thead>
+      <tbody>
+        {#each teams as team}
+          <tr>
+            <td>
+              <a href={`/team/${team.id}`}>{team.name}</a>
+            </td>
+            <td>{team.description}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    <Skeleton rows={3} />
+  {/if}
+  {#if isModalShown}
+    <Modal bind:isModalShown>
+      <fieldset>
+        <label for="teamName">Team name</label>
+        <input type="text" bind:value={teamName} />
+      </fieldset>
+      <fieldset>
+        <label for="teamDesc">Description</label>
+        <textarea bind:value={teamDesc} />
+      </fieldset>
+      <fieldset>
+        <button class="button-create" on:click={submitNewTeam}>Create</button>
+      </fieldset>
+    </Modal>
+  {:else}
+    <button
+      class="button-create"
+      on:click={() => {
+        isModalShown = true;
+      }}>
+      Create team
+    </button>
+  {/if}
+</div>

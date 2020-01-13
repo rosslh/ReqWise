@@ -45,6 +45,7 @@
     padding: 1.2rem;
     margin: 2rem 0;
     overflow: hidden;
+    background-color: white;
   }
   div.featureHeader {
     background-color: #fefefe;
@@ -126,13 +127,13 @@
     </button>
   </div>
   <div class={`selectTools ${selectedReqs.length ? '' : 'hidden'}`}>
-    <button class="button-small button-primary">
+    <button class="button-small">
       <div class="iconWrapper rotate90">
         <FaExchangeAlt />
       </div>
       Move to feature
     </button>
-    <button class="button-small button-primary">
+    <button class="button-small">
       <div class="iconWrapper">
         <FaEdit />
       </div>
@@ -179,7 +180,9 @@
   {/if}
   <div class="featureFooter">
     <AddRequirement {uri} />
-    <button on:click={editFeature} class="button-clear button-small">
+    <button
+      on:click={editFeature}
+      class="button-outline button-small button-secondary">
       <div class="iconWrapper">
         <FaRegEdit />
       </div>
