@@ -15,50 +15,74 @@
       currentProject.set(r);
     });
   });
+
+  let title = null;
+  let sidebarVisible = false;
 </script>
 
 <style>
-  @media (min-width: 700px) {
-    div.projectColumnLeft {
-      position: fixed;
-      top: 5rem; /* nav height */
-      left: 0;
-      bottom: 0;
-      width: 20%;
-      border-right: 0.1rem solid var(--grey2);
-      border-top: 0.1rem solid var(--grey1);
-    }
+  div.projectColumnLeft {
+    position: fixed;
+    top: 5rem; /* nav height */
+    left: 0;
+    bottom: 0;
+    width: var(--sidebarWidth);
+    border-right: 0.1rem solid var(--grey2);
+    transition: transform 0.2s ease;
+    border-top: 0.1rem solid var(--grey1);
+  }
+  div.projectColumnRight {
+    position: fixed;
+    top: 5rem; /* nav height */
+    right: 0;
+    bottom: 0;
+    overflow-y: scroll;
+    background-color: var(--offwhite2);
+    border-top: 0.1rem solid var(--grey1);
+    padding-top: 3.5rem;
+    transition: width 0.2s ease;
+  }
 
+  @media (min-width: 750px) {
     div.projectColumnRight {
-      position: fixed;
-      top: 5rem; /* nav height */
-      right: 0;
-      bottom: 0;
-      width: 80%;
-      overflow-y: scroll;
-      background-color: var(--offwhite2);
-      border-top: 0.1rem solid var(--grey1);
+      width: calc(100% - var(--sidebarWidth));
     }
-
-    div.wrapper > * {
-      padding: 3.5rem 1.5rem 1.5rem;
+    div.sidebarVisible div.projectColumnRight {
+      width: 100%;
     }
   }
 
-  @media (max-width: 699px) {
-    div.wrapper > * {
-      padding-top: 0;
+  @media (max-width: 749px) {
+    div.projectColumnRight {
+      width: 100%;
+      padding-left: 6rem;
     }
+  }
+
+  button.menuToggle {
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    z-index: 300;
+  }
+
+  div.sidebarVisible div.projectColumnLeft {
+    transform: translateX(calc(-1 * var(--sidebarWidth) + 6rem));
   }
 </style>
 
-<div class="wrapper">
+<button
+  class="menuToggle button-small"
+  on:click={() => {
+    sidebarVisible = !sidebarVisible;
+  }}>
+  {sidebarVisible ? 'Hide' : 'Show'}
+</button>
+<div class={sidebarVisible ? 'sidebarVisible' : 'sidebarHidden'}>
+  <div class="projectColumnRight">
+    <slot />
+  </div>
   <div class="projectColumnLeft">
     <Sidebar {tab} {id} name={$currentProject.name} />
-  </div>
-  <div class="projectColumnRight">
-    <div class="contentWrapper">
-      <slot />
-    </div>
   </div>
 </div>

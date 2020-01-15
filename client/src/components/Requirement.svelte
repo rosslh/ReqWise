@@ -16,7 +16,7 @@
       case "proposed":
         return "red";
       case "accepted":
-        return "grey4";
+        return "indigo";
       case "inProgress":
         return "orange";
       default:
@@ -67,14 +67,23 @@
     background-color: var(--offwhite2);
     cursor: pointer;
   }
+
+  tr.requirement.selected {
+    background-color: var(--offwhite2);
+    cursor: pointer;
+  }
+
+  tr.requirement.selected:hover {
+    background-color: var(--offwhite3);
+    cursor: pointer;
+  }
 </style>
 
-<tr class="requirement">
+<tr
+  class={`${selected ? 'selected' : ''} requirement`}
+  on:click={() => toggleReq(requirement.id)}>
   <td class="checkbox">
-    <input
-      type="checkbox"
-      on:click={() => toggleReq(requirement.id)}
-      checked={selected} />
+    <input type="checkbox" checked={selected} />
   </td>
   <td
     class="status"

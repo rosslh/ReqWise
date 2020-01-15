@@ -7,7 +7,7 @@
 </script>
 
 <style>
-  .skeletonWrapper {
+  .yesPadding {
     margin: 3rem 0 2rem;
     padding: 0;
   }
@@ -25,7 +25,7 @@
 </style>
 
 <!-- All properties below are default -->
-<div class={noPadding ? 'noPadding' : 'skeletonWrapper'}>
+<div class={noPadding ? 'noPadding' : 'yesPadding'}>
   {#each Array(rows) as i}
     <div class={rows > 1 ? 'rowWrapper' : 'noPadding'} key={i}>
       <Skeleton

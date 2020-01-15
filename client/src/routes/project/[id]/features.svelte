@@ -19,11 +19,24 @@
   onMount(update);
 </script>
 
-<h2>Features</h2>
-<section>
+<style>
+  p.info {
+    color: var(--grey4);
+    margin: 1.5rem 0 1.5rem;
+  }
+</style>
+
+<section class="contentWrapper">
+  <h2>Features</h2>
+  <p class="info">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat.
+  </p>
   <AddFeature {update} {id} />
 </section>
-<section>
+<section class="contentWrapper">
   {#if features}
     {#each features as feature}
       <Feature {feature} uri={`/projects/${id}/features/${feature.id}`} />

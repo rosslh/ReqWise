@@ -4,10 +4,11 @@
   --orange: #f0922e;
   --red: #ea4b4b;
   --green: var(--themeColor);
-  --blue: #3182ce;
+  --indigo: #7472d5;
 
-  --offwhite1: #fefefe;
-  --offwhite2: #fcfcfc;
+  --offwhite1: #fefeff;
+  --offwhite2: #fcfdfe;
+  --offwhite3: #fafcfd;
 
   --grey1: #eaeef2;
   --grey2: #d7dfe8;
@@ -15,6 +16,9 @@
   --grey4: #718096;
 
   --charcoal1: #4a5568;
+
+  --sidebarWidth: 25rem;
+  --contentWrapperWidth: 100rem;
 
   /* Svelte-Select styling */
   --border: 0.1rem solid var(--grey2);
@@ -25,20 +29,22 @@
 }
 
 .contentWrapper {
-  max-width: 120rem;
+  max-width: 100rem;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 5%;
-}
-
-input,
-textarea {
-  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 fieldset {
   margin-bottom: 1.5rem;
   position: relative;
+  max-width: 60rem;
+}
+
+table.compact {
+  max-width: 60rem;
 }
 
 fieldset input,
@@ -136,9 +142,9 @@ body {
 }
 
 section {
-  padding-bottom: 4rem;
+  padding-bottom: 5rem;
   border-bottom: 0.1rem solid var(--grey1);
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
 }
 
 form {

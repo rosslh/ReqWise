@@ -25,7 +25,7 @@
 <div class="contentWrapper">
   <h1>My Teams</h1>
   {#if teams}
-    <table>
+    <table class="compact">
       <thead>
         <tr>
           <th>Name</th>

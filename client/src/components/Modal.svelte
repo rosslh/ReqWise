@@ -10,10 +10,10 @@
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.8);
-    z-index: 10;
+    z-index: 100;
   }
   div.contentWrapper {
-    z-index: 20;
+    z-index: 200;
     background-color: white;
     padding: 3rem;
     border-radius: 0.4rem;

@@ -13,6 +13,7 @@
     justify-content: space-between;
     align-items: center;
     height: 5rem;
+    max-width: unset;
   }
   a.logoWrapper {
     display: inline-block;

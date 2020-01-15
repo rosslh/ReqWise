@@ -40,7 +40,7 @@
     margin-top: 0;
   }
   div.feature {
-    border: 0.1rem solid #d1d1d1;
+    border: 0.1rem solid var(--grey2);
     border-radius: 0.4rem;
     padding: 1.2rem;
     margin: 2rem 0;
@@ -48,16 +48,16 @@
     background-color: white;
   }
   div.featureHeader {
-    background-color: #fefefe;
+    background-color: var(--offwhite1);
     margin: -1.2rem -1.2rem 0 -1.2rem;
     padding: 1.2rem;
-    border-bottom: 0.1rem solid #d1d1d1;
+    border-bottom: 0.1rem solid var(--grey1);
     min-height: 5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  div.featureHeader h2 {
+  div.featureHeader h3 {
     font-size: 1.8rem;
     display: inline;
     margin: 0;
@@ -87,19 +87,30 @@
   }
 
   div.selectTools {
-    height: 5.7rem;
-    max-height: 5.7rem;
-    display: flex;
-    align-items: center;
+    height: 8.5rem;
+    max-height: 8.5rem;
     transition: all 0.1s linear;
     background-color: var(--offwhite1);
     border-bottom: 0.1rem solid var(--grey1);
     margin: 0 -1.5rem;
     padding: 0 1.5rem;
     opacity: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  div.selectTools > * {
+  div.selectTools > div.selectToolsLabel {
+    margin-bottom: 1rem;
+    height: 2.5rem;
+    font-weight: 600;
+  }
+  div.selectTools > div.buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  div.selectTools > div.buttons > * {
     margin-right: 0.5rem;
     margin-top: 0;
   }
@@ -112,13 +123,13 @@
 
 <div class="feature">
   <div class="featureHeader">
-    <h2>
+    <h3>
       {#if feature}
         {feature.name}
       {:else}
         <Skeleton noPadding inline height="1.7rem" />
       {/if}
-    </h2>
+    </h3>
     <button class="button-small button-outline button-create">
       <div class="iconWrapper">
         <FaGithub />
@@ -127,30 +138,35 @@
     </button>
   </div>
   <div class={`selectTools ${selectedReqs.length ? '' : 'hidden'}`}>
-    <button class="button-small">
-      <div class="iconWrapper rotate90">
-        <FaExchangeAlt />
-      </div>
-      Move to feature
-    </button>
-    <button class="button-small">
-      <div class="iconWrapper">
-        <FaEdit />
-      </div>
-      Change status
-    </button>
-    <button class="button-small button-caution">
-      <div class="iconWrapper">
-        <FaArchive />
-      </div>
-      Archive
-    </button>
-    <button class="button-small button-danger">
-      <div class="iconWrapper">
-        <FaRegTrashAlt />
-      </div>
-      Delete
-    </button>
+    <div class="selectToolsLabel">
+      {selectedReqs.length} selected requirement{selectedReqs.length === 1 ? '' : 's'}:
+    </div>
+    <div class="buttons">
+      <button class="button-small">
+        <div class="iconWrapper rotate90">
+          <FaExchangeAlt />
+        </div>
+        Move to feature
+      </button>
+      <button class="button-small">
+        <div class="iconWrapper">
+          <FaEdit />
+        </div>
+        Change status
+      </button>
+      <button class="button-small button-caution">
+        <div class="iconWrapper">
+          <FaArchive />
+        </div>
+        Archive
+      </button>
+      <button class="button-small button-danger">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+        Delete
+      </button>
+    </div>
   </div>
   <table>
     <thead>

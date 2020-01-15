@@ -63,14 +63,14 @@
   {/if}
   <section>
     {#if name || description}
-      <div>
+      <fieldset>
         <label for="name">Team name</label>
         <input id="name" type="text" bind:value={name} />
-      </div>
-      <div>
+      </fieldset>
+      <fieldset>
         <label for="description">Description</label>
         <input id="description" type="text" bind:value={description} />
-      </div>
+      </fieldset>
     {:else}
       <Skeleton rows={2} />
     {/if}
@@ -81,7 +81,7 @@
   <section>
     <h2>Projects</h2>
     {#if projects}
-      <table>
+      <table class="compact">
         <thead>
           <tr>
             <th>Name</th>
@@ -125,7 +125,7 @@
   <section>
     <h2>Members</h2>
     {#if members}
-      <table>
+      <table class="compact">
         <thead>
           <tr>
             <th>Name</th>
