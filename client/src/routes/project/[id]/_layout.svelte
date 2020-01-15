@@ -59,30 +59,16 @@
     }
   }
 
-  button.menuToggle {
-    position: absolute;
-    top: 0;
-    left: 0.5rem;
-    z-index: 300;
-  }
-
   div.sidebarVisible div.projectColumnLeft {
     transform: translateX(calc(-1 * var(--sidebarWidth) + 6rem));
   }
 </style>
 
-<button
-  class="menuToggle button-small"
-  on:click={() => {
-    sidebarVisible = !sidebarVisible;
-  }}>
-  {sidebarVisible ? 'Hide' : 'Show'}
-</button>
 <div class={sidebarVisible ? 'sidebarVisible' : 'sidebarHidden'}>
   <div class="projectColumnRight">
     <slot />
   </div>
   <div class="projectColumnLeft">
-    <Sidebar {tab} {id} name={$currentProject.name} />
+    <Sidebar bind:sidebarVisible {tab} {id} name={$currentProject.name} />
   </div>
 </div>

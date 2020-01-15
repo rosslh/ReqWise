@@ -4,10 +4,12 @@
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
+  import MdMenu from "svelte-icons/md/MdMenu.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
   export let name;
   export let id;
   export let tab;
+  export let sidebarVisible;
 
   import Skeleton from "../components/Skeleton.svelte";
 
@@ -103,11 +105,31 @@
   nav {
     background-color: white;
     height: 100%;
+    position: relative;
     overflow-y: scroll;
+  }
+
+  button#toggleMenu {
+    background-color: white;
+    border: none;
+    color: var(--themeColor);
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    height: 3rem;
+    width: 3rem;
+    padding: 0;
   }
 </style>
 
 <nav>
+  <button
+    id="toggleMenu"
+    on:click={() => {
+      sidebarVisible = !sidebarVisible;
+    }}>
+    <MdMenu />
+  </button>
   <h1>
     {#if name}
       {name}
