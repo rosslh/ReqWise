@@ -1,5 +1,6 @@
 <script>
   import FaRegComment from "svelte-icons/fa/FaRegComment.svelte";
+  import FaGithub from "svelte-icons/fa/FaGithub.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaRegClock from "svelte-icons/fa/FaRegClock.svelte";
@@ -7,7 +8,7 @@
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
 
   export let requirement;
-  export let featureId;
+  // export let featureId;
   export let toggleReq;
   export let selected;
 
@@ -37,8 +38,8 @@
 
   // \u2011 = non-breaking hyphen
   // \u200B = zero width space
-  const normalizeString = str =>
-    str.replace(/-/g, "\u2011").replace(/\./g, "\u200B.");
+  // const normalizeString = str =>
+  //   str.replace(/-/g, "\u2011").replace(/\./g, "\u200B.");
 </script>
 
 <style>
@@ -110,7 +111,24 @@
       Implemented
     {/if}
   </td>
-  <td>{normalizeString(`${featureId}.${requirement.pretty_id}`)}</td>
+  <td>
+    {#if requirement.status === 'accepted'}
+      <button class="button-small button-outline">
+        <span class="iconWrapper">
+          <FaGithub />
+        </span>
+        Implement
+      </button>
+    {:else if requirement.status === 'inProgress'}
+      <button class="button-small button-secondary button-outline">
+        <span class="iconWrapper">
+          <FaGithub />
+        </span>
+        Open
+      </button>
+    {/if}
+  </td>
+  <!-- <td>{normalizeString(`${featureId}.${requirement.pretty_id}`)}</td> -->
   <td class="desc">{requirement.description}</td>
   <td
     class="priority"

@@ -1,5 +1,10 @@
 <script>
-  export let isModalShown;
+  import { modalContent, modalProps } from "../stores.js";
+
+  const close = () => {
+    modalContent.set(false);
+    modalProps.set({});
+  };
 </script>
 
 <style>
@@ -26,13 +31,9 @@
   }
 </style>
 
-<div
-  class="backdrop"
-  on:click={() => {
-    isModalShown = false;
-  }} />
+<div class="backdrop" on:click={close} />
 <div class="modal">
   <div class="contentWrapper">
-    <slot />
+    <slot {close} />
   </div>
 </div>

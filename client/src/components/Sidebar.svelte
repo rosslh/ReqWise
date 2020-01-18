@@ -5,11 +5,12 @@
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
   import MdMenu from "svelte-icons/md/MdMenu.svelte";
+  import MdClose from "svelte-icons/md/MdClose.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
   export let name;
   export let id;
   export let tab;
-  export let sidebarVisible;
+  export let sidebarHidden;
 
   import Skeleton from "../components/Skeleton.svelte";
 
@@ -77,7 +78,7 @@
   }
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 2.1rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -88,8 +89,8 @@
 
   span.icon {
     float: right;
-    height: 2rem;
-    width: 2rem;
+    height: 1.8rem;
+    width: 1.8rem;
   }
 
   div.items {
@@ -106,19 +107,21 @@
     background-color: white;
     height: 100%;
     position: relative;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    font-size: 1.4rem;
   }
 
   button#toggleMenu {
     background-color: white;
     border: none;
-    color: var(--themeColor);
+    color: var(--grey4);
     position: absolute;
     top: 0;
     right: 1rem;
     height: 3rem;
     width: 3rem;
     padding: 0;
+    outline: none;
   }
 </style>
 
@@ -126,15 +129,19 @@
   <button
     id="toggleMenu"
     on:click={() => {
-      sidebarVisible = !sidebarVisible;
+      sidebarHidden = !sidebarHidden;
     }}>
-    <MdMenu />
+    {#if sidebarHidden}
+      <MdMenu />
+    {:else}
+      <MdClose />
+    {/if}
   </button>
   <h1>
     {#if name}
       {name}
     {:else}
-      <Skeleton inline noPadding />
+      <Skeleton height="2.4rem" inline noPadding />
     {/if}
   </h1>
   <div class="items">

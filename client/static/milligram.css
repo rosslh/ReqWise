@@ -285,7 +285,7 @@ table {
 td,
 th {
   border-bottom: 0.1rem solid var(--grey1);
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.2rem;
   text-align: left;
 }
 

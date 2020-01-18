@@ -17,7 +17,7 @@
   });
 
   let title = null;
-  let sidebarVisible = false;
+  let sidebarHidden = false;
 </script>
 
 <style>
@@ -47,28 +47,28 @@
     div.projectColumnRight {
       width: calc(100% - var(--sidebarWidth));
     }
-    div.sidebarVisible div.projectColumnRight {
-      width: 100%;
+    div.sidebarHidden div.projectColumnRight {
+      width: calc(100% - 5.5rem);
     }
   }
 
   @media (max-width: 749px) {
     div.projectColumnRight {
       width: 100%;
-      padding-left: 6rem;
+      padding-left: 5.5rem;
     }
   }
 
-  div.sidebarVisible div.projectColumnLeft {
-    transform: translateX(calc(-1 * var(--sidebarWidth) + 6rem));
+  div.sidebarHidden div.projectColumnLeft {
+    transform: translateX(calc(-1 * var(--sidebarWidth) + 5.5rem));
   }
 </style>
 
-<div class={sidebarVisible ? 'sidebarVisible' : 'sidebarHidden'}>
+<div class={sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>
   <div class="projectColumnRight">
     <slot />
   </div>
   <div class="projectColumnLeft">
-    <Sidebar bind:sidebarVisible {tab} {id} name={$currentProject.name} />
+    <Sidebar bind:sidebarHidden {tab} {id} name={$currentProject.name} />
   </div>
 </div>

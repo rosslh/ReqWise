@@ -14,11 +14,13 @@
   export let uri;
 
   let requirements = null;
-  onMount(async () => {
+  const update = async () => {
     if (uri) {
       requirements = await get(`${uri}/requirements`);
     }
-  });
+  };
+
+  onMount(update);
 
   const editFeature = () => {};
 
@@ -130,11 +132,11 @@
         <Skeleton noPadding inline height="1.7rem" />
       {/if}
     </h3>
-    <button class="button-small button-outline button-create">
+    <button class="button-small button-outline">
       <div class="iconWrapper">
         <FaGithub />
       </div>
-      Implement
+      Implement Accepted
     </button>
   </div>
   <div class={`selectTools ${selectedReqs.length ? '' : 'hidden'}`}>
@@ -173,7 +175,7 @@
       <tr>
         <th />
         <th>Status</th>
-        <th>ID</th>
+        <th>Repository</th>
         <th>Description</th>
         <th>Priority</th>
         <th />
@@ -195,7 +197,7 @@
     <Skeleton rows={2} noPadding />
   {/if}
   <div class="featureFooter">
-    <AddRequirement {uri} />
+    <AddRequirement {uri} {update} />
     <button
       on:click={editFeature}
       class="button-outline button-small button-secondary">

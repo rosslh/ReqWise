@@ -1,9 +1,9 @@
 <script>
   import { onMount } from "svelte";
-  import { userId } from "../stores.js";
+  import { userId, modalContent, modalProps } from "../stores.js";
   import { get, post } from "../api.js";
-  import Modal from "../components/Modal.svelte";
   import Skeleton from "../components/Skeleton.svelte";
+  import AddTeamModal from "../components/AddTeamModal.svelte";
   let teams = null;
 
   const update = async () => {
@@ -11,15 +11,6 @@
   };
 
   onMount(update);
-
-  let isModalShown = false;
-  let teamName = "";
-  let teamDesc = "";
-
-  const submitNewTeam = async () => {
-    await post(`/teams`, { name: teamName, description: teamDesc });
-    await update();
-  };
 </script>
 
 <div class="contentWrapper">
@@ -46,27 +37,13 @@
   {:else}
     <Skeleton rows={3} />
   {/if}
-  {#if isModalShown}
-    <Modal bind:isModalShown>
-      <fieldset>
-        <label for="teamName">Team name</label>
-        <input type="text" bind:value={teamName} />
-      </fieldset>
-      <fieldset>
-        <label for="teamDesc">Description</label>
-        <textarea bind:value={teamDesc} />
-      </fieldset>
-      <fieldset>
-        <button class="button-create" on:click={submitNewTeam}>Create</button>
-      </fieldset>
-    </Modal>
-  {:else}
-    <button
-      class="button-create"
-      on:click={() => {
-        isModalShown = true;
-      }}>
-      Create team
-    </button>
-  {/if}
+
+  <button
+    class="button-create"
+    on:click={() => {
+      modalContent.set(AddTeamModal);
+      modalProps.set({ update });
+    }}>
+    Create team
+  </button>
 </div>

@@ -22,7 +22,6 @@ module.exports = async function(fastify, opts) {
       preValidation: [fastify.authenticate]
     },
     async function(request, reply) {
-      // TODO: Ensure you also delete dependent entities
       await fastify
         .knex("project")
         .where("id", request.params.projectId)

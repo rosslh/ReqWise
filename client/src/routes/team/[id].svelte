@@ -1,20 +1,18 @@
 <script>
   import { onMount } from "svelte";
-  import { get, post, put, del } from "../../api.js";
+  import { modalContent, modalProps } from "../../stores.js";
+  import { get, put, del } from "../../api.js";
   import { stores, goto } from "@sapper/app";
   const { page } = stores();
 
+  import AddProjectModal from "../../components/AddProjectModal.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
-  import Modal from "../../components/Modal.svelte";
 
   let name = "";
   let description = "";
 
   let projects = null;
   let members = null;
-
-  let isModalShown = false;
-  let newProjectName = "";
 
   const { id } = $page.params;
 
@@ -43,11 +41,6 @@
   };
 
   onMount(update);
-
-  const submitNewProject = async () => {
-    await post(`/teams/${id}/projects`, { name: newProjectName });
-    await update();
-  };
 
   const deleteTeam = async () => {
     await del(`/teams/${id}`);
@@ -100,27 +93,17 @@
     {:else}
       <Skeleton rows={2} />
     {/if}
-    {#if isModalShown}
-      <Modal bind:isModalShown>
-        <fieldset>
-          <label for="projectName">Project name</label>
-          <input type="text" bind:value={newProjectName} />
-        </fieldset>
-        <button class="button-create" on:click={submitNewProject}>
-          Create
-        </button>
-      </Modal>
-    {:else}
-      <div>
-        <button
-          class="button-create"
-          on:click={() => {
-            isModalShown = true;
-          }}>
-          Create project
-        </button>
-      </div>
-    {/if}
+
+    <div>
+      <button
+        class="button-create"
+        on:click={() => {
+          modalContent.set(AddProjectModal);
+          modalProps.set({ id, update });
+        }}>
+        Create project
+      </button>
+    </div>
   </section>
   <section>
     <h2>Members</h2>

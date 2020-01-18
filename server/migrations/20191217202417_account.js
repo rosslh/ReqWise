@@ -18,10 +18,16 @@ exports.up = function(knex) {
       table.increments("id").primary();
       table
         .integer("account_id")
+        .references("account.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
       table
         .integer("team_id")
+        .references("team.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
       table.boolean("is_admin").notNullable();
@@ -31,6 +37,9 @@ exports.up = function(knex) {
       table.string("name");
       table
         .integer("team_id")
+        .references("team.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
     }),
@@ -39,6 +48,9 @@ exports.up = function(knex) {
       table.increments("id").primary();
       table
         .integer("project_id")
+        .references("project.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
       table.string("name").notNullable();
@@ -58,6 +70,9 @@ exports.up = function(knex) {
       table.increments("id").primary();
       table
         .integer("reqgroup_id")
+        .references("reqgroup.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
       table.string("pretty_id").notNullable();
@@ -67,10 +82,14 @@ exports.up = function(knex) {
       table.increments("id").primary();
       table
         .integer("requirement_id")
+        .references("requirement.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
       table
-        .integer("account_id")
+        .integer("account_id") // don't cascade delete for user account deletion
+        .references("account.id")
         .unsigned()
         .notNullable();
       table.enu("priority", ["high", "medium", "low"]).notNullable();
@@ -84,10 +103,14 @@ exports.up = function(knex) {
       table.increments("id").primary();
       table
         .integer("reqversion_id")
+        .references("reqversion.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
         .unsigned()
         .notNullable();
       table
-        .integer("account_id")
+        .integer("account_id") // don't cascade delete for user account deletion
+        .references("account.id")
         .unsigned()
         .notNullable();
       table.string("content").notNullable();
