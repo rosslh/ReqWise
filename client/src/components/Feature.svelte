@@ -48,6 +48,8 @@
     margin: 2rem 0;
     overflow: hidden;
     background-color: white;
+    position: relative;
+    width: 100%;
   }
   div.featureHeader {
     background-color: var(--offwhite1);
@@ -121,6 +123,15 @@
     max-height: 0;
     opacity: 0;
   }
+
+  div.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    padding-right: 3rem;
+  }
 </style>
 
 <div class="feature">
@@ -170,29 +181,31 @@
       </button>
     </div>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th />
-        <th>Status</th>
-        <th>Repository</th>
-        <th>Description</th>
-        <th>Priority</th>
-        <th />
-      </tr>
-    </thead>
-    {#if requirements}
-      <tbody>
-        {#each requirements as requirement}
-          <Requirement
-            selected={selectedReqs.includes(requirement.id)}
-            {toggleReq}
-            {requirement}
-            featureId={feature.pretty_id} />
-        {/each}
-      </tbody>
-    {/if}
-  </table>
+  <div class="tableWrapper">
+    <table>
+      <thead>
+        <tr>
+          <th />
+          <th>Status</th>
+          <th>Repository</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th />
+        </tr>
+      </thead>
+      {#if requirements}
+        <tbody>
+          {#each requirements as requirement}
+            <Requirement
+              selected={selectedReqs.includes(requirement.id)}
+              {toggleReq}
+              {requirement}
+              featureId={feature.pretty_id} />
+          {/each}
+        </tbody>
+      {/if}
+    </table>
+  </div>
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}

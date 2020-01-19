@@ -42,14 +42,44 @@
   //   str.replace(/-/g, "\u2011").replace(/\./g, "\u200B.");
 </script>
 
-<style>
-  div.commentIconWrapper {
-    height: 1.6rem;
-    width: 1.6rem;
+<style lang="scss">
+  td.iconCell:hover {
+    background-color: var(--offwhite2);
+  }
+
+  td.iconCell {
+    position: absolute;
+    display: inline-block;
+    right: 1rem;
+    background-color: var(--offwhite1);
+    border: 1px solid var(--grey2);
+    border-radius: 50%;
+    padding: 0 !important;
+    height: 3.5rem;
+    width: 3.5rem;
+    transform: translateY(0.3rem);
+    margin: 0.2rem;
+    overflow: hidden;
+    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1),
+      0 3px 5px 0 rgba(0, 0, 0, 0.07), 0 0 4px 0 rgba(0, 0, 0, 0.06);
+
+    button.commentIconWrapper {
+      width: 100%;
+      height: 100%;
+      padding: 0.8rem;
+      background: none;
+      border: none;
+      color: var(--grey4);
+      box-sizing: border-box;
+    }
   }
 
   td.priority {
     text-transform: capitalize;
+  }
+
+  td.status {
+    white-space: nowrap !important;
   }
 
   td.checkbox > input {
@@ -64,6 +94,7 @@
   td:last-child {
     padding-right: 1rem;
   }
+
   tr.requirement:hover {
     background-color: var(--offwhite2);
     cursor: pointer;
@@ -135,13 +166,13 @@
     style={`color:var(--${getPriorityColor(requirement.priority)})`}>
     {requirement.priority}
   </td>
-  <td>
-    <div class="commentIconWrapper">
+  <td class="iconCell">
+    <button class="commentIconWrapper">
       {#if requirement.status === 'proposed'}
         <FaRegComment />
       {:else}
         <FaRegEdit />
       {/if}
-    </div>
+    </button>
   </td>
 </tr>

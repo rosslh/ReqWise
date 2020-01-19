@@ -107,8 +107,8 @@
     background-color: white;
     height: 100%;
     position: relative;
-    /* overflow-y: scroll; */
-    font-size: 1.4rem;
+    overflow-y: auto;
+    font-size: 1.5rem;
   }
 
   button#toggleMenu {
