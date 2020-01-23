@@ -64,6 +64,71 @@ module.exports = async function(fastify, opts) {
   );
 
   fastify.get(
+    "/projects/:projectId/features/:featureId",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      return await fastify.knex
+        .from("reqgroup")
+        .select("*")
+        .where({
+          project_id: request.params.projectId,
+          id: request.params.featureId
+        })
+        .first();
+    }
+  );
+  fastify.put(
+    "/projects/:projectId/features/:featureId",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      const { name, pretty_id } = request.body;
+      return await fastify
+        .knex("reqgroup")
+        .where("id", request.params.featureId)
+        .update({
+          name,
+          pretty_id: slugify(pretty_id, { lower: true })
+        })
+        .returning("id");
+    }
+  );
+
+  fastify.delete(
+    "/projects/:projectId/features/:featureId",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      await fastify
+        .knex("requirement")
+        .where("reqgroup_id", request.params.featureId)
+        .update({ is_archived: true });
+      await fastify
+        .knex("reqgroup")
+        .where("id", request.params.featureId)
+        .del();
+      return ["success"];
+    }
+  );
+
+  fastify.get(
+    "/projects/:projectId/archived",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      return await fastify.knex
+        .from("requirement")
+        .select("*")
+        .where({ is_archived: true, project_id: request.params.projectId });
+    }
+  );
+
+  fastify.get(
     "/projects/:projectId/features/:featureId/requirements",
     {
       preValidation: [fastify.authenticate]
@@ -92,12 +157,13 @@ module.exports = async function(fastify, opts) {
     },
     async function(request, reply) {
       const { pretty_id, description, priority, status } = request.body;
-      const { featureId: reqgroup_id } = request.params;
+      const { featureId: reqgroup_id, projectId: project_id } = request.params;
       const requirement_id = (
         await fastify
           .knex("requirement")
           .insert({
             reqgroup_id,
+            project_id,
             pretty_id: slugify(pretty_id, { lower: true })
           })
           .returning("id")

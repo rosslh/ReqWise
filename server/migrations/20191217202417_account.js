@@ -72,9 +72,15 @@ exports.up = function(knex) {
         .integer("reqgroup_id")
         .references("reqgroup.id")
         .onUpdate("CASCADE")
+        .onDelete("SET NULL") // Requirements from deleted features are just archived
+        .unsigned();
+      table
+        .integer("project_id")
+        .references("project.id")
+        .onUpdate("CASCADE")
         .onDelete("CASCADE")
-        .unsigned()
-        .notNullable();
+        .notNullable()
+        .unsigned();
       table.string("pretty_id").notNullable();
       table.boolean("is_archived").defaultTo(false);
     }),
@@ -120,13 +126,13 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return Promise.all([
-    knex.schema.dropTable("account"),
-    knex.schema.dropTable("team"),
-    knex.schema.dropTable("account_team"),
-    knex.schema.dropTable("project"),
-    knex.schema.dropTable("reqgroup"),
-    knex.schema.dropTable("requirement"),
+    knex.schema.dropTable("comment"),
     knex.schema.dropTable("reqversion"),
-    knex.schema.dropTable("comment")
+    knex.schema.dropTable("requirement"),
+    knex.schema.dropTable("reqgroup"),
+    knex.schema.dropTable("project"),
+    knex.schema.dropTable("account_team"),
+    knex.schema.dropTable("team"),
+    knex.schema.dropTable("account")
   ]);
 };

@@ -99,6 +99,10 @@ body {
   box-sizing: border-box;
 }
 
+.button-clear {
+  border: none !important;
+}
+
 .button-outline {
   background-color: none;
   border: 0.15rem solid;
@@ -155,6 +159,12 @@ input,
 textarea {
   color: var(--charcoal1);
 }
+
+input.solidPlaceholder::placeholder {
+  color: var(--charcoal1);
+  opacity: 1;
+}
+
 input:hover {
   border-color: var(--grey3);
 }

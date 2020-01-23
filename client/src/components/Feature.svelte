@@ -1,28 +1,27 @@
 <script>
   import { onMount } from "svelte";
-  import FaGithub from "svelte-icons/fa/FaGithub.svelte";
-  import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
-  import FaEdit from "svelte-icons/fa/FaEdit.svelte";
-  import FaArchive from "svelte-icons/fa/FaArchive.svelte";
-  import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import Requirement from "../components/Requirement.svelte";
-  import AddRequirement from "../components/AddRequirement.svelte";
+  import FeatureSelectTools from "../components/FeatureSelectTools.svelte";
+  import FeatureHeader from "../components/FeatureHeader.svelte";
+  import FeatureFooter from "../components/FeatureFooter.svelte";
   import Skeleton from "../components/Skeleton.svelte";
-  import { get, post } from "../api.js";
+  import { get } from "../api.js";
   export let feature;
   export let uri;
+  export let update;
 
   let requirements = null;
-  const update = async () => {
+  const updateReqs = async () => {
     if (uri) {
       requirements = await get(`${uri}/requirements`);
     }
   };
 
-  onMount(update);
+  const updateFeature = async () => {
+    feature = await get(uri);
+  };
 
-  const editFeature = () => {};
+  onMount(updateReqs);
 
   let showSelectTools = true;
 
@@ -51,136 +50,16 @@
     position: relative;
     width: 100%;
   }
-  div.featureHeader {
-    background-color: var(--offwhite1);
-    margin: -1.2rem -1.2rem 0 -1.2rem;
-    padding: 1.2rem;
-    border-bottom: 0.1rem solid var(--grey1);
-    min-height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  div.featureHeader h3 {
-    font-size: 1.8rem;
-    display: inline;
-    margin: 0;
-    max-width: 50%;
-    /* color: #333; */
-  }
-
-  div.featureHeader button {
-    margin: 0;
-  }
-
-  div.featureFooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  div.iconWrapper {
-    height: 1.4rem;
-    width: 1.4rem;
-    margin-right: 0.4rem;
-    box-sizing: border-box;
-  }
-
-  .rotate90 {
-    transform: rotate(90deg);
-  }
-
-  div.selectTools {
-    height: 8.5rem;
-    max-height: 8.5rem;
-    transition: all 0.1s linear;
-    background-color: var(--offwhite1);
-    border-bottom: 0.1rem solid var(--grey1);
-    margin: 0 -1.5rem;
-    padding: 0 1.5rem;
-    opacity: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  div.selectTools > div.selectToolsLabel {
-    margin-bottom: 1rem;
-    height: 2.5rem;
-    font-weight: 600;
-  }
-  div.selectTools > div.buttons {
-    display: flex;
-    align-items: center;
-  }
-
-  div.selectTools > div.buttons > * {
-    margin-right: 0.5rem;
-    margin-top: 0;
-  }
-  div.selectTools.hidden {
-    transform: scaleY(0%);
-    max-height: 0;
-    opacity: 0;
-  }
 
   div.tableWrapper {
     width: 100%;
     overflow-x: auto;
   }
-
-  table {
-    padding-right: 3rem;
-  }
 </style>
 
 <div class="feature">
-  <div class="featureHeader">
-    <h3>
-      {#if feature}
-        {feature.name}
-      {:else}
-        <Skeleton noPadding inline height="1.7rem" />
-      {/if}
-    </h3>
-    <button class="button-small button-outline">
-      <div class="iconWrapper">
-        <FaGithub />
-      </div>
-      Implement Accepted
-    </button>
-  </div>
-  <div class={`selectTools ${selectedReqs.length ? '' : 'hidden'}`}>
-    <div class="selectToolsLabel">
-      {selectedReqs.length} selected requirement{selectedReqs.length === 1 ? '' : 's'}:
-    </div>
-    <div class="buttons">
-      <button class="button-small">
-        <div class="iconWrapper rotate90">
-          <FaExchangeAlt />
-        </div>
-        Move to feature
-      </button>
-      <button class="button-small">
-        <div class="iconWrapper">
-          <FaEdit />
-        </div>
-        Change status
-      </button>
-      <button class="button-small button-caution">
-        <div class="iconWrapper">
-          <FaArchive />
-        </div>
-        Archive
-      </button>
-      <button class="button-small button-danger">
-        <div class="iconWrapper">
-          <FaRegTrashAlt />
-        </div>
-        Delete
-      </button>
-    </div>
-  </div>
+  <FeatureHeader {feature} {requirements} />
+  <FeatureSelectTools {selectedReqs} />
   <div class="tableWrapper">
     <table>
       <thead>
@@ -209,15 +88,5 @@
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
-  <div class="featureFooter">
-    <AddRequirement {uri} {update} />
-    <button
-      on:click={editFeature}
-      class="button-outline button-small button-secondary">
-      <div class="iconWrapper">
-        <FaRegEdit />
-      </div>
-      Edit
-    </button>
-  </div>
+  <FeatureFooter {feature} {uri} {updateReqs} {updateFeature} {update} />
 </div>

@@ -7,6 +7,8 @@
   import MdMenu from "svelte-icons/md/MdMenu.svelte";
   import MdClose from "svelte-icons/md/MdClose.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
+  import FaArchive from "svelte-icons/fa/FaArchive.svelte";
+
   export let name;
   export let id;
   export let tab;
@@ -36,6 +38,12 @@
       label: "User Classes",
       slug: "user-classes",
       icon: IoMdPeople
+    },
+    {
+      label: "Archived",
+      slug: "archived",
+      icon: FaArchive,
+      newSection: true
     },
     {
       label: "Activity",
@@ -100,7 +108,7 @@
   div.separator {
     height: 1rem;
     border-top: 1px solid var(--grey1);
-    margin-top: 1rem;
+    margin: 1rem -1.5rem 0;
   }
 
   nav {
@@ -122,6 +130,10 @@
     width: 3rem;
     padding: 0;
     outline: none;
+  }
+
+  span.icon.archived {
+    padding: 0.2rem;
   }
 </style>
 
@@ -153,7 +165,7 @@
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>
         <span>{item.label}</span>
-        <span class="icon">
+        <span class={`icon ${item.slug}`}>
           <svelte:component this={item.icon} />
         </span>
       </a>

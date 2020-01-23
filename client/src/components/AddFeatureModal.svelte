@@ -1,5 +1,6 @@
 <script>
-  import { get, post } from "../api.js";
+  import { post } from "../api.js";
+  import { toPrettyId } from "../utils.js";
 
   export let id;
   export let update;
@@ -7,12 +8,13 @@
 
   let description = "";
   let pretty_id = "";
+  $: idFromName = toPrettyId(description);
 
   $: addTeam = async e => {
     e.preventDefault();
     await post(`/projects/${id}/features`, {
       name: description,
-      pretty_id
+      pretty_id: pretty_id || idFromName
     });
     update();
     close();
@@ -36,7 +38,8 @@
       type="text"
       id="prettyId"
       name="prettyId"
-      class="newReqInput"
+      class="newReqInput solidPlaceholder"
+      placeholder={idFromName}
       bind:value={pretty_id} />
   </fieldset>
   <button class="button-create" on:click={addTeam}>+ Add</button>

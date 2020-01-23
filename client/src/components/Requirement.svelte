@@ -43,34 +43,30 @@
 </script>
 
 <style lang="scss">
-  td.iconCell:hover {
-    background-color: var(--offwhite2);
-  }
-
   td.iconCell {
     position: absolute;
-    display: inline-block;
-    right: 1rem;
-    background-color: var(--offwhite1);
-    border: 1px solid var(--grey2);
-    border-radius: 50%;
+    right: 5rem;
     padding: 0 !important;
-    height: 3.5rem;
-    width: 3.5rem;
-    transform: translateY(0.3rem);
-    margin: 0.2rem;
-    overflow: hidden;
-    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1),
-      0 3px 5px 0 rgba(0, 0, 0, 0.07), 0 0 4px 0 rgba(0, 0, 0, 0.06);
+    border: none;
+    width: 0;
 
     button.commentIconWrapper {
-      width: 100%;
-      height: 100%;
-      padding: 0.8rem;
-      background: none;
-      border: none;
+      background-color: var(--offwhite1);
+      border: 1px solid var(--grey2);
+      border-radius: 50%;
+      height: 3.3rem;
+      width: 3.3rem;
+      padding: 0.8rem !important;
       color: var(--grey4);
       box-sizing: border-box;
+      transform: translateY(0.5rem);
+      margin: 0;
+
+      &:hover {
+        color: var(--themeColor);
+        background-color: white;
+        opacity: 1 !important;
+      }
     }
   }
 
@@ -91,8 +87,9 @@
   td:first-child {
     padding-left: 1rem;
   }
-  td:last-child {
-    padding-right: 1rem;
+
+  td:nth-last-child(2) {
+    padding-right: 5rem;
   }
 
   tr.requirement:hover {
