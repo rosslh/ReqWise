@@ -301,7 +301,7 @@ th:last-child {
 
 b,
 strong {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 p {

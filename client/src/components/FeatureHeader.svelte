@@ -11,7 +11,7 @@
   div.featureHeader {
     background-color: var(--offwhite1);
     margin: -1.2rem -1.2rem 0 -1.2rem;
-    padding: 1.2rem;
+    padding: 1.8rem 1.2rem;
     border-bottom: 0.1rem solid var(--grey1);
     min-height: 5rem;
     display: flex;

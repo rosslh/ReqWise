@@ -84,6 +84,12 @@
     outline: none;
   }
 
+  td.history {
+    color: var(--grey4);
+    text-decoration: underline;
+    text-decoration-style: dashed;
+  }
+
   td:first-child {
     padding-left: 1rem;
   }
@@ -114,26 +120,32 @@
   <td class="checkbox">
     <input type="checkbox" checked={selected} />
   </td>
-  <td
-    class="status"
-    style={`color:var(--${getStatusColor(requirement.status)})`}>
+  <td class="status">
     {#if requirement.status === 'proposed'}
-      <span class="iconWrapper">
+      <span
+        class="iconWrapper"
+        style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaExclamation />
       </span>
       <span>Proposed</span>
     {:else if requirement.status === 'accepted'}
-      <span class="iconWrapper">
+      <span
+        class="iconWrapper"
+        style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaThumbsUp />
       </span>
       Accepted
     {:else if requirement.status === 'inProgress'}
-      <span class="iconWrapper">
+      <span
+        class="iconWrapper"
+        style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaRegClock />
       </span>
       In Progress
     {:else}
-      <span class="iconWrapper">
+      <span
+        class="iconWrapper"
+        style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaCheck />
       </span>
       Implemented
@@ -147,8 +159,8 @@
         </span>
         Implement
       </button>
-    {:else if requirement.status === 'inProgress'}
-      <button class="button-small button-secondary button-outline">
+    {:else if requirement.status === 'inProgress' || requirement.status === 'implemented'}
+      <button class="button-small button-secondary button-outline button-clear">
         <span class="iconWrapper">
           <FaGithub />
         </span>
@@ -163,6 +175,7 @@
     style={`color:var(--${getPriorityColor(requirement.priority)})`}>
     {requirement.priority}
   </td>
+  <td class="history">X at Y</td>
   <td class="iconCell">
     <button class="commentIconWrapper">
       {#if requirement.status === 'proposed'}

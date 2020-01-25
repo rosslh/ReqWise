@@ -13,23 +13,26 @@
   }
 
   div.selectTools {
-    height: 8.5rem;
-    max-height: 8.5rem;
-    transition: all 0.1s linear;
     background-color: var(--offwhite1);
     border-bottom: 0.1rem solid var(--grey1);
     margin: 0 -1.5rem;
     padding: 0 1.5rem;
     opacity: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+
+  div.selectTools > * {
+    margin: 0.75rem 0;
   }
 
   div.selectTools > div.selectToolsLabel {
-    margin-bottom: 1rem;
-    height: 2.5rem;
+    line-height: 1.5rem;
+    font-size: 1.5rem;
     font-weight: 600;
+    margin-right: 0.5rem;
   }
   div.selectTools > div.buttons {
     display: flex;
@@ -40,41 +43,38 @@
     margin-right: 0.5rem;
     margin-top: 0;
   }
-  div.selectTools.hidden {
-    transform: scaleY(0%);
-    max-height: 0;
-    opacity: 0;
-  }
 </style>
 
-<div class={`selectTools ${selectedReqs.length ? '' : 'hidden'}`}>
-  <div class="selectToolsLabel">
-    {selectedReqs.length} selected requirement{selectedReqs.length === 1 ? '' : 's'}:
+{#if selectedReqs.length}
+  <div class="selectTools">
+    <div class="selectToolsLabel">
+      {selectedReqs.length} requirement{selectedReqs.length === 1 ? '' : 's'}:
+    </div>
+    <div class="buttons">
+      <button class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper rotate90">
+          <FaExchangeAlt />
+        </div>
+        Move to feature
+      </button>
+      <button class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <FaEdit />
+        </div>
+        Change status
+      </button>
+      <button class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <FaArchive />
+        </div>
+        Archive
+      </button>
+      <button class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+        Delete
+      </button>
+    </div>
   </div>
-  <div class="buttons">
-    <button class="button-small">
-      <div class="iconWrapper rotate90">
-        <FaExchangeAlt />
-      </div>
-      Move to feature
-    </button>
-    <button class="button-small">
-      <div class="iconWrapper">
-        <FaEdit />
-      </div>
-      Change status
-    </button>
-    <button class="button-small button-caution">
-      <div class="iconWrapper">
-        <FaArchive />
-      </div>
-      Archive
-    </button>
-    <button class="button-small button-danger">
-      <div class="iconWrapper">
-        <FaRegTrashAlt />
-      </div>
-      Delete
-    </button>
-  </div>
-</div>
+{/if}

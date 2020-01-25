@@ -3,6 +3,7 @@
   import Requirement from "../components/Requirement.svelte";
   import FeatureSelectTools from "../components/FeatureSelectTools.svelte";
   import FeatureHeader from "../components/FeatureHeader.svelte";
+  import FeatureStatusBar from "../components/FeatureStatusBar.svelte";
   import FeatureFooter from "../components/FeatureFooter.svelte";
   import Skeleton from "../components/Skeleton.svelte";
   import { get } from "../api.js";
@@ -59,6 +60,7 @@
 
 <div class="feature">
   <FeatureHeader {feature} {requirements} />
+  <FeatureStatusBar {requirements} />
   <FeatureSelectTools {selectedReqs} />
   <div class="tableWrapper">
     <table>
@@ -69,6 +71,7 @@
           <th>Repository</th>
           <th>Description</th>
           <th>Priority</th>
+          <th>Updated</th>
           <th />
         </tr>
       </thead>
