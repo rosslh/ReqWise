@@ -4,7 +4,18 @@
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
 
+  import { put } from "../api.js";
+
   export let selectedReqs;
+
+  const moveToFeature = async () => {
+    selectedReqs.forEach(req => {
+      put("/")
+    })
+  };
+  const changeStatus = async () => {};
+  const archiveSelected = async () => {};
+  const deleteSelected = async () => {};
 </script>
 
 <style>
@@ -51,25 +62,25 @@
       {selectedReqs.length} requirement{selectedReqs.length === 1 ? '' : 's'}:
     </div>
     <div class="buttons">
-      <button class="button-small button-outline button-clear button-secondary">
+      <button on:click={moveToFeature} class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper rotate90">
           <FaExchangeAlt />
         </div>
         Move to feature
       </button>
-      <button class="button-small button-outline button-clear button-secondary">
+      <button on:click={changeStatus} class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaEdit />
         </div>
         Change status
       </button>
-      <button class="button-small button-outline button-clear button-secondary">
+      <button on:click={archiveSelected} class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaArchive />
         </div>
         Archive
       </button>
-      <button class="button-small button-outline button-clear button-secondary">
+      <button on:click={deleteSelected} class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaRegTrashAlt />
         </div>

@@ -151,23 +151,6 @@
       Implemented
     {/if}
   </td>
-  <td>
-    {#if requirement.status === 'accepted'}
-      <button class="button-small button-outline">
-        <span class="iconWrapper">
-          <FaGithub />
-        </span>
-        Implement
-      </button>
-    {:else if requirement.status === 'inProgress' || requirement.status === 'implemented'}
-      <button class="button-small button-secondary button-outline button-clear">
-        <span class="iconWrapper">
-          <FaGithub />
-        </span>
-        Open
-      </button>
-    {/if}
-  </td>
   <!-- <td>{normalizeString(`${featureId}.${requirement.pretty_id}`)}</td> -->
   <td class="desc">{requirement.description}</td>
   <td

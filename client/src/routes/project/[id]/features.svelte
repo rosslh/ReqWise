@@ -29,11 +29,11 @@
 <section class="contentWrapper">
   <h2>Features</h2>
   <p class="info">
-    A feature is a set of related requirements that allows the user to satisfy a
-    high-level objective or need.
+    A feature is a group of related requirements that allows the user to satisfy
+    a high-level objective or need.
     <br />
-    A requirement tends to be more granular, and is written with the
-    implementation in mind.
+    Requirements tend to be more granular, and are written with implementation
+    in mind.
   </p>
   <AddFeature {update} {id} />
 </section>

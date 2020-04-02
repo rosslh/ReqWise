@@ -182,4 +182,62 @@ module.exports = async function(fastify, opts) {
       return requirement_id;
     }
   );
+
+  fastify.get(
+    "/projects/:projectId/requirements/:requirementId",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      const reqversion = await fastify
+        .knex("reqversion")
+        .where({
+          requirement_id: request.params.requirementId
+        })
+        .orderBy("created_at")
+        .first();
+
+      console.log(reqversion);
+
+      const requirement = await fastify.knex
+        .from("requirement")
+        .join("reqgroup", "reqgroup.id", "=", "requirement.reqgroup_id")
+        .select("requirement.*")
+        .where({
+          "reqgroup.project_id": request.params.projectId,
+          "requirement.id": request.params.requirementId
+        })
+        .first();
+
+      return { ...requirement, latest: reqversion };
+    }
+  );
+
+  fastify.put(
+    "/projects/:projectId/requirements/:requirementId",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      const {
+        pretty_id,
+        priority,
+        status,
+        reqgroup_id,
+        is_archived
+      } = request.body;
+      return await fastify
+        .knex("requirement")
+        .where("id", request.params.requirementId)
+        .update({
+          name,
+          priority,
+          status,
+          reqgroup_id,
+          is_archived,
+          pretty_id: slugify(pretty_id, { lower: true })
+        })
+        .returning("id");
+    }
+  );
 };

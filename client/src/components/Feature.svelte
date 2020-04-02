@@ -68,7 +68,6 @@
         <tr>
           <th />
           <th>Status</th>
-          <th>Repository</th>
           <th>Description</th>
           <th>Priority</th>
           <th>Updated</th>

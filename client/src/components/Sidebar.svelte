@@ -8,6 +8,7 @@
   import MdClose from "svelte-icons/md/MdClose.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
+  import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
 
   export let name;
   export let id;
@@ -24,10 +25,15 @@
       newSection: true
     },
     {
+      label: "Business Rules",
+      slug: "business-rules",
+      icon: FaBriefcase,
+      newSection: true
+    },
+    {
       label: "Features",
       slug: "features",
-      icon: IoMdCheckmarkCircleOutline,
-      newSection: true
+      icon: IoMdCheckmarkCircleOutline
     },
     {
       label: "Quality Attributes",
@@ -132,7 +138,8 @@
     outline: none;
   }
 
-  span.icon.archived {
+  span.icon.archived,
+  span.icon.business-rules {
     padding: 0.2rem;
   }
 </style>

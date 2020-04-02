@@ -1,9 +1,37 @@
 module.exports = async function(fastify, opts) {
-  /* This is a protected route */
+  const postTeamSchema = {
+    body: {
+      type: "object",
+      required: ["name", "description"],
+      properties: {
+        name: { type: "string" },
+        description: { type: "string" }
+      }
+    },
+    queryString: {},
+    params: {},
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" }
+      },
+      required: ["Authorization", "Content-Type"]
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          team_id: { type: "number" }
+        }
+      }
+    }
+  };
   fastify.post(
     "/teams",
     {
-      preValidation: [fastify.authenticate]
+      preValidation: [fastify.authenticate],
+      schema: postTeamSchema
     },
     async function(request, reply) {
       const { name, description } = request.body;
@@ -22,14 +50,42 @@ module.exports = async function(fastify, opts) {
         is_admin: true
       });
 
-      return ["success"];
+      return { team_id };
     }
   );
 
+  const getTeamSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" }
+      }
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" }
+      },
+      required: ["Authorization"]
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          id: { type: "number" },
+          name: { type: "string" },
+          description: { type: "string" }
+        }
+      }
+    }
+  };
   fastify.get(
     "/teams/:teamId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember]
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getTeamSchema
     },
     async function(request, reply) {
       return await fastify.knex
@@ -40,29 +96,83 @@ module.exports = async function(fastify, opts) {
     }
   );
 
+  const putTeamSchema = {
+    body: {
+      type: "object",
+      required: ["name", "description"],
+      properties: {
+        name: { type: "string" },
+        description: { type: "string" }
+      }
+    },
+    queryString: {},
+    params: {},
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" }
+      },
+      required: ["Authorization", "Content-Type"]
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          description: { type: "string" }
+        }
+      }
+    }
+  };
+
   fastify.put(
     "/teams/:teamId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamAdmin]
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: putTeamSchema
     },
     async function(request, reply) {
       const { name, description } = request.body;
       if (!name || !description) {
-        reply.code = 400;
-        return "Missing name or description";
+        reply.code(400).send("Missing name or description");
+        return;
       }
-      return await fastify
-        .knex("team")
-        .update({ name, description })
-        .where("id", request.params.teamId)
-        .returning(["name", "description"]);
+      return (
+        await fastify
+          .knex("team")
+          .update({ name, description })
+          .where("id", request.params.teamId)
+          .returning(["name", "description"])
+      )[0];
     }
   );
+
+  const deleteTeamSchema = {
+    body: {},
+    queryString: {},
+    params: {},
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" }
+      },
+      required: ["Authorization"]
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" }
+      }
+    }
+  };
 
   fastify.delete(
     "/teams/:teamId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamAdmin]
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: deleteTeamSchema
     },
     async function(request, reply) {
       // TODO: Ensure you also delete dependent entities
@@ -74,10 +184,43 @@ module.exports = async function(fastify, opts) {
     }
   );
 
+  const getTeamMembersSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" }
+      }
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" }
+      },
+      required: ["Authorization"]
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            name: { type: "string" },
+            email: { type: "string" },
+            is_admin: { type: "boolean" }
+          },
+          required: ["id", "name", "email", "is_admin"]
+        }
+      }
+    }
+  };
   fastify.get(
     "/teams/:teamId/members",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember]
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getTeamMembersSchema
     },
     async function(request, reply) {
       return await fastify.knex
@@ -93,10 +236,41 @@ module.exports = async function(fastify, opts) {
     }
   );
 
+  const getTeamProjectsSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" }
+      }
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" }
+      },
+      required: ["Authorization"]
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            name: { type: "string" }
+          },
+          required: ["id", "name"]
+        }
+      }
+    }
+  };
   fastify.get(
     "/teams/:teamId/projects",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember]
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getTeamProjectsSchema
     },
     async function(request, reply) {
       return await fastify.knex
@@ -106,10 +280,37 @@ module.exports = async function(fastify, opts) {
     }
   );
 
+  const postProjectSchema = {
+    body: {
+      type: "object",
+      required: ["name"],
+      properties: {
+        name: { type: "string" }
+      }
+    },
+    queryString: {},
+    params: {},
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" }
+      },
+      required: ["Authorization", "Content-Type"]
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "number" }
+      }
+    }
+  };
   fastify.post(
     "/teams/:teamId/projects",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember]
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postProjectSchema
     },
     async function(request, reply) {
       const { name } = request.body;
