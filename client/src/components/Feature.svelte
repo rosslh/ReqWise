@@ -8,18 +8,17 @@
   import Skeleton from "../components/Skeleton.svelte";
   import { get } from "../api.js";
   export let feature;
-  export let uri;
   export let update;
 
   let requirements = null;
   const updateReqs = async () => {
-    if (uri) {
-      requirements = await get(`${uri}/requirements`);
+    if (feature && feature.id) {
+      requirements = await get(`/features/${feature.id}/requirements`);
     }
   };
 
   const updateFeature = async () => {
-    feature = await get(uri);
+    feature = await get(`/features/${feature.id}`);
   };
 
   onMount(updateReqs);
@@ -80,8 +79,7 @@
             <Requirement
               selected={selectedReqs.includes(requirement.id)}
               {toggleReq}
-              {requirement}
-              featureId={feature.pretty_id} />
+              {requirement} />
           {/each}
         </tbody>
       {/if}
@@ -90,5 +88,5 @@
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
-  <FeatureFooter {feature} {uri} {updateReqs} {updateFeature} {update} />
+  <FeatureFooter {feature} {updateReqs} {updateFeature} {update} />
 </div>

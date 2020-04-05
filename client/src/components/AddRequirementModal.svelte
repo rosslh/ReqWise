@@ -3,7 +3,7 @@
   import { post } from "../api.js";
   import { toPrettyId } from "../utils.js";
 
-  export let uri;
+  export let featureId;
   export let update;
   export let close;
 
@@ -13,7 +13,7 @@
 
   $: addReq = async e => {
     e.preventDefault();
-    await post(`${uri}/requirements`, {
+    await post(`/features/${featureId}/requirements`, {
       pretty_id: pretty_id || idFromName,
       description,
       priority: priority.value,

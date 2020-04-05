@@ -1,7 +1,7 @@
 <script>
   import { put } from "../api.js";
 
-  export let uri;
+  export let featureId;
   export let updateFeature;
   export let close;
 
@@ -10,7 +10,7 @@
 
   $: update = async e => {
     e.preventDefault();
-    await put(uri, {
+    await put(`/features/${featureId}`, {
       name,
       pretty_id
     });

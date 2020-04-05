@@ -7,7 +7,6 @@
   import DeleteFeatureModal from "../components/DeleteFeatureModal.svelte";
   import EditFeatureModal from "../components/EditFeatureModal.svelte";
 
-  export let uri;
   export let updateReqs;
   export let updateFeature;
   export let update;
@@ -15,12 +14,12 @@
 
   const editFeature = () => {
     modalContent.set(EditFeatureModal);
-    modalProps.set({ uri, updateFeature, feature });
+    modalProps.set({ featureId: feature.id, updateFeature, feature });
   };
 
   const deleteFeature = () => {
     modalContent.set(DeleteFeatureModal);
-    modalProps.set({ uri, update });
+    modalProps.set({ featureId: feature.id, update });
   };
 </script>
 
@@ -37,7 +36,7 @@
     class="button-create"
     on:click={() => {
       modalContent.set(AddRequirementModal);
-      modalProps.set({ uri, update: updateReqs });
+      modalProps.set({ featureId: feature.id, update: updateReqs });
     }}>
     + Add Requirement
   </button>

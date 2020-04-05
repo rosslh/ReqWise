@@ -2,12 +2,12 @@
   import Select from "svelte-select";
   import { del } from "../api.js";
 
-  export let uri;
+  export let featureId;
   export let update;
   export let close;
 
   $: deleteFeature = async e => {
-    await del(uri);
+    await del(`/features/${featureId}`);
     await update();
     close();
   };

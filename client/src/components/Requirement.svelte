@@ -8,7 +8,6 @@
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
 
   export let requirement;
-  // export let featureId;
   export let toggleReq;
   export let selected;
 

@@ -10,7 +10,7 @@
   let pretty_id = "";
   $: idFromName = toPrettyId(description);
 
-  $: addTeam = async e => {
+  $: addFeature = async e => {
     e.preventDefault();
     await post(`/projects/${id}/features`, {
       name: description,
@@ -42,5 +42,5 @@
       placeholder={idFromName}
       bind:value={pretty_id} />
   </fieldset>
-  <button class="button-create" on:click={addTeam}>+ Add</button>
+  <button class="button-create" on:click={addFeature}>+ Add</button>
 </form>

@@ -40,10 +40,7 @@
 <section class="contentWrapper">
   {#if features}
     {#each features as feature}
-      <Feature
-        {feature}
-        uri={`/projects/${id}/features/${feature.id}`}
-        {update} />
+      <Feature {feature} {update} />
     {/each}
   {:else}
     <Feature />
