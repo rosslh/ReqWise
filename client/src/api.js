@@ -1,16 +1,17 @@
 import { get as getValue } from "svelte/store";
 import { jwt } from "./stores";
 
-const host = "http://localhost:3000";
+const host = process.env.SAPPER_APP_API_URL;
+
 const commonOptions = () => ({
   mode: "cors",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${getValue(jwt)}`
-  }
+    Authorization: `Bearer ${getValue(jwt)}`,
+  },
 });
 
-const throwError = httpMethod => {
+const throwError = (httpMethod) => {
   throw new Error(`Failed ${httpMethod} request`);
 };
 
@@ -20,9 +21,9 @@ const fetcher = (endpoint, options) => {
   }
   return fetch(`${host}${endpoint}`, {
     ...commonOptions(),
-    ...options
+    ...options,
   })
-    .then(r => {
+    .then((r) => {
       if (r.ok) {
         return r.json();
       } else {
@@ -34,7 +35,7 @@ const fetcher = (endpoint, options) => {
     });
 };
 
-export const get = endpoint => fetcher(endpoint, {});
+export const get = (endpoint) => fetcher(endpoint, {});
 
 export const post = (endpoint, body) =>
   fetcher(endpoint, { method: "POST", body: JSON.stringify(body) });
