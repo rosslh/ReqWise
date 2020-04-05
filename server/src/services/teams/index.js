@@ -1,12 +1,12 @@
-module.exports = async function(fastify, opts) {
+module.exports = async function (fastify, opts) {
   const postTeamSchema = {
     body: {
       type: "object",
       required: ["name", "description"],
       properties: {
         name: { type: "string" },
-        description: { type: "string" }
-      }
+        description: { type: "string" },
+      },
     },
     queryString: {},
     params: {},
@@ -14,40 +14,40 @@ module.exports = async function(fastify, opts) {
       type: "object",
       properties: {
         Authorization: { type: "string" },
-        "Content-Type": { type: "string" }
+        "Content-Type": { type: "string" },
       },
-      required: ["Authorization", "Content-Type"]
+      required: ["Authorization", "Content-Type"],
     },
     response: {
       200: {
         type: "object",
         properties: {
-          team_id: { type: "number" }
-        }
-      }
-    }
+          team_id: { type: "number" },
+        },
+      },
+    },
   };
   fastify.post(
     "/teams",
     {
       preValidation: [fastify.authenticate],
-      schema: postTeamSchema
+      schema: postTeamSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       const { name, description } = request.body;
 
       const [team_id] = await fastify
         .knex("team")
         .insert({
           name,
-          description
+          description,
         })
         .returning("id");
 
       await fastify.knex("account_team").insert({
         account_id: request.user.id,
         team_id,
-        is_admin: true
+        is_admin: true,
       });
 
       return { team_id };
@@ -60,15 +60,15 @@ module.exports = async function(fastify, opts) {
     params: {
       type: "object",
       properties: {
-        teamId: { type: "number" }
-      }
+        teamId: { type: "number" },
+      },
     },
     headers: {
       type: "object",
       properties: {
-        Authorization: { type: "string" }
+        Authorization: { type: "string" },
       },
-      required: ["Authorization"]
+      required: ["Authorization"],
     },
     response: {
       200: {
@@ -76,18 +76,19 @@ module.exports = async function(fastify, opts) {
         properties: {
           id: { type: "number" },
           name: { type: "string" },
-          description: { type: "string" }
-        }
-      }
-    }
+          description: { type: "string" },
+        },
+        required: ["id", "name", "description"],
+      },
+    },
   };
   fastify.get(
     "/teams/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getTeamSchema
+      schema: getTeamSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       return await fastify.knex
         .from("team")
         .select("id", "name", "description")
@@ -102,8 +103,8 @@ module.exports = async function(fastify, opts) {
       required: ["name", "description"],
       properties: {
         name: { type: "string" },
-        description: { type: "string" }
-      }
+        description: { type: "string" },
+      },
     },
     queryString: {},
     params: {},
@@ -111,28 +112,28 @@ module.exports = async function(fastify, opts) {
       type: "object",
       properties: {
         Authorization: { type: "string" },
-        "Content-Type": { type: "string" }
+        "Content-Type": { type: "string" },
       },
-      required: ["Authorization", "Content-Type"]
+      required: ["Authorization", "Content-Type"],
     },
     response: {
       200: {
         type: "object",
         properties: {
           name: { type: "string" },
-          description: { type: "string" }
-        }
-      }
-    }
+          description: { type: "string" },
+        },
+      },
+    },
   };
 
   fastify.put(
     "/teams/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
-      schema: putTeamSchema
+      schema: putTeamSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       const { name, description } = request.body;
       if (!name || !description) {
         reply.code(400).send("Missing name or description");
@@ -155,31 +156,28 @@ module.exports = async function(fastify, opts) {
     headers: {
       type: "object",
       properties: {
-        Authorization: { type: "string" }
+        Authorization: { type: "string" },
       },
-      required: ["Authorization"]
+      required: ["Authorization"],
     },
     response: {
       200: {
         type: "array",
         maxItems: 1,
-        items: { type: "string" }
-      }
-    }
+        items: { type: "string" },
+      },
+    },
   };
 
   fastify.delete(
     "/teams/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
-      schema: deleteTeamSchema
+      schema: deleteTeamSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       // TODO: Ensure you also delete dependent entities
-      await fastify
-        .knex("team")
-        .where("id", request.params.teamId)
-        .del();
+      await fastify.knex("team").where("id", request.params.teamId).del();
       return ["success"];
     }
   );
@@ -190,15 +188,15 @@ module.exports = async function(fastify, opts) {
     params: {
       type: "object",
       properties: {
-        teamId: { type: "number" }
-      }
+        teamId: { type: "number" },
+      },
     },
     headers: {
       type: "object",
       properties: {
-        Authorization: { type: "string" }
+        Authorization: { type: "string" },
       },
-      required: ["Authorization"]
+      required: ["Authorization"],
     },
     response: {
       200: {
@@ -209,20 +207,20 @@ module.exports = async function(fastify, opts) {
             id: { type: "number" },
             name: { type: "string" },
             email: { type: "string" },
-            is_admin: { type: "boolean" }
+            is_admin: { type: "boolean" },
           },
-          required: ["id", "name", "email", "is_admin"]
-        }
-      }
-    }
+          required: ["id", "name", "email", "is_admin"],
+        },
+      },
+    },
   };
   fastify.get(
     "/teams/:teamId/members",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getTeamMembersSchema
+      schema: getTeamMembersSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       return await fastify.knex
         .from("account_team")
         .select(
@@ -242,15 +240,15 @@ module.exports = async function(fastify, opts) {
     params: {
       type: "object",
       properties: {
-        teamId: { type: "number" }
-      }
+        teamId: { type: "number" },
+      },
     },
     headers: {
       type: "object",
       properties: {
-        Authorization: { type: "string" }
+        Authorization: { type: "string" },
       },
-      required: ["Authorization"]
+      required: ["Authorization"],
     },
     response: {
       200: {
@@ -259,20 +257,20 @@ module.exports = async function(fastify, opts) {
           type: "object",
           properties: {
             id: { type: "number" },
-            name: { type: "string" }
+            name: { type: "string" },
           },
-          required: ["id", "name"]
-        }
-      }
-    }
+          required: ["id", "name"],
+        },
+      },
+    },
   };
   fastify.get(
     "/teams/:teamId/projects",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getTeamProjectsSchema
+      schema: getTeamProjectsSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       return await fastify.knex
         .from("project")
         .select("id", "name")
@@ -285,8 +283,8 @@ module.exports = async function(fastify, opts) {
       type: "object",
       required: ["name"],
       properties: {
-        name: { type: "string" }
-      }
+        name: { type: "string" },
+      },
     },
     queryString: {},
     params: {},
@@ -294,32 +292,32 @@ module.exports = async function(fastify, opts) {
       type: "object",
       properties: {
         Authorization: { type: "string" },
-        "Content-Type": { type: "string" }
+        "Content-Type": { type: "string" },
       },
-      required: ["Authorization", "Content-Type"]
+      required: ["Authorization", "Content-Type"],
     },
     response: {
       200: {
         type: "array",
         maxItems: 1,
-        items: { type: "number" }
-      }
-    }
+        items: { type: "number" },
+      },
+    },
   };
   fastify.post(
     "/teams/:teamId/projects",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: postProjectSchema
+      schema: postProjectSchema,
     },
-    async function(request, reply) {
+    async function (request, reply) {
       const { name } = request.body;
 
       return await fastify
         .knex("project")
         .insert({
           name,
-          team_id: request.params.teamId
+          team_id: request.params.teamId,
         })
         .returning("id");
     }
