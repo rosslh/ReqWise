@@ -41,7 +41,7 @@ module.exports = function (fastify, opts, next) {
 
   fastify.register(CORS, {
     methods: ["GET", "PUT", "POST", "DELETE"],
-    origin: ["https://reqwise.web.app", "https://reqwise.firebaseapp.com/"],
+    origin: true,
   });
 
   fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), development);
