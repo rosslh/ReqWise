@@ -8,6 +8,9 @@
     "start": "fastify start -l info -p $PORT src/index.js",
     "dev": "fastify start -l info -P -w src/index.js"
   },
+  "engines": {
+    "node": "10.x"
+  },
   "keywords": [
     "fastify",
     "nodejs"
