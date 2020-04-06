@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "tap test/**/*.test.js",
-    "start": "fastify-app run",
+    "start": "fastify-app run --port $PORT",
     "dev": "fastify-app run -l info -P -w"
   },
   "keywords": [
