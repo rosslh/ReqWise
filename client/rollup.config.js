@@ -50,7 +50,7 @@ export default {
       replace({
         "process.env.SAPPER_APP_API_URL":
           mode === "development"
-            ? JSON.stringify("http://localhost:5000")
+            ? JSON.stringify("http://localhost:3000")
             : JSON.stringify("https://reqwise.herokuapp.com"),
         "process.browser": true,
         "process.env.NODE_ENV": JSON.stringify(mode),

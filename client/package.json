@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "sapper build --legacy",
-    "deploy": "SAPPER_APP_API_URL=https://reqwise.herokuapp.com/ firebase deploy --only functions",
+    "deploy": "firebase deploy --only functions",
     "dev": "sapper dev",
     "export": "sapper export --legacy",
     "fb_start": "npm run shell",
