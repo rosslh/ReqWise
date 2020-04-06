@@ -6,33 +6,41 @@ import babel from "rollup-plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import config from "sapper/config/rollup.js";
 import pkg from "./package.json";
-import sveltePreprocess from "svelte-preprocess";
 
-const sapperEnv = require("sapper-environment");
+import getPreprocessor from "svelte-preprocess";
+import path from "path";
+import postcss from "rollup-plugin-postcss";
+
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
-
-const preprocess = sveltePreprocess({
-  scss: {
-    includePaths: ["src"],
-  },
-  postcss: {
-    plugins: [
-      require("autoprefixer"),
-      require("cssnano")({
-        preset: "default",
-      }),
-    ],
-  },
-});
 
 const onwarn = (warning, onwarn) =>
   (warning.code === "CIRCULAR_DEPENDENCY" &&
     /[/\\]@sapper[/\\]/.test(warning.message)) ||
   onwarn(warning);
-const dedupe = (importee) =>
-  importee === "svelte" || importee.startsWith("svelte/");
+
+const postcssPlugins = (purgecss = false) => {
+  return [
+    require("postcss-import")(),
+    require("postcss-url")(),
+    require("autoprefixer")(),
+    purgecss &&
+      require("@fullhuman/postcss-purgecss")({
+        content: ["./src/**/*.svelte", "./src/**/*.html"],
+        defaultExtractor: (content) => content.match(/[A-Za-z0-9-_:/]+/g) || [],
+      }),
+    !dev && require("cssnano")({ preset: "default" }),
+  ].filter(Boolean);
+};
+
+const preprocess = getPreprocessor({
+  transformers: {
+    postcss: {
+      plugins: postcssPlugins(),
+    },
+  },
+});
 
 export default {
   client: {
@@ -40,7 +48,10 @@ export default {
     output: config.client.output(),
     plugins: [
       replace({
-        ...sapperEnv(),
+        "process.env.SAPPER_APP_API_URL":
+          mode === "development"
+            ? JSON.stringify("http://localhost:5000")
+            : JSON.stringify("https://reqwise.herokuapp.com"),
         "process.browser": true,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),
@@ -52,7 +63,7 @@ export default {
       }),
       resolve({
         browser: true,
-        dedupe,
+        dedupe: ["svelte"],
       }),
       commonjs(),
 
@@ -94,7 +105,6 @@ export default {
     output: config.server.output(),
     plugins: [
       replace({
-        // ...sapperEnv(),
         "process.browser": false,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),
@@ -104,9 +114,13 @@ export default {
         preprocess,
       }),
       resolve({
-        dedupe,
+        dedupe: ["svelte"],
       }),
       commonjs(),
+      postcss({
+        plugins: postcssPlugins(!dev),
+        extract: path.resolve(__dirname, "./static/global.css"),
+      }),
     ],
     external: Object.keys(pkg.dependencies).concat(
       require("module").builtinModules ||

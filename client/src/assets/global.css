@@ -1,0 +1,179 @@
+:root {
+  --themeColor: #38a169;
+
+  --orange: #f0922e;
+  --red: #ea4b4b;
+  --green: var(--themeColor);
+  --indigo: #7472d5;
+
+  --offwhite1: #fefeff;
+  --offwhite2: #fcfdfe;
+  --offwhite3: #fafcfd;
+
+  --grey1: #eaeef2;
+  --grey2: #d7dfe8;
+  --grey3: #a0aec0;
+  --grey4: #718096;
+
+  --charcoal1: #4a5568;
+
+  --sidebarWidth: 24rem;
+  --contentWrapperWidth: 100rem;
+
+  /* Svelte-Select styling */
+  --border: 0.1rem solid var(--grey2);
+  --borderFocusColor: var(--themeColor);
+  --borderHoverColor: var(--grey3);
+  --inputColor: var(--charcoal1);
+  --borderRadius: 0.4rem;
+}
+
+.contentWrapper {
+  max-width: 100rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+fieldset {
+  margin-bottom: 1.5rem;
+  position: relative;
+  max-width: 60rem;
+}
+
+table.compact {
+  max-width: 60rem;
+}
+
+fieldset input,
+fieldset textarea {
+  margin-bottom: 0;
+}
+
+fieldset.inline {
+  display: flex;
+  align-items: center;
+}
+
+fieldset.inline > label::after {
+  content: ":";
+}
+
+fieldset.inline > .selectWrapper {
+  display: inline-block;
+  margin-left: 1.5rem;
+  min-width: 24rem;
+}
+
+fieldset.inline > input {
+  width: unset;
+  min-width: 24rem;
+  display: inline-block;
+  margin-left: 1.5rem;
+}
+
+html,
+body {
+  font-family: "Source Sans Pro", sans-serif !important;
+}
+
+.button-small {
+  height: 2.4rem;
+  padding: 0 1.1rem;
+  border-radius: 2.4rem;
+  font-size: 1.1rem;
+}
+
+.button-small .iconWrapper {
+  height: 1.1rem;
+  width: 1.1rem;
+}
+
+.iconWrapper {
+  height: 1.4rem;
+  width: 1.4rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.button-clear {
+  border: none !important;
+}
+
+.button-outline {
+  background-color: none;
+  border: 0.15rem solid;
+}
+
+.button-outline {
+  color: var(--themeColor);
+}
+
+.button-secondary {
+  background-color: var(--grey4);
+  border-color: var(--grey4);
+}
+.button-outline.button-secondary {
+  color: var(--grey4);
+}
+
+/* Leave this in case theme color changes from green */
+.button-create {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+.button-outline.button-create {
+  color: var(--green);
+}
+
+.button-caution {
+  background-color: var(--orange);
+  border-color: var(--orange);
+}
+.button-outline.button-caution {
+  color: var(--orange);
+}
+
+.button-danger {
+  background-color: var(--red);
+  border-color: var(--red);
+}
+.button-outline.button-danger {
+  color: var(--red);
+}
+
+section {
+  padding-bottom: 5rem;
+  border-bottom: 0.1rem solid var(--grey1);
+  margin-bottom: 5rem;
+}
+
+form {
+  padding: 0;
+  margin: 0;
+}
+input,
+textarea {
+  color: var(--charcoal1);
+}
+
+input.solidPlaceholder::placeholder {
+  color: var(--charcoal1);
+  opacity: 1;
+}
+
+input:hover {
+  border-color: var(--grey3);
+}
+
+table {
+  font-size: 93%;
+}
+
+button:hover,
+.button:hover {
+  opacity: 0.8;
+}
