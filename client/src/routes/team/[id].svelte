@@ -81,7 +81,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each projects as project}
+          {#each projects as project (project.id)}
             <tr>
               <td>
                 <a href={`/project/${project.id}`}>{project.name}</a>
@@ -117,7 +117,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each members as member}
+          {#each members as member (member.id)}
             <tr>
               <td>{member.name}</td>
               <td>{member.email}</td>

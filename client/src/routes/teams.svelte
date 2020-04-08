@@ -24,7 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each teams as team}
+        {#each teams as team (team.id)}
           <tr>
             <td>
               <a href={`/team/${team.id}`}>{team.name}</a>

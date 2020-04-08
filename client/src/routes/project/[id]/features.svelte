@@ -39,7 +39,7 @@
 </section>
 <section class="contentWrapper">
   {#if features}
-    {#each features as feature}
+    {#each features as feature (feature.id)}
       <Feature {feature} {update} />
     {/each}
   {:else}

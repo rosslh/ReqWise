@@ -8,10 +8,13 @@
 
   export let selectedReqs;
 
-  const moveToFeature = async () => {
+  const moveToFeature = async newFeatureId => {
     selectedReqs.forEach(req => {
-      put("/")
-    })
+      put(`/requirements/${req.id}`, {
+        ...req,
+        reqgroup_id: newFeatureId
+      });
+    });
   };
   const changeStatus = async () => {};
   const archiveSelected = async () => {};
@@ -62,25 +65,41 @@
       {selectedReqs.length} requirement{selectedReqs.length === 1 ? '' : 's'}:
     </div>
     <div class="buttons">
-      <button on:click={moveToFeature} class="button-small button-outline button-clear button-secondary">
+      <button
+        on:click={moveToFeature}
+        class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper rotate90">
           <FaExchangeAlt />
         </div>
         Move to feature
       </button>
-      <button on:click={changeStatus} class="button-small button-outline button-clear button-secondary">
+      <button
+        on:click={changeStatus}
+        class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaEdit />
         </div>
         Change status
       </button>
-      <button on:click={archiveSelected} class="button-small button-outline button-clear button-secondary">
+      <button
+        on:click={changeStatus}
+        class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <FaEdit />
+        </div>
+        Change priority
+      </button>
+      <button
+        on:click={archiveSelected}
+        class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaArchive />
         </div>
         Archive
       </button>
-      <button on:click={deleteSelected} class="button-small button-outline button-clear button-secondary">
+      <button
+        on:click={deleteSelected}
+        class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaRegTrashAlt />
         </div>

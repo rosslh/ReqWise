@@ -56,7 +56,7 @@
       height: 3.3rem;
       width: 3.3rem;
       padding: 0.8rem !important;
-      color: var(--grey4);
+      color: var(--charcoal1);
       box-sizing: border-box;
       transform: translateY(0.5rem);
       margin: 0;

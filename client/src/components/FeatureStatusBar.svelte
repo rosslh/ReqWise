@@ -118,7 +118,7 @@
     active = !active;
   }}>
   <div class="barsWrapper">
-    {#each entries as entry}
+    {#each entries as entry (entry.name)}
       {#if entry.count}
         <div
           class="entry"

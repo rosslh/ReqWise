@@ -164,7 +164,7 @@
     {/if}
   </h1>
   <div class="items">
-    {#each tabs as item}
+    {#each tabs as item (item.slug)}
       {#if item.newSection}
         <div class="separator" />
       {/if}
