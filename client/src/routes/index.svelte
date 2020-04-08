@@ -1,5 +1,15 @@
+<style>
+  p.first {
+    font-size: 2.5rem;
+  }
+
+  p {
+    font-size: 2rem;
+  }
+</style>
+
 <div class="contentWrapper">
   <h1>ReqWise</h1>
-  <p>The next generation requirements management tool.</p>
-  <p>Summer 2020</p>
+  <p class="first">The next-gen requirements management tool.</p>
+  <p>Coming Summer 2020.</p>
 </div>
