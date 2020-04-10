@@ -16,9 +16,14 @@ jobs:
     - uses: actions/setup-node@master
       with:
         node-version: '10.x'
-    - run: cd client
-    - run: npm i
-    - run: npm run build
+    - name: Install dependencies
+      working-directory: ./client
+      run: | 
+        npm install
+    - name: Build client
+      working-directory: ./client
+      run: | 
+        npm run build
     - uses: w9jds/firebase-action@master
       with:
         args: deploy
