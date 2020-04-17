@@ -7,7 +7,7 @@ module.exports = async function (fastify, opts) {
     params: {
       type: "object",
       properties: {
-        featureId: { type: "number" },
+        requirementId: { type: "number" },
       },
     },
     headers: {
@@ -54,10 +54,8 @@ module.exports = async function (fastify, opts) {
         .where({
           requirement_id: request.params.requirementId,
         })
-        .orderBy("created_at")
+        .orderBy("created_at", "desc")
         .first();
-
-      console.log(reqversion);
 
       const requirement = await fastify.knex
         .from("requirement")
@@ -72,7 +70,7 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const putRequirementSchema = {
+  const patchRequirementSchema = {
     body: {
       type: "object",
       properties: {
@@ -81,7 +79,6 @@ module.exports = async function (fastify, opts) {
         reqgroup_id: { type: "number" },
         project_id: { type: "number" },
       },
-      required: ["pretty_id", "is_archived", "reqgroup_id", "project_id"],
     },
     queryString: {},
     params: {
@@ -106,11 +103,11 @@ module.exports = async function (fastify, opts) {
       },
     },
   };
-  fastify.put(
+  fastify.patch(
     "/requirements/:requirementId",
     {
       preValidation: [fastify.authenticate],
-      schema: putRequirementSchema,
+      schema: patchRequirementSchema,
     },
     async function (request, reply) {
       const { pretty_id, project_id, reqgroup_id, is_archived } = request.body;
@@ -121,9 +118,72 @@ module.exports = async function (fastify, opts) {
           project_id,
           reqgroup_id,
           is_archived,
-          pretty_id: slugify(pretty_id, { lower: true }),
+          pretty_id: pretty_id && slugify(pretty_id, { lower: true }),
         })
         .returning("id");
+    }
+  );
+
+  const postReqVersionSchema = {
+    body: {
+      type: "object",
+      properties: {
+        priority: { type: "string" },
+        status: { type: "string" },
+        description: { type: "string" },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "number",
+      },
+    },
+  };
+  fastify.post(
+    "/requirements/:requirementId/versions",
+    {
+      preValidation: [fastify.authenticate],
+      schema: postReqVersionSchema,
+    },
+    async function (request, reply) {
+      const { description, priority, status } = request.body;
+      const { requirementId: requirement_id } = request.params;
+
+      const latestVersion = await fastify
+        .knex("reqversion")
+        .select(["description", "priority", "status", "requirement_id"])
+        .where({
+          requirement_id: request.params.requirementId, // TODO: exclude status: proposed
+        })
+        .orderBy("created_at", "desc")
+        .first();
+
+      const newVersion = {
+        ...latestVersion,
+        account_id: request.user.id,
+        ...(priority && { priority }), // Only update priority if defined
+        ...(description && { description }),
+        ...(status && { status }),
+        requirement_id,
+      };
+
+      await fastify.knex("reqversion").insert(newVersion).returning("id");
+
+      return requirement_id;
     }
   );
 };

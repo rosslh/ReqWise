@@ -60,7 +60,7 @@
 <div class="feature">
   <FeatureHeader {feature} {requirements} />
   <FeatureStatusBar {requirements} />
-  <FeatureSelectTools {selectedReqs} />
+  <FeatureSelectTools {selectedReqs} update={updateReqs} />
   <div class="tableWrapper">
     <table>
       <thead>

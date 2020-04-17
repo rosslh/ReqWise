@@ -206,7 +206,7 @@ module.exports = async function (fastify, opts) {
     "/projects/:projectId/features",
     {
       preValidation: [fastify.authenticate],
-      schema: { postFeatureSchema },
+      schema: postFeatureSchema,
     },
     async function (request, reply) {
       const { name, pretty_id } = request.body;

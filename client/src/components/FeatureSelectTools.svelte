@@ -1,4 +1,6 @@
 <script>
+  import { modalContent, modalProps } from "../stores.js";
+  import ChangeStatusModal from "./ChangeStatusModal.svelte";
   import FaEdit from "svelte-icons/fa/FaEdit.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
@@ -7,16 +9,24 @@
   import { put } from "../api.js";
 
   export let selectedReqs;
+  export let update;
 
   const moveToFeature = async newFeatureId => {
-    selectedReqs.forEach(req => {
-      put(`/requirements/${req.id}`, {
-        ...req,
-        reqgroup_id: newFeatureId
-      });
-    });
+    // selectedReqs.forEach(req => {
+    //   put(`/requirements/${req.id}`, {
+    //     ...req,
+    //     reqgroup_id: newFeatureId
+    //   });
+    // });
   };
-  const changeStatus = async () => {};
+  const changeStatus = async () => {
+    modalContent.set(ChangeStatusModal);
+    modalProps.set({ selectedReqs, update });
+  };
+  const changePriority = async () => {
+    modalContent.set(ChangeStatusModal);
+    modalProps.set({ selectedReqs, update });
+  };
   const archiveSelected = async () => {};
   const deleteSelected = async () => {};
 </script>
@@ -82,7 +92,7 @@
         Change status
       </button>
       <button
-        on:click={changeStatus}
+        on:click={changePriority}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaEdit />

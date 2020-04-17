@@ -187,7 +187,18 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("requirement")
-        .select("*")
+        .select(
+          "requirement.id",
+          "requirement.reqgroup_id",
+          "requirement.project_id",
+          "requirement.pretty_id",
+          "requirement.is_archived",
+          "reqversion.account_id",
+          "reqversion.priority",
+          "reqversion.status",
+          "reqversion.description",
+          "reqversion.created_at"
+        )
         .where("reqgroup_id", request.params.featureId)
         .join("reqversion", function () {
           this.on("requirement.id", "=", "reqversion.requirement_id").andOn(

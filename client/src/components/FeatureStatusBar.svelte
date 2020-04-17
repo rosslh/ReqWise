@@ -29,7 +29,8 @@
         count: requirements.filter(req => req.status === status.name).length,
         status: status.name,
         color: status.color,
-        label: status.label
+        label: status.label,
+        name: status.name
       }))
     : [];
 
@@ -128,7 +129,7 @@
   </div>
   {#if active}
     <div class="labelsWrapper">
-      {#each entries as entry}
+      {#each entries as entry (entry.name)}
         {#if entry.count}
           <div class="label">
             <span
