@@ -31,6 +31,13 @@
   };
 </script>
 
+<style>
+  .accept {
+    color: var(--indigo);
+    font-weight: 600;
+  }
+</style>
+
 <h3>Update Priority for Requirements</h3>
 <fieldset class="inline">
   <label for="priority">Priority</label>
@@ -52,4 +59,11 @@
     class="newReqInput"
     bind:value={rationale} />
 </fieldset>
-<button class="button-create" on:click={updateRequirements}>Update</button>
+<fieldset>
+  <input id="acceptAutomatically" type="checkbox" checked={false} />
+  <label class="label-inline" for="acceptAutomatically">
+    <span class="accept">Accept</span>
+    change without discussing
+  </label>
+</fieldset>
+<button class="button-caution" on:click={updateRequirements}>Update</button>

@@ -47,56 +47,54 @@
 </style>
 
 <h3>Add a Requirement</h3>
-<form>
-  <fieldset>
-    <label for="desc">Description</label>
-    <input
-      type="text"
-      id="desc"
-      name="desc"
-      class="newReqInput"
-      bind:value={description} />
-  </fieldset>
-  <fieldset class="inline">
-    <label for="prettyId">Unique ID</label>
-    <input
-      type="text"
-      id="prettyId"
-      name="prettyId"
-      class="newReqInput solidPlaceholder"
-      placeholder={idFromName}
-      bind:value={pretty_id} />
-  </fieldset>
-  <fieldset class="inline">
-    <label for="priority">Priority</label>
-    <div class="selectWrapper">
-      <Select
-        inputAttributes={{ id: 'priority' }}
-        isClearable={false}
-        isSearchable={false}
-        items={priorityOptions}
-        bind:selectedValue={priority} />
-    </div>
-  </fieldset>
-  <fieldset class="inline">
-    <label for="status">Status</label>
-    <div class="selectWrapper">
-      <Select
-        inputAttributes={{ id: 'status' }}
-        isClearable={false}
-        isSearchable={false}
-        items={statusOptions}
-        bind:selectedValue={status} />
-    </div>
-  </fieldset>
-  <fieldset>
-    <label for="desc">Reason for change</label>
-    <input
-      type="text"
-      id="rationale"
-      name="rationale"
-      class="newReqInput"
-      bind:value={rationale} />
-  </fieldset>
-  <button class="button-create" on:click={addReq}>+ Add</button>
-</form>
+<fieldset>
+  <label for="desc">Description</label>
+  <input
+    type="text"
+    id="desc"
+    name="desc"
+    class="newReqInput"
+    bind:value={description} />
+</fieldset>
+<fieldset class="inline">
+  <label for="prettyId">Unique ID</label>
+  <input
+    type="text"
+    id="prettyId"
+    name="prettyId"
+    class="newReqInput solidPlaceholder"
+    placeholder={idFromName}
+    bind:value={pretty_id} />
+</fieldset>
+<fieldset class="inline">
+  <label for="priority">Priority</label>
+  <div class="selectWrapper">
+    <Select
+      inputAttributes={{ id: 'priority' }}
+      isClearable={false}
+      isSearchable={false}
+      items={priorityOptions}
+      bind:selectedValue={priority} />
+  </div>
+</fieldset>
+<fieldset class="inline">
+  <label for="status">Status</label>
+  <div class="selectWrapper">
+    <Select
+      inputAttributes={{ id: 'status' }}
+      isClearable={false}
+      isSearchable={false}
+      items={statusOptions}
+      bind:selectedValue={status} />
+  </div>
+</fieldset>
+<fieldset>
+  <label for="desc">Reason for change</label>
+  <input
+    type="text"
+    id="rationale"
+    name="rationale"
+    class="newReqInput"
+    bind:value={rationale} />
+</fieldset>
+<button class="button-create" on:click={addReq}>+ Add</button>

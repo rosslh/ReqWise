@@ -7,9 +7,14 @@
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
 
+  import { modalContent, modalProps } from "../stores.js";
+  import ViewRequirementModal from "./ViewRequirementModal.svelte";
+  import UpdateRequirementModal from "./UpdateRequirementModal.svelte";
+
   export let requirement;
   export let toggleReq;
   export let selected;
+  export let update;
 
   const getStatusColor = status => {
     switch (status) {
@@ -35,10 +40,17 @@
     }
   };
 
-  // \u2011 = non-breaking hyphen
-  // \u200B = zero width space
-  // const normalizeString = str =>
-  //   str.replace(/-/g, "\u2011").replace(/\./g, "\u200B.");
+  const viewRequirement = (event, id) => {
+    event.stopPropagation();
+    modalContent.set(ViewRequirementModal);
+    modalProps.set({ id, update });
+  };
+
+  const proposeChange = (event, id) => {
+    event.stopPropagation();
+    modalContent.set(UpdateRequirementModal);
+    modalProps.set({ id, update });
+  };
 </script>
 
 <style lang="scss">
@@ -159,7 +171,11 @@
   </td>
   <td class="history">X at Y</td>
   <td class="iconCell">
-    <button class="commentIconWrapper">
+    <button
+      on:click={e => {
+        requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
+      }}
+      class="commentIconWrapper">
       {#if requirement.status === 'proposed'}
         <FaRegComment />
       {:else}

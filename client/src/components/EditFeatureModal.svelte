@@ -19,7 +19,7 @@
   };
 </script>
 
-<h3>Edit Feature</h3>
+<h3>Update Feature</h3>
 <form>
   <fieldset>
     <label for="desc">Description</label>
@@ -39,5 +39,5 @@
       class="newReqInput"
       bind:value={pretty_id} />
   </fieldset>
-  <button class="button-create" on:click={update}>Save</button>
+  <button class="button-caution" on:click={update}>Save</button>
 </form>

@@ -79,6 +79,7 @@
             <Requirement
               selected={selectedReqs.includes(requirement.id)}
               {toggleReq}
+              update={updateReqs}
               {requirement} />
           {/each}
         </tbody>

@@ -53,4 +53,4 @@
     class="newReqInput"
     bind:value={rationale} />
 </fieldset>
-<button class="button-create" on:click={updateRequirements}>Update</button>
+<button class="button-caution" on:click={updateRequirements}>Update</button>
