@@ -131,7 +131,9 @@ module.exports = async function (fastify, opts) {
         priority: { type: "string" },
         status: { type: "string" },
         description: { type: "string" },
+        rationale: { type: "string" },
       },
+      required: ["rationale"],
     },
     queryString: {},
     params: {
@@ -160,7 +162,7 @@ module.exports = async function (fastify, opts) {
       schema: postReqVersionSchema,
     },
     async function (request, reply) {
-      const { description, priority, status } = request.body;
+      const { description, priority, status, rationale } = request.body;
       const { requirementId: requirement_id } = request.params;
 
       const latestVersion = await fastify
@@ -178,6 +180,7 @@ module.exports = async function (fastify, opts) {
         ...(priority && { priority }), // Only update priority if defined
         ...(description && { description }),
         ...(status && { status }),
+        rationale,
         requirement_id,
       };
 

@@ -3,17 +3,17 @@ const bcrypt = require("bcrypt");
 
 module.exports = async (fastify, opts) => {
   // Create a user
-  // fastify.post("/users", async (request, reply) => {
-  //     const { name, email, password } = request.body;
-  //     return await fastify
-  //         .knex("account")
-  //         .insert({
-  //             name,
-  //             email,
-  //             password_hash: bcrypt.hashSync(password, 10)
-  //         })
-  //         .returning("id");
-  // });
+  fastify.post("/users", async (request, reply) => {
+    const { name, email, password } = request.body;
+    return await fastify
+      .knex("account")
+      .insert({
+        name,
+        email,
+        password_hash: bcrypt.hashSync(password, 10),
+      })
+      .returning("id");
+  });
 
   // Update one user
   const putUserSchema = {

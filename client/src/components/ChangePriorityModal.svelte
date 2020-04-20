@@ -7,21 +7,20 @@
 
   import { post } from "../api.js";
 
-  const statusOptions = [
-    { value: "proposed", label: "Proposed" },
-    { value: "accepted", label: "Accepted" },
-    { value: "inProgress", label: "In Progress" },
-    { value: "implemented", label: "Implemented" }
+  const priorityOptions = [
+    { value: "high", label: "High" },
+    { value: "medium", label: "Medium" },
+    { value: "low", label: "Low" }
   ];
 
-  let status = statusOptions[0];
+  let priority = priorityOptions[1];
   let rationale = "";
 
   const updateRequirements = async () => {
     await Promise.all(
       selectedReqs.map(id =>
         post(`/requirements/${id}/versions`, {
-          status: status.value,
+          priority: priority.value,
           rationale
         })
       )
@@ -32,16 +31,16 @@
   };
 </script>
 
-<h3>Update Requirements Statuses</h3>
+<h3>Update Requirements Priorities</h3>
 <fieldset class="inline">
-  <label for="status">Status</label>
+  <label for="priority">Priority</label>
   <div class="selectWrapper">
     <Select
-      inputAttributes={{ id: 'status' }}
+      inputAttributes={{ id: 'priority' }}
       isClearable={false}
       isSearchable={false}
-      items={statusOptions}
-      bind:selectedValue={status} />
+      items={priorityOptions}
+      bind:selectedValue={priority} />
   </div>
 </fieldset>
 <fieldset>

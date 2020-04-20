@@ -1,20 +1,17 @@
-exports.up = function(knex) {
+exports.up = function (knex) {
   return Promise.all([
-    knex.schema.createTable("account", table => {
+    knex.schema.createTable("account", (table) => {
       table.increments("id").primary();
       table.string("name").notNullable();
-      table
-        .string("email")
-        .notNullable()
-        .unique();
+      table.string("email").notNullable().unique();
       table.string("password_hash").notNullable();
     }),
-    knex.schema.createTable("team", table => {
+    knex.schema.createTable("team", (table) => {
       table.increments("id").primary();
       table.string("name").notNullable();
       table.string("description");
     }),
-    knex.schema.createTable("account_team", table => {
+    knex.schema.createTable("account_team", (table) => {
       table.increments("id").primary();
       table
         .integer("account_id")
@@ -32,7 +29,7 @@ exports.up = function(knex) {
         .notNullable();
       table.boolean("is_admin").notNullable();
     }),
-    knex.schema.createTable("project", table => {
+    knex.schema.createTable("project", (table) => {
       table.increments("id").primary();
       table.string("name");
       table
@@ -43,7 +40,7 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable();
     }),
-    knex.schema.createTable("reqgroup", table => {
+    knex.schema.createTable("reqgroup", (table) => {
       // aka feature
       table.increments("id").primary();
       table
@@ -62,11 +59,11 @@ exports.up = function(knex) {
           "interface",
           "user_classes",
           "product_perspective",
-          "description"
+          "description",
         ])
         .notNullable();
     }),
-    knex.schema.createTable("requirement", table => {
+    knex.schema.createTable("requirement", (table) => {
       table.increments("id").primary();
       table
         .integer("reqgroup_id")
@@ -84,7 +81,7 @@ exports.up = function(knex) {
       table.string("pretty_id").notNullable();
       table.boolean("is_archived").defaultTo(false);
     }),
-    knex.schema.createTable("reqversion", table => {
+    knex.schema.createTable("reqversion", (table) => {
       table.increments("id").primary();
       table
         .integer("requirement_id")
@@ -103,9 +100,10 @@ exports.up = function(knex) {
         .enu("status", ["implemented", "inProgress", "accepted", "proposed"])
         .notNullable();
       table.string("description").notNullable();
+      table.string("rationale").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
-    knex.schema.createTable("comment", table => {
+    knex.schema.createTable("comment", (table) => {
       table.increments("id").primary();
       table
         .integer("reqversion_id")
@@ -120,11 +118,11 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable();
       table.string("content").notNullable();
-    })
+    }),
   ]);
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return Promise.all([
     knex.schema.dropTable("comment"),
     knex.schema.dropTable("reqversion"),
@@ -133,6 +131,6 @@ exports.down = function(knex) {
     knex.schema.dropTable("project"),
     knex.schema.dropTable("account_team"),
     knex.schema.dropTable("team"),
-    knex.schema.dropTable("account")
+    knex.schema.dropTable("account"),
   ]);
 };

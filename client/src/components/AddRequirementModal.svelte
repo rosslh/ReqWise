@@ -8,6 +8,7 @@
   export let close;
 
   let description = "";
+  let rationale = "";
   let pretty_id = "";
   $: idFromName = toPrettyId(description);
 
@@ -16,6 +17,7 @@
     await post(`/features/${featureId}/requirements`, {
       pretty_id: pretty_id || idFromName,
       description,
+      rationale,
       priority: priority.value,
       status: status.value
     });
@@ -86,6 +88,15 @@
         items={statusOptions}
         bind:selectedValue={status} />
     </div>
+  </fieldset>
+  <fieldset>
+    <label for="desc">Reason for change</label>
+    <input
+      type="text"
+      id="rationale"
+      name="rationale"
+      class="newReqInput"
+      bind:value={rationale} />
   </fieldset>
   <button class="button-create" on:click={addReq}>+ Add</button>
 </form>

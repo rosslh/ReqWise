@@ -220,8 +220,9 @@ module.exports = async function (fastify, opts) {
         priority: { type: "string" },
         status: { type: "string" },
         pretty_id: { type: "string" },
+        ratonale: { type: "string" },
       },
-      required: ["description", "priority", "status", "pretty_id"],
+      required: ["description", "priority", "status", "pretty_id", "rationale"],
     },
     queryString: {},
     params: {
@@ -251,7 +252,13 @@ module.exports = async function (fastify, opts) {
       schema: postRequirementSchema,
     },
     async function (request, reply) {
-      const { pretty_id, description, priority, status } = request.body;
+      const {
+        pretty_id,
+        description,
+        priority,
+        status,
+        rationale,
+      } = request.body;
       const { featureId: reqgroup_id } = request.params;
 
       const project_id = (
@@ -280,6 +287,7 @@ module.exports = async function (fastify, opts) {
           requirement_id,
           account_id: request.user.id,
           description,
+          rationale,
           priority,
           status,
         })

@@ -1,6 +1,7 @@
 <script>
   import { modalContent, modalProps } from "../stores.js";
   import ChangeStatusModal from "./ChangeStatusModal.svelte";
+  import ChangePriorityModal from "./ChangePriorityModal.svelte";
   import FaEdit from "svelte-icons/fa/FaEdit.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
@@ -24,7 +25,7 @@
     modalProps.set({ selectedReqs, update });
   };
   const changePriority = async () => {
-    modalContent.set(ChangeStatusModal);
+    modalContent.set(ChangePriorityModal);
     modalProps.set({ selectedReqs, update });
   };
   const archiveSelected = async () => {};
