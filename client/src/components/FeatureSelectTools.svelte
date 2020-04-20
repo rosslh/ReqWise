@@ -2,6 +2,8 @@
   import { modalContent, modalProps } from "../stores.js";
   import ChangeStatusModal from "./ChangeStatusModal.svelte";
   import ChangePriorityModal from "./ChangePriorityModal.svelte";
+  import ArchiveRequirementsModal from "./ArchiveRequirementsModal.svelte";
+  import DeleteRequirementsModal from "./DeleteRequirementsModal.svelte";
   import FaEdit from "svelte-icons/fa/FaEdit.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
@@ -12,14 +14,7 @@
   export let selectedReqs;
   export let update;
 
-  const moveToFeature = async newFeatureId => {
-    // selectedReqs.forEach(req => {
-    //   put(`/requirements/${req.id}`, {
-    //     ...req,
-    //     reqgroup_id: newFeatureId
-    //   });
-    // });
-  };
+  const moveToFeature = async newFeatureId => {};
   const changeStatus = async () => {
     modalContent.set(ChangeStatusModal);
     modalProps.set({ selectedReqs, update });
@@ -28,8 +23,14 @@
     modalContent.set(ChangePriorityModal);
     modalProps.set({ selectedReqs, update });
   };
-  const archiveSelected = async () => {};
-  const deleteSelected = async () => {};
+  const archiveSelected = async () => {
+    modalContent.set(ArchiveRequirementsModal);
+    modalProps.set({ selectedReqs, update });
+  };
+  const deleteSelected = async () => {
+    modalContent.set(DeleteRequirementsModal);
+    modalProps.set({ selectedReqs, update });
+  };
 </script>
 
 <style>

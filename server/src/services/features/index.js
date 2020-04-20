@@ -200,6 +200,7 @@ module.exports = async function (fastify, opts) {
           "reqversion.created_at"
         )
         .where("reqgroup_id", request.params.featureId)
+        .andWhere("is_archived", false)
         .join("reqversion", function () {
           this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
             "reqversion.created_at",

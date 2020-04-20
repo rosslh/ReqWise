@@ -32,7 +32,7 @@
   };
 </script>
 
-<h3>Update Requirements Statuses</h3>
+<h3>Update Status for Requirements</h3>
 <fieldset class="inline">
   <label for="status">Status</label>
   <div class="selectWrapper">

@@ -70,6 +70,45 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const deleteRequirementSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.delete(
+    "/requirements/:requirementId",
+    {
+      preValidation: [fastify.authenticate],
+      schema: deleteRequirementSchema,
+    },
+    async function (request, reply) {
+      await fastify
+        .knex("requirement")
+        .where("id", request.params.requirementId)
+        .del();
+      return ["success"];
+    }
+  );
+
   const patchRequirementSchema = {
     body: {
       type: "object",

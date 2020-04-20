@@ -40,7 +40,7 @@ module.exports = function (fastify, opts, next) {
   });
 
   fastify.register(CORS, {
-    methods: ["GET", "PUT", "POST", "DELETE"],
+    methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
     origin: true,
   });
 

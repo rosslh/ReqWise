@@ -31,7 +31,7 @@
   };
 </script>
 
-<h3>Update Requirements Priorities</h3>
+<h3>Update Priority for Requirements</h3>
 <fieldset class="inline">
   <label for="priority">Priority</label>
   <div class="selectWrapper">
