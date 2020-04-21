@@ -61,6 +61,7 @@
     "svelte-persistent-store": "^0.1.1",
     "svelte-preprocess": "^3.7.1",
     "svelte-preprocess-postcss": "^1.1.1",
-    "svelte-select": "^3.3.5"
+    "svelte-select": "^3.3.5",
+    "text-diff": "^1.0.1"
   }
 }

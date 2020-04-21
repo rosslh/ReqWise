@@ -3,14 +3,16 @@
   import { get, patch, post } from "../api.js";
   import { toPrettyId } from "../utils.js";
   import { onMount } from "svelte";
+  import Skeleton from "./Skeleton.svelte";
 
   export let id;
   export let update;
   export let close;
 
-  let description = "";
-  let rationale = "";
-  let pretty_id = "";
+  let description;
+  let priority;
+  let rationale;
+  let pretty_id;
 
   const priorityOptions = [
     { value: "high", label: "High" },
@@ -18,18 +20,16 @@
     { value: "low", label: "Low" }
   ];
 
-  let priority = priorityOptions[1];
-
   let original_pretty_id = "";
   let acceptAutomatically = false;
 
   onMount(async () => {
     const res = await get(`/requirements/${id}`);
-    description = res.latest.description;
+    description = res.latestVersion.description;
     original_pretty_id = res.pretty_id;
     pretty_id = res.pretty_id;
     priority = priorityOptions.find(
-      option => option.value === res.latest.priority
+      option => option.value === res.latestVersion.priority
     );
   });
 
@@ -58,34 +58,46 @@
   }
 </style>
 
-<h3>Update Requirement {id}</h3>
+<h3>Update Requirement</h3>
 <fieldset>
   <label for="desc">Description</label>
-  <input
-    type="text"
-    id="desc"
-    name="desc"
-    class="newReqInput"
-    bind:value={description} />
+  {#if description || description === ''}
+    <input
+      type="text"
+      id="desc"
+      name="desc"
+      class="newReqInput"
+      bind:value={description} />
+  {:else}
+    <Skeleton noPadding />
+  {/if}
 </fieldset>
 <fieldset class="inline">
   <label for="prettyId">Unique ID</label>
-  <input
-    type="text"
-    id="prettyId"
-    name="prettyId"
-    class="newReqInput solidPlaceholder"
-    bind:value={pretty_id} />
+  {#if pretty_id || pretty_id === ''}
+    <input
+      type="text"
+      id="prettyId"
+      name="prettyId"
+      class="newReqInput solidPlaceholder"
+      bind:value={pretty_id} />
+  {:else}
+    <Skeleton noPadding inline />
+  {/if}
 </fieldset>
 <fieldset class="inline">
   <label for="priority">Priority</label>
   <div class="selectWrapper">
-    <Select
-      inputAttributes={{ id: 'priority' }}
-      isClearable={false}
-      isSearchable={false}
-      items={priorityOptions}
-      bind:selectedValue={priority} />
+    {#if priority || priority === ''}
+      <Select
+        inputAttributes={{ id: 'priority' }}
+        isClearable={false}
+        isSearchable={false}
+        items={priorityOptions}
+        bind:selectedValue={priority} />
+    {:else}
+      <Skeleton noPadding inline />
+    {/if}
   </div>
 </fieldset>
 <fieldset>

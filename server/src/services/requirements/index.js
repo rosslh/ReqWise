@@ -26,7 +26,14 @@ module.exports = async function (fastify, opts) {
           project_id: { type: "number" },
           is_archived: { type: "boolean" },
           pretty_id: { type: "string" },
-          latest: {
+          comments: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {},
+            },
+          },
+          latestVersion: {
             type: "object",
             properties: {
               id: { type: "number" },
@@ -35,6 +42,19 @@ module.exports = async function (fastify, opts) {
               status: { type: "string" },
               description: { type: "string" },
               created_at: { type: "string" },
+              rationale: { type: "string" },
+            },
+          },
+          previousVersion: {
+            type: "object",
+            properties: {
+              id: { type: "number" },
+              account_id: { type: "number" },
+              priority: { type: "string" },
+              status: { type: "string" },
+              description: { type: "string" },
+              created_at: { type: "string" },
+              rationale: { type: "string" },
             },
           },
         },
@@ -49,13 +69,17 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       // TODO: check if team member
-      const reqversion = await fastify
+      const versions = await fastify
         .knex("reqversion")
         .where({
           requirement_id: request.params.requirementId,
         })
         .orderBy("created_at", "desc")
-        .first();
+        .limit(2);
+
+      const latestVersion = versions[0];
+
+      const previousVersion = versions.length === 2 ? versions[1] : {};
 
       const requirement = await fastify.knex
         .from("requirement")
@@ -66,7 +90,7 @@ module.exports = async function (fastify, opts) {
         })
         .first();
 
-      return { ...requirement, latest: reqversion };
+      return { ...requirement, latestVersion, previousVersion, comments: [] };
     }
   );
 

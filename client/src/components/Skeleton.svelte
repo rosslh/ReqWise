@@ -24,10 +24,9 @@
   }
 </style>
 
-<!-- All properties below are default -->
 <div class={noPadding ? 'noPadding' : 'yesPadding'}>
   {#each Array(rows) as i}
-    <div class={rows > 1 ? 'rowWrapper' : 'noPadding'} key={i}>
+    <div class={rows > 1 ? 'rowWrapper' : 'noPadding'}>
       <Skeleton
         width={inline ? '14rem' : '100%'}
         height={height || '3rem'}
