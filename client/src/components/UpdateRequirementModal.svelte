@@ -21,7 +21,7 @@
   ];
 
   let original_pretty_id = "";
-  let acceptAutomatically = false;
+  let repropose = true;
 
   onMount(async () => {
     const res = await get(`/requirements/${id}`);
@@ -42,7 +42,7 @@
     const data = {
       description,
       priority: priority.value,
-      status: acceptAutomatically ? "accepted" : "proposed",
+      status: repropose ? "proposed" : undefined,
       rationale
     };
     await post(`/requirements/${id}/versions`, data);
@@ -52,8 +52,8 @@
 </script>
 
 <style>
-  .accept {
-    color: var(--indigo);
+  .proposed {
+    color: var(--red);
     font-weight: 600;
   }
 </style>
@@ -110,13 +110,10 @@
     bind:value={rationale} />
 </fieldset>
 <fieldset>
-  <input
-    id="acceptAutomatically"
-    type="checkbox"
-    bind:checked={acceptAutomatically} />
-  <label class="label-inline" for="acceptAutomatically">
-    <span class="accept">Accept</span>
-    change without discussing
+  <input id="repropose" type="checkbox" bind:checked={repropose} />
+  <label class="label-inline" for="repropose">
+    Change status to
+    <span class="proposed">Proposed</span>
   </label>
 </fieldset>
 <button class="button-caution" on:click={updateRequirement}>Save</button>

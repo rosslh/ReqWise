@@ -14,6 +14,7 @@
   ];
 
   let priority = priorityOptions[1];
+  let repropose = true;
   let rationale = "";
 
   const updateRequirements = async () => {
@@ -21,7 +22,8 @@
       selectedReqs.map(id =>
         post(`/requirements/${id}/versions`, {
           priority: priority.value,
-          rationale
+          rationale,
+          status: repropose ? "proposed" : undefined
         })
       )
     );
@@ -32,8 +34,8 @@
 </script>
 
 <style>
-  .accept {
-    color: var(--indigo);
+  .proposed {
+    color: var(--red);
     font-weight: 600;
   }
 </style>
@@ -60,10 +62,10 @@
     bind:value={rationale} />
 </fieldset>
 <fieldset>
-  <input id="acceptAutomatically" type="checkbox" checked={false} />
-  <label class="label-inline" for="acceptAutomatically">
-    <span class="accept">Accept</span>
-    change without discussing
+  <input id="repropose" type="checkbox" bind:checked={repropose} />
+  <label class="label-inline" for="repropose">
+    Change status to
+    <span class="proposed">Proposed</span>
   </label>
 </fieldset>
 <button class="button-caution" on:click={updateRequirements}>Update</button>

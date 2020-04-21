@@ -53,9 +53,14 @@
     transform: translateY(-0.25rem);
   }
 
+  .outerWrapper.inactive {
+    padding: 0.5rem 0;
+    margin: -0.5rem 0;
+  }
+
   .barsWrapper {
     width: calc(100% + 2.4rem); /* accounts for feature padding */
-    max-height: 0.5rem;
+    max-height: 0.3rem;
     overflow: hidden;
     padding: 0;
     margin: 0 -1.2rem;
@@ -114,7 +119,7 @@
 </style>
 
 <div
-  class="outerWrapper"
+  class={`outerWrapper ${active ? 'active' : 'inactive'}`}
   on:click={() => {
     active = !active;
   }}>
