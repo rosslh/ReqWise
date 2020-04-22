@@ -2,9 +2,11 @@ exports.up = function (knex) {
   return Promise.all([
     knex.schema.createTable("account", (table) => {
       table.increments("id").primary();
-      table.string("name").notNullable();
+      table.string("name");
       table.string("email").notNullable().unique();
-      table.string("password_hash").notNullable();
+      table.string("verification_token");
+      table.string("password_hash");
+      table.boolean("is_verified").notNullable();
     }),
     knex.schema.createTable("team", (table) => {
       table.increments("id").primary();

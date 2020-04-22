@@ -44,7 +44,7 @@
     </a>
     <div class="right">
       {#if $jwt === ''}
-        <!-- <a href="/sign-up">Sign Up</a> -->
+        <a href="/sign-up/invite">Sign Up</a>
 
         <a href="/login">Login</a>
       {:else}

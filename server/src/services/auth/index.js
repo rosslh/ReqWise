@@ -42,9 +42,14 @@ module.exports = async (fastify, opts) => {
       const { email, password } = request.body;
       const account = await fastify.knex
         .from("account")
-        .select("password_hash", "name", "id")
+        .select("password_hash", "name", "id", "is_verified")
         .where("email", email)
         .first();
+
+      if (!account.is_verified) {
+        reply.code(403);
+        return ["Account is not verified"];
+      }
 
       if (bcrypt.compareSync(password, account.password_hash)) {
         const jwtContent = { email, name: account.name, id: account.id };
