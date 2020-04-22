@@ -17,6 +17,12 @@
   };
 </script>
 
+<style>
+  .forgotPwd {
+    margin-top: 2rem;
+  }
+</style>
+
 <div class="contentWrapper">
   <h2>Log in</h2>
   <fieldset>
@@ -32,4 +38,7 @@
       id="pwd" />
   </fieldset>
   <button on:click={submit}>Submit</button>
+</div>
+<div class="contentWrapper forgotPwd">
+  <a href="/reset/request">Forgot password?</a>
 </div>

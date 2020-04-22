@@ -12,8 +12,8 @@
 </script>
 
 <script>
+  import { goto } from "@sapper/app";
   import { put, post } from "../../api";
-  import { jwt, userId } from "../../stores";
 
   export let token;
   export let email;
@@ -25,13 +25,7 @@
       password,
       token
     });
-    await post("/auth/token", { email, password })
-      .then(r => {
-        jwt.set(r.token);
-        userId.set(r.userId);
-        goto("/teams");
-      })
-      .catch(err => alert("Incorrect email or password"));
+    goto("/login");
   };
 </script>
 

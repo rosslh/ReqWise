@@ -5,7 +5,7 @@
 
   const submit = () => {
     post(`/users`, { email })
-      .then(r => alert(JSON.stringify(r)))
+      .then(r => alert("Please check your email to finish signing up"))
       .catch(err => alert(JSON.stringify(err)));
   };
 </script>

@@ -34,7 +34,6 @@
   const updateTeam = async () => {
     await put(`/teams/${id}`, { name, description })
       .then(() => {
-        alert("Success");
         update();
       })
       .catch(() => alert("Failure"));
