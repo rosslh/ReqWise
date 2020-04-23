@@ -46,4 +46,5 @@ export const put = (endpoint, body) =>
 export const patch = (endpoint, body) =>
   fetcher(endpoint, { method: "PATCH", body: JSON.stringify(body) });
 
-export const del = (endpoint) => fetcher(endpoint, { method: "DELETE" });
+export const del = (endpoint) =>
+  fetcher(endpoint, { method: "DELETE", body: "{}" });

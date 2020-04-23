@@ -34,7 +34,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/features/:featureId",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getFeatureSchema,
     },
     async function (request, reply) {
@@ -82,7 +82,7 @@ module.exports = async function (fastify, opts) {
   fastify.put(
     "/features/:featureId",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: putFeatureSchema,
     },
     async function (request, reply) {
@@ -125,7 +125,7 @@ module.exports = async function (fastify, opts) {
   fastify.delete(
     "/features/:featureId",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: deleteFeatureSchema,
     },
     async function (request, reply) {
@@ -181,7 +181,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/features/:featureId/requirements",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementsSchema,
     },
     async function (request, reply) {
@@ -249,7 +249,7 @@ module.exports = async function (fastify, opts) {
   fastify.post(
     "/features/:featureId/requirements",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postRequirementSchema,
     },
     async function (request, reply) {

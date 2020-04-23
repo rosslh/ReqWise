@@ -31,13 +31,20 @@
 
 <div class="contentWrapper">
   <h2>Complete password reset</h2>
-  <label for="email">Email</label>
-  <input autocomplete="email" value={email} type="email" disabled id="email" />
-  <label for="pwd">New password</label>
-  <input
-    autocomplete="new-password"
-    bind:value={password}
-    type="password"
-    id="pwd" />
-  <button on:click={submit}>Submit</button>
+  <fieldset>
+    <label for="email">Email</label>
+    <input
+      autocomplete="email"
+      value={email}
+      type="email"
+      disabled
+      id="email" />
+    <label for="pwd">New password</label>
+    <input
+      autocomplete="new-password"
+      bind:value={password}
+      type="password"
+      id="pwd" />
+    <button on:click={submit}>Submit</button>
+  </fieldset>
 </div>

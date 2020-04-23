@@ -64,11 +64,10 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/requirements/:requirementId",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementSchema,
     },
     async function (request, reply) {
-      // TODO: check if team member
       const versions = await fastify
         .knex("reqversion")
         .where({
@@ -121,7 +120,7 @@ module.exports = async function (fastify, opts) {
   fastify.delete(
     "/requirements/:requirementId",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: deleteRequirementSchema,
     },
     async function (request, reply) {
@@ -169,7 +168,7 @@ module.exports = async function (fastify, opts) {
   fastify.patch(
     "/requirements/:requirementId",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: patchRequirementSchema,
     },
     async function (request, reply) {
@@ -221,7 +220,7 @@ module.exports = async function (fastify, opts) {
   fastify.post(
     "/requirements/:requirementId/versions",
     {
-      preValidation: [fastify.authenticate],
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postReqVersionSchema,
     },
     async function (request, reply) {

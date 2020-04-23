@@ -174,16 +174,16 @@ module.exports = async (fastify, opts) => {
   };
   // Get one user
   fastify.get(
-    "/users/:id",
+    "/users/:userId",
     {
-      preValidation: [fastify.authenticate], //, fastify.isCorrectUser],
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: getUserSchema,
     },
     async function (request, reply) {
       return await fastify
         .knex("account")
         .select("name", "email")
-        .where("id", request.params.id)
+        .where("id", request.params.userId)
         .first();
     }
   );
@@ -194,7 +194,7 @@ module.exports = async (fastify, opts) => {
     params: {
       type: "object",
       properties: {
-        id: { type: "number" },
+        userId: { type: "number" },
       },
     },
     headers: {
@@ -351,9 +351,9 @@ module.exports = async (fastify, opts) => {
 
   // Get a user's teams
   fastify.get(
-    "/users/:id/teams",
+    "/users/:userId/teams",
     {
-      preValidation: [fastify.authenticate], //, fastify.isCorrectUser]
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: getTeamsSchema,
     },
     async function (request, reply) {
@@ -365,7 +365,7 @@ module.exports = async (fastify, opts) => {
           "team.description",
           "account_team.is_admin"
         )
-        .where("account_id", request.params.id)
+        .where("account_id", request.params.userId)
         .join("team", "team.id", "=", "account_team.team_id");
     }
   );
