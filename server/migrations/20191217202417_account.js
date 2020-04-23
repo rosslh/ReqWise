@@ -31,6 +31,24 @@ exports.up = function (knex) {
         .notNullable();
       table.boolean("is_admin").notNullable();
     }),
+    knex.schema.createTable("stakeholder_reqgroup", (table) => {
+      table.increments("id").primary();
+      table
+        .integer("account_id")
+        .references("account.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table
+        .integer("reqgroup_id")
+        .references("reqgroup.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table.string("role").notNullable();
+    }),
     knex.schema.createTable("project", (table) => {
       table.increments("id").primary();
       table.string("name");
@@ -120,6 +138,9 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.string("content").notNullable();
+      table.enu("type", ["accept", "comment", "requestChanges"]).notNullable();
+      table.string("requestedDescription");
+      table.enu("requestedPriority", ["high", "medium", "low"]);
     }),
   ]);
 };
@@ -134,5 +155,6 @@ exports.down = function (knex) {
     knex.schema.dropTable("account_team"),
     knex.schema.dropTable("team"),
     knex.schema.dropTable("account"),
+    knex.schema.dropTable("stakeholder_reqgroup"),
   ]);
 };
