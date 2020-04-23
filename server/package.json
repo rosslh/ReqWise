@@ -25,6 +25,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-jwt": "^1.2.1",
     "fastify-plugin": "^1.6.0",
+    "hashids": "^2.2.1",
     "is-docker": "^2.0.0",
     "knex": "^0.20.4",
     "make-promises-safe": "^5.0.0",

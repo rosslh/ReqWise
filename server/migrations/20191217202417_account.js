@@ -147,6 +147,8 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
   return Promise.all([
+    knex.schema.dropTable("stakeholder_reqgroup"),
+
     knex.schema.dropTable("comment"),
     knex.schema.dropTable("reqversion"),
     knex.schema.dropTable("requirement"),
@@ -155,6 +157,5 @@ exports.down = function (knex) {
     knex.schema.dropTable("account_team"),
     knex.schema.dropTable("team"),
     knex.schema.dropTable("account"),
-    knex.schema.dropTable("stakeholder_reqgroup"),
   ]);
 };

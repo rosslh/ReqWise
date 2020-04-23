@@ -339,6 +339,7 @@ module.exports = async (fastify, opts) => {
             .knex("account")
             .update({
               password_hash: bcrypt.hashSync(password, 10),
+              verification_token: null,
             })
             .where("email", email)
             .returning(["name", "email"])
