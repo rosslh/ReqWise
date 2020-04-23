@@ -17,7 +17,7 @@ module.exports = fp(async (fastify, opts) => {
       ? payload.replace(
           /"(((?!per_project_unique)[^"])*_|)id":(\d+)/g,
           (match, $1, $2, $3) => {
-            return `"${$1}id":"${hashids.encode($3)}"`;
+            return `"${$1}id":"${fastify.encodeHashId($3)}"`;
           }
         )
       : payload;

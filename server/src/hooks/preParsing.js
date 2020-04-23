@@ -13,7 +13,7 @@ module.exports = fp(async (fastify, opts) => {
     // of handlers.
     Object.keys(request.params).forEach((key) => {
       if (key.endsWith("Id") && isNaN(request.params[key])) {
-        request.params[key] = Number(hashids.decode(request.params[key]));
+        request.params[key] = fastify.decodeHashId(request.params[key]);
       }
     });
   });
