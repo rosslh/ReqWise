@@ -1,5 +1,3 @@
-const slugify = require("slugify");
-
 module.exports = async function (fastify, opts) {
   const getProjectSchema = {
     body: {},
@@ -104,7 +102,7 @@ module.exports = async function (fastify, opts) {
             project_id: { type: "number" },
             name: { type: "string" },
             description: { type: "string" },
-            pretty_id: { type: "string" },
+            per_project_unique_id: { type: "number" },
             type: { type: "string" },
           },
         },
@@ -150,7 +148,7 @@ module.exports = async function (fastify, opts) {
             id: { type: "number" },
             reqgroup_id: { type: "number" },
             project_id: { type: "number" },
-            pretty_id: { type: "string" },
+            per_project_unique_id: { type: "number" },
             is_archived: { type: "boolean" },
           },
         },
@@ -174,10 +172,9 @@ module.exports = async function (fastify, opts) {
   const postFeatureSchema = {
     body: {
       type: "object",
-      required: ["name", "pretty_id"],
+      required: ["name"],
       properties: {
         name: { type: "string" },
-        pretty_id: { type: "string" },
       },
     },
     queryString: {},
@@ -209,15 +206,23 @@ module.exports = async function (fastify, opts) {
       schema: postFeatureSchema,
     },
     async function (request, reply) {
-      const { name, pretty_id } = request.body;
+      const { name } = request.body;
       const { projectId: project_id } = request.params;
+      const maxPpuid =
+        (
+          await fastify
+            .knex("reqgroup")
+            .where({ project_id })
+            .max("per_project_unique_id")
+            .first()
+        ).max || 0;
       return await fastify
         .knex("reqgroup")
         .insert({
           project_id,
           name,
           type: "feature",
-          pretty_id: slugify(pretty_id, { lower: true }),
+          per_project_unique_id: maxPpuid + 1,
         })
         .returning("id");
     }

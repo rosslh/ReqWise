@@ -1,7 +1,6 @@
 <script>
   import Select from "svelte-select";
-  import { get, patch, post } from "../api.js";
-  import { toPrettyId } from "../utils.js";
+  import { get, post } from "../api.js";
   import { onMount } from "svelte";
   import Skeleton from "./Skeleton.svelte";
 
@@ -12,7 +11,6 @@
   let description;
   let priority;
   let rationale;
-  let pretty_id;
 
   const priorityOptions = [
     { value: "high", label: "High" },
@@ -20,25 +18,17 @@
     { value: "low", label: "Low" }
   ];
 
-  let original_pretty_id = "";
   let repropose = true;
 
   onMount(async () => {
     const res = await get(`/requirements/${id}`);
     description = res.latestVersion.description;
-    original_pretty_id = res.pretty_id;
-    pretty_id = res.pretty_id;
     priority = priorityOptions.find(
       option => option.value === res.latestVersion.priority
     );
   });
 
   const updateRequirement = async () => {
-    if (original_pretty_id !== pretty_id) {
-      await patch(`/requirements/${id}`, {
-        pretty_id
-      });
-    }
     const data = {
       description,
       priority: priority.value,
@@ -70,19 +60,6 @@
       bind:value={description} />
   {:else}
     <Skeleton noPadding />
-  {/if}
-</fieldset>
-<fieldset class="inline">
-  <label for="prettyId">Unique ID</label>
-  {#if pretty_id || pretty_id === ''}
-    <input
-      type="text"
-      id="prettyId"
-      name="prettyId"
-      class="newReqInput solidPlaceholder"
-      bind:value={pretty_id} />
-  {:else}
-    <Skeleton noPadding inline />
   {/if}
 </fieldset>
 <fieldset class="inline">

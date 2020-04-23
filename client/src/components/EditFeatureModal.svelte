@@ -6,13 +6,12 @@
   export let close;
 
   export let feature;
-  let { name, pretty_id } = feature;
+  let { name } = feature;
 
   $: update = async e => {
     e.preventDefault();
     await put(`/features/${featureId}`, {
-      name,
-      pretty_id
+      name
     });
     updateFeature();
     close();
@@ -22,22 +21,13 @@
 <h3>Update Feature</h3>
 <form>
   <fieldset>
-    <label for="desc">Description</label>
+    <label for="desc">Title</label>
     <input
       type="text"
       id="desc"
       name="desc"
       class="newReqInput"
       bind:value={name} />
-  </fieldset>
-  <fieldset class="inline">
-    <label for="prettyId">Unique ID</label>
-    <input
-      type="text"
-      id="prettyId"
-      name="prettyId"
-      class="newReqInput"
-      bind:value={pretty_id} />
   </fieldset>
   <button class="button-caution" on:click={update}>Save</button>
 </form>

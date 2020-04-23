@@ -1,7 +1,6 @@
 <script>
   import Select from "svelte-select";
   import { post } from "../api.js";
-  import { toPrettyId } from "../utils.js";
 
   export let featureId;
   export let update;
@@ -9,13 +8,10 @@
 
   let description = "";
   let rationale = "";
-  let pretty_id = "";
-  $: idFromName = toPrettyId(description);
 
   $: addReq = async e => {
     e.preventDefault();
     await post(`/features/${featureId}/requirements`, {
-      pretty_id: pretty_id || idFromName,
       description,
       rationale,
       priority: priority.value,
@@ -55,16 +51,6 @@
     name="desc"
     class="newReqInput"
     bind:value={description} />
-</fieldset>
-<fieldset class="inline">
-  <label for="prettyId">Unique ID</label>
-  <input
-    type="text"
-    id="prettyId"
-    name="prettyId"
-    class="newReqInput solidPlaceholder"
-    placeholder={idFromName}
-    bind:value={pretty_id} />
 </fieldset>
 <fieldset class="inline">
   <label for="priority">Priority</label>

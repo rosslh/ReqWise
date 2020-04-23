@@ -1,5 +1,3 @@
-const slugify = require("slugify");
-
 module.exports = async function (fastify, opts) {
   const getRequirementSchema = {
     body: {},
@@ -25,7 +23,7 @@ module.exports = async function (fastify, opts) {
           reqgroup_id: { type: "number" },
           project_id: { type: "number" },
           is_archived: { type: "boolean" },
-          pretty_id: { type: "string" },
+          per_project_unique_id: { type: "number" },
           comments: {
             type: "array",
             items: {
@@ -136,7 +134,6 @@ module.exports = async function (fastify, opts) {
     body: {
       type: "object",
       properties: {
-        pretty_id: { type: "string" },
         is_archived: { type: "boolean" },
         reqgroup_id: { type: "number" },
         project_id: { type: "number" },
@@ -172,7 +169,7 @@ module.exports = async function (fastify, opts) {
       schema: patchRequirementSchema,
     },
     async function (request, reply) {
-      const { pretty_id, project_id, reqgroup_id, is_archived } = request.body;
+      const { project_id, reqgroup_id, is_archived } = request.body;
       return await fastify
         .knex("requirement")
         .where("id", request.params.requirementId)
@@ -180,7 +177,6 @@ module.exports = async function (fastify, opts) {
           project_id,
           reqgroup_id,
           is_archived,
-          pretty_id: pretty_id && slugify(pretty_id, { lower: true }),
         })
         .returning("id");
     }

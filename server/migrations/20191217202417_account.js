@@ -53,7 +53,7 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.string("name").notNullable();
-      table.string("pretty_id").notNullable();
+      table.integer("per_project_unique_id").notNullable().unsigned();
       table.string("description");
       table
         .enu("type", [
@@ -80,7 +80,7 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .notNullable()
         .unsigned();
-      table.string("pretty_id").notNullable();
+      table.integer("per_project_unique_id").notNullable().unsigned();
       table.boolean("is_archived").defaultTo(false);
     }),
     knex.schema.createTable("reqversion", (table) => {

@@ -1,5 +1,3 @@
-const slugify = require("slugify");
-
 module.exports = async function (fastify, opts) {
   const getFeatureSchema = {
     body: {},
@@ -25,7 +23,7 @@ module.exports = async function (fastify, opts) {
           project_id: { type: "number" },
           name: { type: "string" },
           description: { type: "string" },
-          pretty_id: { type: "string" },
+          per_project_unique_id: { type: "number" },
           type: { type: "string" },
         },
       },
@@ -53,9 +51,9 @@ module.exports = async function (fastify, opts) {
       type: "object",
       properties: {
         name: { type: "string" },
-        pretty_id: { type: "string" },
+        per_project_unique_id: { type: "number" },
       },
-      required: ["name", "pretty_id"],
+      required: ["name"],
     },
     queryString: {},
     params: {
@@ -86,13 +84,12 @@ module.exports = async function (fastify, opts) {
       schema: putFeatureSchema,
     },
     async function (request, reply) {
-      const { name, pretty_id } = request.body;
+      const { name } = request.body;
       return await fastify
         .knex("reqgroup")
         .where("id", request.params.featureId)
         .update({
           name,
-          pretty_id: slugify(pretty_id, { lower: true }),
         })
         .returning("id");
     }
@@ -166,7 +163,7 @@ module.exports = async function (fastify, opts) {
             id: { type: "number" },
             reqgroup_id: { type: "number" },
             project_id: { type: "number" },
-            pretty_id: { type: "string" },
+            per_project_unique_id: { type: "number" },
             is_archived: { type: "boolean" },
             account_id: { type: "number" },
             priority: { type: "string" },
@@ -191,7 +188,7 @@ module.exports = async function (fastify, opts) {
           "requirement.id",
           "requirement.reqgroup_id",
           "requirement.project_id",
-          "requirement.pretty_id",
+          "requirement.per_project_unique_id",
           "requirement.is_archived",
           "reqversion.account_id",
           "reqversion.priority",
@@ -220,10 +217,9 @@ module.exports = async function (fastify, opts) {
         description: { type: "string" },
         priority: { type: "string" },
         status: { type: "string" },
-        pretty_id: { type: "string" },
         ratonale: { type: "string" },
       },
-      required: ["description", "priority", "status", "pretty_id", "rationale"],
+      required: ["description", "priority", "status", "rationale"],
     },
     queryString: {},
     params: {
@@ -253,13 +249,7 @@ module.exports = async function (fastify, opts) {
       schema: postRequirementSchema,
     },
     async function (request, reply) {
-      const {
-        pretty_id,
-        description,
-        priority,
-        status,
-        rationale,
-      } = request.body;
+      const { description, priority, status, rationale } = request.body;
       const { featureId: reqgroup_id } = request.params;
 
       const project_id = (
@@ -272,13 +262,22 @@ module.exports = async function (fastify, opts) {
           .first()
       ).project_id;
 
+      const maxPpuid =
+        (
+          await fastify
+            .knex("requirement")
+            .where({ project_id })
+            .max("per_project_unique_id")
+            .first()
+        ).max || 0;
+
       const requirement_id = (
         await fastify
           .knex("requirement")
           .insert({
             reqgroup_id,
             project_id,
-            pretty_id: slugify(pretty_id, { lower: true }),
+            per_project_unique_id: maxPpuid + 1,
           })
           .returning("id")
       )[0];

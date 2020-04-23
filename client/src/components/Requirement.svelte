@@ -81,6 +81,10 @@
     }
   }
 
+  td.ppuid {
+    color: var(--grey4);
+  }
+
   td.priority {
     text-transform: capitalize;
   }
@@ -131,6 +135,8 @@
   <td class="checkbox">
     <input type="checkbox" checked={selected} />
   </td>
+  <td class="desc">{requirement.description}</td>
+  <td class="ppuid">#{requirement.per_project_unique_id}</td>
   <td class="status">
     {#if requirement.status === 'proposed'}
       <span
@@ -162,8 +168,6 @@
       Implemented
     {/if}
   </td>
-  <!-- <td>{normalizeString(`${featureId}.${requirement.pretty_id}`)}</td> -->
-  <td class="desc">{requirement.description}</td>
   <td
     class="priority"
     style={`color:var(--${getPriorityColor(requirement.priority)})`}>

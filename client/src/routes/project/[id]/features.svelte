@@ -37,12 +37,14 @@
   </p>
   <AddFeature {update} {id} />
 </section>
-<section class="contentWrapper">
-  {#if features}
-    {#each features as feature (feature.id)}
-      <Feature {feature} {update} />
-    {/each}
-  {:else}
-    <Feature />
-  {/if}
-</section>
+{#if !features || features.length}
+  <section class="contentWrapper">
+    {#if features}
+      {#each features as feature (feature.id)}
+        <Feature {feature} {update} />
+      {/each}
+    {:else}
+      <Feature />
+    {/if}
+  </section>
+{/if}

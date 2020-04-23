@@ -66,8 +66,9 @@
       <thead>
         <tr>
           <th />
-          <th>Status</th>
           <th>Description</th>
+          <th>ID</th>
+          <th>Status</th>
           <th>Priority</th>
           <th>Updated</th>
           <th />

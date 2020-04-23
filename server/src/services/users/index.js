@@ -70,7 +70,7 @@ module.exports = async (fastify, opts) => {
       )}'>Follow this link to verify your account</a>.`, // html body
     });
 
-    console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    request.log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 
     return userId[0];
   });
@@ -284,7 +284,7 @@ module.exports = async (fastify, opts) => {
         )}'>Follow this link to reset your ReqWise password</a>.`, // html body
       });
 
-      console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+      request.log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 
       return user;
     }

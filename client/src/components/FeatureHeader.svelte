@@ -29,12 +29,18 @@
   div.featureHeader button {
     margin: 0;
   }
+
+  .featurePpuid {
+    color: var(--grey4);
+    margin-left: 0.5rem;
+  }
 </style>
 
 <div class="featureHeader">
   <h3>
     {#if feature}
       {feature.name}
+      <span class="featurePpuid">#{feature.per_project_unique_id}</span>
     {:else}
       <Skeleton noPadding inline height="1.7rem" />
     {/if}
