@@ -15,9 +15,9 @@ module.exports = fp(async (fastify, opts) => {
     // TODO: evaluate performance impact of moving this to preSerialization
     const newPayload = payload
       ? payload.replace(
-          /"(((?!per_project_unique)[^"])*_|)id":(\d+)/g,
-          (match, $1, $2, $3) => {
-            return `"${$1}id":"${fastify.obfuscateId($3)}"`;
+          /"((?!per_project_unique)[^"]*_|)id":(\d+)/g,
+          (_, $1, $2) => {
+            return `"${$1}id":"${fastify.obfuscateId($2)}"`;
           }
         )
       : payload;
