@@ -8,7 +8,9 @@
   import MdClose from "svelte-icons/md/MdClose.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
+  import FaShapes from "svelte-icons/fa/FaShapes.svelte";
   import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
+  import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
 
   export let name;
   export let id;
@@ -41,21 +43,33 @@
       icon: IoMdRibbon
     },
     {
-      label: "User Classes",
-      slug: "user-classes",
-      icon: IoMdPeople
+      label: "Models",
+      slug: "models",
+      icon: FaShapes,
+      newSection: true
     },
     {
-      label: "Archived",
-      slug: "archived",
-      icon: FaArchive,
+      label: "User Classes",
+      slug: "user-classes",
+      icon: IoMdPeople,
+      newSection: true
+    },
+    // {
+    //   label: "Archived",
+    //   slug: "archived",
+    //   icon: FaArchive,
+    //   newSection: true
+    // },
+    {
+      label: "Stakeholders",
+      slug: "stakeholders",
+      icon: FaUserTie,
       newSection: true
     },
     {
       label: "Activity",
       slug: "activity",
-      icon: MdHistory,
-      newSection: true
+      icon: MdHistory
     },
     {
       label: "Settings",
@@ -139,7 +153,9 @@
   }
 
   span.icon.archived,
-  span.icon.business-rules {
+  span.icon.business-rules,
+  span.icon.stakeholders,
+  span.icon.models {
     padding: 0.2rem;
   }
 </style>

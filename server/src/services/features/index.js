@@ -23,7 +23,7 @@ module.exports = async function (fastify, opts) {
           project_id: { type: "number" },
           name: { type: "string" },
           description: { type: "string" },
-          per_project_unique_id: { type: "number" },
+          ppuid: { type: "number" },
           type: { type: "string" },
         },
       },
@@ -38,7 +38,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("reqgroup")
-        .select("*")
+        .select("*", "per_project_unique_id as ppuid")
         .where({
           id: request.params.featureId,
         })
@@ -51,7 +51,6 @@ module.exports = async function (fastify, opts) {
       type: "object",
       properties: {
         name: { type: "string" },
-        per_project_unique_id: { type: "number" },
       },
       required: ["name"],
     },
@@ -163,7 +162,7 @@ module.exports = async function (fastify, opts) {
             id: { type: "number" },
             reqgroup_id: { type: "number" },
             project_id: { type: "number" },
-            per_project_unique_id: { type: "number" },
+            ppuid: { type: "number" },
             is_archived: { type: "boolean" },
             account_id: { type: "number" },
             priority: { type: "string" },
@@ -188,7 +187,7 @@ module.exports = async function (fastify, opts) {
           "requirement.id",
           "requirement.reqgroup_id",
           "requirement.project_id",
-          "requirement.per_project_unique_id",
+          "requirement.per_project_unique_id as ppuid",
           "requirement.is_archived",
           "reqversion.account_id",
           "reqversion.priority",

@@ -102,7 +102,7 @@ module.exports = async function (fastify, opts) {
             project_id: { type: "number" },
             name: { type: "string" },
             description: { type: "string" },
-            per_project_unique_id: { type: "number" },
+            ppuid: { type: "number" },
             type: { type: "string" },
           },
         },
@@ -118,7 +118,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("reqgroup")
-        .select("reqgroup.*")
+        .select("*", "per_project_unique_id as ppuid")
         .where("project_id", request.params.projectId);
     }
   );
@@ -148,7 +148,7 @@ module.exports = async function (fastify, opts) {
             id: { type: "number" },
             reqgroup_id: { type: "number" },
             project_id: { type: "number" },
-            per_project_unique_id: { type: "number" },
+            ppuid: { type: "number" },
             is_archived: { type: "boolean" },
           },
         },
@@ -164,7 +164,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("requirement")
-        .select("*")
+        .select("*", "per_project_unique_id as ppuid")
         .where({ is_archived: true, project_id: request.params.projectId });
     }
   );

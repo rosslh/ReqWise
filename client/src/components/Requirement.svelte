@@ -136,7 +136,7 @@
     <input type="checkbox" checked={selected} />
   </td>
   <td class="desc">{requirement.description}</td>
-  <td class="ppuid">#{requirement.per_project_unique_id}</td>
+  <td class="ppuid">#{requirement.ppuid}</td>
   <td class="status">
     {#if requirement.status === 'proposed'}
       <span

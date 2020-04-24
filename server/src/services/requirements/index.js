@@ -23,7 +23,7 @@ module.exports = async function (fastify, opts) {
           reqgroup_id: { type: "number" },
           project_id: { type: "number" },
           is_archived: { type: "boolean" },
-          per_project_unique_id: { type: "number" },
+          ppuid: { type: "number" },
           comments: {
             type: "array",
             items: {
@@ -81,7 +81,7 @@ module.exports = async function (fastify, opts) {
       const requirement = await fastify.knex
         .from("requirement")
         .join("reqgroup", "reqgroup.id", "=", "requirement.reqgroup_id")
-        .select("requirement.*")
+        .select("requirement.*", "requirement.per_project_unique_id as ppuid")
         .where({
           "requirement.id": request.params.requirementId,
         })
