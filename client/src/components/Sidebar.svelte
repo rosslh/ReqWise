@@ -1,6 +1,6 @@
 <script>
   import IoMdRibbon from "svelte-icons/io/IoMdRibbon.svelte";
-  import IoMdCheckmarkCircleOutline from "svelte-icons/io/IoMdCheckmarkCircleOutline.svelte";
+  import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
@@ -11,6 +11,7 @@
   import FaShapes from "svelte-icons/fa/FaShapes.svelte";
   import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
+  import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
 
   export let name;
   export let id;
@@ -35,7 +36,7 @@
     {
       label: "Features",
       slug: "features",
-      icon: IoMdCheckmarkCircleOutline
+      icon: FaCheck
     },
     {
       label: "Quality Attributes",
@@ -52,6 +53,12 @@
       label: "User Classes",
       slug: "user-classes",
       icon: IoMdPeople,
+      newSection: true
+    },
+    {
+      label: "Tests",
+      slug: "tests",
+      icon: FaCheckDouble,
       newSection: true
     },
     // {
@@ -155,7 +162,9 @@
   span.icon.archived,
   span.icon.business-rules,
   span.icon.stakeholders,
-  span.icon.models {
+  span.icon.models,
+  span.icon.tests,
+  span.icon.features {
     padding: 0.2rem;
   }
 </style>
