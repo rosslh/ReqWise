@@ -4,11 +4,11 @@ const Hashids = require("hashids/cjs");
 module.exports = fp(function (fastify, opts, done) {
   const hashids = new Hashids(process.env["HASHID_KEY"], 5);
 
-  fastify.decorate("decodeHashId", function (str) {
-    return Number(hashids.decode(str));
+  fastify.decorate("deobfuscateId", function (str) {
+    return hashids.decode(str)[0] || str;
   });
 
-  fastify.decorate("encodeHashId", function (num) {
+  fastify.decorate("obfuscateId", function (num) {
     return hashids.encode(num);
   });
 

@@ -7,11 +7,13 @@ exports.up = function (knex) {
       table.string("verification_token");
       table.string("password_hash");
       table.boolean("is_verified").notNullable();
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("team", (table) => {
       table.increments("id").primary();
       table.string("name").notNullable();
       table.string("description");
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("account_team", (table) => {
       table.increments("id").primary();
@@ -30,6 +32,7 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.boolean("is_admin").notNullable();
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("stakeholder_reqgroup", (table) => {
       table.increments("id").primary();
@@ -49,6 +52,24 @@ exports.up = function (knex) {
         .notNullable();
       table.string("role").notNullable();
     }),
+    knex.schema.createTable("stakeholder_requirement", (table) => {
+      table.increments("id").primary();
+      table
+        .integer("account_id")
+        .references("account.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table
+        .integer("requirement_id")
+        .references("requirement.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table.string("role").notNullable();
+    }),
     knex.schema.createTable("project", (table) => {
       table.increments("id").primary();
       table.string("name");
@@ -59,6 +80,7 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .unsigned()
         .notNullable();
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("reqgroup", (table) => {
       // aka feature
@@ -82,6 +104,7 @@ exports.up = function (knex) {
           "description",
         ])
         .notNullable();
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("requirement", (table) => {
       table.increments("id").primary();
@@ -141,6 +164,18 @@ exports.up = function (knex) {
       table.enu("type", ["accept", "comment", "requestChanges"]).notNullable();
       table.string("requestedDescription");
       table.enu("requestedPriority", ["high", "medium", "low"]);
+      table.timestamp("created_at").defaultTo(knex.fn.now());
+    }),
+    knex.schema.createTable("teamInvite", (table) => {
+      table.increments("id").primary();
+      table.string("inviteeEmail").notNullable();
+      table.integer("team_id").references("team.id").unsigned().notNullable();
+      table
+        .integer("inviter_id")
+        .references("account.id")
+        .unsigned()
+        .notNullable();
+      table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
   ]);
 };
@@ -148,6 +183,7 @@ exports.up = function (knex) {
 exports.down = function (knex) {
   return Promise.all([
     knex.schema.dropTable("stakeholder_reqgroup"),
+    knex.schema.dropTable("teamInvite"),
 
     knex.schema.dropTable("comment"),
     knex.schema.dropTable("reqversion"),

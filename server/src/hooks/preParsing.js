@@ -12,8 +12,8 @@ module.exports = fp(async (fastify, opts) => {
     // situation unexpected behavior may occur, e.g. duplicate invocation
     // of handlers.
     Object.keys(request.params).forEach((key) => {
-      if (key.endsWith("Id") && isNaN(request.params[key])) {
-        request.params[key] = fastify.decodeHashId(request.params[key]);
+      if (key.endsWith("Id")) {
+        request.params[key] = fastify.deobfuscateId(request.params[key]);
       }
     });
   });
