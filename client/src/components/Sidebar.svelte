@@ -52,14 +52,12 @@
     {
       label: "User Classes",
       slug: "user-classes",
-      icon: IoMdPeople,
-      newSection: true
+      icon: IoMdPeople
     },
     {
       label: "Tests",
       slug: "tests",
-      icon: FaCheckDouble,
-      newSection: true
+      icon: FaCheckDouble
     },
     // {
     //   label: "Archived",
