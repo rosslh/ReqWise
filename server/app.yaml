@@ -5,8 +5,8 @@ instance_class: F2
 env_variables:
   DB_NAME: reqwise
   DB_USERNAME: postgres
-  DB_PASS: "4MXc5(_inRsJV54J$Ac5"
-  DB_HOST: "database-dev-1.cr0vlp9alyoi.us-east-2.rds.amazonaws.com"
+  DB_PASS: "bbJ6EPur6z9M9fsf"
+  DB_HOST: "/cloudsql/reqwise:us-central1:reqwise"
   DB_PORT: 5432
   JWT_KEY: "@lVxVTh)^8A6X7))myL4"
   HASHID_KEY: "TQE^6q^ncmeL)31s"
