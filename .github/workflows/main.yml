@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: add env variables to app.yaml
-        run: 'echo "env_variables:{"DB_NAME": $DB_NAME,"DB_USERNAME": $DB_USERNAME,"DB_PASS": $DB_PASS,"DB_HOST": $DB_HOST,"DB_PORT": $DB_PORT,"JWT_KEY": $JWT_KEY,"HASHID_KEY": $HASHID_KEY}" >> app.yaml'
+        run: 'echo "env_variables:{\"DB_NAME\": \"$DB_NAME\",\"DB_USERNAME\": \"$DB_USERNAME\",\"DB_PASS\": \"$DB_PASS\",\"DB_HOST\": \"$DB_HOST\",\"DB_PORT\": \"$DB_PORT\",\"JWT_KEY\": \"$JWT_KEY\",\"HASHID_KEY\": \"$HASHID_KEY\"}" >> app.yaml'
         shell: bash
         env:
           DB_NAME: ${{secrets.DB_NAME}}
