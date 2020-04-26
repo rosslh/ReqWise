@@ -1,8 +1,9 @@
 <script>
-  import { onMount } from "svelte";
-  import { modalContent, modalProps } from "../../stores.js";
-  import { get, put, del } from "../../api.js";
   import { stores, goto } from "@sapper/app";
+  import { onMount } from "svelte";
+
+  import { modalContent, modalProps, userId } from "../../stores.js";
+  import { get, put, del } from "../../api.js";
   const { page } = stores();
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
@@ -15,6 +16,7 @@
   let projects = null;
   let members = null;
   let invites = null;
+  let is_admin = false;
 
   const { id } = $page.params;
 
@@ -22,7 +24,7 @@
 
   const update = async () => {
     get(`/teams/${id}`).then(r => {
-      ({ name, description } = r);
+      ({ name, description, is_admin } = r);
       title = name;
     });
     get(`/teams/${id}/projects`).then(r => {
@@ -53,6 +55,11 @@
 
   const deleteInvite = async inviteId => {
     await del(`/teams/${id}/invites/${inviteId}`);
+    update();
+  };
+
+  const deleteMember = async memberId => {
+    await del(`/teams/${id}/members/${memberId}`);
     update();
   };
 </script>
@@ -102,17 +109,18 @@
     {:else}
       <Skeleton rows={2} />
     {/if}
-
-    <div>
-      <button
-        class="button-create"
-        on:click={() => {
-          modalContent.set(AddProjectModal);
-          modalProps.set({ id, update });
-        }}>
-        Create project
-      </button>
-    </div>
+    {#if is_admin}
+      <div>
+        <button
+          class="button-create"
+          on:click={() => {
+            modalContent.set(AddProjectModal);
+            modalProps.set({ id, update });
+          }}>
+          Create project
+        </button>
+      </div>
+    {/if}
   </section>
   <section>
     <h2>Members</h2>
@@ -123,6 +131,9 @@
             <th>Name</th>
             <th>Email</th>
             <th>Is admin</th>
+            {#if is_admin}
+              <th />
+            {/if}
           </tr>
         </thead>
         <tbody>
@@ -131,6 +142,18 @@
               <td>{member.name}</td>
               <td>{member.email}</td>
               <td>{member.is_admin}</td>
+              {#if is_admin}
+                <td>
+                  {#if member.id !== $userId}
+                    <button
+                      class="button-danger button-small button-outline"
+                      style="margin: 0;"
+                      on:click={() => deleteMember(member.id)}>
+                      Remove member
+                    </button>
+                  {:else}(You){/if}
+                </td>
+              {/if}
             </tr>
           {/each}
         </tbody>
@@ -145,7 +168,9 @@
           <tr>
             <th>Email</th>
             <th>Is admin</th>
-            <th />
+            {#if is_admin}
+              <th />
+            {/if}
           </tr>
         </thead>
         <tbody>
@@ -153,14 +178,16 @@
             <tr>
               <td>{invite.inviteeEmail}</td>
               <td>{invite.is_admin}</td>
-              <td>
-                <button
-                  class="button-danger button-small button-outline"
-                  style="margin: 0;"
-                  on:click={() => deleteInvite(invite.id)}>
-                  Delete invite
-                </button>
-              </td>
+              {#if is_admin}
+                <td>
+                  <button
+                    class="button-danger button-small button-outline"
+                    style="margin: 0;"
+                    on:click={() => deleteInvite(invite.id)}>
+                    Delete invite
+                  </button>
+                </td>
+              {/if}
             </tr>
           {/each}
         </tbody>
@@ -168,19 +195,23 @@
     {:else}
       <Skeleton rows={3} />
     {/if}
-    <div>
-      <button
-        on:click={() => {
-          modalContent.set(InviteTeamMemberModal);
-          modalProps.set({ id, update });
-        }}
-        class="button-create">
-        Invite member
-      </button>
-    </div>
+    {#if is_admin}
+      <div>
+        <button
+          on:click={() => {
+            modalContent.set(InviteTeamMemberModal);
+            modalProps.set({ id, update });
+          }}
+          class="button-create">
+          Invite member
+        </button>
+      </div>
+    {/if}
   </section>
-  <section>
-    <h2>Danger Zone</h2>
-    <button class="button-danger" on:click={deleteTeam}>Delete team</button>
-  </section>
+  {#if is_admin}
+    <section>
+      <h2>Danger Zone</h2>
+      <button class="button-danger" on:click={deleteTeam}>Delete team</button>
+    </section>
+  {/if}
 </div>

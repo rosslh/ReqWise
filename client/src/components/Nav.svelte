@@ -3,7 +3,7 @@
 
   const logout = () => {
     jwt.set("");
-    userId.set(-1);
+    userId.set("");
   };
 </script>
 

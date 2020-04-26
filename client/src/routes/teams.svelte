@@ -1,16 +1,32 @@
 <script>
   import { onMount } from "svelte";
   import { userId, modalContent, modalProps } from "../stores.js";
-  import { get, post } from "../api.js";
+  import { get, post, del } from "../api.js";
   import Skeleton from "../components/Skeleton.svelte";
   import AddTeamModal from "../components/AddTeamModal.svelte";
   let teams = null;
+  let invites = null;
 
   const update = async () => {
     teams = await get(`/users/${$userId}/teams`);
+    invites = await get(`/users/${$userId}/invites`);
   };
 
   onMount(update);
+
+  const acceptInvite = async inviteId => {
+    await post(`/users/${$userId}/teams`, {
+      inviteId
+    });
+  };
+
+  const deleteInvite = async inviteId => {
+    await del(`/users/${$userId}/invites/${inviteId}`);
+  };
+
+  const leaveTeam = async teamId => {
+    // TODO: do this
+  };
 </script>
 
 <div class="contentWrapper">
@@ -30,6 +46,14 @@
               <a href={`/team/${team.id}`}>{team.name}</a>
             </td>
             <td>{team.description}</td>
+            <td>
+              <button
+                class="button-danger button-small button-outline"
+                style="margin: 0;"
+                on:click={() => leaveTeam(team.id)}>
+                Leave team
+              </button>
+            </td>
           </tr>
         {/each}
       </tbody>
@@ -37,7 +61,45 @@
   {:else}
     <Skeleton rows={3} />
   {/if}
-
+  <h2>Invites</h2>
+  {#if invites}
+    <table class="compact">
+      <thead>
+        <tr>
+          <th>Team name</th>
+          <th>Inviter name</th>
+          <th />
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {#each invites as invite (invite.id)}
+          <tr>
+            <td>{invite.teamName}</td>
+            <td>{invite.inviterName}</td>
+            <td>
+              <button
+                class="button-success button-small button-outline"
+                style="margin: 0;"
+                on:click={() => acceptInvite(invite.id)}>
+                Accept
+              </button>
+            </td>
+            <td>
+              <button
+                class="button-danger button-small button-outline"
+                style="margin: 0;"
+                on:click={() => deleteInvite(invite.id)}>
+                Delete
+              </button>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:else}
+    <Skeleton rows={3} />
+  {/if}
   <button
     class="button-create"
     on:click={() => {

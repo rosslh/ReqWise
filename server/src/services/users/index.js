@@ -188,44 +188,6 @@ module.exports = async (fastify, opts) => {
     }
   );
 
-  const getTeamsSchema = {
-    body: {},
-    queryString: {},
-    params: {
-      type: "object",
-      properties: {
-        userId: { type: "number" },
-      },
-    },
-    headers: {
-      type: "object",
-      properties: {
-        Authorization: {
-          type: "string",
-        },
-      },
-      required: ["Authorization"],
-    },
-    response: {
-      200: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            name: { type: "string" },
-            description: {
-              type: "string",
-            },
-            is_admin: {
-              type: "boolean",
-            },
-          },
-        },
-      },
-    },
-  };
-
   const resetPasswordSchema = {
     body: {
       type: "object",
@@ -350,7 +312,43 @@ module.exports = async (fastify, opts) => {
     }
   );
 
-  // Get a user's teams
+  const getTeamsSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: {
+          type: "string",
+        },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            name: { type: "string" },
+            description: {
+              type: "string",
+            },
+            is_admin: {
+              type: "boolean",
+            },
+          },
+        },
+      },
+    },
+  };
   fastify.get(
     "/users/:userId/teams",
     {
@@ -368,6 +366,194 @@ module.exports = async (fastify, opts) => {
         )
         .where("account_id", request.params.userId)
         .join("team", "team.id", "=", "account_team.team_id");
+    }
+  );
+
+  const getInvitesSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: {
+          type: "string",
+        },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            inviterName: { type: "string" },
+            teamName: { type: "string" },
+          },
+        },
+      },
+    },
+  };
+  fastify.get(
+    "/users/:userId/invites",
+    {
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
+      schema: getInvitesSchema,
+    },
+    async function (request, reply) {
+      return await fastify
+        .knex("teamInvite")
+        .select(
+          "teamInvite.id",
+          "inviter.name as inviterName",
+          "team.name as teamName"
+        )
+        .where("teamInvite.inviteeEmail", request.user.email)
+        .join("account as inviter", "inviter.id", "=", "teamInvite.inviter_id")
+        .join("team", "team.id", "=", "teamInvite.team_id");
+    }
+  );
+
+  const acceptInviteSchema = {
+    body: {
+      type: "object",
+      required: ["inviteId"],
+      properties: {
+        inviteId: { type: "string" },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        "Content-Type": {
+          type: "string",
+        },
+      },
+      required: ["Content-Type"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.post(
+    "/users/:userId/teams",
+    {
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
+      schema: acceptInviteSchema,
+    },
+    async function (request, reply) {
+      // get invite
+      const inviteId = fastify.deobfuscateId(request.body.inviteId);
+      const invite = await fastify
+        .knex("teamInvite")
+        .select("*")
+        .where("id", inviteId)
+        .first();
+
+      // add member to team
+      if (invite) {
+        const { team_id, is_admin } = invite;
+
+        const memberAlreadyExists = await fastify
+          .knex("account_team")
+          .select("*")
+          .where({ account_id: request.user.id, team_id })
+          .first();
+
+        if (!memberAlreadyExists) {
+          await fastify.knex("account_team").insert({
+            account_id: request.user.id,
+            team_id,
+            is_admin,
+          });
+        }
+
+        // delete invite
+        await fastify
+          .knex("teamInvite")
+          .select("*")
+          .where("id", inviteId)
+          .del();
+
+        return ["success"];
+      }
+      reply.code(400);
+      return ["invalid invite"];
+    }
+  );
+
+  const deleteInviteSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+        inviteId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        "Content-Type": {
+          type: "string",
+        },
+      },
+      required: ["Content-Type"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.delete(
+    "/users/:userId/invites/:inviteId",
+    {
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
+      schema: deleteInviteSchema,
+    },
+    async function (request, reply) {
+      // get invite
+      const invite = await fastify
+        .knex("teamInvite")
+        .select("*")
+        .where({
+          id: request.params.inviteId,
+          inviteeEmail: request.user.email,
+        })
+        .first();
+
+      if (invite) {
+        // delete invite
+        await fastify
+          .knex("teamInvite")
+          .select("*")
+          .where("id", request.params.inviteId)
+          .del();
+
+        return ["success"];
+      }
+      reply.code(400);
+      return ["invalid invite"];
     }
   );
 };

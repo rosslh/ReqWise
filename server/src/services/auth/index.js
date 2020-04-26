@@ -25,7 +25,7 @@ module.exports = async (fastify, opts) => {
         type: "object",
         properties: {
           token: { type: "string" },
-          userId: { type: "number" },
+          userId: { type: "string" },
         },
       },
       401: {
@@ -53,7 +53,10 @@ module.exports = async (fastify, opts) => {
 
       if (bcrypt.compareSync(password, account.password_hash)) {
         const jwtContent = { email, name: account.name, id: account.id };
-        return { token: fastify.jwt.sign(jwtContent), userId: account.id };
+        return {
+          token: fastify.jwt.sign(jwtContent),
+          userId: fastify.obfuscateId(account.id),
+        };
       } else {
         reply.code(401);
         return ["Incorrect password"];

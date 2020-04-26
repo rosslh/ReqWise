@@ -26,7 +26,7 @@ module.exports = fp(async function (fastify, opts) {
         .from("account_team")
         .select("id")
         .where({
-          id: request.params.teamId,
+          team_id: request.params.teamId,
           account_id: request.user.id,
           ...(is_admin && { is_admin }),
         })
@@ -34,7 +34,7 @@ module.exports = fp(async function (fastify, opts) {
 
     if (!membership) {
       reply.code(403);
-      reply.send("Not a team member");
+      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
     }
   };
 
@@ -53,7 +53,7 @@ module.exports = fp(async function (fastify, opts) {
 
     if (!membership) {
       reply.code(403);
-      reply.send("Not a team member");
+      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
     }
   };
 
@@ -73,7 +73,7 @@ module.exports = fp(async function (fastify, opts) {
 
     if (!membership) {
       reply.code(403);
-      reply.send("Not a team member");
+      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
     }
   };
 
@@ -98,7 +98,7 @@ module.exports = fp(async function (fastify, opts) {
 
     if (!membership) {
       reply.code(403);
-      reply.send("Not a team member");
+      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
     }
   };
 
@@ -124,7 +124,7 @@ module.exports = fp(async function (fastify, opts) {
 
     if (!membership) {
       reply.code(403);
-      reply.send("Not a team member");
+      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
     }
   };
 

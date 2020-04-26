@@ -82,8 +82,9 @@ module.exports = async function (fastify, opts) {
           id: { type: "number" },
           name: { type: "string" },
           description: { type: "string" },
+          is_admin: { type: "boolean" },
         },
-        required: ["id", "name", "description"],
+        required: ["id", "name", "description", "is_admin"],
       },
     },
   };
@@ -96,8 +97,17 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("team")
-        .select("id", "name", "description")
-        .where("id", request.params.teamId)
+        .select(
+          "team.id as id",
+          "team.name as name",
+          "team.description as description",
+          "account_team.is_admin as is_admin"
+        )
+        .where("team.id", request.params.teamId)
+        .join("account_team", {
+          "account_team.team_id": "team.id",
+          "account_team.account_id": request.user.id,
+        })
         .first();
     }
   );

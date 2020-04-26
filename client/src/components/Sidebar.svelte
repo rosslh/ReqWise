@@ -44,7 +44,7 @@
       icon: IoMdRibbon
     },
     {
-      label: "Models",
+      label: "Models and diagrams",
       slug: "models",
       icon: FaShapes,
       newSection: true
