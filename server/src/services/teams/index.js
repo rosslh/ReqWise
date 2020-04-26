@@ -350,14 +350,29 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { inviteeEmail, is_admin } = request.body;
 
-      const alreadyExists = (
+      const memberAlreadyExists = (
+        await fastify.knex
+          .from("account")
+          .select("account.id")
+          .where({
+            email: inviteeEmail,
+          })
+          .join("account_team", "account_team.account_id", "account.id")
+      ).length;
+
+      if (memberAlreadyExists) {
+        reply.code(409);
+        return ["Member already exists"];
+      }
+
+      const inviteAlreadyExists = (
         await fastify.knex.from("teamInvite").select("id").where({
           inviteeEmail,
           team_id: request.params.teamId,
         })
       ).length;
 
-      if (alreadyExists) {
+      if (inviteAlreadyExists) {
         reply.code(409);
         return ["Invite already exists"];
       }

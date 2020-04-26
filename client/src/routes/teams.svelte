@@ -18,10 +18,12 @@
     await post(`/users/${$userId}/teams`, {
       inviteId
     });
+    await update();
   };
 
   const deleteInvite = async inviteId => {
     await del(`/users/${$userId}/invites/${inviteId}`);
+    await update();
   };
 
   const leaveTeam = async teamId => {
