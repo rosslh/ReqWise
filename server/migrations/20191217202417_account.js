@@ -176,6 +176,7 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.boolean("is_admin").notNullable();
     }),
   ]);
 };
@@ -183,6 +184,7 @@ exports.up = function (knex) {
 exports.down = function (knex) {
   return Promise.all([
     knex.schema.dropTable("stakeholder_reqgroup"),
+    knex.schema.dropTable("stakeholder_requirement"),
     knex.schema.dropTable("teamInvite"),
 
     knex.schema.dropTable("comment"),

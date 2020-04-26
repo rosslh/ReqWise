@@ -6,6 +6,7 @@
   const { page } = stores();
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
+  import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
 
   let name = "";
@@ -13,6 +14,7 @@
 
   let projects = null;
   let members = null;
+  let invites = null;
 
   const { id } = $page.params;
 
@@ -29,6 +31,9 @@
     get(`/teams/${id}/members`).then(r => {
       members = r;
     });
+    get(`/teams/${id}/invites`).then(r => {
+      invites = r;
+    });
   };
 
   const updateTeam = async () => {
@@ -44,6 +49,11 @@
   const deleteTeam = async () => {
     await del(`/teams/${id}`);
     goto("/teams");
+  };
+
+  const deleteInvite = async inviteId => {
+    await del(`/teams/${id}/invites/${inviteId}`);
+    update();
   };
 </script>
 
@@ -128,8 +138,45 @@
     {:else}
       <Skeleton rows={3} />
     {/if}
+    <h3>Invites</h3>
+    {#if invites}
+      <table class="compact">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Is admin</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {#each invites as invite (invite.id)}
+            <tr>
+              <td>{invite.inviteeEmail}</td>
+              <td>{invite.is_admin}</td>
+              <td>
+                <button
+                  class="button-danger button-small button-outline"
+                  style="margin: 0;"
+                  on:click={() => deleteInvite(invite.id)}>
+                  Delete invite
+                </button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:else}
+      <Skeleton rows={3} />
+    {/if}
     <div>
-      <button class="button-create">Add member</button>
+      <button
+        on:click={() => {
+          modalContent.set(InviteTeamMemberModal);
+          modalProps.set({ id, update });
+        }}
+        class="button-create">
+        Invite member
+      </button>
     </div>
   </section>
   <section>
