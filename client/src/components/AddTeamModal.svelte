@@ -13,6 +13,7 @@
   };
 </script>
 
+<h3>Create team</h3>
 <fieldset>
   <label for="teamName">Team name</label>
   <input type="text" bind:value={teamName} />

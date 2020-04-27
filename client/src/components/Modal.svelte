@@ -16,7 +16,7 @@
     if ($modalProps.url) {
       fromUrl = location.href;
       history.pushState({}, "", $modalProps.url);
-      eventListener = window.addEventListener("popstate", function(event) {
+      eventListener = window.addEventListener("popstate", () => {
         clearModal();
       });
     }
@@ -49,7 +49,7 @@
   div.contentWrapper {
     z-index: 200;
     background-color: white;
-    padding: 3rem;
+    padding: 1rem 3rem 3rem;
     border-radius: 0.4rem;
     position: fixed;
     top: 50%;

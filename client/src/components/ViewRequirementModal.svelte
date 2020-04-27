@@ -38,11 +38,11 @@
     margin-top: 2rem;
     margin-bottom: 0.6rem;
   }
-  :global(.descDiff ins) {
+  :global(.reqversionContent ins) {
     color: var(--green);
   }
 
-  :global(.descDiff del) {
+  :global(.reqversionContent del) {
     color: var(--red);
   }
 
@@ -60,7 +60,7 @@
 
   .reqversionContent {
     border: 0.1rem solid var(--grey2);
-    background-color: var(--offwhite3);
+    background-color: var(--offwhite2);
     border-radius: 0.3rem;
     padding: 0.2rem 0.6rem;
   }
@@ -85,7 +85,11 @@
     {#if typeof oldPriority === 'undefined'}
       <span class="capitalize">{newPriority}</span>
     {:else if oldPriority !== newPriority}
-      <span class="capitalize">{oldPriority} &rarr; {newPriority}</span>
+      <span class="capitalize">
+        <del>{oldPriority}</del>
+        &rarr;
+        <ins>{newPriority}</ins>
+      </span>
     {:else}
       <span class="capitalize">{newPriority}</span>
       (no change)

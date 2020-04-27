@@ -14,6 +14,7 @@
   };
 </script>
 
+<h3>Invite member</h3>
 <fieldset>
   <label for="inviteeEmail">Invitee email address</label>
   <input type="email" id="inviteeEmail" bind:value={inviteeEmail} />
