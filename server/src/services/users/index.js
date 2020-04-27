@@ -341,7 +341,10 @@ module.exports = async (fastify, opts) => {
             description: {
               type: "string",
             },
-            is_admin: {
+            isAdmin: {
+              type: "boolean",
+            },
+            isOwner: {
               type: "boolean",
             },
           },
@@ -362,7 +365,8 @@ module.exports = async (fastify, opts) => {
           "team.id",
           "team.name",
           "team.description",
-          "account_team.is_admin"
+          "account_team.isAdmin",
+          "account_team.isOwner"
         )
         .where("account_id", request.params.userId)
         .join("team", "team.id", "=", "account_team.team_id");
@@ -469,7 +473,7 @@ module.exports = async (fastify, opts) => {
 
       // add member to team
       if (invite) {
-        const { team_id, is_admin } = invite;
+        const { team_id, isAdmin } = invite;
 
         const memberAlreadyExists = await fastify
           .knex("account_team")
@@ -481,7 +485,8 @@ module.exports = async (fastify, opts) => {
           await fastify.knex("account_team").insert({
             account_id: request.user.id,
             team_id,
-            is_admin,
+            isAdmin,
+            isOwner: false,
           });
         }
 
@@ -554,6 +559,65 @@ module.exports = async (fastify, opts) => {
       }
       reply.code(400);
       return ["invalid invite"];
+    }
+  );
+
+  const leaveTeamSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+        inviteId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        "Content-Type": {
+          type: "string",
+        },
+      },
+      required: ["Content-Type"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.delete(
+    "/users/:userId/teams/:teamId",
+    {
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
+      schema: leaveTeamSchema,
+    },
+    async function (request, reply) {
+      const membership = await fastify
+        .knex("account_team")
+        .select("*")
+        .where({
+          account_id: request.params.userId,
+          team_id: request.params.teamId,
+        })
+        .first();
+
+      if (!membership.isOwner) {
+        await fastify
+          .knex("account_team")
+          .select("*")
+          .where({
+            account_id: request.params.userId,
+            team_id: request.params.teamId,
+            isOwner: false,
+          })
+          .del();
+        return ["success"];
+      }
+      reply.code(400);
+      return ["owner cannot leave team"];
     }
   );
 };

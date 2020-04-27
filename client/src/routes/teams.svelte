@@ -27,9 +27,16 @@
   };
 
   const leaveTeam = async teamId => {
-    // TODO: do this
+    await del(`/users/${$userId}/teams/${teamId}`);
+    await update();
   };
 </script>
+
+<style>
+  .membership {
+    color: var(--grey4);
+  }
+</style>
 
 <div class="contentWrapper">
   <h1>My Teams</h1>
@@ -39,6 +46,7 @@
         <tr>
           <th>Name</th>
           <th>Description</th>
+          <th />
         </tr>
       </thead>
       <tbody>
@@ -48,13 +56,17 @@
               <a href={`/team/${team.id}`}>{team.name}</a>
             </td>
             <td>{team.description}</td>
-            <td>
-              <button
-                class="button-danger button-small button-outline"
-                style="margin: 0;"
-                on:click={() => leaveTeam(team.id)}>
-                Leave team
-              </button>
+            <td class="membership">
+              {#if team.isOwner}
+                (You own this team)
+              {:else}
+                <button
+                  class="button-danger button-small button-outline"
+                  style="margin: 0;"
+                  on:click={() => leaveTeam(team.id)}>
+                  Leave team
+                </button>
+              {/if}
             </td>
           </tr>
         {/each}

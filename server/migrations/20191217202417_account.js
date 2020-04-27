@@ -31,7 +31,8 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .unsigned()
         .notNullable();
-      table.boolean("is_admin").notNullable();
+      table.boolean("isAdmin").notNullable();
+      table.boolean("isOwner").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("stakeholder_reqgroup", (table) => {
@@ -176,7 +177,7 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
-      table.boolean("is_admin").notNullable();
+      table.boolean("isAdmin").notNullable();
     }),
   ]);
 };

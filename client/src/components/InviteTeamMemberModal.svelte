@@ -5,10 +5,10 @@
   import { post } from "../api.js";
 
   let inviteeEmail = "";
-  let is_admin = false;
+  let isAdmin = false;
 
   const inviteMember = async () => {
-    await post(`/teams/${id}/invites`, { inviteeEmail, is_admin });
+    await post(`/teams/${id}/invites`, { inviteeEmail, isAdmin });
     await update();
     close();
   };
@@ -19,7 +19,7 @@
   <input type="email" id="inviteeEmail" bind:value={inviteeEmail} />
 </fieldset>
 <fieldset>
-  <input type="checkbox" id="isAdmin" bind:checked={is_admin} />
+  <input type="checkbox" id="isAdmin" bind:checked={isAdmin} />
   <label class="label-inline" for="isAdmin">Make administrator</label>
 </fieldset>
 <fieldset>

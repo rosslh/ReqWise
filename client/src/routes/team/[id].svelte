@@ -16,7 +16,7 @@
   let projects = null;
   let members = null;
   let invites = null;
-  let is_admin = false;
+  let isAdmin = false;
 
   const { id } = $page.params;
 
@@ -24,7 +24,7 @@
 
   const update = async () => {
     get(`/teams/${id}`).then(r => {
-      ({ name, description, is_admin } = r);
+      ({ name, description, isAdmin } = r);
       title = name;
     });
     get(`/teams/${id}/projects`).then(r => {
@@ -63,6 +63,12 @@
     update();
   };
 </script>
+
+<style>
+  .userActions {
+    color: var(--grey4);
+  }
+</style>
 
 <div class="contentWrapper">
   {#if title}
@@ -109,7 +115,7 @@
     {:else}
       <Skeleton rows={2} />
     {/if}
-    {#if is_admin}
+    {#if isAdmin}
       <div>
         <button
           class="button-create"
@@ -131,7 +137,8 @@
             <th>Name</th>
             <th>Email</th>
             <th>Is admin</th>
-            {#if is_admin}
+            <th>Is owner</th>
+            {#if isAdmin}
               <th />
             {/if}
           </tr>
@@ -141,16 +148,19 @@
             <tr>
               <td>{member.name}</td>
               <td>{member.email}</td>
-              <td>{member.is_admin}</td>
-              {#if is_admin}
-                <td>
+              <td>{member.isAdmin}</td>
+              <td>{member.isOwner}</td>
+              {#if isAdmin}
+                <td class="userActions">
                   {#if member.id !== $userId}
-                    <button
-                      class="button-danger button-small button-outline"
-                      style="margin: 0;"
-                      on:click={() => deleteMember(member.id)}>
-                      Remove member
-                    </button>
+                    {#if !member.isOwner}
+                      <button
+                        class="button-danger button-small button-outline"
+                        style="margin: 0;"
+                        on:click={() => deleteMember(member.id)}>
+                        Remove member
+                      </button>
+                    {/if}
                   {:else}(You){/if}
                 </td>
               {/if}
@@ -168,7 +178,7 @@
           <tr>
             <th>Email</th>
             <th>Is admin</th>
-            {#if is_admin}
+            {#if isAdmin}
               <th />
             {/if}
           </tr>
@@ -177,8 +187,8 @@
           {#each invites as invite (invite.id)}
             <tr>
               <td>{invite.inviteeEmail}</td>
-              <td>{invite.is_admin}</td>
-              {#if is_admin}
+              <td>{invite.isAdmin}</td>
+              {#if isAdmin}
                 <td>
                   <button
                     class="button-danger button-small button-outline"
@@ -195,7 +205,7 @@
     {:else}
       <Skeleton rows={3} />
     {/if}
-    {#if is_admin}
+    {#if isAdmin}
       <div>
         <button
           on:click={() => {
@@ -208,7 +218,7 @@
       </div>
     {/if}
   </section>
-  {#if is_admin}
+  {#if isAdmin}
     <section>
       <h2>Danger Zone</h2>
       <button class="button-danger" on:click={deleteTeam}>Delete team</button>

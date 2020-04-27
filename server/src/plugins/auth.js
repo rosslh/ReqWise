@@ -20,7 +20,7 @@ module.exports = fp(async function (fastify, opts) {
     }
   });
 
-  const isTeamMemberByTeamId = async (request, reply, is_admin = false) => {
+  const isTeamMemberByTeamId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
         .from("account_team")
@@ -28,17 +28,17 @@ module.exports = fp(async function (fastify, opts) {
         .where({
           team_id: request.params.teamId,
           account_id: request.user.id,
-          ...(is_admin && { is_admin }),
+          ...(isAdmin && { isAdmin }),
         })
     ).length;
 
     if (!membership) {
       reply.code(403);
-      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
-  const isTeamMemberByProjectId = async (request, reply, is_admin = false) => {
+  const isTeamMemberByProjectId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
         .from("project")
@@ -47,17 +47,17 @@ module.exports = fp(async function (fastify, opts) {
         .where({
           "project.id": request.params.projectId,
           "account_team.account_id": request.user.id,
-          ...(is_admin && { is_admin }),
+          ...(isAdmin && { isAdmin }),
         })
     ).length;
 
     if (!membership) {
       reply.code(403);
-      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
-  const isTeamMemberByFeatureId = async (request, reply, is_admin = false) => {
+  const isTeamMemberByFeatureId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
         .from("reqgroup")
@@ -67,20 +67,20 @@ module.exports = fp(async function (fastify, opts) {
         .where({
           "reqgroup.id": request.params.featureId,
           "account_team.account_id": request.user.id,
-          ...(is_admin && { is_admin }),
+          ...(isAdmin && { isAdmin }),
         })
     ).length;
 
     if (!membership) {
       reply.code(403);
-      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
   const isTeamMemberByRequirementId = async (
     request,
     reply,
-    is_admin = false
+    isAdmin = false
   ) => {
     const membership = (
       await fastify.knex
@@ -92,20 +92,20 @@ module.exports = fp(async function (fastify, opts) {
         .where({
           "requirement.id": request.params.requirementId,
           "account_team.account_id": request.user.id,
-          ...(is_admin && { is_admin }),
+          ...(isAdmin && { isAdmin }),
         })
     ).length;
 
     if (!membership) {
       reply.code(403);
-      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
   const isTeamMemberByReqversionId = async (
     request,
     reply,
-    is_admin = false
+    isAdmin = false
   ) => {
     const membership = (
       await fastify.knex
@@ -118,13 +118,13 @@ module.exports = fp(async function (fastify, opts) {
         .where({
           "reqversion.id": request.params.reqversionId,
           "account_team.account_id": request.user.id,
-          ...(is_admin && { is_admin }),
+          ...(isAdmin && { isAdmin }),
         })
     ).length;
 
     if (!membership) {
       reply.code(403);
-      reply.send(`Not a team ${is_admin ? "admin" : "member"}`);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 

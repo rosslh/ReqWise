@@ -52,7 +52,8 @@ module.exports = async function (fastify, opts) {
       await fastify.knex("account_team").insert({
         account_id: request.user.id,
         team_id,
-        is_admin: true,
+        isAdmin: true,
+        isOwner: true,
       });
 
       return { team_id };
@@ -82,9 +83,9 @@ module.exports = async function (fastify, opts) {
           id: { type: "number" },
           name: { type: "string" },
           description: { type: "string" },
-          is_admin: { type: "boolean" },
+          isAdmin: { type: "boolean" },
         },
-        required: ["id", "name", "description", "is_admin"],
+        required: ["id", "name", "description", "isAdmin"],
       },
     },
   };
@@ -101,7 +102,7 @@ module.exports = async function (fastify, opts) {
           "team.id as id",
           "team.name as name",
           "team.description as description",
-          "account_team.is_admin as is_admin"
+          "account_team.isAdmin as isAdmin"
         )
         .where("team.id", request.params.teamId)
         .join("account_team", {
@@ -232,9 +233,10 @@ module.exports = async function (fastify, opts) {
             id: { type: "number" },
             name: { type: "string" },
             email: { type: "string" },
-            is_admin: { type: "boolean" },
+            isAdmin: { type: "boolean" },
+            isOwner: { type: "boolean" },
           },
-          required: ["id", "name", "email", "is_admin"],
+          required: ["id", "name", "email", "isAdmin", "isOwner"],
         },
       },
     },
@@ -252,7 +254,8 @@ module.exports = async function (fastify, opts) {
           "account.id",
           "account.name",
           "account.email",
-          "account_team.is_admin"
+          "account_team.isAdmin",
+          "account_team.isOwner"
         )
         .where("team_id", request.params.teamId)
         .join("account", "account.id", "=", "account_team.account_id");
@@ -283,9 +286,9 @@ module.exports = async function (fastify, opts) {
           properties: {
             id: { type: "number" },
             inviteeEmail: { type: "string" },
-            is_admin: { type: "boolean" },
+            isAdmin: { type: "boolean" },
           },
-          required: ["inviteeEmail", "is_admin", "id"],
+          required: ["inviteeEmail", "isAdmin", "id"],
         },
       },
     },
@@ -307,10 +310,10 @@ module.exports = async function (fastify, opts) {
   const postTeamInviteSchema = {
     body: {
       type: "object",
-      required: ["inviteeEmail", "is_admin"],
+      required: ["inviteeEmail", "isAdmin"],
       properties: {
         inviteeEmail: { type: "string" },
-        is_admin: { type: "boolean" },
+        isAdmin: { type: "boolean" },
       },
     },
     queryString: {},
@@ -348,7 +351,7 @@ module.exports = async function (fastify, opts) {
       schema: postTeamInviteSchema,
     },
     async function (request, reply) {
-      const { inviteeEmail, is_admin } = request.body;
+      const { inviteeEmail, isAdmin } = request.body;
 
       const memberAlreadyExists = (
         await fastify.knex
@@ -356,6 +359,7 @@ module.exports = async function (fastify, opts) {
           .select("account.id")
           .where({
             email: inviteeEmail,
+            "account_team.team_id": request.params.teamId,
           })
           .join("account_team", "account_team.account_id", "account.id")
       ).length;
@@ -381,7 +385,7 @@ module.exports = async function (fastify, opts) {
         .knex("teamInvite")
         .insert({
           inviteeEmail,
-          is_admin,
+          isAdmin,
           inviter_id: request.user.id,
           team_id: request.params.teamId,
         })
@@ -429,6 +433,65 @@ module.exports = async function (fastify, opts) {
         .where({ team_id: request.params.teamId, id: request.params.inviteId })
         .del();
       return ["success"];
+    }
+  );
+
+  const deleteMemberSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+        memberId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+
+  fastify.delete(
+    "/teams/:teamId/members/:memberId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: deleteMemberSchema,
+    },
+    async function (request, reply) {
+      const membership = await fastify
+        .knex("account_team")
+        .select("*")
+        .where({
+          account_id: request.params.memberId,
+          team_id: request.params.teamId,
+        })
+        .first();
+
+      if (!membership.isOwner) {
+        await fastify
+          .knex("account_team")
+          .select("*")
+          .where({
+            account_id: request.params.memberId,
+            team_id: request.params.teamId,
+            isOwner: false,
+          })
+          .del();
+        return ["success"];
+      }
+      reply.code(400);
+      return ["owner cannot leave team"];
     }
   );
 
