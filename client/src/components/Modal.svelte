@@ -13,19 +13,19 @@
   // TODO: consider using sapper goto instead of history.pushState
 
   onMount(() => {
-    fromUrl = location.href;
-
     if ($modalProps.url) {
+      fromUrl = location.href;
       history.pushState({}, "", $modalProps.url);
+      eventListener = window.addEventListener("popstate", function(event) {
+        clearModal();
+      });
     }
-
-    eventListener = window.addEventListener("popstate", function(event) {
-      clearModal();
-    });
   });
 
   onDestroy(() => {
-    window.removeEventListener("popstate", eventListener);
+    if ($modalProps.url) {
+      window.removeEventListener("popstate", eventListener);
+    }
   });
 
   const close = () => {
