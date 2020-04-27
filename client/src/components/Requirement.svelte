@@ -43,13 +43,13 @@
   const viewRequirement = (event, id) => {
     event.stopPropagation();
     modalContent.set(ViewRequirementModal);
-    modalProps.set({ id, update });
+    modalProps.set({ id, update, url: `/requirements/${id}` });
   };
 
   const proposeChange = (event, id) => {
     event.stopPropagation();
     modalContent.set(UpdateRequirementModal);
-    modalProps.set({ id, update });
+    modalProps.set({ id, update, url: `/requirements/${id}` });
   };
 </script>
 

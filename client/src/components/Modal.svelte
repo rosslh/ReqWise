@@ -1,9 +1,38 @@
 <script>
+  import { onMount, onDestroy } from "svelte";
   import { modalContent, modalProps } from "../stores.js";
 
-  const close = () => {
+  let fromUrl;
+  let eventListener;
+
+  const clearModal = () => {
     modalContent.set(false);
     modalProps.set({});
+  };
+
+  // TODO: consider using sapper goto instead of history.pushState
+
+  onMount(() => {
+    fromUrl = location.href;
+
+    if ($modalProps.url) {
+      history.pushState({}, "", $modalProps.url);
+    }
+
+    eventListener = window.addEventListener("popstate", function(event) {
+      clearModal();
+    });
+  });
+
+  onDestroy(() => {
+    window.removeEventListener("popstate", eventListener);
+  });
+
+  const close = () => {
+    if ($modalProps.url) {
+      history.pushState({}, "", fromUrl);
+    }
+    clearModal();
   };
 </script>
 
