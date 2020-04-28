@@ -1,10 +1,15 @@
 :root {
   --themeColor: #38a169;
 
-  --orange: #f0922e;
-  --red: #ea4b4b;
-  --green: var(--themeColor);
-  --indigo: #7472d5;
+  --orange: #ee9338;
+
+  --lightRed: #fef6f6;
+  --red: #f35c5c;
+
+  --lightGreen: #e3feec;
+  --green: #38a169;
+
+  --indigo: #8583ed;
 
   --offwhite1: #fefeff;
   --offwhite2: #fcfdfe;

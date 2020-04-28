@@ -37,12 +37,17 @@
 </script>
 
 <style>
+  .editorWrapper {
+    padding-top: 1rem;
+  }
   #editor {
     height: 12rem;
   }
 </style>
 
-<div id="editor" />
-<button on:click={postCommentAndClear} class="button-success">
-  Post comment
-</button>
+<div class="editorWrapper">
+  <div id="editor" />
+  <button on:click={postCommentAndClear} class="button-success">
+    Post comment
+  </button>
+</div>

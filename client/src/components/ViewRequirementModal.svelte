@@ -78,10 +78,12 @@
   }
   :global(.reqversionContent ins) {
     color: var(--green);
+    background-color: var(--lightGreen);
   }
 
   :global(.reqversionContent del) {
     color: var(--red);
+    background-color: var(--lightRed);
   }
 
   :global(.descDiff > *:first-child) {
@@ -138,12 +140,11 @@
     height: 24rem;
   }
   h3 {
-    margin-top: 1rem;
-    margin: 0;
+    margin: 1rem 0 0.5rem;
   }
 
   h4 {
-    margin-top: 0.8rem;
+    margin-top: 1rem;
   }
 </style>
 
