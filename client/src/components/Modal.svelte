@@ -55,8 +55,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* width: 70rem; */
-    /* max-width: 95%; */
+    max-height: 90vh;
+    max-width: 90vw;
+    overflow-y: scroll;
+    box-sizing: content-box;
   }
 </style>
 

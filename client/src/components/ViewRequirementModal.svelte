@@ -1,10 +1,11 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import Diff from "text-diff";
   const diff = new Diff();
 
-  import { get } from "../api.js";
+  import { get, post } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
+  import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
 
   export let id;
@@ -14,15 +15,23 @@
   let oldDescription;
   let newDescription;
   let rationale;
-  let comments;
   let authorName;
   let authorEmail;
 
   let isInitialVersion = false;
 
-  let commentRichText = "";
+  let quillDelta;
+  let plaintextComment = "";
+
+  let comments;
+  let reqversionId;
 
   onMount(async () => {
+    await getRequirement();
+    await getComments();
+  });
+
+  const getRequirement = async () => {
     const requirement = await get(`/requirements/${id}`);
     isInitialVersion = !requirement.previousVersion.id;
     oldPriority = requirement.previousVersion.priority;
@@ -32,7 +41,18 @@
     rationale = requirement.latestVersion.rationale;
     authorName = requirement.latestVersion.authorName;
     authorEmail = requirement.latestVersion.authorEmail;
-  });
+
+    reqversionId = requirement.latestVersion.id;
+  };
+
+  $: getComments = async () => {
+    comments = await get(`/reqversions/${reqversionId}/comments`);
+    await tick();
+    document
+      .getElementById("commentsBottom")
+      .scrollIntoView({ behavior: "smooth" });
+  };
+
   $: descriptionDiff =
     newDescription &&
     (() => {
@@ -41,6 +61,15 @@
       difference = difference.map(part => [part[0], part[1].trim()]); // remove whitespace from end of parts (which have padding)
       return diff.prettyHtml(difference);
     })();
+
+  $: postComment = async () => {
+    await post(`/reqversions/${reqversionId}/comments`, {
+      plaintext: plaintextComment,
+      quillDelta: JSON.stringify(quillDelta),
+      type: "comment"
+    });
+    await getComments();
+  };
 </script>
 
 <style>
@@ -83,19 +112,44 @@
     color: var(--grey4);
   }
 
-  .container {
+  .requirementContainer {
     display: flex;
     justify-content: space-between;
+    /* min-height: 85vh; */
+    max-height: 90vh;
+    overflow: hidden;
   }
 
-  .container > .column {
+  .requirementContainer > .column {
     max-width: calc(50% - 1rem);
     flex-grow: 1;
     padding: 0 1rem;
   }
+
+  .requirementContainer > .column.comments {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 90vh;
+    position: relative;
+  }
+  .column.comments > .commentsTop {
+    height: calc(100% - 28rem);
+    overflow-y: scroll;
+    top: 4rem;
+    position: relative;
+  }
+  .column.comments > .commentsBottom {
+    background-color: white;
+    height: 24rem;
+  }
+  .column.comments > h4 {
+    position: fixed;
+    margin-top: 0.5rem;
+  }
 </style>
 
-<div class="container">
+<div class="requirementContainer">
   <div class="column">
     <h3>
       Proposed requirement
@@ -145,10 +199,24 @@
       <Skeleton noPadding />
     {/if}
   </div>
-  <div class="column">
+  <div class="column comments">
     <h4>Comments</h4>
-    <CommentEditor bind:value={commentRichText} />
-    <button class="button-success">Post comment</button>
-    <div>...</div>
+    <div class="commentsTop">
+      {#if comments}
+        <div id="commentsTop" />
+        {#each comments as comment (comment.id)}
+          <Comment {comment} />
+        {/each}
+        <div id="commentsBottom" />
+      {:else}
+        <Skeleton rows={4} />
+      {/if}
+    </div>
+    <div class="commentsBottom">
+      <CommentEditor bind:quillDelta bind:plaintext={plaintextComment} />
+      <button on:click={postComment} class="button-success">
+        Post comment
+      </button>
+    </div>
   </div>
 </div>

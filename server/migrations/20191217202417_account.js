@@ -161,7 +161,10 @@ exports.up = function (knex) {
         .references("account.id")
         .unsigned()
         .notNullable();
-      table.string("content").notNullable();
+      table.string("quillDelta", 2000).notNullable();
+      table.string("plaintext", 2000).notNullable();
+      table.string("html", 2000).notNullable();
+      table.string("mrkdwn", 2000).notNullable();
       table.enu("type", ["accept", "comment", "requestChanges"]).notNullable();
       table.string("requestedDescription");
       table.enu("requestedPriority", ["high", "medium", "low"]);

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  export let value = "";
+  export let quillDelta;
+  export let plaintext = "";
 
   onMount(() => {
     if (typeof document !== "undefined") {
@@ -18,8 +19,9 @@
           theme: "snow" // or 'bubble'
         });
 
-        quill.on("text-change", () => {
-          value = container.innerText;
+        quill.on("text-change", (delta, oldDelta, source) => {
+          quillDelta = quill.getContents();
+          plaintext = container.innerText;
         });
       });
     }
@@ -28,7 +30,7 @@
 
 <style>
   #editor {
-    height: 120px;
+    height: 12rem;
   }
 </style>
 
