@@ -41,6 +41,8 @@ module.exports = async function (fastify, opts) {
               description: { type: "string" },
               created_at: { type: "string" },
               rationale: { type: "string" },
+              authorName: { type: "string" },
+              authorEmail: { type: "string" },
             },
           },
           previousVersion: {
@@ -66,11 +68,17 @@ module.exports = async function (fastify, opts) {
       schema: getRequirementSchema,
     },
     async function (request, reply) {
-      const versions = await fastify
-        .knex("reqversion")
+      const versions = await fastify.knex
+        .from("reqversion")
+        .select(
+          "reqversion.*",
+          "account.name as authorName",
+          "account.email as authorEmail"
+        )
         .where({
           requirement_id: request.params.requirementId,
         })
+        .join("account", "account.id", "=", "reqversion.account_id")
         .orderBy("created_at", "desc")
         .limit(2);
 

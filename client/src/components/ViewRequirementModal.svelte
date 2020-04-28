@@ -5,6 +5,7 @@
 
   import { get } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
+  import CommentEditor from "./CommentEditor.svelte";
 
   export let id;
 
@@ -14,14 +15,23 @@
   let newDescription;
   let rationale;
   let comments;
+  let authorName;
+  let authorEmail;
+
+  let isInitialVersion = false;
+
+  let commentRichText = "";
 
   onMount(async () => {
     const requirement = await get(`/requirements/${id}`);
+    isInitialVersion = !requirement.previousVersion.id;
     oldPriority = requirement.previousVersion.priority;
     newPriority = requirement.latestVersion.priority;
     oldDescription = requirement.previousVersion.description;
     newDescription = requirement.latestVersion.description;
     rationale = requirement.latestVersion.rationale;
+    authorName = requirement.latestVersion.authorName;
+    authorEmail = requirement.latestVersion.authorEmail;
   });
   $: descriptionDiff =
     newDescription &&
@@ -68,41 +78,77 @@
   .capitalize {
     text-transform: capitalize;
   }
+
+  .authorEmail {
+    color: var(--grey4);
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .container > .column {
+    max-width: calc(50% - 1rem);
+    flex-grow: 1;
+    padding: 0 1rem;
+  }
 </style>
 
-<h3>Proposed requirement</h3>
-<h4>Description</h4>
-{#if typeof descriptionDiff === 'undefined'}
-  <Skeleton noPadding />
-{:else}
-  <div class="reqversionContent descDiff">
-    {@html descriptionDiff}
-  </div>
-{/if}
-<h4>Priority</h4>
-{#if newPriority}
-  <div class="reqversionContent">
-    {#if typeof oldPriority === 'undefined'}
-      <span class="capitalize">{newPriority}</span>
-    {:else if oldPriority !== newPriority}
-      <span class="capitalize">
-        <del>{oldPriority}</del>
-        &rarr;
-        <ins>{newPriority}</ins>
-      </span>
+<div class="container">
+  <div class="column">
+    <h3>
+      Proposed requirement
+      {#if !isInitialVersion}change{/if}
+    </h3>
+    <h4>Description</h4>
+    {#if typeof descriptionDiff === 'undefined'}
+      <Skeleton noPadding />
     {:else}
-      <span class="capitalize">{newPriority}</span>
-      (no change)
+      <div class="reqversionContent descDiff">
+        {@html descriptionDiff}
+      </div>
+    {/if}
+    <h4>Priority</h4>
+    {#if newPriority}
+      <div class="reqversionContent">
+        {#if typeof oldPriority === 'undefined'}
+          <span class="capitalize">{newPriority}</span>
+        {:else if oldPriority !== newPriority}
+          <span class="capitalize">
+            <del>{oldPriority}</del>
+            &rarr;
+            <ins>{newPriority}</ins>
+          </span>
+        {:else}
+          <span class="capitalize">{newPriority}</span>
+          (no change)
+        {/if}
+      </div>
+    {:else}
+      <Skeleton noPadding />
+    {/if}
+    <h4>Reason for change</h4>
+    {#if typeof rationale === 'undefined'}
+      <Skeleton noPadding />
+    {:else}
+      <div class="reqversionContent">{rationale || '\u200B'}</div>
+      <!-- zero-width-space to preserve height if rationale is empty-->
+    {/if}
+    <h4>Proposer</h4>
+    {#if authorName}
+      <div class="reqversionContent">
+        {authorName}
+        <span class="authorEmail">&lt;{authorEmail}&gt;</span>
+      </div>
+    {:else}
+      <Skeleton noPadding />
     {/if}
   </div>
-{:else}
-  <Skeleton noPadding />
-{/if}
-<h4>Reason for change</h4>
-{#if typeof rationale === 'undefined'}
-  <Skeleton noPadding />
-{:else}
-  <div class="reqversionContent">{rationale || '\u200B'}</div>
-  <!-- zero-width-space to preserve height if rationale is empty-->
-{/if}
-<h4>Comments</h4>
+  <div class="column">
+    <h4>Comments</h4>
+    <CommentEditor bind:value={commentRichText} />
+    <button class="button-success">Post comment</button>
+    <div>...</div>
+  </div>
+</div>
