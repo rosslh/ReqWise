@@ -56,8 +56,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     max-height: 90vh;
-    max-width: 90vw;
-    overflow-y: scroll;
+    /* max-width: 90vw; */
     box-sizing: content-box;
   }
 </style>

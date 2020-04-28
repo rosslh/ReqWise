@@ -2,12 +2,15 @@
   import { onMount } from "svelte";
   export let quillDelta;
   export let plaintext = "";
+  export let postComment;
+
+  let quill;
 
   onMount(() => {
     if (typeof document !== "undefined") {
       let container = document.getElementById("editor");
       import("quill").then(({ default: Quill }) => {
-        const quill = new Quill(container, {
+        quill = new Quill(container, {
           modules: {
             toolbar: [
               ["bold", "italic", "underline", "strike"],
@@ -26,6 +29,11 @@
       });
     }
   });
+
+  const postCommentAndClear = async () => {
+    await postComment();
+    quill.setText("");
+  };
 </script>
 
 <style>
@@ -35,3 +43,6 @@
 </style>
 
 <div id="editor" />
+<button on:click={postCommentAndClear} class="button-success">
+  Post comment
+</button>

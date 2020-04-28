@@ -58,7 +58,6 @@
     (() => {
       let difference = diff.main(oldDescription || "", newDescription);
       diff.cleanupSemantic(difference);
-      difference = difference.map(part => [part[0], part[1].trim()]); // remove whitespace from end of parts (which have padding)
       return diff.prettyHtml(difference);
     })();
 
@@ -74,7 +73,7 @@
 
 <style>
   h4 {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     margin-bottom: 0.6rem;
   }
   :global(.reqversionContent ins) {
@@ -83,10 +82,6 @@
 
   :global(.reqversionContent del) {
     color: var(--red);
-  }
-
-  :global(.descDiff > *) {
-    padding: 0 0.2rem;
   }
 
   :global(.descDiff > *:first-child) {
@@ -134,18 +129,21 @@
     position: relative;
   }
   .column.comments > .commentsTop {
-    height: calc(100% - 28rem);
+    flex-grow: 1;
     overflow-y: scroll;
-    top: 4rem;
     position: relative;
   }
   .column.comments > .commentsBottom {
     background-color: white;
     height: 24rem;
   }
-  .column.comments > h4 {
-    position: fixed;
-    margin-top: 0.5rem;
+  h3 {
+    margin-top: 1rem;
+    margin: 0;
+  }
+
+  h4 {
+    margin-top: 0.8rem;
   }
 </style>
 
@@ -213,10 +211,10 @@
       {/if}
     </div>
     <div class="commentsBottom">
-      <CommentEditor bind:quillDelta bind:plaintext={plaintextComment} />
-      <button on:click={postComment} class="button-success">
-        Post comment
-      </button>
+      <CommentEditor
+        {postComment}
+        bind:quillDelta
+        bind:plaintext={plaintextComment} />
     </div>
   </div>
 </div>
