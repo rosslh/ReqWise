@@ -1,9 +1,14 @@
 <script>
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   const { session } = stores();
 
-  const logout = () => {
+  const logout = async () => {
+    await fetch("auth/logout", {
+      method: "POST",
+      credentials: "include"
+    });
     $session.user = {};
+    goto("/login");
   };
 </script>
 

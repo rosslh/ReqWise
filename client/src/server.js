@@ -35,7 +35,6 @@ const expressServer = express()
     sirv("static", { dev }),
     sapper.middleware({
       session: (req) => {
-        console.log(req.session); // TODO: why isn't this printing user:...
         return {
           user: req.session && req.session.user,
         };

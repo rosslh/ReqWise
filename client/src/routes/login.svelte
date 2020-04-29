@@ -1,13 +1,20 @@
 <script>
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
-  import { post } from "../api";
 
   let email = "";
   let password = "";
 
   const submit = () => {
-    post("/auth/token", { email, password })
+    fetch("auth/login", {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(r => r.json())
       .then(r => {
         $session.user = { jwt: r.token, id: r.userId };
         goto("/teams");

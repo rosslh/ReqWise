@@ -13,15 +13,13 @@ const throwError = (httpMethod) => {
 };
 
 const fetcher = (endpoint, options, token) => {
-  if (!token) {
-    alert("No token");
-  }
   if (endpoint.charAt(0) !== "/") {
     endpoint = `/${endpoint}`;
   }
-  const fetchFn = process.browser
-    ? window.fetch
-    : require("node-fetch").default;
+  const fetchFn =
+    typeof window !== "undefined"
+      ? window.fetch
+      : require("node-fetch").default;
 
   return fetchFn(`${host}${endpoint}`, {
     ...commonOptions(token),
