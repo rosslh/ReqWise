@@ -179,13 +179,7 @@
       <MdClose />
     {/if}
   </button>
-  <h1>
-    {#if name}
-      {name}
-    {:else}
-      <Skeleton height="2.4rem" inline noPadding />
-    {/if}
-  </h1>
+  <h1>{name}</h1>
   <div class="items">
     {#each tabs as item (item.slug)}
       {#if item.newSection}

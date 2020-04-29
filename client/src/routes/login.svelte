@@ -42,4 +42,3 @@
 <div class="contentWrapper forgotPwd">
   <a href="/reset/request">Forgot password?</a>
 </div>
-{JSON.stringify($session, null, 2)}

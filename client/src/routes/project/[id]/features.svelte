@@ -17,7 +17,7 @@
   const { page, session } = stores();
   const { id } = $page.params;
 
-  export let features = null;
+  export let features = [];
 
   const update = async () => {
     features = await get(`/projects/${id}/features`, $session.jwt);
@@ -42,14 +42,10 @@
   </p>
   <AddFeature {update} {id} />
 </section>
-{#if !features || features.length}
+{#if features.length}
   <section class="contentWrapper">
-    {#if features}
-      {#each features as feature (feature.id)}
-        <Feature {feature} {update} />
-      {/each}
-    {:else}
-      <Feature />
-    {/if}
+    {#each features as feature (feature.id)}
+      <Feature {feature} {update} />
+    {/each}
   </section>
 {/if}
