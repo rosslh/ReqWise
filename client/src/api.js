@@ -13,6 +13,9 @@ const throwError = (httpMethod) => {
 };
 
 const fetcher = (endpoint, options, token) => {
+  if (!token) {
+    alert("No token");
+  }
   if (endpoint.charAt(0) !== "/") {
     endpoint = `/${endpoint}`;
   }

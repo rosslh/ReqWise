@@ -23,8 +23,8 @@
   export let invites = null;
 
   const update = async () => {
-    teams = await get(`/users/${$session.userId}/teams`);
-    invites = await get(`/users/${$session.userId}/invites`);
+    teams = await get(`/users/${$session.userId}/teams`, $session.jwt);
+    invites = await get(`/users/${$session.userId}/invites`, $session.jwt);
   };
 
   const acceptInvite = async inviteId => {

@@ -2,17 +2,17 @@
   import { del, get } from "../../../api.js";
   import { stores, goto } from "@sapper/app";
   import { onMount } from "svelte";
-  const { page } = stores();
+  const { page, session } = stores();
   const { id } = $page.params;
 
   let team_id = null;
 
   onMount(async () => {
-    ({ team_id } = await get(`/projects/${id}`));
+    ({ team_id } = await get(`/projects/${id}`, $session.jwt));
   });
 
   const deleteProject = async () => {
-    await del(`/projects/${id}`).then(r => {
+    await del(`/projects/${id}`, $session.jwt).then(r => {
       goto(`/team/${team_id}`);
     });
   };

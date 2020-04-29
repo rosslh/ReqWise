@@ -1,3 +1,11 @@
+<script context="module">
+  export const preload = async ({ params }, { jwt }) => {
+    const { id } = params;
+    const features = await get(`/projects/${id}/features`, jwt);
+    return { features };
+  };
+</script>
+
 <script>
   import { onMount } from "svelte";
   import { get, post } from "../../../api.js";
@@ -6,17 +14,14 @@
   import Feature from "../../../components/Feature.svelte";
   import AddFeature from "../../../components/AddFeature.svelte";
 
-  const { page } = stores();
+  const { page, session } = stores();
   const { id } = $page.params;
-  let features = null;
+
+  export let features = null;
 
   const update = async () => {
-    get(`/projects/${id}/features`).then(r => {
-      ({ features } = r);
-    });
+    features = await get(`/projects/${id}/features`, $session.jwt);
   };
-
-  onMount(update);
 </script>
 
 <style>

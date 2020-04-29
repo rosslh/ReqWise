@@ -1,65 +1,76 @@
+<script context="module">
+  export const preload = async ({ params }, { jwt }) => {
+    const team = await get(`/teams/${params.id}`, jwt);
+    const { name, description, isAdmin } = team;
+    const title = name;
+    const projects = await get(`/teams/${params.id}/projects`, jwt);
+    const members = await get(`/teams/${params.id}/members`, jwt);
+    const invites = await get(`/teams/${params.id}/invites`, jwt);
+    return { name, title, description, projects, members, invites, isAdmin };
+  };
+</script>
+
 <script>
   import { stores, goto } from "@sapper/app";
   import { onMount } from "svelte";
 
   import { modalContent, modalProps, userId } from "../../stores.js";
   import { get, put, del } from "../../api.js";
-  const { page } = stores();
+  const { page, session } = stores();
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
   import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
 
-  let name = "";
-  let description = "";
+  export let name = "";
+  export let description = "";
 
-  let projects = null;
-  let members = null;
-  let invites = null;
-  let isAdmin = false;
+  export let projects = null;
+  export let members = null;
+  export let invites = null;
+  export let isAdmin = false;
 
+  const { jwt } = $session;
   const { id } = $page.params;
 
-  let title = "";
+  export let title = "";
 
   const update = async () => {
-    get(`/teams/${id}`).then(r => {
+    get(`/teams/${id}`, jwt).then(r => {
       ({ name, description, isAdmin } = r);
       title = name;
     });
-    get(`/teams/${id}/projects`).then(r => {
+    get(`/teams/${id}/projects`, jwt).then(r => {
       projects = r;
     });
-    get(`/teams/${id}/members`).then(r => {
+    get(`/teams/${id}/members`, jwt).then(r => {
       members = r;
     });
-    get(`/teams/${id}/invites`).then(r => {
+    get(`/teams/${id}/invites`, jwt).then(r => {
       invites = r;
     });
   };
 
   const updateTeam = async () => {
-    await put(`/teams/${id}`, { name, description })
+    await put(`/teams/${id}`, { name, description }, jwt)
       .then(() => {
         update();
       })
       .catch(() => alert("Failure"));
   };
 
-  onMount(update);
-
   const deleteTeam = async () => {
-    await del(`/teams/${id}`);
+    await del(`/teams/${id}`, jwt);
     goto("/teams");
   };
 
   const deleteInvite = async inviteId => {
-    await del(`/teams/${id}/invites/${inviteId}`);
+    await del(`/teams/${id}/invites/${inviteId}`, jwt);
     update();
   };
 
   const deleteMember = async memberId => {
-    await del(`/teams/${id}/members/${memberId}`);
+    await del(`/teams/${id}/members/${memberId}`, jwt);
     update();
   };
 </script>

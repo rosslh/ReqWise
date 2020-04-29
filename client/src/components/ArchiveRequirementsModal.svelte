@@ -1,4 +1,7 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
   export let selectedReqs;
   export let close;
   export let update;
@@ -8,9 +11,13 @@
   const archiveRequirements = async () => {
     await Promise.all(
       selectedReqs.map(id =>
-        patch(`/requirements/${id}`, {
-          is_archived: true
-        })
+        patch(
+          `/requirements/${id}`,
+          {
+            is_archived: true
+          },
+          $session.jwt
+        )
       )
     );
 

@@ -1,5 +1,7 @@
 <script>
   import { put } from "../api.js";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   export let featureId;
   export let updateFeature;
@@ -10,9 +12,13 @@
 
   $: update = async e => {
     e.preventDefault();
-    await put(`/features/${featureId}`, {
-      name
-    });
+    await put(
+      `/features/${featureId}`,
+      {
+        name
+      },
+      $session.jwt
+    );
     updateFeature();
     close();
   };

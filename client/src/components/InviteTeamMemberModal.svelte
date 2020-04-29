@@ -1,4 +1,6 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
   export let update;
   export let close;
   export let id;
@@ -8,7 +10,7 @@
   let isAdmin = false;
 
   const inviteMember = async () => {
-    await post(`/teams/${id}/invites`, { inviteeEmail, isAdmin });
+    await post(`/teams/${id}/invites`, { inviteeEmail, isAdmin }, $session.jwt);
     await update();
     close();
   };

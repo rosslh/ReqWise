@@ -1,4 +1,7 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
   import { onMount, tick } from "svelte";
   import Diff from "text-diff";
   const diff = new Diff();
@@ -32,7 +35,7 @@
   });
 
   const getRequirement = async () => {
-    const requirement = await get(`/requirements/${id}`);
+    const requirement = await get(`/requirements/${id}`, $session.jwt);
     isInitialVersion = !requirement.previousVersion.id;
     oldPriority = requirement.previousVersion.priority;
     newPriority = requirement.latestVersion.priority;
@@ -46,7 +49,7 @@
   };
 
   $: getComments = async () => {
-    comments = await get(`/reqversions/${reqversionId}/comments`);
+    comments = await get(`/reqversions/${reqversionId}/comments`, $session.jwt);
     await tick();
     document
       .getElementById("commentsBottom")
@@ -62,11 +65,15 @@
     })();
 
   $: postComment = async () => {
-    await post(`/reqversions/${reqversionId}/comments`, {
-      plaintext: plaintextComment,
-      quillDelta: JSON.stringify(quillDelta),
-      type: "comment"
-    });
+    await post(
+      `/reqversions/${reqversionId}/comments`,
+      {
+        plaintext: plaintextComment,
+        quillDelta: JSON.stringify(quillDelta),
+        type: "comment"
+      },
+      $session.jwt
+    );
     await getComments();
   };
 </script>

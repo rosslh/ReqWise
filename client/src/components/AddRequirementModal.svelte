@@ -1,6 +1,8 @@
 <script>
   import Select from "svelte-select";
   import { post } from "../api.js";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   export let featureId;
   export let update;
@@ -11,12 +13,16 @@
 
   $: addReq = async e => {
     e.preventDefault();
-    await post(`/features/${featureId}/requirements`, {
-      description,
-      rationale,
-      priority: priority.value,
-      status: status.value
-    });
+    await post(
+      `/features/${featureId}/requirements`,
+      {
+        description,
+        rationale,
+        priority: priority.value,
+        status: status.value
+      },
+      $session.jwt
+    );
     await update();
     close();
   };

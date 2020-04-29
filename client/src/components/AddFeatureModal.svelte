@@ -1,5 +1,7 @@
 <script>
   import { post } from "../api.js";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   export let id;
   export let update;
@@ -9,9 +11,13 @@
 
   $: addFeature = async e => {
     e.preventDefault();
-    await post(`/projects/${id}/features`, {
-      name: description
-    });
+    await post(
+      `/projects/${id}/features`,
+      {
+        name: description
+      },
+      $session.jwt
+    );
     update();
     close();
   };
