@@ -4,6 +4,7 @@ import commonjs from "rollup-plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
 import babel from "rollup-plugin-babel";
 import { terser } from "rollup-plugin-terser";
+import json from "@rollup/plugin-json";
 import config from "sapper/config/rollup.js";
 import pkg from "./package.json";
 
@@ -47,6 +48,7 @@ export default {
     input: config.client.input(),
     output: config.client.output(),
     plugins: [
+      json(),
       replace({
         "process.env.SAPPER_APP_API_URL":
           mode === "development"
@@ -104,6 +106,7 @@ export default {
     input: config.server.input(),
     output: config.server.output(),
     plugins: [
+      json(),
       replace({
         "process.browser": false,
         "process.env.NODE_ENV": JSON.stringify(mode),
@@ -134,6 +137,7 @@ export default {
     input: config.serviceworker.input(),
     output: config.serviceworker.output(),
     plugins: [
+      json(),
       resolve(),
       replace({
         "process.browser": true,

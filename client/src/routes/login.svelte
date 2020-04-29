@@ -1,6 +1,6 @@
 <script>
-  import { goto } from "@sapper/app";
-  import { jwt, userId } from "../stores.js";
+  import { goto, stores } from "@sapper/app";
+  const { session } = stores();
   import { post } from "../api";
 
   let email = "";
@@ -9,8 +9,8 @@
   const submit = () => {
     post("/auth/token", { email, password })
       .then(r => {
-        jwt.set(r.token);
-        userId.set(r.userId);
+        $session.jwt = r.token;
+        $session.userId = r.userId;
         goto("/teams");
       })
       .catch(err => alert("Incorrect email or password"));
@@ -42,3 +42,4 @@
 <div class="contentWrapper forgotPwd">
   <a href="/reset/request">Forgot password?</a>
 </div>
+{JSON.stringify($session, null, 2)}

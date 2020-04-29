@@ -6,7 +6,7 @@ src/node_modules/@sapper/
 yarn-error.log
 cypress/screenshots/
 __sapper__/
-
+.sessions/
 
 # Logs
 logs

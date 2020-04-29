@@ -1,33 +1,46 @@
+<script context="module">
+  export const preload = async (page, session) => {
+    if (session.jwt) {
+      const teams = await get(`/users/${session.userId}/teams`, session.jwt);
+      const invites = await get(
+        `/users/${session.userId}/invites`,
+        session.jwt
+      );
+      return { teams, invites };
+    }
+    return { teams: [], invites: [] };
+  };
+</script>
+
 <script>
-  import { onMount } from "svelte";
-  import { userId, modalContent, modalProps } from "../stores.js";
   import { get, post, del } from "../api.js";
+  import { goto, stores } from "@sapper/app";
+  const { session } = stores();
+  import { modalContent, modalProps } from "../stores.js";
   import Skeleton from "../components/Skeleton.svelte";
   import AddTeamModal from "../components/AddTeamModal.svelte";
-  let teams = null;
-  let invites = null;
+  export let teams = null;
+  export let invites = null;
 
   const update = async () => {
-    teams = await get(`/users/${$userId}/teams`);
-    invites = await get(`/users/${$userId}/invites`);
+    teams = await get(`/users/${$session.userId}/teams`);
+    invites = await get(`/users/${$session.userId}/invites`);
   };
 
-  onMount(update);
-
   const acceptInvite = async inviteId => {
-    await post(`/users/${$userId}/teams`, {
+    await post(`/users/${$session.userId}/teams`, {
       inviteId
     });
     await update();
   };
 
   const deleteInvite = async inviteId => {
-    await del(`/users/${$userId}/invites/${inviteId}`);
+    await del(`/users/${$session.userId}/invites/${inviteId}`);
     await update();
   };
 
   const leaveTeam = async teamId => {
-    await del(`/users/${$userId}/teams/${teamId}`);
+    await del(`/users/${$session.userId}/teams/${teamId}`);
     await update();
   };
 </script>
@@ -39,6 +52,7 @@
 </style>
 
 <div class="contentWrapper">
+  {JSON.stringify($session, null, 2)}
   <h1>My Teams</h1>
   {#if teams}
     <table class="compact">
