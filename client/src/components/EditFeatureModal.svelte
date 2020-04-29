@@ -17,7 +17,7 @@
       {
         name
       },
-      $session.jwt
+      $session.user && $session.user.jwt
     );
     updateFeature();
     close();

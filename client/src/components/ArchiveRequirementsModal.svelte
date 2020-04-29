@@ -16,7 +16,7 @@
           {
             is_archived: true
           },
-          $session.jwt
+          $session.user && $session.user.jwt
         )
       )
     );

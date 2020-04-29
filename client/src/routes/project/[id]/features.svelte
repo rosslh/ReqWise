@@ -1,7 +1,7 @@
 <script context="module">
-  export const preload = async ({ params }, { jwt }) => {
+  export const preload = async ({ params }, { user }) => {
     const { id } = params;
-    const features = await get(`/projects/${id}/features`, jwt);
+    const features = await get(`/projects/${id}/features`, user && user.jwt);
     return { features };
   };
 </script>
@@ -20,7 +20,10 @@
   export let features = [];
 
   const update = async () => {
-    features = await get(`/projects/${id}/features`, $session.jwt);
+    features = await get(
+      `/projects/${id}/features`,
+      $session.user && $session.user.jwt
+    );
   };
 </script>
 

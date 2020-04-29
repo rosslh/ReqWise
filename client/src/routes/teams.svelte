@@ -1,7 +1,13 @@
 <script context="module">
   export const preload = async (page, session) => {
-    const teams = await get(`/users/${session.userId}/teams`, session.jwt);
-    const invites = await get(`/users/${session.userId}/invites`, session.jwt);
+    const teams = await get(
+      `/users/${session.user.id}/teams`,
+      session.user && session.user.jwt
+    );
+    const invites = await get(
+      `/users/${session.user.id}/invites`,
+      session.user && session.user.jwt
+    );
     return { teams, invites };
   };
 </script>
@@ -16,24 +22,30 @@
   export let invites = [];
 
   const update = async () => {
-    teams = await get(`/users/${$session.userId}/teams`, $session.jwt);
-    invites = await get(`/users/${$session.userId}/invites`, $session.jwt);
+    teams = await get(
+      `/users/${$session.user.id}/teams`,
+      $session.user && $session.user.jwt
+    );
+    invites = await get(
+      `/users/${$session.user.id}/invites`,
+      $session.user && $session.user.jwt
+    );
   };
 
   const acceptInvite = async inviteId => {
-    await post(`/users/${$session.userId}/teams`, {
+    await post(`/users/${$session.user.id}/teams`, {
       inviteId
     });
     await update();
   };
 
   const deleteInvite = async inviteId => {
-    await del(`/users/${$session.userId}/invites/${inviteId}`);
+    await del(`/users/${$session.user.id}/invites/${inviteId}`);
     await update();
   };
 
   const leaveTeam = async teamId => {
-    await del(`/users/${$session.userId}/teams/${teamId}`);
+    await del(`/users/${$session.user.id}/teams/${teamId}`);
     await update();
   };
 </script>
@@ -45,7 +57,10 @@
 </style>
 
 <div class="contentWrapper">
-  <h1>My Teams</h1>
+  <h1>
+    {#if typeof window === 'undefined'}SSR{/if}
+    My Teams
+  </h1>
   <table class="compact">
     <thead>
       <tr>

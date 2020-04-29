@@ -16,7 +16,7 @@
       {
         name: description
       },
-      $session.jwt
+      $session.user && $session.user.jwt
     );
     update();
     close();

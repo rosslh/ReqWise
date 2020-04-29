@@ -8,11 +8,14 @@
   let team_id = null;
 
   onMount(async () => {
-    ({ team_id } = await get(`/projects/${id}`, $session.jwt));
+    ({ team_id } = await get(
+      `/projects/${id}`,
+      $session.user && $session.user.jwt
+    ));
   });
 
   const deleteProject = async () => {
-    await del(`/projects/${id}`, $session.jwt).then(r => {
+    await del(`/projects/${id}`, $session.user && $session.user.jwt).then(r => {
       goto(`/team/${team_id}`);
     });
   };

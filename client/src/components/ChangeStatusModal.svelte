@@ -29,7 +29,7 @@
             status: status.value,
             rationale
           },
-          $session.jwt
+          $session.user && $session.user.jwt
         )
       )
     );

@@ -35,7 +35,10 @@
   });
 
   const getRequirement = async () => {
-    const requirement = await get(`/requirements/${id}`, $session.jwt);
+    const requirement = await get(
+      `/requirements/${id}`,
+      $session.user && $session.user.jwt
+    );
     isInitialVersion = !requirement.previousVersion.id;
     oldPriority = requirement.previousVersion.priority;
     newPriority = requirement.latestVersion.priority;
@@ -49,7 +52,10 @@
   };
 
   $: getComments = async () => {
-    comments = await get(`/reqversions/${reqversionId}/comments`, $session.jwt);
+    comments = await get(
+      `/reqversions/${reqversionId}/comments`,
+      $session.user && $session.user.jwt
+    );
     await tick();
     document
       .getElementById("commentsBottom")
@@ -72,7 +78,7 @@
         quillDelta: JSON.stringify(quillDelta),
         type: "comment"
       },
-      $session.jwt
+      $session.user && $session.user.jwt
     );
     await getComments();
   };

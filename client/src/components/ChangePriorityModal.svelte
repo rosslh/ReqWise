@@ -30,7 +30,7 @@
             rationale,
             status: repropose ? "proposed" : undefined
           },
-          $session.jwt
+          $session.user && $session.user.jwt
         )
       )
     );

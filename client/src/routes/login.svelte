@@ -9,8 +9,7 @@
   const submit = () => {
     post("/auth/token", { email, password })
       .then(r => {
-        $session.jwt = r.token;
-        $session.userId = r.userId;
+        $session.user = { jwt: r.token, id: r.userId };
         goto("/teams");
       })
       .catch(err => alert("Incorrect email or password"));

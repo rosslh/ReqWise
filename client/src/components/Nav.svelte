@@ -3,8 +3,7 @@
   const { session } = stores();
 
   const logout = () => {
-    $session.jwt = "";
-    $session.userId = "";
+    $session.user = {};
   };
 </script>
 
@@ -44,7 +43,7 @@
       <img src={'logo.png'} alt="ReqWise" />
     </a>
     <div class="right">
-      {#if !$session.jwt}
+      {#if !$session.user || !$session.user.jwt}
         <a href="/sign-up/invite">Sign Up</a>
 
         <a href="/login">Login</a>

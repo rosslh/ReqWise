@@ -10,7 +10,11 @@
   let isAdmin = false;
 
   const inviteMember = async () => {
-    await post(`/teams/${id}/invites`, { inviteeEmail, isAdmin }, $session.jwt);
+    await post(
+      `/teams/${id}/invites`,
+      { inviteeEmail, isAdmin },
+      $session.user && $session.user.jwt
+    );
     await update();
     close();
   };

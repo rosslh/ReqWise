@@ -13,7 +13,7 @@
     await post(
       `/teams`,
       { name: teamName, description: teamDesc },
-      $session.jwt
+      $session.user && $session.user.jwt
     );
     await update();
     close();

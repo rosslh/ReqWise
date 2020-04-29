@@ -1,11 +1,14 @@
 <script context="module">
-  export const preload = async ({ params }, { jwt }) => {
-    const team = await get(`/teams/${params.id}`, jwt);
+  export const preload = async ({ params }, { user }) => {
+    const team = await get(`/teams/${params.id}`, user && user.jwt);
     const { name, description, isAdmin } = team;
     const title = name;
-    const projects = await get(`/teams/${params.id}/projects`, jwt);
-    const members = await get(`/teams/${params.id}/members`, jwt);
-    const invites = await get(`/teams/${params.id}/invites`, jwt);
+    const projects = await get(
+      `/teams/${params.id}/projects`,
+      user && user.jwt
+    );
+    const members = await get(`/teams/${params.id}/members`, user && user.jwt);
+    const invites = await get(`/teams/${params.id}/invites`, user && user.jwt);
     return { name, title, description, projects, members, invites, isAdmin };
   };
 </script>
@@ -29,29 +32,29 @@
   export let invites = null;
   export let isAdmin = false;
 
-  const { jwt } = $session;
+  const { user } = $session;
   const { id } = $page.params;
 
   export let title = "";
 
   const update = async () => {
-    get(`/teams/${id}`, jwt).then(r => {
+    get(`/teams/${id}`, user && user.jwt).then(r => {
       ({ name, description, isAdmin } = r);
       title = name;
     });
-    get(`/teams/${id}/projects`, jwt).then(r => {
+    get(`/teams/${id}/projects`, user && user.jwt).then(r => {
       projects = r;
     });
-    get(`/teams/${id}/members`, jwt).then(r => {
+    get(`/teams/${id}/members`, user && user.jwt).then(r => {
       members = r;
     });
-    get(`/teams/${id}/invites`, jwt).then(r => {
+    get(`/teams/${id}/invites`, user && user.jwt).then(r => {
       invites = r;
     });
   };
 
   const updateTeam = async () => {
-    await put(`/teams/${id}`, { name, description }, jwt)
+    await put(`/teams/${id}`, { name, description }, user && user.jwt)
       .then(() => {
         update();
       })
@@ -59,17 +62,17 @@
   };
 
   const deleteTeam = async () => {
-    await del(`/teams/${id}`, jwt);
+    await del(`/teams/${id}`, user && user.jwt);
     goto("/teams");
   };
 
   const deleteInvite = async inviteId => {
-    await del(`/teams/${id}/invites/${inviteId}`, jwt);
+    await del(`/teams/${id}/invites/${inviteId}`, user && user.jwt);
     update();
   };
 
   const deleteMember = async memberId => {
-    await del(`/teams/${id}/members/${memberId}`, jwt);
+    await del(`/teams/${id}/members/${memberId}`, user && user.jwt);
     update();
   };
 </script>

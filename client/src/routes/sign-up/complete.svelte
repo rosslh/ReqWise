@@ -26,6 +26,7 @@
     await put(`/users/${encodeURIComponent(email)}`, { name, password, token });
     post("/auth/token", { email, password })
       .then(r => {
+        // TODO: fix this
         jwt.set(r.token);
         userId.set(r.userId);
         goto("/teams");

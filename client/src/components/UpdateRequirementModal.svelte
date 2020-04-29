@@ -23,7 +23,10 @@
   let repropose = true;
 
   onMount(async () => {
-    const res = await get(`/requirements/${id}`, $session.jwt);
+    const res = await get(
+      `/requirements/${id}`,
+      $session.user && $session.user.jwt
+    );
     description = res.latestVersion.description;
     priority = priorityOptions.find(
       option => option.value === res.latestVersion.priority
@@ -37,7 +40,11 @@
       status: repropose ? "proposed" : undefined,
       rationale
     };
-    await post(`/requirements/${id}/versions`, data, $session.jwt);
+    await post(
+      `/requirements/${id}/versions`,
+      data,
+      $session.user && $session.user.jwt
+    );
     await update();
     close();
   };

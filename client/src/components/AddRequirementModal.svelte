@@ -21,7 +21,7 @@
         priority: priority.value,
         status: status.value
       },
-      $session.jwt
+      $session.user && $session.user.jwt
     );
     await update();
     close();

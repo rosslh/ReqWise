@@ -17,13 +17,16 @@
     if (feature && feature.id) {
       requirements = await get(
         `/features/${feature.id}/requirements`,
-        $session.jwt
+        $session.user && $session.user.jwt
       );
     }
   };
 
   const updateFeature = async () => {
-    feature = await get(`/features/${feature.id}`, $session.jwt);
+    feature = await get(
+      `/features/${feature.id}`,
+      $session.user && $session.user.jwt
+    );
   };
 
   onMount(updateReqs);

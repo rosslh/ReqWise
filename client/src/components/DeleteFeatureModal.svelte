@@ -9,7 +9,7 @@
   export let close;
 
   $: deleteFeature = async e => {
-    await del(`/features/${featureId}`, $session.jwt);
+    await del(`/features/${featureId}`, $session.user && $session.user.jwt);
     await update();
     close();
   };

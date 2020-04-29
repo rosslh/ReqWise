@@ -19,7 +19,6 @@ const expressServer = express()
   .use(bodyParser.json())
   .use(
     session({
-      name: "sessionCookie",
       secret: "replace-this-secret-1aqwsedrftgyhu",
       resave: false,
       saveUninitialized: true,
@@ -35,10 +34,12 @@ const expressServer = express()
     compression({ threshold: 0 }),
     sirv("static", { dev }),
     sapper.middleware({
-      session: (req) => ({
-        userId: req.session && req.session.userId,
-        token: req.session && req.session.token,
-      }),
+      session: (req) => {
+        console.log(req.session); // TODO: why isn't this printing user:...
+        return {
+          user: req.session && req.session.user,
+        };
+      },
     })
   );
 

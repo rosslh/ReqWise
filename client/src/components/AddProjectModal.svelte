@@ -9,7 +9,11 @@
   let newProjectName = "";
 
   const submitNewProject = async () => {
-    await post(`/teams/${id}/projects`, { name: newProjectName }, $session.jwt);
+    await post(
+      `/teams/${id}/projects`,
+      { name: newProjectName },
+      $session.user && $session.user.jwt
+    );
     await update();
     close();
   };
