@@ -1,12 +1,19 @@
 <script>
   import { post } from "../api.js";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
   export let id;
   export let update;
   export let close;
   let newProjectName = "";
 
   const submitNewProject = async () => {
-    await post(`/teams/${id}/projects`, { name: newProjectName });
+    await post(
+      `/teams/${id}/projects`,
+      { name: newProjectName },
+      $session.user && $session.user.jwt
+    );
     await update();
     close();
   };

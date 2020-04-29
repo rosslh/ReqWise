@@ -1,20 +1,21 @@
+<script context="module">
+  export const preload = async ({ params }, { user }) => {
+    const project = await get(`/projects/${params.id}`, user && user.jwt);
+    return { project };
+  };
+</script>
+
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
   import { stores } from "@sapper/app";
   import { currentProject } from "../../../stores.js";
-  import { onMount } from "svelte";
   import { get } from "../../../api.js";
-
+  export let project;
+  $currentProject = project;
   const { page } = stores();
   $: ({ path, params } = $page);
   $: tab = path.split("/").pop();
   $: id = params.id;
-
-  onMount(async () => {
-    get(`/projects/${id}`).then(r => {
-      currentProject.set(r);
-    });
-  });
 
   let title = null;
   let sidebarHidden = false;

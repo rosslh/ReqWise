@@ -3,8 +3,6 @@
 
   export let feature;
   export let requirements;
-
-  import Skeleton from "./Skeleton.svelte";
 </script>
 
 <style>
@@ -38,12 +36,8 @@
 
 <div class="featureHeader">
   <h3>
-    {#if feature}
-      {feature.name}
-      <span class="featurePpuid">#{feature.ppuid}</span>
-    {:else}
-      <Skeleton noPadding inline height="1.7rem" />
-    {/if}
+    {feature.name}
+    <span class="featurePpuid">#{feature.ppuid}</span>
   </h3>
   {#if requirements && requirements.some(r => r.status === 'accepted')}
     <button class="button-small button-outline">

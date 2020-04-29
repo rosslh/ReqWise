@@ -1,13 +1,15 @@
 <script>
   import Select from "svelte-select";
   import { del } from "../api.js";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   export let featureId;
   export let update;
   export let close;
 
   $: deleteFeature = async e => {
-    await del(`/features/${featureId}`);
+    await del(`/features/${featureId}`, $session.user && $session.user.jwt);
     await update();
     close();
   };

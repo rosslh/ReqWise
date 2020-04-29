@@ -42,16 +42,18 @@ const preprocess = getPreprocessor({
   },
 });
 
+const apiUrl =
+  mode === "development"
+    ? '"http://localhost:3000"'
+    : '"https://reqwise.uc.r.appspot.com"';
+
 export default {
   client: {
     input: config.client.input(),
     output: config.client.output(),
     plugins: [
       replace({
-        "process.env.SAPPER_APP_API_URL":
-          mode === "development"
-            ? '"http://localhost:3000"'
-            : '"https://reqwise.uc.r.appspot.com"',
+        "process.env.SAPPER_APP_API_URL": apiUrl,
         "process.browser": true,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),
@@ -105,6 +107,7 @@ export default {
     output: config.server.output(),
     plugins: [
       replace({
+        "process.env.SAPPER_APP_API_URL": apiUrl,
         "process.browser": false,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),

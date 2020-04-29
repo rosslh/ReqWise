@@ -1,9 +1,14 @@
 <script>
-  import { jwt, userId } from "../stores.js";
+  import { stores, goto } from "@sapper/app";
+  const { session } = stores();
 
-  const logout = () => {
-    jwt.set("");
-    userId.set("");
+  const logout = async () => {
+    await fetch("auth/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+    $session.user = {};
+    goto("/login");
   };
 </script>
 
@@ -43,7 +48,7 @@
       <img src={'logo.png'} alt="ReqWise" />
     </a>
     <div class="right">
-      {#if $jwt === ''}
+      {#if !$session.user || !$session.user.jwt}
         <a href="/sign-up/invite">Sign Up</a>
 
         <a href="/login">Login</a>

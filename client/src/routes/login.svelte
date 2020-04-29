@@ -1,16 +1,22 @@
 <script>
-  import { goto } from "@sapper/app";
-  import { jwt, userId } from "../stores.js";
-  import { post } from "../api";
+  import { goto, stores } from "@sapper/app";
+  const { session } = stores();
 
   let email = "";
   let password = "";
 
   const submit = () => {
-    post("/auth/token", { email, password })
+    fetch("auth/login", {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(r => r.json())
       .then(r => {
-        jwt.set(r.token);
-        userId.set(r.userId);
+        $session.user = { jwt: r.token, id: r.userId };
         goto("/teams");
       })
       .catch(err => alert("Incorrect email or password"));

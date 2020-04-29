@@ -1,4 +1,6 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
   import { onMount } from "svelte";
   import Requirement from "../components/Requirement.svelte";
   import FeatureSelectTools from "../components/FeatureSelectTools.svelte";
@@ -13,12 +15,18 @@
   let requirements = null;
   const updateReqs = async () => {
     if (feature && feature.id) {
-      requirements = await get(`/features/${feature.id}/requirements`);
+      requirements = await get(
+        `/features/${feature.id}/requirements`,
+        $session.user && $session.user.jwt
+      );
     }
   };
 
   const updateFeature = async () => {
-    feature = await get(`/features/${feature.id}`);
+    feature = await get(
+      `/features/${feature.id}`,
+      $session.user && $session.user.jwt
+    );
   };
 
   onMount(updateReqs);

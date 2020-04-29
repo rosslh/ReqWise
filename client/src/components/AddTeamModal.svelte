@@ -1,4 +1,7 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
   export let update;
   export let close;
   import { post } from "../api.js";
@@ -7,7 +10,11 @@
   let teamDesc = "";
 
   const submitNewTeam = async () => {
-    await post(`/teams`, { name: teamName, description: teamDesc });
+    await post(
+      `/teams`,
+      { name: teamName, description: teamDesc },
+      $session.user && $session.user.jwt
+    );
     await update();
     close();
   };

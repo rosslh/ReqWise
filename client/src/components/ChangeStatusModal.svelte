@@ -1,4 +1,7 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
   export let selectedReqs;
   export let close;
   export let update;
@@ -20,10 +23,14 @@
   const updateRequirements = async () => {
     await Promise.all(
       selectedReqs.map(id =>
-        post(`/requirements/${id}/versions`, {
-          status: status.value,
-          rationale
-        })
+        post(
+          `/requirements/${id}/versions`,
+          {
+            status: status.value,
+            rationale
+          },
+          $session.user && $session.user.jwt
+        )
       )
     );
 

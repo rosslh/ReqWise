@@ -1,4 +1,6 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
   import Select from "svelte-select";
   import { get, post } from "../api.js";
   import { onMount } from "svelte";
@@ -21,7 +23,10 @@
   let repropose = true;
 
   onMount(async () => {
-    const res = await get(`/requirements/${id}`);
+    const res = await get(
+      `/requirements/${id}`,
+      $session.user && $session.user.jwt
+    );
     description = res.latestVersion.description;
     priority = priorityOptions.find(
       option => option.value === res.latestVersion.priority
@@ -35,7 +40,11 @@
       status: repropose ? "proposed" : undefined,
       rationale
     };
-    await post(`/requirements/${id}/versions`, data);
+    await post(
+      `/requirements/${id}/versions`,
+      data,
+      $session.user && $session.user.jwt
+    );
     await update();
     close();
   };
