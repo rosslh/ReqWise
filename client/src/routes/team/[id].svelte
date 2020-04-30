@@ -1,5 +1,8 @@
 <script context="module">
-  export const preload = async ({ params }, { user }) => {
+  export async function preload({ params }, { user }) {
+    if (!user) {
+      return this.redirect(302, "/login");
+    }
     const team = await get(`/teams/${params.id}`, user && user.jwt);
     const { name, description, isAdmin } = team;
     const title = name;
@@ -10,7 +13,7 @@
     const members = await get(`/teams/${params.id}/members`, user && user.jwt);
     const invites = await get(`/teams/${params.id}/invites`, user && user.jwt);
     return { name, title, description, projects, members, invites, isAdmin };
-  };
+  }
 </script>
 
 <script>

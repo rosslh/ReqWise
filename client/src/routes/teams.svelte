@@ -1,5 +1,8 @@
 <script context="module">
-  export const preload = async (page, session) => {
+  export async function preload(page, session) {
+    if (!session.user) {
+      return this.redirect(302, "/login");
+    }
     const teams = await get(
       `/users/${session.user.id}/teams`,
       session.user && session.user.jwt
@@ -9,12 +12,12 @@
       session.user && session.user.jwt
     );
     return { teams, invites };
-  };
+  }
 </script>
 
 <script>
   import { get, post, del } from "../api.js";
-  import { goto, stores } from "@sapper/app";
+  import { stores } from "@sapper/app";
   const { session } = stores();
   import { modalContent, modalProps } from "../stores.js";
   import AddTeamModal from "../components/AddTeamModal.svelte";

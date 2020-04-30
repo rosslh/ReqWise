@@ -7,7 +7,7 @@
       method: "POST",
       credentials: "include"
     });
-    $session.user = {};
+    $session.user = undefined;
     goto("/login");
   };
 </script>

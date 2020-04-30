@@ -1,9 +1,9 @@
 <script context="module">
-  export const preload = async ({ params }, { user }) => {
+  export async function preload({ params }, { user }) {
     const { id } = params;
     const features = await get(`/projects/${id}/features`, user && user.jwt);
     return { features };
-  };
+  }
 </script>
 
 <script>
