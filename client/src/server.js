@@ -43,6 +43,7 @@ const expressServer = express()
     sirv("static", { dev }),
     sapper.middleware({
       session: (req) => {
+        console.log("server.js", req.session && req.session.user);
         return {
           user: req.session && req.session.user,
         };
