@@ -83,7 +83,7 @@
         <div class="iconWrapper rotate90">
           <FaExchangeAlt />
         </div>
-        Move to reqgroup
+        Move to feature
       </button>
       <button
         on:click={changeStatus}

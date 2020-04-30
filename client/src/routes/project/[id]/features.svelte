@@ -33,8 +33,8 @@
 <section class="contentWrapper">
   <h2>Features</h2>
   <p class="infoBlurb">
-    A reqgroup is a group of related requirements that allows the user to
-    satisfy a high-level objective or need.
+    A feature is a group of related requirements that allows the user to satisfy
+    a high-level objective or need.
     <br />
     Requirements tend to be more granular, and are written with implementation
     in mind.

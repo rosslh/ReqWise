@@ -162,7 +162,7 @@
   span.icon.stakeholders,
   span.icon.models,
   span.icon.tests,
-  span.icon.reqgroups {
+  span.icon.features {
     padding: 0.2rem;
   }
 </style>

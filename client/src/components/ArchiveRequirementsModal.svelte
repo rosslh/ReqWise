@@ -28,7 +28,7 @@
 
 <h3>Archive Requirements</h3>
 <p>
-  This action will remove the selected requirements from the reqgroup and
-  archive them.
+  This action will remove the selected requirements from the feature and archive
+  them.
 </p>
 <button class="button-caution" on:click={archiveRequirements}>Archive</button>
