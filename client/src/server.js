@@ -21,7 +21,7 @@ const expressServer = express()
   .use(bodyParser.json())
   .use(
     session({
-      name: "__session",
+      name: "__session", // this name is required by GCP cloud functions
       secret: "replace-this-secret-1aqwsedrftgyhu",
       resave: false,
       saveUninitialized: true,
@@ -30,7 +30,7 @@ const expressServer = express()
       },
       store: dev
         ? new FileStore({
-            path: ".sessions", // process.env.NOW ? `/tmp/sessions` : `.sessions`,
+            path: ".sessions",
           })
         : new FirestoreStore({
             dataset: new Firestore({
