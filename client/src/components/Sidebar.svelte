@@ -31,12 +31,14 @@
       label: "Business Requirements",
       slug: "business-requirements",
       icon: FaBriefcase,
-      newSection: true
+      newSection: true,
+      extraPadding: true
     },
     {
       label: "Features",
       slug: "features",
-      icon: FaCheck
+      icon: FaCheck,
+      extraPadding: true
     },
     {
       label: "Quality Attributes",
@@ -47,7 +49,8 @@
       label: "Models and Diagrams",
       slug: "models",
       icon: FaShapes,
-      newSection: true
+      newSection: true,
+      extraPadding: true
     },
     {
       label: "User Classes",
@@ -57,19 +60,22 @@
     {
       label: "Tests",
       slug: "tests",
-      icon: FaCheckDouble
+      icon: FaCheckDouble,
+      extraPadding: true
     },
     // {
     //   label: "Archived",
     //   slug: "archived",
     //   icon: FaArchive,
-    //   newSection: true
+    //   newSection: true,
+    //   extraPadding: true
     // },
     {
       label: "Stakeholders",
       slug: "stakeholders",
       icon: FaUserTie,
-      newSection: true
+      newSection: true,
+      extraPadding: true
     },
     {
       label: "Activity",
@@ -157,12 +163,7 @@
     outline: none;
   }
 
-  span.icon.archived,
-  span.icon.business-requirements,
-  span.icon.stakeholders,
-  span.icon.models,
-  span.icon.tests,
-  span.icon.features {
+  span.icon.extraPadding {
     padding: 0.2rem;
   }
 </style>
@@ -189,7 +190,8 @@
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>
         <span>{item.label}</span>
-        <span class={`icon ${item.slug}`}>
+        <span
+          class={`icon ${item.slug} ${item.extraPadding ? 'extraPadding' : ''}`}>
           <svelte:component this={item.icon} />
         </span>
       </a>
