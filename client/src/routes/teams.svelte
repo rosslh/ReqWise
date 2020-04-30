@@ -57,10 +57,7 @@
 </style>
 
 <div class="contentWrapper">
-  <h1>
-    {#if typeof window === 'undefined'}SSR{/if}
-    My Teams
-  </h1>
+  <h1>My Teams</h1>
   <table class="compact">
     <thead>
       <tr>
