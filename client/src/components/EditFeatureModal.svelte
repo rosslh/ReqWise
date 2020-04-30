@@ -3,17 +3,17 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  export let featureId;
+  export let reqgroupId;
   export let updateFeature;
   export let close;
 
-  export let feature;
-  let { name } = feature;
+  export let reqgroup;
+  let { name } = reqgroup;
 
   $: update = async e => {
     e.preventDefault();
     await put(
-      `/features/${featureId}`,
+      `/reqgroups/${reqgroupId}`,
       {
         name
       },

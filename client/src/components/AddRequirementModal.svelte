@@ -4,7 +4,7 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  export let featureId;
+  export let reqgroupId;
   export let update;
   export let close;
 
@@ -14,7 +14,7 @@
   $: addReq = async e => {
     e.preventDefault();
     await post(
-      `/features/${featureId}/requirements`,
+      `/reqgroups/${reqgroupId}/requirements`,
       {
         description,
         rationale,

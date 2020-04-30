@@ -1,8 +1,11 @@
 <script context="module">
   export async function preload({ params }, { user }) {
     const { id } = params;
-    const features = await get(`/projects/${id}/features`, user && user.jwt);
-    return { features };
+    const reqgroups = await get(
+      `/projects/${id}/reqgroups?type=feature`,
+      user && user.jwt
+    );
+    return { reqgroups };
   }
 </script>
 
@@ -11,32 +14,25 @@
   import { get, post } from "../../../api.js";
   import { stores } from "@sapper/app";
 
-  import Feature from "../../../components/Feature.svelte";
+  import Reqgroup from "../../../components/Reqgroup.svelte";
   import AddFeature from "../../../components/AddFeature.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
 
-  export let features = [];
+  export let reqgroups = [];
 
   const update = async () => {
-    features = await get(
-      `/projects/${id}/features`,
+    reqgroups = await get(
+      `/projects/${id}/reqgroups`,
       $session.user && $session.user.jwt
     );
   };
 </script>
 
-<style>
-  p.info {
-    color: var(--grey4);
-    margin: 1.5rem 0 1.5rem;
-  }
-</style>
-
 <section class="contentWrapper">
   <h2>Features</h2>
-  <p class="info">
+  <p class="infoBlurb">
     A feature is a group of related requirements that allows the user to satisfy
     a high-level objective or need.
     <br />
@@ -45,10 +41,10 @@
   </p>
   <AddFeature {update} {id} />
 </section>
-{#if features.length}
+{#if reqgroups.length}
   <section class="contentWrapper">
-    {#each features as feature (feature.id)}
-      <Feature {feature} {update} />
+    {#each reqgroups as reqgroup (reqgroup.id)}
+      <Reqgroup {reqgroup} {update} />
     {/each}
   </section>
 {/if}

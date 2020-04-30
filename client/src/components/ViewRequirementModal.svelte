@@ -118,6 +118,10 @@
     text-transform: capitalize;
   }
 
+  span.priorityDiff {
+    color: var(--grey4);
+  }
+
   .authorEmail {
     color: var(--grey4);
   }
@@ -181,7 +185,7 @@
         {#if typeof oldPriority === 'undefined'}
           <span class="capitalize">{newPriority}</span>
         {:else if oldPriority !== newPriority}
-          <span class="capitalize">
+          <span class="capitalize priorityDiff">
             <del>{oldPriority}</del>
             &rarr;
             <ins>{newPriority}</ins>

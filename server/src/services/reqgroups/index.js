@@ -1,11 +1,11 @@
 module.exports = async function (fastify, opts) {
-  const getFeatureSchema = {
+  const getReqgroupSchema = {
     body: {},
     queryString: {},
     params: {
       type: "object",
       properties: {
-        featureId: { type: "number" },
+        reqgroupId: { type: "number" },
       },
     },
     headers: {
@@ -30,23 +30,23 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/features/:featureId",
+    "/reqgroups/:reqgroupId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getFeatureSchema,
+      schema: getReqgroupSchema,
     },
     async function (request, reply) {
       return await fastify.knex
         .from("reqgroup")
         .select("*", "per_project_unique_id as ppuid")
         .where({
-          id: request.params.featureId,
+          id: request.params.reqgroupId,
         })
         .first();
     }
   );
 
-  const putFeatureSchema = {
+  const putReqgroupSchema = {
     body: {
       type: "object",
       properties: {
@@ -58,7 +58,7 @@ module.exports = async function (fastify, opts) {
     params: {
       type: "object",
       properties: {
-        featureId: { type: "number" },
+        reqgroupId: { type: "number" },
       },
     },
     headers: {
@@ -77,16 +77,16 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.put(
-    "/features/:featureId",
+    "/reqgroups/:reqgroupId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: putFeatureSchema,
+      schema: putReqgroupSchema,
     },
     async function (request, reply) {
       const { name } = request.body;
       return await fastify
         .knex("reqgroup")
-        .where("id", request.params.featureId)
+        .where("id", request.params.reqgroupId)
         .update({
           name,
         })
@@ -94,13 +94,13 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const deleteFeatureSchema = {
+  const deleteReqgroupSchema = {
     body: {},
     queryString: {},
     params: {
       type: "object",
       properties: {
-        featureId: { type: "number" },
+        reqgroupId: { type: "number" },
       },
     },
     headers: {
@@ -119,19 +119,19 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.delete(
-    "/features/:featureId",
+    "/reqgroups/:reqgroupId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: deleteFeatureSchema,
+      schema: deleteReqgroupSchema,
     },
     async function (request, reply) {
       await fastify
         .knex("requirement")
-        .where("reqgroup_id", request.params.featureId)
+        .where("reqgroup_id", request.params.reqgroupId)
         .update({ is_archived: true });
       await fastify
         .knex("reqgroup")
-        .where("id", request.params.featureId)
+        .where("id", request.params.reqgroupId)
         .del();
       return ["success"];
     }
@@ -143,7 +143,7 @@ module.exports = async function (fastify, opts) {
     params: {
       type: "object",
       properties: {
-        featureId: { type: "number" },
+        reqgroupId: { type: "number" },
       },
     },
     headers: {
@@ -175,7 +175,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/features/:featureId/requirements",
+    "/reqgroups/:reqgroupId/requirements",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementsSchema,
@@ -195,7 +195,7 @@ module.exports = async function (fastify, opts) {
           "reqversion.description",
           "reqversion.created_at"
         )
-        .where("reqgroup_id", request.params.featureId)
+        .where("reqgroup_id", request.params.reqgroupId)
         .andWhere("is_archived", false)
         .join("reqversion", function () {
           this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
@@ -224,7 +224,7 @@ module.exports = async function (fastify, opts) {
     params: {
       type: "object",
       properties: {
-        featureId: { type: "number" },
+        reqgroupId: { type: "number" },
       },
     },
     headers: {
@@ -242,14 +242,14 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/features/:featureId/requirements",
+    "/reqgroups/:reqgroupId/requirements",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postRequirementSchema,
     },
     async function (request, reply) {
       const { description, priority, status, rationale } = request.body;
-      const { featureId: reqgroup_id } = request.params;
+      const { reqgroupId: reqgroup_id } = request.params;
 
       const project_id = (
         await fastify.knex

@@ -2,7 +2,7 @@
   export async function preload({ params }, { user }) {
     const { id } = params;
     const reqgroups = await get(
-      `/projects/${id}/reqgroups?type=quality`,
+      `/projects/${id}/reqgroups?type=business`,
       user && user.jwt
     );
     return { reqgroups };
@@ -15,7 +15,6 @@
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
-  import AddFeature from "../../../components/AddFeature.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -24,24 +23,19 @@
 
   const update = async () => {
     reqgroups = await get(
-      `/projects/${id}/reqgroups?type=quality`,
+      `/projects/${id}/reqgroups?type=business`,
       $session.user && $session.user.jwt
     );
   };
 </script>
 
 <section class="contentWrapper">
-  <h2>Quality Attributes</h2>
+  <h2>Business Requirements</h2>
   <p class="infoBlurb">
-    Quality attributes are measurable or testable properties of a system that
-    are used to indicate how well the system satisfies the needs of its
-    stakeholders.
+    Business requirements describe the reason behind a project and what
+    objectives of the organization will be fulfilled by undertaking the project.
   </p>
-  <p class="infoBlurb">
-    Types of quality attributes include usability, maintainability, efficiency,
-    and reliability.
-  </p>
-  <button>Add quality attribute</button>
+  <button>Add requirement group</button>
 </section>
 {#if reqgroups.length}
   <section class="contentWrapper">

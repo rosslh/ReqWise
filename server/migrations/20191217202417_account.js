@@ -84,7 +84,6 @@ exports.up = function (knex) {
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("reqgroup", (table) => {
-      // aka feature
       table.increments("id").primary();
       table
         .integer("project_id")
@@ -96,15 +95,7 @@ exports.up = function (knex) {
       table.string("name").notNullable();
       table.integer("per_project_unique_id").notNullable().unsigned();
       table.string("description");
-      table
-        .enu("type", [
-          "feature",
-          "interface",
-          "user_classes",
-          "product_perspective",
-          "description",
-        ])
-        .notNullable();
+      table.enu("type", ["feature", "business", "quality"]).notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("requirement", (table) => {

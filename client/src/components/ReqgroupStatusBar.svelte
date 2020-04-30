@@ -59,7 +59,7 @@
   }
 
   .barsWrapper {
-    width: calc(100% + 2.4rem); /* accounts for feature padding */
+    width: calc(100% + 2.4rem); /* accounts for reqgroup padding */
     max-height: 0.3rem;
     overflow: hidden;
     padding: 0;
@@ -91,7 +91,7 @@
     padding: 0.8rem 0;
     font-weight: 600;
     border-bottom: 1px solid var(--grey2);
-    margin: 0 -1.2rem; /* accounts for feature padding */
+    margin: 0 -1.2rem; /* accounts for reqgroup padding */
     /* border-top: none; */
     border-bottom-left-radius: 0.4rem;
     border-bottom-right-radius: 0.4rem;

@@ -4,12 +4,12 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  export let featureId;
+  export let reqgroupId;
   export let update;
   export let close;
 
   $: deleteFeature = async e => {
-    await del(`/features/${featureId}`, $session.user && $session.user.jwt);
+    await del(`/reqgroups/${reqgroupId}`, $session.user && $session.user.jwt);
     await update();
     close();
   };
@@ -20,5 +20,5 @@
 </style>
 
 <h3>Delete Feature</h3>
-<p>The feature's requirements will be archived.</p>
+<p>The reqgroup's requirements will be archived.</p>
 <button class="button-danger" on:click={deleteFeature}>Delete</button>

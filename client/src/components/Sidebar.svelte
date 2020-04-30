@@ -28,8 +28,8 @@
       newSection: true
     },
     {
-      label: "Business Rules",
-      slug: "business-rules",
+      label: "Business Requirements",
+      slug: "business-requirements",
       icon: FaBriefcase,
       newSection: true
     },
@@ -44,7 +44,7 @@
       icon: IoMdRibbon
     },
     {
-      label: "Models and diagrams",
+      label: "Models and Diagrams",
       slug: "models",
       icon: FaShapes,
       newSection: true
@@ -158,7 +158,7 @@
   }
 
   span.icon.archived,
-  span.icon.business-rules,
+  span.icon.business-requirements,
   span.icon.stakeholders,
   span.icon.models,
   span.icon.tests,

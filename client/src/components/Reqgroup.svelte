@@ -3,28 +3,28 @@
   const { session } = stores();
   import { onMount } from "svelte";
   import Requirement from "../components/Requirement.svelte";
-  import FeatureSelectTools from "../components/FeatureSelectTools.svelte";
-  import FeatureHeader from "../components/FeatureHeader.svelte";
-  import FeatureStatusBar from "../components/FeatureStatusBar.svelte";
-  import FeatureFooter from "../components/FeatureFooter.svelte";
+  import ReqgroupSelectTools from "../components/ReqgroupSelectTools.svelte";
+  import ReqgroupHeader from "../components/ReqgroupHeader.svelte";
+  import ReqgroupStatusBar from "../components/ReqgroupStatusBar.svelte";
+  import ReqgroupFooter from "../components/ReqgroupFooter.svelte";
   import Skeleton from "../components/Skeleton.svelte";
   import { get } from "../api.js";
-  export let feature;
+  export let reqgroup;
   export let update;
 
   let requirements = null;
   const updateReqs = async () => {
-    if (feature && feature.id) {
+    if (reqgroup && reqgroup.id) {
       requirements = await get(
-        `/features/${feature.id}/requirements`,
+        `/reqgroups/${reqgroup.id}/requirements`,
         $session.user && $session.user.jwt
       );
     }
   };
 
-  const updateFeature = async () => {
-    feature = await get(
-      `/features/${feature.id}`,
+  const updateReqgroup = async () => {
+    reqgroup = await get(
+      `/reqgroups/${reqgroup.id}`,
       $session.user && $session.user.jwt
     );
   };
@@ -45,10 +45,10 @@
 </script>
 
 <style>
-  :global(.feature button) {
+  :global(.reqgroup button) {
     margin-top: 0;
   }
-  div.feature {
+  div.reqgroup {
     border: 0.1rem solid var(--grey2);
     border-radius: 0.4rem;
     padding: 1.2rem;
@@ -65,10 +65,10 @@
   }
 </style>
 
-<div class="feature">
-  <FeatureHeader {feature} {requirements} />
-  <FeatureStatusBar {requirements} />
-  <FeatureSelectTools {selectedReqs} update={updateReqs} />
+<div class="reqgroup">
+  <ReqgroupHeader {reqgroup} {requirements} />
+  <ReqgroupStatusBar {requirements} />
+  <ReqgroupSelectTools {selectedReqs} update={updateReqs} />
   <div class="tableWrapper">
     <table>
       <thead>
@@ -98,5 +98,5 @@
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
-  <FeatureFooter {feature} {updateReqs} {updateFeature} {update} />
+  <ReqgroupFooter {reqgroup} {updateReqs} {updateReqgroup} {update} />
 </div>

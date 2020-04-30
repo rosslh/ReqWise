@@ -286,9 +286,7 @@ html {
 
 body {
   color: var(--charcoal1);
-  font-family: "Roboto", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 1.6em;
-  font-weight: 300;
   line-height: 1.8;
 }
 
@@ -616,7 +614,7 @@ h4 {
 h5,
 h6 {
   font-size: 1.6rem;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 img {

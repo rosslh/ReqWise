@@ -3,8 +3,6 @@
   import { get } from "../../../api.js";
   import { stores } from "@sapper/app";
 
-  import Feature from "../../../components/Feature.svelte";
-
   const { page } = stores();
   const { id } = $page.params;
 

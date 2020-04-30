@@ -66,6 +66,12 @@
   div.sidebarHidden div.projectColumnLeft {
     transform: translateX(calc(-1 * var(--sidebarWidth) + 5.5rem));
   }
+
+  :global(.projectColumnRight p.infoBlurb) {
+    color: var(--grey4);
+    margin: 1.5rem 0 1.5rem;
+    max-width: 70rem;
+  }
 </style>
 
 <div class={sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>

@@ -1,12 +1,12 @@
 <script>
   import FaGithub from "svelte-icons/fa/FaGithub.svelte";
 
-  export let feature;
+  export let reqgroup;
   export let requirements;
 </script>
 
 <style>
-  div.featureHeader {
+  div.reqgroupHeader {
     background-color: var(--offwhite1);
     margin: -1.2rem -1.2rem 0 -1.2rem;
     padding: 1.8rem 1.2rem;
@@ -16,7 +16,7 @@
     align-items: center;
     justify-content: space-between;
   }
-  div.featureHeader h3 {
+  div.reqgroupHeader h3 {
     font-size: 1.8rem;
     display: inline;
     margin: 0;
@@ -24,20 +24,20 @@
     /* color: #333; */
   }
 
-  div.featureHeader button {
+  div.reqgroupHeader button {
     margin: 0;
   }
 
-  .featurePpuid {
+  .reqgroupPpuid {
     color: var(--grey4);
     margin-left: 0.5rem;
   }
 </style>
 
-<div class="featureHeader">
+<div class="reqgroupHeader">
   <h3>
-    {feature.name}
-    <span class="featurePpuid">#{feature.ppuid}</span>
+    {reqgroup.name}
+    <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
   {#if requirements && requirements.some(r => r.status === 'accepted')}
     <button class="button-small button-outline">
