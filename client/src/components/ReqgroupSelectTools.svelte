@@ -14,7 +14,7 @@
   export let selectedReqs;
   export let update;
 
-  const moveToFeature = async newFeatureId => {};
+  const moveToReqgroup = async newReqgroupId => {};
   const changeStatus = async () => {
     modalContent.set(ChangeStatusModal);
     modalProps.set({ selectedReqs, update });
@@ -78,12 +78,12 @@
     </div>
     <div class="buttons">
       <button
-        on:click={moveToFeature}
+        on:click={moveToReqgroup}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper rotate90">
           <FaExchangeAlt />
         </div>
-        Move to feature
+        Move to reqgroup
       </button>
       <button
         on:click={changeStatus}

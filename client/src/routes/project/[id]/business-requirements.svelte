@@ -2,7 +2,7 @@
   export async function preload({ params }, { user }) {
     const { id } = params;
     const reqgroups = await get(
-      `/projects/${id}/reqgroups?type=feature`,
+      `/projects/${id}/reqgroups?type=business`,
       user && user.jwt
     );
     return { reqgroups };
@@ -15,7 +15,6 @@
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
-  import AddFeature from "../../../components/AddFeature.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -24,22 +23,19 @@
 
   const update = async () => {
     reqgroups = await get(
-      `/projects/${id}/reqgroups`,
+      `/projects/${id}/reqgroups?type=business`,
       $session.user && $session.user.jwt
     );
   };
 </script>
 
 <section class="contentWrapper">
-  <h2>Features</h2>
+  <h2>Business Requirements</h2>
   <p class="infoBlurb">
-    A reqgroup is a group of related requirements that allows the user to
-    satisfy a high-level objective or need.
-    <br />
-    Requirements tend to be more granular, and are written with implementation
-    in mind.
+    Business requirements describe the reason behind a project and what
+    objectives of the organization will be fulfilled by undertaking the project.
   </p>
-  <AddFeature {update} {id} />
+  <button>Add requirement group</button>
 </section>
 {#if reqgroups.length}
   <section class="contentWrapper">

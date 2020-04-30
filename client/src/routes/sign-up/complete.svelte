@@ -12,9 +12,8 @@
 </script>
 
 <script>
-  import { goto } from "@sapper/app";
+  import { goto, stores } from "@sapper/app";
   import { put, post } from "../../api";
-  import { jwt, userId } from "../../stores.js";
 
   export let token;
   export let email;
@@ -22,13 +21,21 @@
   let name = "";
   let password = "";
 
+  const { session } = stores();
+
   const submit = async () => {
     await put(`/users/${encodeURIComponent(email)}`, { name, password, token });
-    post("/auth/token", { email, password })
+    fetch("auth/login", {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(r => r.json())
       .then(r => {
-        // TODO: fix this
-        jwt.set(r.token);
-        userId.set(r.userId);
+        $session.user = { jwt: r.token, id: r.userId };
         goto("/teams");
       })
       .catch(err => alert("Incorrect email or password"));

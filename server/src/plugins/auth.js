@@ -57,7 +57,7 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
-  const isTeamMemberByFeatureId = async (request, reply, isAdmin = false) => {
+  const isTeamMemberByReqgroupId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
         .from("reqgroup")
@@ -65,7 +65,7 @@ module.exports = fp(async function (fastify, opts) {
         .join("account_team", "account_team.team_id", "project.team_id")
         .select("account_team.id")
         .where({
-          "reqgroup.id": request.params.featureId,
+          "reqgroup.id": request.params.reqgroupId,
           "account_team.account_id": request.user.id,
           ...(isAdmin && { isAdmin }),
         })
@@ -149,8 +149,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByTeamId(request, reply);
     } else if (request.params.projectId) {
       return isTeamMemberByProjectId(request, reply);
-    } else if (request.params.featureId) {
-      return isTeamMemberByFeatureId(request, reply);
+    } else if (request.params.reqgroupId) {
+      return isTeamMemberByReqgroupId(request, reply);
     } else if (request.params.requirementId) {
       return isTeamMemberByRequirementId(request, reply);
     } else if (request.params.reqversionId) {
@@ -167,8 +167,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByTeamId(request, reply, true);
     } else if (request.params.projectId) {
       return isTeamMemberByProjectId(request, reply, true);
-    } else if (request.params.featureId) {
-      return isTeamMemberByFeatureId(request, reply, true);
+    } else if (request.params.reqgroupId) {
+      return isTeamMemberByReqgroupId(request, reply, true);
     } else if (request.params.requirementId) {
       return isTeamMemberByRequirementId(request, reply, true);
     } else if (request.params.reqversionId) {

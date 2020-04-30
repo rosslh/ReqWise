@@ -76,9 +76,14 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const getProjectFeaturesSchema = {
+  const getProjectReqgroupsSchema = {
     body: {},
-    queryString: {},
+    queryString: {
+      type: "object",
+      properties: {
+        type: { type: "string" },
+      },
+    },
     params: {
       type: "object",
       properties: {
@@ -110,16 +115,17 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/projects/:projectId/features",
+    "/projects/:projectId/reqgroups",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getProjectFeaturesSchema,
+      schema: getProjectReqgroupsSchema,
     },
     async function (request, reply) {
+      const { type } = request.query;
       return await fastify.knex
         .from("reqgroup")
         .select("*", "per_project_unique_id as ppuid")
-        .where("project_id", request.params.projectId);
+        .where({ project_id: request.params.projectId, type });
     }
   );
 
@@ -169,7 +175,7 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const postFeatureSchema = {
+  const postReqgroupSchema = {
     body: {
       type: "object",
       required: ["name"],
@@ -200,13 +206,13 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/projects/:projectId/features",
+    "/projects/:projectId/reqgroups",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: postFeatureSchema,
+      schema: postReqgroupSchema,
     },
     async function (request, reply) {
-      const { name } = request.body;
+      const { name, type } = request.body;
       const { projectId: project_id } = request.params;
       const maxPpuid =
         (
@@ -221,7 +227,7 @@ module.exports = async function (fastify, opts) {
         .insert({
           project_id,
           name,
-          type: "feature",
+          type,
           per_project_unique_id: maxPpuid + 1,
         })
         .returning("id");

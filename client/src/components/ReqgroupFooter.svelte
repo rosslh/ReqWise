@@ -8,41 +8,41 @@
   import EditFeatureModal from "../components/EditFeatureModal.svelte";
 
   export let updateReqs;
-  export let updateFeature;
+  export let updateReqgroup;
   export let update;
-  export let feature;
+  export let reqgroup;
 
-  const editFeature = () => {
+  const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
-    modalProps.set({ featureId: feature.id, updateFeature, feature });
+    modalProps.set({ reqgroupId: reqgroup.id, updateReqgroup, reqgroup });
   };
 
-  const deleteFeature = () => {
+  const deleteReqgroup = () => {
     modalContent.set(DeleteFeatureModal);
-    modalProps.set({ featureId: feature.id, update });
+    modalProps.set({ reqgroupId: reqgroup.id, update });
   };
 </script>
 
 <style>
-  div.featureFooter {
+  div.reqgroupFooter {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 </style>
 
-<div class="featureFooter">
+<div class="reqgroupFooter">
   <button
     class="button-create"
     on:click={() => {
       modalContent.set(AddRequirementModal);
-      modalProps.set({ featureId: feature.id, update: updateReqs });
+      modalProps.set({ reqgroupId: reqgroup.id, update: updateReqs });
     }}>
     + Add Requirement
   </button>
   <div>
     <button
-      on:click={editFeature}
+      on:click={editReqgroup}
       class="button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
         <FaRegEdit />
@@ -50,7 +50,7 @@
       Edit
     </button>
     <button
-      on:click={deleteFeature}
+      on:click={deleteReqgroup}
       class="button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
         <FaRegTrashAlt />

@@ -20,7 +20,7 @@
   import { stores, goto } from "@sapper/app";
   import { onMount } from "svelte";
 
-  import { modalContent, modalProps, userId } from "../../stores.js";
+  import { modalContent, modalProps } from "../../stores.js";
   import { get, put, del } from "../../api.js";
   const { page, session } = stores();
 
@@ -155,7 +155,7 @@
             <td>{member.isOwner}</td>
             {#if isAdmin}
               <td class="userActions">
-                {#if member.id !== $userId}
+                {#if member.id !== $session.user.id}
                   {#if !member.isOwner}
                     <button
                       class="button-danger button-small button-outline"

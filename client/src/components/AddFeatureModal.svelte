@@ -12,7 +12,7 @@
   $: addFeature = async e => {
     e.preventDefault();
     await post(
-      `/projects/${id}/features`,
+      `/projects/${id}/reqgroups`,
       {
         name: description
       },
