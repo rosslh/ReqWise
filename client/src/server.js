@@ -21,6 +21,7 @@ const expressServer = express()
   .use(bodyParser.json())
   .use(
     session({
+      name: "__session",
       secret: "replace-this-secret-1aqwsedrftgyhu",
       resave: false,
       saveUninitialized: true,
