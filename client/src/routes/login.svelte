@@ -1,6 +1,6 @@
 <script>
   import { goto, stores } from "@sapper/app";
-  const { session } = stores();
+  const { session, page } = stores();
 
   let email = "";
   let password = "";
@@ -17,7 +17,11 @@
       .then(r => r.json())
       .then(r => {
         $session.user = { jwt: r.token, id: r.userId };
-        goto("/teams");
+        if ($page.query.redirect) {
+          goto($page.query.redirect);
+        } else {
+          goto("/teams");
+        }
       })
       .catch(err => alert("Incorrect email or password"));
   };

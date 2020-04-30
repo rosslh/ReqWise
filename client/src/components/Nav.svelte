@@ -8,7 +8,7 @@
       credentials: "include"
     });
     $session.user = undefined;
-    goto("/login");
+    // goto("/login");
   };
 </script>
 

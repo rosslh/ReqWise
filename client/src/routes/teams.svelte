@@ -1,7 +1,10 @@
 <script context="module">
   export async function preload(page, session) {
     if (!session.user) {
-      return this.redirect(302, "/login");
+      return this.redirect(
+        302,
+        `/login?redirect=${encodeURIComponent(page.path)}`
+      );
     }
     const teams = await get(
       `/users/${session.user.id}/teams`,

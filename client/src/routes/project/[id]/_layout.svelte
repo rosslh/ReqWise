@@ -1,7 +1,7 @@
 <script context="module">
-  export async function preload({ params }, { user }) {
+  export async function preload({ params, path }, { user }) {
     if (!user) {
-      return this.redirect(302, "/login");
+      return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
     }
     const project = await get(`/projects/${params.id}`, user && user.jwt);
     return { project };
