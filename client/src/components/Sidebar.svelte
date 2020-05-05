@@ -144,6 +144,7 @@
     height: 100%;
     position: relative;
     overflow-y: auto;
+    overflow-x: hidden;
     font-size: 1.5rem;
   }
 
