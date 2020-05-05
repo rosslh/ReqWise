@@ -11,7 +11,7 @@
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
   import { stores } from "@sapper/app";
-  import { currentProject } from "../../../stores.js";
+  import { currentProject, sidebarHidden } from "../../../stores.js";
   import { get } from "../../../api.js";
   export let project;
   $currentProject = project;
@@ -21,7 +21,6 @@
   $: id = params.id;
 
   let title = null;
-  let sidebarHidden = false;
 </script>
 
 <style>
@@ -52,19 +51,18 @@
       width: calc(100% - var(--sidebarWidth));
     }
     div.sidebarHidden div.projectColumnRight {
-      width: calc(100% - 5.5rem);
+      width: 100%;
     }
   }
 
   @media (max-width: 749px) {
     div.projectColumnRight {
       width: 100%;
-      padding-left: 5.5rem;
     }
   }
 
   div.sidebarHidden div.projectColumnLeft {
-    transform: translateX(calc(-1 * var(--sidebarWidth) + 5.5rem));
+    transform: translateX(calc(-1 * var(--sidebarWidth)));
   }
 
   :global(.projectColumnRight p.infoBlurb) {
@@ -74,11 +72,11 @@
   }
 </style>
 
-<div class={sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>
+<div class={$sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>
   <div class="projectColumnRight">
     <slot />
   </div>
   <div class="projectColumnLeft">
-    <Sidebar bind:sidebarHidden {tab} {id} name={$currentProject.name} />
+    <Sidebar {tab} {id} name={$currentProject.name} />
   </div>
 </div>

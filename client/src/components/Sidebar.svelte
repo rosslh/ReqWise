@@ -4,8 +4,6 @@
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
-  import MdMenu from "svelte-icons/md/MdMenu.svelte";
-  import MdClose from "svelte-icons/md/MdClose.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaShapes from "svelte-icons/fa/FaShapes.svelte";
@@ -16,7 +14,6 @@
   export let name;
   export let id;
   export let tab;
-  export let sidebarHidden;
 
   import Skeleton from "../components/Skeleton.svelte";
 
@@ -97,7 +94,7 @@
     align-items: center;
     justify-content: space-between;
     height: 5rem;
-    padding: 0.5rem 0;
+    padding: 0.5rem 2rem;
     text-decoration: none !important;
   }
 
@@ -133,7 +130,7 @@
   }
 
   div.items {
-    padding: 0 2rem;
+    padding: 0;
   }
 
   div.separator {
@@ -150,36 +147,12 @@
     font-size: 1.5rem;
   }
 
-  button#toggleMenu {
-    background-color: white;
-    border: none;
-    color: var(--grey4);
-    position: absolute;
-    top: 0;
-    right: 1rem;
-    height: 3rem;
-    width: 3rem;
-    padding: 0;
-    outline: none;
-  }
-
   span.icon.extraPadding {
     padding: 0.2rem;
   }
 </style>
 
 <nav>
-  <button
-    id="toggleMenu"
-    on:click={() => {
-      sidebarHidden = !sidebarHidden;
-    }}>
-    {#if sidebarHidden}
-      <MdMenu />
-    {:else}
-      <MdClose />
-    {/if}
-  </button>
   <h1>{name}</h1>
   <div class="items">
     {#each tabs as item (item.slug)}

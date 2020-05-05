@@ -1,6 +1,10 @@
 <script>
   import { stores, goto } from "@sapper/app";
-  const { session } = stores();
+
+  import MdMenu from "svelte-icons/md/MdMenu.svelte";
+
+  import { sidebarHidden } from "../stores.js";
+  const { session, page } = stores();
 
   const logout = async () => {
     await fetch("auth/logout", {
@@ -14,6 +18,7 @@
 
 <style>
   div.contentWrapper {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,10 +45,41 @@
     display: inline-block;
     margin: 0 0.75rem;
   }
+
+  div.menuButtonWrapper {
+    height: 2.5rem;
+    width: 2.5rem;
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  button#toggleMenu {
+    background-color: white;
+    border: none;
+    color: var(--grey4);
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0;
+    outline: none;
+    margin: 0;
+  }
 </style>
 
 <nav>
   <div class="contentWrapper">
+    {#if $page.path.includes('/project/')}
+      <div class="menuButtonWrapper">
+        <button
+          id="toggleMenu"
+          on:click={() => {
+            $sidebarHidden = !$sidebarHidden;
+          }}>
+          <MdMenu />
+        </button>
+      </div>
+    {/if}
     <a class="logoWrapper" href=".">
       <img src={'logo.png'} alt="ReqWise" />
     </a>
