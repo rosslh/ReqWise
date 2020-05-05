@@ -116,3 +116,4 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 .vscode/settings.json
+server/cloud_sql_proxy_x64.exe

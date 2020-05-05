@@ -4,7 +4,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import session from "express-session";
 import { Firestore } from "@google-cloud/firestore";
-import sessionFileStore from "session-file-store";
+const MemoryStore = require('memorystore')(session)
 import * as sapper from "@sapper/server";
 
 import "./assets/normalize.css";
@@ -14,7 +14,6 @@ import "./assets/global.css";
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
 
-const FileStore = sessionFileStore(session);
 const { FirestoreStore } = require("@google-cloud/connect-firestore");
 
 const expressServer = express()
@@ -29,8 +28,8 @@ const expressServer = express()
         maxAge: 31536000,
       },
       store: dev
-        ? new FileStore({
-            path: ".sessions",
+        ? new MemoryStore({
+            checkPeriod: 86400000 // prune expired entries every 24h
           })
         : new FirestoreStore({
             dataset: new Firestore({

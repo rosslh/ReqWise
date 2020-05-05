@@ -44,7 +44,7 @@ const preprocess = getPreprocessor({
 
 const apiUrl =
   mode === "development"
-    ? '"http://localhost:3000"'
+    ? '"http://localhost:3001"'
     : '"https://reqwise.uc.r.appspot.com"';
 
 export default {
