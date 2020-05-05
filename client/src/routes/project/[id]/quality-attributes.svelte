@@ -15,7 +15,9 @@
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
-  import AddFeature from "../../../components/AddFeature.svelte";
+
+  import { modalContent, modalProps } from "../../../stores.js";
+  import AddQaGroupModal from "../../../components/AddQaGroupModal.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -27,6 +29,11 @@
       `/projects/${id}/reqgroups?type=quality`,
       $session.user && $session.user.jwt
     );
+  };
+
+  const showAddQaModal = async () => {
+    modalContent.set(AddQaGroupModal);
+    modalProps.set({ id, update });
   };
 </script>
 
@@ -41,7 +48,7 @@
     Types of quality attributes include usability, maintainability, efficiency,
     and reliability.
   </p>
-  <button>Add quality attribute</button>
+  <button on:click={showAddQaModal}>Add quality attribute</button>
 </section>
 {#if reqgroups.length}
   <section class="contentWrapper">

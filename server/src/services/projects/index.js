@@ -175,6 +175,8 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
+
   const postReqgroupSchema = {
     body: {
       type: "object",
@@ -226,7 +228,7 @@ module.exports = async function (fastify, opts) {
         .knex("reqgroup")
         .insert({
           project_id,
-          name,
+          name: capitalizeFirstLetter(name),
           type,
           per_project_unique_id: maxPpuid + 1,
         })
