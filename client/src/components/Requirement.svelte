@@ -169,11 +169,13 @@
       Implemented -->
     {/if}
   </td>
-  <td
-    class="priority"
-    style={`color:var(--${getPriorityColor(requirement.priority)})`}>
-    {requirement.priority}
-  </td>
+  {#if isPrioritized}
+    <td
+      class="priority"
+      style={`color:var(--${getPriorityColor(requirement.priority)})`}>
+      {requirement.priority}
+    </td>
+  {/if}
   <td class="history">X at Y</td>
   <td class="iconCell">
     <button

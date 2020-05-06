@@ -80,7 +80,9 @@
           <th>Description</th>
           <th>ID</th>
           <th>Status</th>
-          <th>Priority</th>
+          {#if reqgroup.isPrioritized}
+            <th>Priority</th>
+          {/if}
           <th>Updated</th>
           <th />
         </tr>
