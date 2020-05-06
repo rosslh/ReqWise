@@ -10,6 +10,7 @@
 
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
+  import { onMount, onDestroy } from "svelte";
   import { stores } from "@sapper/app";
   import { currentProject, sidebarHidden } from "../../../stores.js";
   import { get } from "../../../api.js";
@@ -21,6 +22,48 @@
   $: id = params.id;
 
   let title = null;
+
+  const { session } = stores();
+
+  let streamSource;
+
+  $: startStream = () => {
+    if ($currentProject) {
+      const url = `${
+        process.env.SAPPER_APP_API_URL
+      }/stream/${id}?jwt=${encodeURIComponent($session.user.jwt)}`;
+
+      streamSource = new EventSource(url);
+
+      streamSource.onmessage = event => {
+        alert(event.data);
+      };
+
+      streamSource.onerror = function(err) {
+        console.error("EventSource failed:", err);
+        streamSource.close();
+        streamSource = undefined;
+      };
+    } else {
+      console.log("No project selected");
+    }
+  };
+
+  onMount(() => async () => {
+    if ($session.user && $session.user.jwt) {
+      startStream();
+    }
+  });
+
+  onDestroy(() => {
+    if (streamSource) {
+      streamSource.close();
+      streamSource = undefined;
+    }
+  });
+
+  $: refreshStream =
+    !streamSource && $session.user && $session.user.jwt && startStream();
 </script>
 
 <style>

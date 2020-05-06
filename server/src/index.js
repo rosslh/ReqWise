@@ -1,5 +1,6 @@
 const { development } = require("../knexfile");
 const fastifyPlugin = require("fastify-plugin");
+const { FastifySSEPlugin } = require("fastify-sse-v2");
 const knex = require("knex");
 const path = require("path");
 const AutoLoad = require("fastify-autoload");
@@ -45,6 +46,8 @@ module.exports = function (fastify, opts, next) {
   });
 
   fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), development);
+
+  fastify.register(FastifySSEPlugin);
 
   next();
 };
