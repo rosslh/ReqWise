@@ -11,6 +11,7 @@
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
 
+  export let isPrioritized;
   export let id;
 
   let oldPriority;
@@ -179,24 +180,26 @@
         {@html descriptionDiff}
       </div>
     {/if}
-    <h4>Priority</h4>
-    {#if newPriority}
-      <div class="reqversionContent">
-        {#if typeof oldPriority === 'undefined'}
-          <span class="capitalize">{newPriority}</span>
-        {:else if oldPriority !== newPriority}
-          <span class="capitalize priorityDiff">
-            <del>{oldPriority}</del>
-            &rarr;
-            <ins>{newPriority}</ins>
-          </span>
-        {:else}
-          <span class="capitalize">{newPriority}</span>
-          (no change)
-        {/if}
-      </div>
-    {:else}
-      <Skeleton noPadding />
+    {#if isPrioritized}
+      <h4>Priority</h4>
+      {#if newPriority}
+        <div class="reqversionContent">
+          {#if typeof oldPriority === 'undefined'}
+            <span class="capitalize">{newPriority}</span>
+          {:else if oldPriority !== newPriority}
+            <span class="capitalize priorityDiff">
+              <del>{oldPriority}</del>
+              &rarr;
+              <ins>{newPriority}</ins>
+            </span>
+          {:else}
+            <span class="capitalize">{newPriority}</span>
+            (no change)
+          {/if}
+        </div>
+      {:else}
+        <Skeleton noPadding />
+      {/if}
     {/if}
     <h4>Reason for change</h4>
     {#if typeof rationale === 'undefined'}
@@ -225,7 +228,7 @@
         {/each}
         <div id="commentsBottom" />
       {:else}
-        <Skeleton rows={4} />
+        <Skeleton rows={2} />
       {/if}
     </div>
     <div class="commentsBottom">

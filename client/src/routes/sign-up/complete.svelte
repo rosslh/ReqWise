@@ -52,8 +52,12 @@
       type="email"
       disabled
       id="email" />
+  </fieldset>
+  <fieldset>
     <label for="name">Name</label>
     <input autocomplete="name" bind:value={name} type="text" id="name" />
+  </fieldset>
+  <fieldset>
     <label for="pwd">Password</label>
     <input
       autocomplete="new-password"

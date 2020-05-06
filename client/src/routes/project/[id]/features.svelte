@@ -24,7 +24,7 @@
 
   const update = async () => {
     reqgroups = await get(
-      `/projects/${id}/reqgroups`,
+      `/projects/${id}/reqgroups?type=feature`,
       $session.user && $session.user.jwt
     );
   };

@@ -13,8 +13,8 @@
     await post(
       `/projects/${id}/reqgroups`,
       {
-        name: attribute.value,
-        type: "quality"
+        name: type.value,
+        type: "business"
       },
       $session.user && $session.user.jwt
     );
@@ -25,33 +25,27 @@
   const capitalizeFirstLetter = str =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
-  const attributeOptions = [
-    "performance",
-    "interoperability",
-    "usability",
-    "reliability",
-    "availability",
-    "security",
-    "maintainability",
-    "modifiability",
-    "testability",
-    "scalability",
-    "reusability",
-    "supportability"
+  const typeOptions = [
+    "Business opportunity",
+    "Business objectives",
+    "Success metrics",
+    "Vision statement",
+    "Business risks",
+    "Business assumptions and dependencies"
   ].map(attr => ({ value: attr, label: capitalizeFirstLetter(attr) }));
 
-  let attribute = attributeOptions[0];
+  let type = typeOptions[0];
 </script>
 
-<h3>Add a Quality Attribute</h3>
+<h3>Add a group of business requirements</h3>
 <form>
   <fieldset>
-    <label for="attribute">Quality Attribute</label>
+    <label for="type">Business Requirement Type</label>
     <Select
-      inputAttributes={{ id: 'attribute' }}
+      inputAttributes={{ id: 'type' }}
       isCreatable={true}
-      items={attributeOptions}
-      bind:selectedValue={attribute} />
+      items={typeOptions}
+      bind:selectedValue={type} />
   </fieldset>
   <button class="button-create" on:click={addReqGroup}>+ Add</button>
 </form>

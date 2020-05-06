@@ -9,6 +9,7 @@
   export let id;
   export let update;
   export let close;
+  export let isPrioritized;
 
   let description;
   let priority;
@@ -71,21 +72,23 @@
     <Skeleton noPadding />
   {/if}
 </fieldset>
-<fieldset class="inline">
-  <label for="priority">Priority</label>
-  <div class="selectWrapper">
-    {#if priority || priority === ''}
-      <Select
-        inputAttributes={{ id: 'priority' }}
-        isClearable={false}
-        isSearchable={false}
-        items={priorityOptions}
-        bind:selectedValue={priority} />
-    {:else}
-      <Skeleton noPadding inline />
-    {/if}
-  </div>
-</fieldset>
+{#if isPrioritized}
+  <fieldset class="inline">
+    <label for="priority">Priority</label>
+    <div class="selectWrapper">
+      {#if priority || priority === ''}
+        <Select
+          inputAttributes={{ id: 'priority' }}
+          isClearable={false}
+          isSearchable={false}
+          items={priorityOptions}
+          bind:selectedValue={priority} />
+      {:else}
+        <Skeleton noPadding inline />
+      {/if}
+    </div>
+  </fieldset>
+{/if}
 <fieldset>
   <label for="desc">Reason for change</label>
   <input

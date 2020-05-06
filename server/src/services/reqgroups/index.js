@@ -125,15 +125,28 @@ module.exports = async function (fastify, opts) {
       schema: deleteReqgroupSchema,
     },
     async function (request, reply) {
-      await fastify
-        .knex("requirement")
-        .where("reqgroup_id", request.params.reqgroupId)
-        .update({ is_archived: true });
-      await fastify
-        .knex("reqgroup")
-        .where("id", request.params.reqgroupId)
-        .del();
-      return ["success"];
+      const { isDeletable } = await fastify.knex
+        .from("reqgroup")
+        .select("*")
+        .where({
+          id: request.params.reqgroupId,
+        })
+        .first();
+
+      if (isDeletable) {
+        await fastify
+          .knex("requirement")
+          .where("reqgroup_id", request.params.reqgroupId)
+          .update({ is_archived: true });
+        await fastify
+          .knex("reqgroup")
+          .where("id", request.params.reqgroupId)
+          .del();
+        return ["success"];
+      }
+      else {
+        reply.code(400).send("Cannot delete this reqgroup.")
+      }
     }
   );
 
@@ -218,7 +231,7 @@ module.exports = async function (fastify, opts) {
         status: { type: "string" },
         ratonale: { type: "string" },
       },
-      required: ["description", "priority", "status", "rationale"],
+      required: ["description", "status", "rationale"],
     },
     queryString: {},
     params: {
@@ -251,7 +264,7 @@ module.exports = async function (fastify, opts) {
       const { description, priority, status, rationale } = request.body;
       const { reqgroupId: reqgroup_id } = request.params;
 
-      const project_id = (
+      const { project_id, isMaxOneRequirement } = (
         await fastify.knex
           .from("reqgroup")
           .select("*")
@@ -259,40 +272,54 @@ module.exports = async function (fastify, opts) {
             id: reqgroup_id,
           })
           .first()
-      ).project_id;
+      );
 
-      const maxPpuid =
-        (
+      const numRequirements = isMaxOneRequirement && (
+        await fastify.knex
+          .from("requirement")
+          .select("id")
+          .where({
+            reqgroup_id
+          })
+      ).length;
+
+      if (!isMaxOneRequirement || numRequirements === 0) {
+        const maxPpuid =
+          (
+            await fastify
+              .knex("requirement")
+              .where({ project_id })
+              .max("per_project_unique_id")
+              .first()
+          ).max || 0;
+
+        const requirement_id = (
           await fastify
             .knex("requirement")
-            .where({ project_id })
-            .max("per_project_unique_id")
-            .first()
-        ).max || 0;
-
-      const requirement_id = (
+            .insert({
+              reqgroup_id,
+              project_id,
+              per_project_unique_id: maxPpuid + 1,
+            })
+            .returning("id")
+        )[0];
         await fastify
-          .knex("requirement")
+          .knex("reqversion")
           .insert({
-            reqgroup_id,
-            project_id,
-            per_project_unique_id: maxPpuid + 1,
+            requirement_id,
+            account_id: request.user.id,
+            description,
+            rationale,
+            priority,
+            status,
           })
-          .returning("id")
-      )[0];
-      await fastify
-        .knex("reqversion")
-        .insert({
-          requirement_id,
-          account_id: request.user.id,
-          description,
-          rationale,
-          priority,
-          status,
-        })
-        .returning("id");
+          .returning("id");
 
-      return requirement_id;
+        return requirement_id;
+      }
+      else {
+        reply.code(400).send("Maximum number of requirements exceeded.")
+      }
     }
   );
 };

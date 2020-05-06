@@ -24,7 +24,7 @@
   };
 </script>
 
-<h3>Update Feature</h3>
+<h3>Update requirement group</h3>
 <form>
   <fieldset>
     <label for="desc">Title</label>

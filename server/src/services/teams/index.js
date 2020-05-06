@@ -539,6 +539,16 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  // TODO: seed business reqgroups (can be limited to 1 requirement, undeletable, or unimplementable)
+  const businessReqgroupSeeds = [
+    { name: "Business opportunity", description: "Describe the business problem being solved. For commercial products, also describe the market in which the product will be competing.", isMaxOneRequirement: false },
+    { name: "Business objectives", description: "Summarize the important business benefits the product will provide in a quantitative and measurable way.", isMaxOneRequirement: false },
+    { name: "Success metrics", description: "Specify the indicators that stakeholders will use to define and measure success on this project.", isMaxOneRequirement: false },
+    { name: "Vision statement", description: "Write a concise vision statement that summarizes the long-term purpose and intent of the product.", isMaxOneRequirement: true },
+    { name: "Business risks", description: "Summarize the major business risks associated with developing (or not developing) this product.", isMaxOneRequirement: false },
+    { name: "Business assumptions and dependencies", description: "An assumption is a statement that is believed to be true in the absence of proof or definitive knowledge. Incorrect assumptions can potentially keep you from meeting your business objectives. Also record any major dependencies the project has on external factors, such as government regulations or thid-party suppliers.", isMaxOneRequirement: false },
+  ];
+
   const postProjectSchema = {
     body: {
       type: "object",
@@ -579,13 +589,31 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name } = request.body;
 
-      return await fastify
+      const [project_id] = await fastify
         .knex("project")
         .insert({
           name,
           team_id: request.params.teamId,
         })
         .returning("id");
+
+      await Promise.all(businessReqgroupSeeds.map(async (reqgroup, i) => {
+        await fastify
+          .knex("reqgroup")
+          .insert({
+            project_id,
+            name: reqgroup.name,
+            description: reqgroup.description,
+            type: "business",
+            per_project_unique_id: i + 1,
+            isMaxOneRequirement: reqgroup.isMaxOneRequirement,
+            isDeletable: false,
+            isPrioritized: false,
+          })
+          .returning("id");
+      }));
+
+      return [project_id];
     }
   );
 };

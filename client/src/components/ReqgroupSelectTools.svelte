@@ -13,6 +13,7 @@
 
   export let selectedReqs;
   export let update;
+  export let isPrioritized;
 
   const moveToReqgroup = async newReqgroupId => {};
   const changeStatus = async () => {
@@ -93,14 +94,16 @@
         </div>
         Change status
       </button>
-      <button
-        on:click={changePriority}
-        class="button-small button-outline button-clear button-secondary">
-        <div class="iconWrapper">
-          <FaEdit />
-        </div>
-        Change priority
-      </button>
+      {#if isPrioritized}
+        <button
+          on:click={changePriority}
+          class="button-small button-outline button-clear button-secondary">
+          <div class="iconWrapper">
+            <FaEdit />
+          </div>
+          Change priority
+        </button>
+      {/if}
       <button
         on:click={archiveSelected}
         class="button-small button-outline button-clear button-secondary">

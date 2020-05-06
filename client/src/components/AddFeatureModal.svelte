@@ -14,7 +14,8 @@
     await post(
       `/projects/${id}/reqgroups`,
       {
-        name: description
+        name: description,
+        type: "feature"
       },
       $session.user && $session.user.jwt
     );

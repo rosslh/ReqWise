@@ -109,6 +109,9 @@ module.exports = async function (fastify, opts) {
             description: { type: "string" },
             ppuid: { type: "number" },
             type: { type: "string" },
+            isDeletable: { type: "boolean" },
+            isMaxOneRequirement: { type: "boolean" },
+            isPrioritized: { type: "boolean" }
           },
         },
       },

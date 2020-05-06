@@ -1,8 +1,13 @@
 <script>
-  import FaGithub from "svelte-icons/fa/FaGithub.svelte";
-
+  import MdInfoOutline from "svelte-icons/md/MdInfoOutline.svelte";
+  import { modalContent, modalProps } from "../stores.js";
+  import ReqgroupDescriptionModal from "../components/ReqgroupDescriptionModal.svelte";
   export let reqgroup;
-  export let requirements;
+
+  const showDescriptionModal = () => {
+    modalContent.set(ReqgroupDescriptionModal);
+    modalProps.set({ description: reqgroup.description, name: reqgroup.name });
+  };
 </script>
 
 <style>
@@ -26,6 +31,12 @@
 
   div.reqgroupHeader button {
     margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--grey4);
+    width: 1.8rem;
+    height: 1.8rem;
   }
 
   .reqgroupPpuid {
@@ -39,12 +50,9 @@
     {reqgroup.name}
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
-  {#if requirements && requirements.some(r => r.status === 'accepted')}
-    <button class="button-small button-outline">
-      <div class="iconWrapper">
-        <FaGithub />
-      </div>
-      Implement Accepted
+  {#if reqgroup.description}
+    <button on:click={showDescriptionModal}>
+      <MdInfoOutline />
     </button>
   {/if}
 </div>

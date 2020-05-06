@@ -16,6 +16,9 @@
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
 
+  import { modalContent, modalProps } from "../../../stores.js";
+  import AddBrGroupModal from "../../../components/AddBrGroupModal.svelte";
+
   const { page, session } = stores();
   const { id } = $page.params;
 
@@ -27,6 +30,11 @@
       $session.user && $session.user.jwt
     );
   };
+
+  const showAddBrModal = async () => {
+    modalContent.set(AddBrGroupModal);
+    modalProps.set({ id, update });
+  };
 </script>
 
 <section class="contentWrapper">
@@ -35,7 +43,7 @@
     Business requirements describe the reason behind a project and what
     objectives of the organization will be fulfilled by undertaking the project.
   </p>
-  <button>Add requirement group</button>
+  <button on:click={showAddBrModal}>Add requirement group</button>
 </section>
 {#if reqgroups.length}
   <section class="contentWrapper">

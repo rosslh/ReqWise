@@ -94,7 +94,10 @@ exports.up = function (knex) {
         .notNullable();
       table.string("name").notNullable();
       table.integer("per_project_unique_id").notNullable().unsigned();
-      table.string("description");
+      table.string("description", 2000);
+      table.boolean("isMaxOneRequirement").defaultTo(false);
+      table.boolean("isDeletable").defaultTo(true);
+      table.boolean("isPrioritized").defaultTo(true);
       table.enu("type", ["feature", "business", "quality"]).notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
@@ -130,9 +133,9 @@ exports.up = function (knex) {
         .references("account.id")
         .unsigned()
         .notNullable();
-      table.enu("priority", ["high", "medium", "low"]).notNullable();
+      table.enu("priority", ["high", "medium", "low"]);
       table
-        .enu("status", ["implemented", "inProgress", "accepted", "proposed"])
+        .enu("status", ["accepted", "proposed"])
         .notNullable();
       table.string("description").notNullable();
       table.string("rationale").notNullable();

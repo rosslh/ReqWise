@@ -15,6 +15,7 @@
   export let toggleReq;
   export let selected;
   export let update;
+  export let isPrioritized;
 
   const getStatusColor = status => {
     switch (status) {
@@ -43,13 +44,13 @@
   const viewRequirement = (event, id) => {
     event.stopPropagation();
     modalContent.set(ViewRequirementModal);
-    modalProps.set({ id, update, url: `/requirements/${id}` });
+    modalProps.set({ id, update, url: `/requirements/${id}`, isPrioritized });
   };
 
   const proposeChange = (event, id) => {
     event.stopPropagation();
     modalContent.set(UpdateRequirementModal);
-    modalProps.set({ id, update, url: `/requirements/${id}` });
+    modalProps.set({ id, update, url: `/requirements/${id}`, isPrioritized });
   };
 </script>
 
@@ -145,14 +146,14 @@
         <FaExclamation />
       </span>
       <span>Proposed</span>
-    {:else if requirement.status === 'accepted'}
+    {:else}
       <span
         class="iconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaThumbsUp />
       </span>
       Accepted
-    {:else if requirement.status === 'inProgress'}
+      <!-- {:else if requirement.status === 'inProgress'}
       <span
         class="iconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
@@ -165,7 +166,7 @@
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaCheck />
       </span>
-      Implemented
+      Implemented -->
     {/if}
   </td>
   <td

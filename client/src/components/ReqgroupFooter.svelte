@@ -11,6 +11,7 @@
   export let updateReqgroup;
   export let update;
   export let reqgroup;
+  export let requirements;
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
@@ -32,14 +33,22 @@
 </style>
 
 <div class="reqgroupFooter">
-  <button
-    class="button-create"
-    on:click={() => {
-      modalContent.set(AddRequirementModal);
-      modalProps.set({ reqgroupId: reqgroup.id, update: updateReqs });
-    }}>
-    + Add Requirement
-  </button>
+  {#if !reqgroup.isMaxOneRequirement || (requirements && !requirements.length)}
+    <button
+      class="button-create"
+      on:click={() => {
+        modalContent.set(AddRequirementModal);
+        modalProps.set({
+          reqgroupId: reqgroup.id,
+          update: updateReqs,
+          isPrioritized: reqgroup.isPrioritized
+        });
+      }}>
+      + Add Requirement
+    </button>
+  {:else}
+    <div />
+  {/if}
   <div>
     <button
       on:click={editReqgroup}
@@ -49,13 +58,15 @@
       </div>
       Edit
     </button>
-    <button
-      on:click={deleteReqgroup}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegTrashAlt />
-      </div>
-      Delete
-    </button>
+    {#if reqgroup.isDeletable}
+      <button
+        on:click={deleteReqgroup}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+        Delete
+      </button>
+    {/if}
   </div>
 </div>

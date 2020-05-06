@@ -66,9 +66,12 @@
 </style>
 
 <div class="reqgroup">
-  <ReqgroupHeader {reqgroup} {requirements} />
+  <ReqgroupHeader {reqgroup} />
   <ReqgroupStatusBar {requirements} />
-  <ReqgroupSelectTools {selectedReqs} update={updateReqs} />
+  <ReqgroupSelectTools
+    {selectedReqs}
+    update={updateReqs}
+    isPrioritized={reqgroup.isPrioritized} />
   <div class="tableWrapper">
     <table>
       <thead>
@@ -86,6 +89,7 @@
         <tbody>
           {#each requirements as requirement}
             <Requirement
+              isPrioritized={reqgroup.isPrioritized}
               selected={selectedReqs.includes(requirement.id)}
               {toggleReq}
               update={updateReqs}
@@ -98,5 +102,10 @@
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
-  <ReqgroupFooter {reqgroup} {updateReqs} {updateReqgroup} {update} />
+  <ReqgroupFooter
+    {reqgroup}
+    {updateReqs}
+    {updateReqgroup}
+    {update}
+    {requirements} />
 </div>

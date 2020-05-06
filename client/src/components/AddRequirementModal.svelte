@@ -7,6 +7,7 @@
   export let reqgroupId;
   export let update;
   export let close;
+  export let isPrioritized;
 
   let description = "";
   let rationale = "";
@@ -18,7 +19,7 @@
       {
         description,
         rationale,
-        priority: priority.value,
+        priority: isPrioritized ? priority.value : undefined,
         status: status.value
       },
       $session.user && $session.user.jwt
@@ -35,9 +36,9 @@
 
   const statusOptions = [
     { value: "proposed", label: "Proposed" },
-    { value: "accepted", label: "Accepted" },
-    { value: "inProgress", label: "In Progress" },
-    { value: "implemented", label: "Implemented" }
+    { value: "accepted", label: "Accepted" }
+    // { value: "inProgress", label: "In Progress" },
+    // { value: "implemented", label: "Implemented" }
   ];
 
   let priority = priorityOptions[1];
@@ -58,17 +59,19 @@
     class="newReqInput"
     bind:value={description} />
 </fieldset>
-<fieldset class="inline">
-  <label for="priority">Priority</label>
-  <div class="selectWrapper">
-    <Select
-      inputAttributes={{ id: 'priority' }}
-      isClearable={false}
-      isSearchable={false}
-      items={priorityOptions}
-      bind:selectedValue={priority} />
-  </div>
-</fieldset>
+{#if isPrioritized}
+  <fieldset class="inline">
+    <label for="priority">Priority</label>
+    <div class="selectWrapper">
+      <Select
+        inputAttributes={{ id: 'priority' }}
+        isClearable={false}
+        isSearchable={false}
+        items={priorityOptions}
+        bind:selectedValue={priority} />
+    </div>
+  </fieldset>
+{/if}
 <fieldset class="inline">
   <label for="status">Status</label>
   <div class="selectWrapper">
