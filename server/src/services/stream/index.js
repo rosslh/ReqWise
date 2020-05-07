@@ -1,12 +1,12 @@
 module.exports = async function (fastify, opts) {
 
-    const sleep = ms => {
-        return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
-    }
+    const sleep = ms => new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 
-    const streamSchema = {
+    const timestampBufferMs = 200;
+
+    const projectStreamSchema = {
         body: {},
         queryString: {
             type: "object",
@@ -27,13 +27,12 @@ module.exports = async function (fastify, opts) {
     };
     fastify.get("/stream/project/:projectId", {
         preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
-        schema: streamSchema,
+        schema: projectStreamSchema,
     }, function (req, res) {
         let timestamp = Date.now();
-        console.log(req.user);
         res.sse({
             async*[Symbol.asyncIterator]() {
-                for (let i = 0; i < 20; i++) {
+                for (let i = 0; i < 5; i++) { // expires after one minute
                     await sleep(2000);
 
                     const projectUpdated = !!(
@@ -43,7 +42,7 @@ module.exports = async function (fastify, opts) {
                             .where({
                                 "id": req.params.projectId
                             })
-                            .where('reqgroups_updated_at', '>', new Date(timestamp))
+                            .where('reqgroups_updated_at', '>', new Date(timestamp - timestampBufferMs))
                     ).length;
 
                     let updatedReqgroups = (
@@ -53,7 +52,7 @@ module.exports = async function (fastify, opts) {
                             .where({
                                 "project_id": req.params.projectId
                             })
-                            .where('updated_at', '>', new Date(timestamp))
+                            .where('updated_at', '>', new Date(timestamp - timestampBufferMs))
                             .where('updated_by', "!=", req.user.id)
                     ).map(x => fastify.obfuscateId(x.id));
 
@@ -65,7 +64,7 @@ module.exports = async function (fastify, opts) {
                         .where({
                             "reqgroup.project_id": req.params.projectId
                         })
-                        .where('reqversion.created_at', '>', new Date(timestamp))
+                        .where('reqversion.created_at', '>', new Date(timestamp - timestampBufferMs))
                         .where('account_id', "!=", req.user.id)
                     ).map(x => fastify.obfuscateId(x.id));
 
@@ -85,4 +84,57 @@ module.exports = async function (fastify, opts) {
         });
     });
 
+    const commentStreamSchema = {
+        body: {},
+        queryString: {
+            type: "object",
+            properties: {
+                jwt: { type: "string" },
+            },
+            required: ["jwt"]
+        },
+        params: {
+            type: "object",
+            properties: {
+                reqversionId: { type: "number" }
+            },
+            required: ["reqversionId"]
+        },
+        headers: {},
+        response: {},
+    };
+    fastify.get("/stream/comments/:reqversionId", {
+        preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
+        schema: commentStreamSchema,
+    }, function (req, res) {
+        let timestamp = Date.now();
+        console.log(req.user);
+        res.sse({
+            async*[Symbol.asyncIterator]() {
+                for (let i = 0; i < 5; i++) { // expires after one minute
+                    await sleep(2000);
+
+                    let newComments = (await fastify.knex
+                        .from("comment")
+                        .select(
+                            "comment.*",
+                            "account.name as authorName",
+                            "account.email as authorEmail"
+                        )
+                        .join("account", "account.id", "=", "comment.account_id").where({
+                            "comment.reqversion_id": req.params.reqversionId
+                        })
+                        .where('comment.created_at', '>', new Date(timestamp - timestampBufferMs))
+                    );
+
+                    if (newComments.length) {
+                        yield {
+                            id: String(i), data: JSON.stringify(newComments)
+                        };
+                    }
+                    timestamp = Date.now();
+                }
+            }
+        });
+    });
 };

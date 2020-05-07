@@ -11,7 +11,6 @@
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
   import { onMount, onDestroy } from "svelte";
-  import debounce from "debounce";
   import { stores } from "@sapper/app";
   import {
     currentProject,
@@ -19,7 +18,7 @@
     reqgroupsToUpdate,
     projectShouldUpdate
   } from "../../../stores.js";
-  import { get } from "../../../api.js";
+  import { get, stream } from "../../../api.js";
 
   export let project;
   $currentProject = project;
@@ -32,33 +31,26 @@
 
   let title = null;
 
-  let streamSource;
+  let closeStream;
 
   $: startStream = () => {
-    if ($currentProject && typeof window !== "undefined") {
-      const url = `${
-        process.env.SAPPER_APP_API_URL
-      }/stream/project/${id}?jwt=${encodeURIComponent($session.user.jwt)}`;
-
-      streamSource = new EventSource(url);
-
-      streamSource.onmessage = async event => {
-        const data = JSON.parse(event.data);
-        if (data.projectUpdated) {
-          $projectShouldUpdate = true;
+    if (id) {
+      // TODO: why do I need this check
+      closeStream = stream(
+        `/stream/project/${id}`,
+        $session.user.jwt,
+        event => {
+          const data = JSON.parse(event.data);
+          if (data.projectUpdated) {
+            $projectShouldUpdate = true;
+          }
+          if (data.updatedReqgroups.length) {
+            $reqgroupsToUpdate = Array.from(
+              new Set([...$reqgroupsToUpdate, ...data.updatedReqgroups])
+            );
+          }
         }
-        if (data.updatedReqgroups.length) {
-          $reqgroupsToUpdate = Array.from(
-            new Set([...$reqgroupsToUpdate, ...data.updatedReqgroups])
-          );
-        }
-      };
-
-      streamSource.onerror = function(err) {
-        console.error("EventSource failed:", err);
-        streamSource.close();
-        streamSource = undefined;
-      };
+      );
     }
   };
 
@@ -69,19 +61,15 @@
   });
 
   onDestroy(() => {
-    if (streamSource) {
-      streamSource.close();
-      streamSource = undefined;
-    }
+    closeStream();
   });
 
-  $: debouncedStartStream = debounce(startStream, 5000);
-
   $: refreshStream =
-    !streamSource &&
+    typeof window !== "undefined" &&
+    !closeStream &&
     $session.user &&
     $session.user.jwt &&
-    debouncedStartStream();
+    startStream();
 </script>
 
 <style>

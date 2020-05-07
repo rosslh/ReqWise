@@ -2,11 +2,11 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  import { onMount, tick } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import Diff from "text-diff";
   const diff = new Diff();
 
-  import { get, post } from "../api.js";
+  import { get, post, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
@@ -30,9 +30,15 @@
   let comments;
   let reqversionId;
 
+  // let pollInterval;
+
   onMount(async () => {
     await getRequirement();
     await getComments();
+    if ($session.user && $session.user.jwt) {
+      startStream();
+    }
+    // pollInterval = setInterval(getComments, 6000);
   });
 
   const getRequirement = async () => {
@@ -52,15 +58,20 @@
     reqversionId = requirement.latestVersion.id;
   };
 
+  const scrollToBottom = async () => {
+    await tick();
+
+    document
+      .getElementById("commentsBottom")
+      .scrollIntoView({ behavior: "smooth" });
+  };
+
   $: getComments = async () => {
     comments = await get(
       `/reqversions/${reqversionId}/comments`,
       $session.user && $session.user.jwt
     );
-    await tick();
-    document
-      .getElementById("commentsBottom")
-      .scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
   };
 
   $: descriptionDiff =
@@ -81,8 +92,24 @@
       },
       $session.user && $session.user.jwt
     );
-    await getComments();
   };
+
+  let closeStream;
+
+  $: startStream = () => {
+    closeStream = stream(`/stream/comments/${id}`, $session.user.jwt, event => {
+      let data = JSON.parse(event.data).filter(
+        x => !comments.some(y => y.id === x.id)
+      );
+      console.log(data, comments);
+      comments = [...comments, ...data];
+      scrollToBottom();
+    });
+  };
+
+  onDestroy(() => {
+    closeStream();
+  });
 </script>
 
 <style>
