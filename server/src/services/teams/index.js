@@ -594,6 +594,7 @@ module.exports = async function (fastify, opts) {
         .insert({
           name,
           team_id: request.params.teamId,
+          created_by: request.user.id,
         })
         .returning("id");
 

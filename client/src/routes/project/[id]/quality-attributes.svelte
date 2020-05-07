@@ -15,6 +15,7 @@
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
+  import { projectShouldUpdate } from "../../../stores.js";
 
   import { modalContent, modalProps } from "../../../stores.js";
   import AddQaGroupModal from "../../../components/AddQaGroupModal.svelte";
@@ -35,6 +36,13 @@
     modalContent.set(AddQaGroupModal);
     modalProps.set({ id, update });
   };
+
+  $: updateFromStream =
+    $projectShouldUpdate &&
+    (() => {
+      update();
+      $projectShouldUpdate = false;
+    })();
 </script>
 
 <section class="contentWrapper">

@@ -89,6 +89,8 @@ module.exports = async function (fastify, opts) {
         .where("id", request.params.reqgroupId)
         .update({
           name,
+          updated_at: new Date(Date.now()),
+          updated_by: request.user.id,
         })
         .returning("id");
     }
@@ -125,7 +127,7 @@ module.exports = async function (fastify, opts) {
       schema: deleteReqgroupSchema,
     },
     async function (request, reply) {
-      const { isDeletable } = await fastify.knex
+      const { isDeletable, project_id } = await fastify.knex
         .from("reqgroup")
         .select("*")
         .where({
@@ -134,6 +136,7 @@ module.exports = async function (fastify, opts) {
         .first();
 
       if (isDeletable) {
+        await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
         await fastify
           .knex("requirement")
           .where("reqgroup_id", request.params.reqgroupId)

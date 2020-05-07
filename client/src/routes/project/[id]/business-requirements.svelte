@@ -11,6 +11,7 @@
 
 <script>
   import { onMount } from "svelte";
+  import { projectShouldUpdate } from "../../../stores.js";
   import { get, post } from "../../../api.js";
   import { stores } from "@sapper/app";
 
@@ -35,6 +36,13 @@
     modalContent.set(AddBrGroupModal);
     modalProps.set({ id, update });
   };
+
+  $: updateFromStream =
+    $projectShouldUpdate &&
+    (() => {
+      update();
+      $projectShouldUpdate = false;
+    })();
 </script>
 
 <section class="contentWrapper">

@@ -12,6 +12,7 @@
 <script>
   import { onMount } from "svelte";
   import { get, post } from "../../../api.js";
+  import { projectShouldUpdate } from "../../../stores.js";
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
@@ -28,6 +29,13 @@
       $session.user && $session.user.jwt
     );
   };
+
+  $: updateFromStream =
+    $projectShouldUpdate &&
+    (() => {
+      update();
+      $projectShouldUpdate = false;
+    })();
 </script>
 
 <section class="contentWrapper">

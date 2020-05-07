@@ -11,32 +11,47 @@
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
   import { onMount, onDestroy } from "svelte";
+  import debounce from "debounce";
   import { stores } from "@sapper/app";
-  import { currentProject, sidebarHidden } from "../../../stores.js";
+  import {
+    currentProject,
+    sidebarHidden,
+    reqgroupsToUpdate,
+    projectShouldUpdate
+  } from "../../../stores.js";
   import { get } from "../../../api.js";
+
   export let project;
   $currentProject = project;
-  const { page } = stores();
+
+  const { page, session } = stores();
+
   $: ({ path, params } = $page);
   $: tab = path.split("/").pop();
   $: id = params.id;
 
   let title = null;
 
-  const { session } = stores();
-
   let streamSource;
 
   $: startStream = () => {
-    if ($currentProject) {
+    if ($currentProject && typeof window !== "undefined") {
       const url = `${
         process.env.SAPPER_APP_API_URL
-      }/stream/${id}?jwt=${encodeURIComponent($session.user.jwt)}`;
+      }/stream/project/${id}?jwt=${encodeURIComponent($session.user.jwt)}`;
 
       streamSource = new EventSource(url);
 
-      streamSource.onmessage = event => {
-        alert(event.data);
+      streamSource.onmessage = async event => {
+        const data = JSON.parse(event.data);
+        if (data.projectUpdated) {
+          $projectShouldUpdate = true;
+        }
+        if (data.updatedReqgroups.length) {
+          $reqgroupsToUpdate = Array.from(
+            new Set([...$reqgroupsToUpdate, ...data.updatedReqgroups])
+          );
+        }
       };
 
       streamSource.onerror = function(err) {
@@ -44,8 +59,6 @@
         streamSource.close();
         streamSource = undefined;
       };
-    } else {
-      console.log("No project selected");
     }
   };
 
@@ -62,8 +75,13 @@
     }
   });
 
+  $: debouncedStartStream = debounce(startStream, 5000);
+
   $: refreshStream =
-    !streamSource && $session.user && $session.user.jwt && startStream();
+    !streamSource &&
+    $session.user &&
+    $session.user.jwt &&
+    debouncedStartStream();
 </script>
 
 <style>

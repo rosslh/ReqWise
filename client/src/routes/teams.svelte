@@ -39,19 +39,26 @@
   };
 
   const acceptInvite = async inviteId => {
-    await post(`/users/${$session.user.id}/teams`, {
-      inviteId
-    });
+    await post(
+      `/users/${$session.user.id}/teams`,
+      {
+        inviteId
+      },
+      $session.user.jwt
+    );
     await update();
   };
 
   const deleteInvite = async inviteId => {
-    await del(`/users/${$session.user.id}/invites/${inviteId}`);
+    await del(
+      `/users/${$session.user.id}/invites/${inviteId}`,
+      $session.user.jwt
+    );
     await update();
   };
 
   const leaveTeam = async teamId => {
-    await del(`/users/${$session.user.id}/teams/${teamId}`);
+    await del(`/users/${$session.user.id}/teams/${teamId}`, $session.user.jwt);
     await update();
   };
 </script>

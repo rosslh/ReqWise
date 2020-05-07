@@ -4,7 +4,7 @@
   const { session } = stores();
 
   export let reqgroupId;
-  export let updateFeature;
+  export let updateReqgroup;
   export let close;
 
   export let reqgroup;
@@ -19,7 +19,7 @@
       },
       $session.user && $session.user.jwt
     );
-    updateFeature();
+    updateReqgroup();
     close();
   };
 </script>

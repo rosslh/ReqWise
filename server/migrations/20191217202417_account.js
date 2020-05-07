@@ -82,6 +82,11 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.integer("created_by")
+        .references("account.id")
+        .unsigned()
+        .notNullable();
+      table.timestamp("reqgroups_updated_at").defaultTo(knex.fn.now()); // updated when reqgroup added or deleted
     }),
     knex.schema.createTable("reqgroup", (table) => {
       table.increments("id").primary();
@@ -100,6 +105,13 @@ exports.up = function (knex) {
       table.boolean("isPrioritized").defaultTo(true);
       table.enu("type", ["feature", "business", "quality"]).notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.integer("created_by")
+        .references("account.id")
+        .unsigned(); // can be created by seed script
+      table.timestamp("updated_at").defaultTo(knex.fn.now());
+      table.integer("updated_by")
+        .references("account.id")
+        .unsigned(); // can be created by seed script
     }),
     knex.schema.createTable("requirement", (table) => {
       table.increments("id").primary();

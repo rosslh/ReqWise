@@ -8,7 +8,10 @@
   import ReqgroupStatusBar from "../components/ReqgroupStatusBar.svelte";
   import ReqgroupFooter from "../components/ReqgroupFooter.svelte";
   import Skeleton from "../components/Skeleton.svelte";
+
   import { get } from "../api.js";
+  import { reqgroupsToUpdate } from "../stores.js";
+
   export let reqgroup;
   export let update;
 
@@ -42,6 +45,14 @@
       selectedReqs = [...selectedReqs, id]; // push doesn't update state
     }
   };
+
+  $: updateFromStream =
+    $reqgroupsToUpdate.includes(reqgroup.id) &&
+    (() => {
+      updateReqgroup();
+      updateReqs();
+      $reqgroupsToUpdate = $reqgroupsToUpdate.filter(x => x != reqgroup.id);
+    })();
 </script>
 
 <style>

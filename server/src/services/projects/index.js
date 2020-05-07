@@ -227,6 +227,9 @@ module.exports = async function (fastify, opts) {
             .max("per_project_unique_id")
             .first()
         ).max || 0;
+
+      await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
+
       return await fastify
         .knex("reqgroup")
         .insert({
@@ -234,6 +237,8 @@ module.exports = async function (fastify, opts) {
           name: capitalizeFirstLetter(name),
           type,
           per_project_unique_id: maxPpuid + 1,
+          created_by: request.user.id,
+          updated_by: request.user.id,
         })
         .returning("id");
     }
