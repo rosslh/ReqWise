@@ -30,17 +30,6 @@
   let comments;
   let reqversionId;
 
-  // let pollInterval;
-
-  onMount(async () => {
-    await getRequirement();
-    await getComments();
-    if ($session.user && $session.user.jwt) {
-      startStream();
-    }
-    // pollInterval = setInterval(getComments, 6000);
-  });
-
   const getRequirement = async () => {
     const requirement = await get(
       `/requirements/${id}`,
@@ -97,18 +86,35 @@
   let closeStream;
 
   $: startStream = () => {
-    closeStream = stream(`/stream/comments/${id}`, $session.user.jwt, event => {
-      let data = JSON.parse(event.data).filter(
-        x => !comments.some(y => y.id === x.id)
-      );
-      console.log(data, comments);
-      comments = [...comments, ...data];
-      scrollToBottom();
-    });
+    if (closeStream) {
+      closeStream();
+    }
+    closeStream = stream(
+      `/stream/comments/${reqversionId}`,
+      $session.user.jwt,
+      event => {
+        let data = JSON.parse(event.data).filter(
+          x => !comments.some(y => y.id === x.id)
+        );
+        console.log(data, comments);
+        comments = [...comments, ...data];
+        scrollToBottom();
+      }
+    );
   };
 
+  onMount(async () => {
+    await getRequirement();
+    await getComments();
+    if ($session.user && $session.user.jwt) {
+      startStream();
+    }
+  });
+
   onDestroy(() => {
-    closeStream();
+    if (closeStream) {
+      closeStream();
+    }
   });
 </script>
 

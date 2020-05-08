@@ -53,18 +53,24 @@ export const del = (endpoint, token) =>
 
 export const stream = (endpoint, token, callback) => {
   // TODO: use JWT to fetch one-time token to use in query parameter
-
   if (typeof window === "undefined") {
+    // EventSource only exists on client
     throw new Error("Only stream on client");
   }
   if (endpoint.charAt(0) !== "/") {
     endpoint = `/${endpoint}`;
   }
+
   const url = `${
     host
     }${endpoint}?jwt=${encodeURIComponent(token)}`;
 
   let streamSource = new EventSource(url);
+
+  const endStream = () => {
+    streamSource.close();
+    streamSource = null;
+  };
 
   streamSource.onmessage = callback;
 
@@ -72,8 +78,5 @@ export const stream = (endpoint, token, callback) => {
     console.log("EventSource ended. Restarting.");
   };
 
-  return () => {
-    streamSource.close();
-    streamSource = null;
-  };
+  return endStream;
 }

@@ -660,9 +660,9 @@ img {
 }
 
 html body { /* default light theme */
-  --backdrop: #dae0e6;
+  --backdrop: #EDF2F7;
   --background1:#ffffff;
-  --background2: #f6f7f8;
+  --background2: #F7FAFC;
 
   --normalText: #4a5568;
   --secondaryText: #718096;
@@ -670,13 +670,13 @@ html body { /* default light theme */
 }
 
 html body[data-theme="dark"] {
-  --backdrop: #030303;
-  --background1: #272729;
-  --background2:#1a1a1b;
+  --backdrop: #1A202C;
+  --background1: #2D3748;
+  --background2:#4A5568;
 
-  --normalText: #fefefe;
-  --secondaryText: #ccc;
-  --borderColor: #666;
+  --normalText: #F7FAFC;
+  --secondaryText: #EDF2F7;
+  --borderColor: #718096;
 }
 
 .contentWrapper {

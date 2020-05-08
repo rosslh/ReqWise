@@ -4,8 +4,6 @@ module.exports = async function (fastify, opts) {
         setTimeout(resolve, ms);
     });
 
-    const timestampBufferMs = 200;
-
     const projectStreamSchema = {
         body: {},
         queryString: {
@@ -30,10 +28,11 @@ module.exports = async function (fastify, opts) {
         schema: projectStreamSchema,
     }, function (req, res) {
         let timestamp = Date.now();
+        let interval = 6000;
         res.sse({
             async*[Symbol.asyncIterator]() {
                 for (let i = 0; i < 10; i++) { // expires after one minute
-                    await sleep(6000);
+                    await sleep(interval);
 
                     const projectUpdated = !!(
                         await fastify.knex
@@ -42,7 +41,7 @@ module.exports = async function (fastify, opts) {
                             .where({
                                 "id": req.params.projectId
                             })
-                            .where('reqgroups_updated_at', '>', new Date(timestamp - timestampBufferMs))
+                            .where('reqgroups_updated_at', '>', new Date(timestamp - interval))
                     ).length;
 
                     let updatedReqgroups = (
@@ -52,7 +51,7 @@ module.exports = async function (fastify, opts) {
                             .where({
                                 "project_id": req.params.projectId
                             })
-                            .where('updated_at', '>', new Date(timestamp - timestampBufferMs))
+                            .where('updated_at', '>', new Date(timestamp - interval))
                             .where('updated_by', "!=", req.user.id)
                     ).map(x => fastify.obfuscateId(x.id));
 
@@ -64,7 +63,7 @@ module.exports = async function (fastify, opts) {
                         .where({
                             "reqgroup.project_id": req.params.projectId
                         })
-                        .where('reqversion.created_at', '>', new Date(timestamp - timestampBufferMs))
+                        .where('reqversion.created_at', '>', new Date(timestamp - interval))
                         .where('account_id', "!=", req.user.id)
                     ).map(x => fastify.obfuscateId(x.id));
 
@@ -108,13 +107,12 @@ module.exports = async function (fastify, opts) {
         schema: commentStreamSchema,
     }, function (req, res) {
         let timestamp = Date.now();
-        console.log(req.user);
+        let interval = 2000;
         res.sse({
             async*[Symbol.asyncIterator]() {
-                for (let i = 0; i < 30; i++) { // expires after one minute
-                    await sleep(2000);
-
-                    let newComments = (await fastify.knex
+                for (let i = 0; i < 15; i++) { // expires after 30 seconds
+                    await sleep(interval);
+                    const newComments = (await fastify.knex
                         .from("comment")
                         .select(
                             "comment.*",
@@ -124,8 +122,10 @@ module.exports = async function (fastify, opts) {
                         .join("account", "account.id", "=", "comment.account_id").where({
                             "comment.reqversion_id": req.params.reqversionId
                         })
-                        .where('comment.created_at', '>', new Date(timestamp - timestampBufferMs))
-                    ).map(x => ({ ...x, id: obfuscateId(x.id) }));
+                        .where('comment.created_at', '>', new Date(timestamp - interval))
+                    ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
+
+                    console.log(newComments);
 
                     if (newComments.length) {
                         yield {
