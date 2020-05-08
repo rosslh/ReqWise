@@ -11,37 +11,35 @@
 
   --indigo: #8583ed;
 
-  --offwhite1: #fefeff;
-  --offwhite2: #fcfdfe;
-  --offwhite3: #fafcfd;
-
-  --grey1: #eaeef2;
-  --grey2: #d7dfe8;
-  --grey3: #a0aec0;
-  --grey4: #718096;
-
-  --charcoal1: #4a5568;
-
   --sidebarWidth: 26rem;
   --contentWrapperWidth: 100rem;
 
   /* Svelte-Select styling */
-  --border: 0.1rem solid var(--grey2);
+  --border: 0.1rem solid var(--borderColor);
   --borderFocusColor: var(--themeColor);
-  --borderHoverColor: var(--grey3);
-  --inputColor: var(--charcoal1);
+  --borderHoverColor: var(--borderColor);
+  --inputColor: var(--normalText);
   --borderRadius: 0.4rem;
 }
 
 html body { /* default light theme */
-  /* TODO */
-  --background1: var(--offwhite1);
-  --background2: var(--offwhite2);
-  --background3: var(--offwhite3);
+  --backdrop: #dae0e6;
+  --background1:#ffffff;
+  --background2: #f6f7f8;
+
+  --normalText: #4a5568;
+  --secondaryText: #718096;
+  --borderColor: #d7dfe8;
 }
 
 html body[data-theme="dark"] {
-  /* TODO */
+  --backdrop: #030303;
+  --background1: #272729;
+  --background2:#1a1a1b;
+
+  --normalText: #fefefe;
+  --secondaryText: #ccc;
+  --borderColor: #666;
 }
 
 .contentWrapper {
@@ -93,6 +91,7 @@ fieldset.inline > input {
 html,
 body {
   font-family: "Source Sans Pro", sans-serif !important;
+  background-color: var(--backdrop);
 }
 
 .button-small {
@@ -129,11 +128,11 @@ body {
 }
 
 .button-secondary {
-  background-color: var(--grey4);
-  border-color: var(--grey4);
+  background-color: var(--secondaryText);
+  border-color: var(--secondaryText);
 }
 .button-outline.button-secondary {
-  color: var(--grey4);
+  color: var(--secondaryText);
 }
 
 /* Leave this in case theme color changes from green */
@@ -163,7 +162,7 @@ body {
 
 section {
   padding-bottom: 5rem;
-  border-bottom: 0.1rem solid var(--grey1);
+  border-bottom: 0.1rem solid var(--borderColor);
   margin-bottom: 5rem;
 }
 
@@ -173,16 +172,16 @@ form {
 }
 input,
 textarea {
-  color: var(--charcoal1);
+  color: var(--normalText);
 }
 
 input.solidPlaceholder::placeholder {
-  color: var(--charcoal1);
+  color: var(--normalText);
   opacity: 1;
 }
 
 input:hover {
-  border-color: var(--grey3);
+  border-color: var(--borderColor);
 }
 
 table {

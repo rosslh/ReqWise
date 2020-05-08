@@ -20,7 +20,6 @@
   }
 </style>
 
-{$session.user && $session.user.darkModeEnabled}
 {#if $modalContent}
   <Modal let:close>
     <svelte:component this={$modalContent} {...$modalProps} {close} />

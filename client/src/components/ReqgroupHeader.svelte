@@ -15,7 +15,7 @@
     background-color: var(--background1);
     margin: -1.2rem -1.2rem 0 -1.2rem;
     padding: 1.8rem 1.2rem;
-    border-bottom: 0.1rem solid var(--grey1);
+    border-bottom: 0.1rem solid var(--borderColor);
     min-height: 5rem;
     display: flex;
     align-items: center;
@@ -34,13 +34,13 @@
     padding: 0;
     background: none;
     border: none;
-    color: var(--grey4);
+    color: var(--secondaryText);
     width: 1.8rem;
     height: 1.8rem;
   }
 
   .reqgroupPpuid {
-    color: var(--grey4);
+    color: var(--secondaryText);
     margin-left: 0.5rem;
   }
 </style>

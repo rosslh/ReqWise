@@ -45,7 +45,7 @@
   }
 
   .outerWrapper:not(:hover) .labelsWrapper {
-    background-color: white;
+    background-color: var(--background1);
   }
 
   .outerWrapper {
@@ -75,7 +75,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: var(--background1);
   }
 
   .barsWrapper .entry:not(:last-child) {
@@ -83,14 +83,14 @@
   }
 
   .labelsWrapper {
-    background-color: var(--background3);
+    background-color: var(--background2);
     font-size: 1.5rem;
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding: 0.8rem 0;
     font-weight: 600;
-    border-bottom: 1px solid var(--grey2);
+    border-bottom: 1px solid var(--borderColor);
     margin: 0 -1.2rem; /* accounts for reqgroup padding */
     /* border-top: none; */
     border-bottom-left-radius: 0.4rem;
@@ -107,7 +107,7 @@
   }
 
   .labelsWrapper .label .labelPercent {
-    color: var(--grey4);
+    color: var(--secondaryText);
   }
 
   .labelsWrapper .label .labelDot {

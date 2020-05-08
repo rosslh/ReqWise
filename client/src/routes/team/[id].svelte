@@ -82,7 +82,7 @@
 
 <style>
   .userActions {
-    color: var(--grey4);
+    color: var(--secondaryText);
   }
 </style>
 

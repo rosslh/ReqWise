@@ -60,12 +60,12 @@
     margin-top: 0;
   }
   div.reqgroup {
-    border: 0.1rem solid var(--grey2);
+    border: 0.1rem solid var(--borderColor);
     border-radius: 0.4rem;
     padding: 1.2rem;
     margin: 2rem 0;
     overflow: hidden;
-    background-color: white;
+    background-color: var(--background1);
     position: relative;
     width: 100%;
   }

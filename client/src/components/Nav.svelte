@@ -17,6 +17,9 @@
 </script>
 
 <style>
+  nav {
+    background-color: var(--background1);
+  }
   div.contentWrapper {
     position: relative;
     display: flex;
@@ -56,9 +59,9 @@
   }
 
   button#toggleMenu {
-    background-color: white;
+    background-color: var(--background1);
     border: none;
-    color: var(--grey4);
+    color: var(--secondaryText);
     height: 2.5rem;
     width: 2.5rem;
     padding: 0;

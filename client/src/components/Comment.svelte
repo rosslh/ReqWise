@@ -11,7 +11,7 @@
   }
   div.commentWrapper {
     display: flex;
-    border: 1px solid var(--grey1);
+    border: 1px solid var(--borderColor);
     margin: 0.5rem 0;
     padding: 0.5rem;
     border-radius: 0.3rem;
@@ -25,13 +25,13 @@
     margin-top: 1rem;
   }
   div.imgPlaceholder {
-    background-color: var(--grey2);
+    background-color: var(--borderColor);
     border-radius: 50%;
     height: 3rem;
     width: 3rem;
   }
   .createdAt {
-    color: var(--grey4);
+    color: var(--secondaryText);
     font-size: 1.4rem;
     margin-left: 1rem;
   }

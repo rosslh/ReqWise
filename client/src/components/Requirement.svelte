@@ -64,26 +64,26 @@
 
     button.commentIconWrapper {
       background-color: var(--background1);
-      border: 1px solid var(--grey2);
+      border: 1px solid var(--borderColor);
       border-radius: 50%;
       height: 3.3rem;
       width: 3.3rem;
       padding: 0.8rem !important;
-      color: var(--charcoal1);
+      color: var(--normalText);
       box-sizing: border-box;
       transform: translateY(0.5rem);
       margin: 0;
 
       &:hover {
         color: var(--themeColor);
-        background-color: white;
+        background-color: var(--background1);
         opacity: 1 !important;
       }
     }
   }
 
   td.ppuid {
-    color: var(--grey4);
+    color: var(--secondaryText);
   }
 
   td.priority {
@@ -101,7 +101,7 @@
   }
 
   td.history {
-    color: var(--grey4);
+    color: var(--secondaryText);
     text-decoration: underline;
     text-decoration-style: dashed;
   }
@@ -125,7 +125,7 @@
   }
 
   tr.requirement.selected:hover {
-    background-color: var(--background3);
+    background-color: var(--background2);
     cursor: pointer;
   }
 </style>

@@ -48,7 +48,7 @@
   }
   div.contentWrapper {
     z-index: 200;
-    background-color: white;
+    background-color: var(--backdrop);
     padding: 1rem 3rem 3rem;
     border-radius: 0.4rem;
     position: fixed;

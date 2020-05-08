@@ -37,7 +37,7 @@
   }
 </style>
 
-<div class="contentWrapper">
+<div class="contentWrapper panel">
   <h2>Log in</h2>
   <fieldset>
     <label for="email">Email</label>

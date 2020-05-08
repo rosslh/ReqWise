@@ -136,7 +136,7 @@
   }
 
   .reqversionContent {
-    border: 0.1rem solid var(--grey2);
+    border: 0.1rem solid var(--borderColor);
     background-color: var(--background2);
     border-radius: 0.3rem;
     padding: 0.2rem 0.6rem;
@@ -147,11 +147,11 @@
   }
 
   span.priorityDiff {
-    color: var(--grey4);
+    color: var(--secondaryText);
   }
 
   .authorEmail {
-    color: var(--grey4);
+    color: var(--secondaryText);
   }
 
   .requirementContainer {
@@ -181,7 +181,7 @@
     position: relative;
   }
   .column.comments > .commentsBottom {
-    background-color: white;
+    background-color: var(--background1);
     height: 24rem;
   }
   h3 {

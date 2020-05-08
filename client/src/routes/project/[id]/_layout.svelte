@@ -79,9 +79,9 @@
     left: 0;
     bottom: 0;
     width: var(--sidebarWidth);
-    border-right: 0.1rem solid var(--grey2);
+    border-right: 0.1rem solid var(--borderColor);
     transition: transform 0.2s ease;
-    border-top: 0.1rem solid var(--grey1);
+    border-top: 0.1rem solid var(--borderColor);
   }
   div.projectColumnRight {
     position: fixed;
@@ -89,8 +89,8 @@
     right: 0;
     bottom: 0;
     overflow-y: scroll;
-    background-color: var(--background2);
-    border-top: 0.1rem solid var(--grey1);
+    background-color: var(--backdrop);
+    border-top: 0.1rem solid var(--borderColor);
     padding-top: 3.5rem;
     transition: width 0.2s ease;
   }
@@ -115,7 +115,7 @@
   }
 
   :global(.projectColumnRight p.infoBlurb) {
-    color: var(--grey4);
+    color: var(--secondaryText);
     margin: 1.5rem 0 1.5rem;
     max-width: 70rem;
   }

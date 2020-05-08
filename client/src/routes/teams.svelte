@@ -65,7 +65,7 @@
 
 <style>
   .membership {
-    color: var(--grey4);
+    color: var(--secondaryText);
   }
 </style>
 

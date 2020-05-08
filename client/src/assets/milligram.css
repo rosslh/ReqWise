@@ -18,13 +18,13 @@ html {
 }
 
 body {
-  color: var(--charcoal1);
+  color: var(--normalText);
   font-size: 1.6em;
   line-height: 1.8;
 }
 
 blockquote {
-  border-left: 0.3rem solid var(--grey2);
+  border-left: 0.3rem solid var(--borderColor);
   margin-left: 0;
   margin-right: 0;
   padding: 1rem 1.5rem;
@@ -112,7 +112,7 @@ input[type="submit"].button-outline[disabled]:hover {
 }
 
 code {
-  background: var(--offwhite2);
+  background: var(--background2);
   border-radius: 0.4rem;
   font-size: 86%;
   margin: 0 0.2rem;
@@ -121,7 +121,7 @@ code {
 }
 
 pre {
-  background: var(--offwhite2);
+  background: var(--background2);
   border-left: 0.3rem solid var(--themeColor);
   overflow-y: hidden;
 }
@@ -135,7 +135,7 @@ pre > code {
 
 hr {
   border: 0;
-  border-top: 0.1rem solid var(--grey2);
+  border-top: 0.1rem solid var(--borderColor);
   margin: 3rem 0;
 }
 
@@ -152,7 +152,7 @@ select {
   -moz-appearance: none;
   appearance: none;
   background-color: transparent;
-  border: 0.1rem solid var(--grey2);
+  border: 0.1rem solid var(--borderColor);
   border-radius: 0.4rem;
   box-shadow: none;
   box-sizing: inherit;
@@ -282,7 +282,7 @@ table {
 
 td,
 th {
-  border-bottom: 0.1rem solid var(--grey1);
+  border-bottom: 0.1rem solid var(--borderColor);
   padding: 1rem 1.2rem;
   text-align: left;
 }

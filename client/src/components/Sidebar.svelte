@@ -99,14 +99,14 @@
   }
 
   a.newSection {
-    border-top: 1px solid var(--grey1);
+    border-top: 1px solid var(--borderColor);
   }
   a span {
     line-height: 2rem;
   }
 
   a:not(.selected) {
-    color: var(--charcoal1);
+    color: var(--normalText);
   }
 
   a:hover {
@@ -135,12 +135,12 @@
 
   div.separator {
     height: 1rem;
-    border-top: 1px solid var(--grey1);
+    border-top: 1px solid var(--borderColor);
     margin: 1rem -1.5rem 0;
   }
 
   nav {
-    background-color: white;
+    background-color: var(--background1);
     height: 100%;
     position: relative;
     overflow-y: auto;
