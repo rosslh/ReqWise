@@ -12,6 +12,7 @@
   div.commentWrapper {
     display: flex;
     border: 1px solid var(--borderColor);
+    background-color: var(--background1);
     margin: 0.5rem 0;
     padding: 0.5rem;
     border-radius: 0.3rem;

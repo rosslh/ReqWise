@@ -96,7 +96,6 @@
         let data = JSON.parse(event.data).filter(
           x => !comments.some(y => y.id === x.id)
         );
-        console.log(data, comments);
         comments = [...comments, ...data];
         scrollToBottom();
       }
