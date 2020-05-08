@@ -125,8 +125,6 @@ module.exports = async function (fastify, opts) {
                         .where('comment.created_at', '>', new Date(timestamp - interval))
                     ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
 
-                    console.log(newComments);
-
                     if (newComments.length) {
                         yield {
                             id: String(i), data: JSON.stringify(newComments)
