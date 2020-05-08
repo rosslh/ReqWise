@@ -90,7 +90,7 @@
         <a href="/login">Login</a>
       {:else}
         <a href="/teams">My Teams</a>
-
+        <a href="/settings">Settings</a>
         <button class="button button-small button-outline" on:click={logout}>
           Log out
         </button>

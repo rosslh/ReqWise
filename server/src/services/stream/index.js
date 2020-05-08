@@ -32,8 +32,8 @@ module.exports = async function (fastify, opts) {
         let timestamp = Date.now();
         res.sse({
             async*[Symbol.asyncIterator]() {
-                for (let i = 0; i < 5; i++) { // expires after one minute
-                    await sleep(2000);
+                for (let i = 0; i < 10; i++) { // expires after one minute
+                    await sleep(6000);
 
                     const projectUpdated = !!(
                         await fastify.knex
@@ -111,7 +111,7 @@ module.exports = async function (fastify, opts) {
         console.log(req.user);
         res.sse({
             async*[Symbol.asyncIterator]() {
-                for (let i = 0; i < 5; i++) { // expires after one minute
+                for (let i = 0; i < 30; i++) { // expires after one minute
                     await sleep(2000);
 
                     let newComments = (await fastify.knex
@@ -125,7 +125,7 @@ module.exports = async function (fastify, opts) {
                             "comment.reqversion_id": req.params.reqversionId
                         })
                         .where('comment.created_at', '>', new Date(timestamp - timestampBufferMs))
-                    );
+                    ).map(x => ({ ...x, id: obfuscateId(x.id) }));
 
                     if (newComments.length) {
                         yield {

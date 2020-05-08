@@ -16,7 +16,11 @@
     })
       .then(r => r.json())
       .then(r => {
-        $session.user = { jwt: r.token, id: r.userId };
+        $session.user = {
+          jwt: r.token,
+          id: r.userId,
+          darkModeEnabled: r.darkModeEnabled
+        };
         if ($page.query.redirect) {
           goto($page.query.redirect);
         } else {

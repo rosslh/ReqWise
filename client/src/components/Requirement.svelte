@@ -63,7 +63,7 @@
     width: 0;
 
     button.commentIconWrapper {
-      background-color: var(--offwhite1);
+      background-color: var(--background1);
       border: 1px solid var(--grey2);
       border-radius: 50%;
       height: 3.3rem;
@@ -115,17 +115,17 @@
   }
 
   tr.requirement:hover {
-    background-color: var(--offwhite2);
+    background-color: var(--background2);
     cursor: pointer;
   }
 
   tr.requirement.selected {
-    background-color: var(--offwhite2);
+    background-color: var(--background2);
     cursor: pointer;
   }
 
   tr.requirement.selected:hover {
-    background-color: var(--offwhite3);
+    background-color: var(--background3);
     cursor: pointer;
   }
 </style>

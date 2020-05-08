@@ -137,7 +137,7 @@
 
   .reqversionContent {
     border: 0.1rem solid var(--grey2);
-    background-color: var(--offwhite2);
+    background-color: var(--background2);
     border-radius: 0.3rem;
     padding: 0.2rem 0.6rem;
   }

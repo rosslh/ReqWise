@@ -83,7 +83,7 @@
   }
 
   .labelsWrapper {
-    background-color: var(--offwhite3);
+    background-color: var(--background3);
     font-size: 1.5rem;
     display: flex;
     justify-content: space-around;

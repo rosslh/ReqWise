@@ -89,7 +89,7 @@
     right: 0;
     bottom: 0;
     overflow-y: scroll;
-    background-color: var(--offwhite2);
+    background-color: var(--background2);
     border-top: 0.1rem solid var(--grey1);
     padding-top: 3.5rem;
     transition: width 0.2s ease;

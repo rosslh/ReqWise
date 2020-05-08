@@ -33,6 +33,17 @@
   --borderRadius: 0.4rem;
 }
 
+html body { /* default light theme */
+  /* TODO */
+  --background1: var(--offwhite1);
+  --background2: var(--offwhite2);
+  --background3: var(--offwhite3);
+}
+
+html body[data-theme="dark"] {
+  /* TODO */
+}
+
 .contentWrapper {
   max-width: 100rem;
   width: 100%;
