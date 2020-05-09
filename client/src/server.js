@@ -17,6 +17,7 @@ const dev = NODE_ENV === "development";
 const { FirestoreStore } = require("@google-cloud/connect-firestore");
 
 const expressServer = express()
+  .set('trust proxy', 1)
   .use(bodyParser.json())
   .use(
     session({
@@ -29,13 +30,13 @@ const expressServer = express()
       },
       store: dev
         ? new MemoryStore({
-            checkPeriod: 86400000 // prune expired entries every 24h
-          })
+          checkPeriod: 86400000 // prune expired entries every 24h
+        })
         : new FirestoreStore({
-            dataset: new Firestore({
-              kind: "express-sessions",
-            }),
+          dataset: new Firestore({
+            kind: "express-sessions",
           }),
+        }),
     })
   )
   .use(
