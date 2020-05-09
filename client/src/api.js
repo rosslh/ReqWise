@@ -67,7 +67,7 @@ export const stream = (endpoint, token, callback) => {
 
   let streamSource = new EventSource(url);
 
-  const endStream = () => {
+  const closeStream = () => {
     streamSource.close();
     streamSource = null;
   };
@@ -78,5 +78,5 @@ export const stream = (endpoint, token, callback) => {
     console.log("EventSource ended. Restarting.");
   };
 
-  return endStream;
+  return closeStream;
 }
