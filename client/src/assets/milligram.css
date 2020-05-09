@@ -151,7 +151,7 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-color: transparent;
+  background-color: var(--background2);
   border: 0.1rem solid var(--borderColor);
   border-radius: 0.4rem;
   box-shadow: none;

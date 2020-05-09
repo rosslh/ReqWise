@@ -49,7 +49,7 @@
           ...$session.user,
           darkModeEnabled
         };
-        goto(`/settings`);
+        goto(`/settings`, { replaceState: true });
       });
   };
 </script>

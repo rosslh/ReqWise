@@ -1,4 +1,12 @@
 :root {
+  --backdrop: #EDF2F7;
+  --background1:#ffffff;
+  --background2: #F7FAFC;
+
+  --normalText: #4a5568;
+  --secondaryText: #718096;
+  --borderColor: #d7dfe8;
+
   --themeColor: #38a169;
 
   --orange: #ee9338;
@@ -13,6 +21,10 @@
 
   --sidebarWidth: 26rem;
   --contentWrapperWidth: 100rem;
+}
+
+body {
+  min-height: 100vh;
 
   /* Svelte-Select styling */
   --border: 0.1rem solid var(--borderColor);
@@ -20,26 +32,17 @@
   --borderHoverColor: var(--borderColor);
   --inputColor: var(--normalText);
   --borderRadius: 0.4rem;
-}
+  --background: var(--background2);
+  --disabledBackground: var(--background2);
+  --listBackground: var(--background2);
+  --itemActiveBackground: var(--background2);
 
-html body { /* default light theme */
-  --backdrop: #EDF2F7;
-  --background1:#ffffff;
-  --background2: #F7FAFC;
-
-  --normalText: #4a5568;
-  --secondaryText: #718096;
-  --borderColor: #d7dfe8;
-}
-
-html body[data-theme="dark"] {
-  --backdrop: #1A202C;
-  --background1: #2D3748;
-  --background2:#4A5568;
-
-  --normalText: #F7FAFC;
-  --secondaryText: #EDF2F7;
-  --borderColor: #718096;
+  --itemHoverBG:  var(--background1);
+  --itemIsActiveBG:  var(--background1);
+  --multiClearBG:  var(--background2);
+  --multiClearHoverBG:  var(--background2);
+  --multiItemActiveBG:  var(--background2);
+  --multiItemBG:  var(--background2);
 }
 
 .contentWrapper {

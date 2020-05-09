@@ -5,13 +5,6 @@
   import Nav from "../components/Nav.svelte";
 
   const { session } = stores();
-
-  $: $session.user &&
-    typeof window !== "undefined" &&
-    document.body.setAttribute(
-      "data-theme",
-      $session.user.darkModeEnabled ? "dark" : "light"
-    );
 </script>
 
 <style>
@@ -20,6 +13,11 @@
   }
 </style>
 
+<svelte:head>
+  {#if $session.user && $session.user.darkModeEnabled}
+    <link rel="stylesheet" href="dark-mode.css" />
+  {/if}
+</svelte:head>
 {#if $modalContent}
   <Modal let:close>
     <svelte:component this={$modalContent} {...$modalProps} {close} />
