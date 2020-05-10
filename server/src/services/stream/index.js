@@ -27,6 +27,8 @@ module.exports = async function (fastify, opts) {
         preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
         schema: projectStreamSchema,
     }, function (req, res) {
+        res.header('X-Accel-Buffering', 'no');
+
         let timestamp = Date.now();
         let interval = 6000;
         res.sse({
@@ -106,6 +108,8 @@ module.exports = async function (fastify, opts) {
         preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
         schema: commentStreamSchema,
     }, function (req, res) {
+        res.header('X-Accel-Buffering', 'no');
+
         let timestamp = Date.now();
         let interval = 2000;
         res.sse({

@@ -84,7 +84,9 @@
       </div>
     {/if}
     <a class="logoWrapper" href=".">
-      <img src={'logo.png'} alt="ReqWise" />
+      <img
+        src={$session.user && $session.user.darkModeEnabled ? 'logo-white.png' : 'logo.png'}
+        alt="ReqWise" />
     </a>
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
