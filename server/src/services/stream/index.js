@@ -4,6 +4,15 @@ module.exports = async function (fastify, opts) {
         setTimeout(resolve, ms);
     });
 
+    const addHeaders = res => {
+        res.headers({
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            'X-Accel-Buffering': 'no'
+        })
+    };
+
     const projectStreamSchema = {
         body: {},
         queryString: {
@@ -27,7 +36,7 @@ module.exports = async function (fastify, opts) {
         preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
         schema: projectStreamSchema,
     }, function (req, res) {
-        res.header('X-Accel-Buffering', 'no');
+        addHeaders(res);
 
         let timestamp = Date.now();
         let interval = 6000;
@@ -108,7 +117,7 @@ module.exports = async function (fastify, opts) {
         preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
         schema: commentStreamSchema,
     }, function (req, res) {
-        res.header('X-Accel-Buffering', 'no');
+        addHeaders(res);
 
         let timestamp = Date.now();
         let interval = 2000;
