@@ -38,7 +38,6 @@
       closeStream();
     }
     if (id) {
-      // TODO: why do I need this check
       closeStream = stream(
         "getProjectNotifications",
         { projectId: id },

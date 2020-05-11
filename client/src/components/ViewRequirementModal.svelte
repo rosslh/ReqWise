@@ -98,7 +98,6 @@
       closeStream();
     }
     if (reqversionId) {
-      // TODO: why do I need this check
       closeStream = stream(
         "getCommentNotifications",
         { reqversionId },

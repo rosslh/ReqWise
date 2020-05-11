@@ -539,7 +539,6 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  // TODO: seed business reqgroups (can be limited to 1 requirement, undeletable, or unimplementable)
   const businessReqgroupSeeds = [
     { name: "Business opportunity", description: "Describe the business problem being solved. For commercial products, also describe the market in which the product will be competing.", isMaxOneRequirement: false },
     { name: "Business objectives", description: "Summarize the important business benefits the product will provide in a quantitative and measurable way.", isMaxOneRequirement: false },

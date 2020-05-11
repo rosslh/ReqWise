@@ -3,14 +3,45 @@ module.exports = async function (fastify, opts) {
         setTimeout(resolve, ms);
     });
 
+    const userIsMemberByProject = async (userId, projectId) => !!(
+        await fastify.knex
+            .from("project")
+            .join("account_team", "account_team.team_id", "project.team_id")
+            .select("account_team.id")
+            .where({
+                "project.id": projectId,
+                "account_team.account_id": userId
+            })
+    ).length;
+
+    const userIsMemberByReqversion = async (userId, reqversionId) => !!(
+        await fastify.knex
+            .from("reqversion")
+            .join("requirement", "requirement.id", "reqversion.requirement_id")
+            .join("reqgroup", "reqgroup.id", "requirement.reqgroup_id")
+            .join("project", "project.id", "reqgroup.project_id")
+            .join("account_team", "account_team.team_id", "project.team_id")
+            .select("account_team.id")
+            .where({
+                "reqversion.id": reqversionId,
+                "account_team.account_id": userId,
+            })
+    ).length;
+
     fastify.io.on('connection', async (socket) => {
         console.log('user connected');
 
         socket.on('getProjectNotifications', async ({ jwt, data }) => {
             let timestamp = Date.now();
             const user = fastify.jwt.verify(jwt);
+
             const projectId = fastify.deobfuscateId(data.projectId);
-            // TODO: authenticate that user is part of team
+
+            if (!(await userIsMemberByProject(user.id, projectId))) {
+                console.log("Unauthorized socket.io access");
+                socket.disconnect();
+            }
+
             const interval = 6000;
 
             while (true) {
@@ -63,7 +94,12 @@ module.exports = async function (fastify, opts) {
             let timestamp = Date.now();
             const user = fastify.jwt.verify(jwt);
             const reqversionId = fastify.deobfuscateId(data.reqversionId);
-            // TODO: authenticate that user is part of team
+
+            if (!(await userIsMemberByReqversion(user.id, reqversionId))) {
+                console.log("Unauthorized socket.io access");
+                socket.disconnect();
+            }
+
             const interval = 2500;
             while (true) {
                 await sleep(interval);
@@ -93,40 +129,4 @@ module.exports = async function (fastify, opts) {
             console.log('user disconnected');
         });
     });
-
-    // fastify.get("/stream/comments/:reqversionId", {
-    //     preValidation: [fastify.authenticateQueryString, fastify.isTeamMember],
-    //     schema: commentStreamSchema,
-    // }, function (req, res) {
-    //     addHeaders(res);
-
-    //     let timestamp = Date.now();
-    //     let interval = 2000;
-    //     res.sse({
-    //         async*[Symbol.asyncIterator]() {
-    //             for (let i = 0; i < 15; i++) { // expires after 30 seconds
-    //                 await sleep(interval);
-    //                 const newComments = (await fastify.knex
-    //                     .from("comment")
-    //                     .select(
-    //                         "comment.*",
-    //                         "account.name as authorName",
-    //                         "account.email as authorEmail"
-    //                     )
-    //                     .join("account", "account.id", "=", "comment.account_id").where({
-    //                         "comment.reqversion_id": req.params.reqversionId
-    //                     })
-    //                     .where('comment.created_at', '>', new Date(timestamp))
-    //                 ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
-
-    //                 if (newComments.length) {
-    //                     yield {
-    //                         id: String(i), data: JSON.stringify(newComments)
-    //                     };
-    //                 }
-    //                 timestamp = Date.now();
-    //             }
-    //         }
-    //     });
-    // });
 };
