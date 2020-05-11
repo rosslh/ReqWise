@@ -26,7 +26,6 @@
     "fastify-cors": "^3.0.3",
     "fastify-jwt": "^1.2.1",
     "fastify-plugin": "^1.6.0",
-    "fastify-sse-v2": "^1.0.3",
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",
     "is-docker": "^2.0.0",

@@ -3,7 +3,7 @@ import { post as p } from "../../api";
 export function post(req, res) {
   const { email, password } = req.body;
   p("/auth/token", { email, password }).then((r) => {
-    if (r) req.session.user = { id: r.userId, jwt: r.token, darkModeEnabled: r.darkModeEnabled };
+    if (r) req.session.user = { id: r.userId, jwt: r.token, theme: r.theme };
 
     res.setHeader("Content-Type", "application/json");
 

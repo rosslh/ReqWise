@@ -1,6 +1,6 @@
 export function put(req, res) {
-    const { darkModeEnabled } = req.body;
-    req.session.user = { ...req.session.user, darkModeEnabled };
+    const { theme } = req.body;
+    req.session.user = { ...req.session.user, theme };
     req.session.save((err) => {
         if (err) {
             console.error(err);

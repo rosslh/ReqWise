@@ -14,8 +14,10 @@
 </style>
 
 <svelte:head>
-  {#if $session.user && $session.user.darkModeEnabled}
+  {#if $session.user && $session.user.theme === "dark"}
     <link rel="stylesheet" href="dark-mode.css" />
+  {:else if $session.user && $session.user.theme === "system"}
+    <link rel="stylesheet" href="system-theme.css" />
   {/if}
 </svelte:head>
 {#if $modalContent}

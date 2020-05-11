@@ -15,6 +15,8 @@
 </script>
 
 <script>
+  import Select from "svelte-select";
+
   import { get, put } from "../api.js";
 
   import { goto, stores } from "@sapper/app";
@@ -23,22 +25,32 @@
 
   export let user;
   let name = "";
-  let darkModeEnabled = false;
+
+  const capitalizeFirstLetter = str =>
+    str.charAt(0).toUpperCase() + str.slice(1);
+
+  const themeOptions = ["light", "system", "dark"].map(attr => ({
+    value: attr,
+    label: capitalizeFirstLetter(attr)
+  }));
+
+  let theme = themeOptions[0];
 
   onMount(() => {
-    ({ name, darkModeEnabled } = user);
+    ({ name } = user);
+    theme = themeOptions.find(x => x.value === user.theme);
   });
 
   const submit = async () => {
     await put(
       `/users/${$session.user.id}/settings`,
-      { name, darkModeEnabled },
+      { name, theme: theme.value },
       $session.user && $session.user.jwt
     );
     fetch("auth/changeTheme", {
       method: "PUT",
       credentials: "include",
-      body: JSON.stringify({ darkModeEnabled }),
+      body: JSON.stringify({ theme: theme.value }),
       headers: {
         "Content-Type": "application/json"
       }
@@ -47,7 +59,7 @@
       .then(r => {
         $session.user = {
           ...$session.user,
-          darkModeEnabled
+          theme: theme.value
         };
         goto(`/settings`, { replaceState: true });
       });
@@ -67,11 +79,11 @@
     <input bind:value={name} type="text" id="name" />
   </fieldset>
   <fieldset>
-    <input
-      type="checkbox"
-      id="darkModeEnabled"
-      bind:checked={darkModeEnabled} />
-    <label class="label-inline" for="darkModeEnabled">Enable dark theme</label>
+    <label for="theme">Interface theme</label>
+    <Select
+      inputAttributes={{ id: 'theme' }}
+      items={themeOptions}
+      bind:selectedValue={theme} />
   </fieldset>
   <button on:click={submit}>Submit</button>
 </div>

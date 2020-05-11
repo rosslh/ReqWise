@@ -26,7 +26,7 @@ module.exports = async (fastify, opts) => {
         properties: {
           token: { type: "string" },
           userId: { type: "string" },
-          darkModeEnabled: { type: "boolean" }
+          theme: { type: "string" }
         },
       },
       401: {
@@ -43,7 +43,7 @@ module.exports = async (fastify, opts) => {
       const { email, password } = request.body;
       const account = await fastify.knex
         .from("account")
-        .select("password_hash", "name", "id", "is_verified", "darkModeEnabled")
+        .select("password_hash", "name", "id", "is_verified", "theme")
         .where("email", email)
         .first();
 
@@ -57,7 +57,7 @@ module.exports = async (fastify, opts) => {
         return {
           token: fastify.jwt.sign(jwtContent),
           userId: fastify.obfuscateId(account.id),
-          darkModeEnabled: account.darkModeEnabled
+          theme: account.theme
         };
       } else {
         reply.code(401);

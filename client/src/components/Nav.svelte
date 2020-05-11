@@ -14,6 +14,22 @@
     $session.user = undefined;
     // goto("/login");
   };
+
+  $: getLogo = () => {
+    if ($session.user && $session.user.theme) {
+      if ($session.user.theme === "dark") {
+        return "logo-white.png";
+      }
+      if (
+        $session.user.theme === "system" &&
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        return "logo-white.png";
+      }
+    }
+    return "logo.png";
+  };
 </script>
 
 <style>
@@ -84,9 +100,7 @@
       </div>
     {/if}
     <a class="logoWrapper" href=".">
-      <img
-        src={$session.user && $session.user.darkModeEnabled ? 'logo-white.png' : 'logo.png'}
-        alt="ReqWise" />
+      <img src={getLogo()} alt="ReqWise" />
     </a>
     <div class="right">
       {#if !$session.user || !$session.user.jwt}

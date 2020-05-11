@@ -108,7 +108,7 @@ module.exports = async (fastify, opts) => {
         properties: {
           name: { type: "string" },
           email: { type: "string" },
-          darkModeEnabled: { type: "boolean" }
+          theme: { type: "string" }
         },
       },
     },
@@ -137,7 +137,7 @@ module.exports = async (fastify, opts) => {
               password_hash: bcrypt.hashSync(password, 10),
             })
             .where("email", email)
-            .returning(["name", "email", "darkModeEnabled"])
+            .returning(["name", "email", "theme"])
         )[0];
       } else {
         reply.code(403).send("Invalid verification token.");
@@ -149,10 +149,10 @@ module.exports = async (fastify, opts) => {
   const putUserSettingsSchema = {
     body: {
       type: "object",
-      required: ["name", "darkModeEnabled"],
+      required: ["name", "theme"],
       properties: {
         name: { type: "string" },
-        darkModeEnabled: { type: "boolean" }
+        theme: { type: "string" }
       },
     },
     queryString: {},
@@ -177,7 +177,7 @@ module.exports = async (fastify, opts) => {
         properties: {
           name: { type: "string" },
           email: { type: "string" },
-          darkModeEnabled: { type: "boolean" }
+          theme: { type: "string" }
         },
       },
     },
@@ -189,17 +189,17 @@ module.exports = async (fastify, opts) => {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
     },
     async function (request, reply) {
-      const { name, darkModeEnabled } = request.body;
+      const { name, theme } = request.body;
 
       return (
         await fastify
           .knex("account")
           .update({
             name,
-            darkModeEnabled
+            theme
           })
           .where("id", request.user.id)
-          .returning(["name", "email", "darkModeEnabled"])
+          .returning(["name", "email", "theme"])
       )[0];
     }
   );
@@ -229,7 +229,7 @@ module.exports = async (fastify, opts) => {
         properties: {
           name: { type: "string" },
           email: { type: "string" },
-          darkModeEnabled: { type: "boolean" },
+          theme: { type: "string" },
         },
       },
     },
@@ -244,7 +244,7 @@ module.exports = async (fastify, opts) => {
     async function (request, reply) {
       return await fastify
         .knex("account")
-        .select("name", "email", "darkModeEnabled")
+        .select("name", "email", "theme")
         .where("id", request.params.userId)
         .first();
     }

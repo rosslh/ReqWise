@@ -19,7 +19,7 @@
         $session.user = {
           jwt: r.token,
           id: r.userId,
-          darkModeEnabled: r.darkModeEnabled
+          theme: r.theme
         };
         if ($page.query.redirect) {
           goto($page.query.redirect);

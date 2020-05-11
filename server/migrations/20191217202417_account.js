@@ -7,7 +7,7 @@ exports.up = function (knex) {
       table.string("verification_token");
       table.string("password_hash");
       table.boolean("is_verified").notNullable();
-      table.boolean("darkModeEnabled").defaultTo(false);
+      table.enu("theme", ["light", "system", "dark"]).defaultTo("light");
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
     knex.schema.createTable("team", (table) => {

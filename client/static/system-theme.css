@@ -1,0 +1,11 @@
+@media (prefers-color-scheme: dark) {
+html body {
+    --backdrop: #1A202C;
+    --background1: #2D3748;
+    --background2:#4A5568;
+  
+    --normalText: #F7FAFC;
+    --secondaryText: #EDF2F7;
+    --borderColor: #718096;
+  }
+}

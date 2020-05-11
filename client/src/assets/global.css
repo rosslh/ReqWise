@@ -37,8 +37,9 @@ body {
   --listBackground: var(--background2);
   --itemActiveBackground: var(--background2);
 
-  --itemHoverBG:  var(--background1);
-  --itemIsActiveBG:  var(--background1);
+  --itemHoverBG:  var(--backdrop);
+  --itemIsActiveBG:  var(--themeColor);
+  --itemIsActiveColor: var(--background1);
   --multiClearBG:  var(--background2);
   --multiClearHoverBG:  var(--background2);
   --multiItemActiveBG:  var(--background2);
