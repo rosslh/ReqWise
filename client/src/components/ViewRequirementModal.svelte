@@ -106,6 +106,7 @@
         event => {
           const data = JSON.parse(event);
           comments = [...comments, ...data];
+          scrollToBottom();
         }
       );
     }
