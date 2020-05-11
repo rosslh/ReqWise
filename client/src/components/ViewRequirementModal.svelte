@@ -2,11 +2,11 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  import { onMount, onDestroy, tick } from "svelte";
+  import { onMount, tick } from "svelte";
   import Diff from "text-diff";
   const diff = new Diff();
 
-  import { get, post, stream } from "../api.js";
+  import { get, post } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
@@ -83,37 +83,9 @@
     );
   };
 
-  let closeStream;
-
-  $: startStream = () => {
-    if (closeStream) {
-      closeStream();
-    }
-    closeStream = stream(
-      `/stream/comments/${reqversionId}`,
-      $session.user.jwt,
-      event => {
-        let data = JSON.parse(event.data).filter(
-          x => !comments.some(y => y.id === x.id)
-        );
-        comments = [...comments, ...data];
-        scrollToBottom();
-      }
-    );
-  };
-
   onMount(async () => {
     await getRequirement();
     await getComments();
-    if ($session.user && $session.user.jwt) {
-      startStream();
-    }
-  });
-
-  onDestroy(() => {
-    if (closeStream) {
-      closeStream();
-    }
   });
 </script>
 
