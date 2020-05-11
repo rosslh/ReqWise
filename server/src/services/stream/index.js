@@ -4,13 +4,15 @@ module.exports = async function (fastify, opts) {
     });
 
     fastify.io.on('connection', async (socket) => {
-        console.log('a user connected');
+        console.log('user connected');
 
-        socket.on('getNotifications', async ({ jwt, projectId }) => {
+        socket.on('getProjectNotifications', async ({ jwt, data }) => {
             let timestamp = Date.now();
             const user = fastify.jwt.verify(jwt);
+            const projectId = fastify.deobfuscateId(data.projectId);
+            // TODO: authenticate that user is part of team
             const interval = 6000;
-            console.log(user);
+
             while (true) {
                 await sleep(interval);
                 const projectUpdated = !!(
@@ -48,11 +50,40 @@ module.exports = async function (fastify, opts) {
 
                 updatedReqgroups = Array.from(new Set(updatedReqgroups.concat(newReqversionReqgroups)));
                 if (projectUpdated || updatedReqgroups.length) {
-                    console.log(projectUpdated, updatedReqgroups)
                     socket.emit('message', JSON.stringify({
                         projectUpdated,
                         updatedReqgroups
                     }));
+                }
+                timestamp = Date.now();
+            }
+        });
+
+        socket.on('getCommentNotifications', async ({ jwt, data }) => {
+            let timestamp = Date.now();
+            const user = fastify.jwt.verify(jwt);
+            const reqversionId = fastify.deobfuscateId(data.reqversionId);
+            // TODO: authenticate that user is part of team
+            const interval = 2500;
+            while (true) {
+                await sleep(interval);
+                const newComments = (await fastify.knex
+                    .from("comment")
+                    .select(
+                        "comment.*",
+                        "account.name as authorName",
+                        "account.email as authorEmail"
+                    )
+                    .join("account", "account.id", "=", "comment.account_id").where({
+                        "comment.reqversion_id": reqversionId
+                    })
+                    .where('comment.created_at', '>', new Date(timestamp))
+                ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
+
+                if (newComments.length) {
+                    socket.emit('message', JSON.stringify(
+                        newComments
+                    ));
                 }
                 timestamp = Date.now();
             }

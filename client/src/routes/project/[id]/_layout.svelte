@@ -39,17 +39,22 @@
     }
     if (id) {
       // TODO: why do I need this check
-      closeStream = stream($session.user.jwt, event => {
-        const data = JSON.parse(event);
-        if (data.projectUpdated) {
-          $projectShouldUpdate = true;
+      closeStream = stream(
+        "getProjectNotifications",
+        { projectId: id },
+        $session.user.jwt,
+        event => {
+          const data = JSON.parse(event);
+          if (data.projectUpdated) {
+            $projectShouldUpdate = true;
+          }
+          if (data.updatedReqgroups.length) {
+            $reqgroupsToUpdate = Array.from(
+              new Set([...$reqgroupsToUpdate, ...data.updatedReqgroups])
+            );
+          }
         }
-        if (data.updatedReqgroups.length) {
-          $reqgroupsToUpdate = Array.from(
-            new Set([...$reqgroupsToUpdate, ...data.updatedReqgroups])
-          );
-        }
-      });
+      );
     }
   };
 

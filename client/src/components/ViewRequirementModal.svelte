@@ -2,11 +2,11 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  import { onMount, tick } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import Diff from "text-diff";
   const diff = new Diff();
 
-  import { get, post } from "../api.js";
+  import { get, post, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
@@ -86,7 +86,43 @@
   onMount(async () => {
     await getRequirement();
     await getComments();
+    if ($session.user && $session.user.jwt) {
+      startStream();
+    }
   });
+
+  let closeStream;
+
+  $: startStream = function() {
+    if (closeStream) {
+      closeStream();
+    }
+    if (reqversionId) {
+      // TODO: why do I need this check
+      closeStream = stream(
+        "getCommentNotifications",
+        { reqversionId },
+        $session.user.jwt,
+        event => {
+          const data = JSON.parse(event);
+          comments = [...comments, ...data];
+        }
+      );
+    }
+  };
+
+  onDestroy(function() {
+    if (closeStream) {
+      closeStream();
+    }
+  });
+
+  $: refreshStream =
+    typeof window !== "undefined" &&
+    !closeStream &&
+    $session.user &&
+    $session.user.jwt &&
+    startStream();
 </script>
 
 <style>

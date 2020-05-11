@@ -52,15 +52,14 @@ export const patch = (endpoint, body, token) =>
 export const del = (endpoint, token) =>
   fetcher(endpoint, { method: "DELETE", body: "{}" }, token);
 
-export const stream = (token, callback) => {
+export const stream = (eventName, data, token, callback) => {
   if (typeof window === "undefined") {
-    // EventSource only exists on client
     throw new Error("Only stream on client");
   }
   const socket = io(host);
   socket.on("message", callback);
-  socket.on("reconnecting", () => { console.log("EventSource ended. Restarting."); })
-  socket.emit("getNotifications", { jwt: token, projectId: 1 })
+  socket.on("reconnecting", () => { console.log("Stream ended. Restarting."); })
+  socket.emit(eventName, { jwt: token, data })
 
 
   return function () { socket.close() };
