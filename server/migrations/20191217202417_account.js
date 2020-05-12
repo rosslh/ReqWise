@@ -129,6 +129,10 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .notNullable()
         .unsigned();
+      table
+        .integer("parent_requirement_id")
+        .references("requirement.id")
+        .unsigned();
       table.integer("per_project_unique_id").notNullable().unsigned();
       table.boolean("is_archived").defaultTo(false);
     }),
