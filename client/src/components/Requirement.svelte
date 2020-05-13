@@ -128,10 +128,28 @@
     background-color: var(--background2);
     cursor: pointer;
   }
+
+  tr.requirement {
+    position: relative;
+  }
+
+  tr.requirement.depth-1 {
+    left: 3rem;
+    td.iconCell {
+      transform: translateX(-3rem);
+    }
+  }
+
+  tr.requirement.depth-2 {
+    left: 6rem;
+    td.iconCell {
+      transform: translateX(-6rem);
+    }
+  }
 </style>
 
 <tr
-  class={`${selected ? 'selected' : ''} requirement`}
+  class={`${selected ? 'selected' : ''} requirement depth-${requirement.depth}`}
   on:click={() => toggleReq(requirement.id)}>
   <td class="checkbox">
     <input type="checkbox" checked={selected} />

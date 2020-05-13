@@ -205,48 +205,40 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       // TODO: Make recursive: http://knexjs.org/#Builder-withRecursive
 
-      const result = await fastify.knex.withRecursive('descendants', (qb) => {
-        qb.select('requirement.*').from('requirement').where('requirement.parent_requirement_id', null).union((qb) => {
-          qb.select('requirement.*').from('requirement').join('descendants', 'descendants.parent_requirement_id', 'requirement.id')
-        })
-      }).select('*').from('descendants')
+      const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+          "reqversion.created_at",
+          "=",
+          fastify.knex.raw(
+            "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+          )
+        );
+      };
 
-      // const result = await fastify.knex
-      //   .from("requirement")
-      //   .select(
-      //     "requirement.id",
-      //     "requirement.parent_requirement_id",
-      //     "requirement.reqgroup_id",
-      //     "requirement.project_id",
-      //     "requirement.per_project_unique_id as ppuid",
-      //     "requirement.is_archived",
-      //     "reqversion.account_id",
-      //     "reqversion.priority",
-      //     "reqversion.status",
-      //     "reqversion.description",
-      //     "reqversion.created_at"
-      //   )
-      //   .where("reqgroup_id", request.params.reqgroupId)
-      //   .andWhere("is_archived", false)
-      //   .join("reqversion", function () {
-      //     this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
-      //       "reqversion.created_at",
-      //       "=",
-      //       fastify.knex.raw(
-      //         "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
-      //       )
-      //     );
-      //   });
+      const selectColumns = [
+        "requirement.id",
+        "requirement.parent_requirement_id",
+        "requirement.reqgroup_id",
+        "requirement.project_id",
+        "requirement.per_project_unique_id as ppuid",
+        "requirement.is_archived",
+        "reqversion.account_id",
+        "reqversion.priority",
+        "reqversion.status",
+        "reqversion.description",
+        "reqversion.created_at"
+      ]
 
-      console.log(result);
-      return result;
-
-      // return result.map(r => {
-      //   if (!r.parent_requirement_id) {
-      //     delete r.parent_requirement_id;
-      //   }
-      //   return r;
-      // });
+      return await fastify.knex.withRecursive('ancestors', (qb) => {
+        qb.select(...selectColumns, fastify.knex.raw("0 as depth")).from('requirement')
+          .where('requirement.parent_requirement_id', null)
+          .andWhere("reqgroup_id", request.params.reqgroupId)
+          .andWhere("is_archived", false)
+          .join("reqversion", getReqversion)
+          .union((qb) => {
+            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
+          })
+      }).select('*').from('ancestors')
     }
   );
 
