@@ -94,10 +94,12 @@
     white-space: nowrap !important;
   }
 
-  td.checkbox > input {
-    margin: 0;
-    transform: scale(1.2);
-    outline: none;
+  td.controls span.handle {
+    color: var(--secondaryText);
+    padding: 0.8rem;
+    &:hover {
+      color: var(--regularText);
+    }
   }
 
   td.history {
@@ -120,7 +122,7 @@
   }
 
   tr.requirement.selected {
-    background-color: var(--background2);
+    background-color: var(--backdrop);
     cursor: pointer;
   }
 
@@ -151,8 +153,8 @@
 <tr
   class={`${selected ? 'selected' : ''} requirement depth-${requirement.depth}`}
   on:click={() => toggleReq(requirement.id)}>
-  <td class="checkbox">
-    <input type="checkbox" checked={selected} />
+  <td class="controls">
+    <span class="handle">&#10303;</span>
   </td>
   <td class="desc">{requirement.description}</td>
   <td class="ppuid">#{requirement.ppuid}</td>
