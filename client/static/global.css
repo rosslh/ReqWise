@@ -314,12 +314,9 @@ input[type="submit"] {
   font-size: 1.3rem;
   font-weight: 700;
   height: 3.8rem;
-  display: -webkit-inline-box;
   display: inline-flex;
-  -webkit-box-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
   padding: 0 3rem;
   text-align: center;
   text-decoration: none;
@@ -708,10 +705,8 @@ fieldset textarea {
 }
 
 fieldset.inline {
-  display: -webkit-box;
   display: flex;
-  -webkit-box-align: center;
-          align-items: center;
+  align-items: center;
 }
 
 fieldset.inline > label::after {

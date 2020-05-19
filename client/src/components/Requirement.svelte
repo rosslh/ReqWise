@@ -94,7 +94,7 @@
     white-space: nowrap !important;
   }
 
-  td.controls span.handle {
+  td.controls span.reqHandle {
     color: var(--secondaryText);
     padding: 0.8rem;
     &:hover {
@@ -154,7 +154,7 @@
   class={`${selected ? 'selected' : ''} requirement depth-${requirement.depth}`}
   on:click={() => toggleReq(requirement.id)}>
   <td class="controls">
-    <span class="handle">&#10303;</span>
+    <span class="reqHandle">&#10303;</span>
   </td>
   <td class="desc">{requirement.description}</td>
   <td class="ppuid">#{requirement.ppuid}</td>

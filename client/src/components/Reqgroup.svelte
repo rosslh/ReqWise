@@ -1,7 +1,7 @@
 <script>
   import { stores } from "@sapper/app";
   const { session } = stores();
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import Requirement from "../components/Requirement.svelte";
   import ReqgroupSelectTools from "../components/ReqgroupSelectTools.svelte";
   import ReqgroupHeader from "../components/ReqgroupHeader.svelte";
@@ -32,8 +32,6 @@
     );
   };
 
-  onMount(updateReqs);
-
   let showSelectTools = true;
 
   let selectedReqs = [];
@@ -53,6 +51,28 @@
       updateReqs();
       $reqgroupsToUpdate = $reqgroupsToUpdate.filter(x => x != reqgroup.id);
     })();
+
+  let draggable;
+
+  onMount(() => {
+    if (typeof window !== "undefined") {
+      updateReqs();
+      import("@shopify/draggable").then(({ default: Draggable }) => {
+        const container = document.getElementById(`reqgroup-${reqgroup.id}`);
+        draggable = new Draggable.Draggable(container, {
+          handle: ".reqHandle",
+          draggable: ".requirement"
+        });
+      });
+    }
+  });
+
+  onDestroy(() => {
+    if (draggable) {
+      alert("destroying");
+      draggable.destroy();
+    }
+  });
 </script>
 
 <style>
@@ -76,7 +96,7 @@
   }
 </style>
 
-<div class="reqgroup">
+<div class="reqgroup" id={`reqgroup-${reqgroup.id}`}>
   <ReqgroupHeader {reqgroup} />
   <ReqgroupStatusBar {requirements} />
   <ReqgroupSelectTools
