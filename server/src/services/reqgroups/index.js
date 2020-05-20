@@ -229,7 +229,7 @@ module.exports = async function (fastify, opts) {
         "reqversion.created_at"
       ]
 
-      return await fastify.knex.withRecursive('ancestors', (qb) => {
+      const result = await fastify.knex.withRecursive('ancestors', (qb) => {
         qb.select(...selectColumns, fastify.knex.raw("0 as depth")).from('requirement')
           .where('requirement.parent_requirement_id', null)
           .andWhere("reqgroup_id", request.params.reqgroupId)
@@ -238,7 +238,8 @@ module.exports = async function (fastify, opts) {
           .union((qb) => {
             qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
           })
-      }).select('*').from('ancestors')
+      }).select('*').from('ancestors').orderBy(fastify.knex.raw('coalesce(parent_requirement_id,id)'), 'id');
+      return result;
     }
   );
 
