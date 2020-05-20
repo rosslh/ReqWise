@@ -238,7 +238,7 @@ module.exports = async function (fastify, opts) {
           .union((qb) => {
             qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
           })
-      }).select('*').from('ancestors').orderBy(fastify.knex.raw('coalesce(parent_requirement_id,id)'), 'id');
+      }).select('*').from('ancestors');
       return result;
     }
   );
