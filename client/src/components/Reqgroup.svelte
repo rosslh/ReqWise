@@ -9,19 +9,21 @@
   import ReqgroupFooter from "../components/ReqgroupFooter.svelte";
   import Skeleton from "../components/Skeleton.svelte";
 
-  import { get } from "../api.js";
+  import { get, patch } from "../api.js";
   import { reqgroupsToUpdate } from "../stores.js";
 
   export let reqgroup;
   export let update;
 
   let requirements = null;
-  const updateReqs = async () => {
+  const updateReqs = () => {
     if (reqgroup && reqgroup.id) {
-      requirements = await get(
+      get(
         `/reqgroups/${reqgroup.id}/requirements`,
         $session.user && $session.user.jwt
-      );
+      ).then(r => {
+        requirements = r;
+      });
     }
   };
 
@@ -52,29 +54,92 @@
       $reqgroupsToUpdate = $reqgroupsToUpdate.filter(x => x != reqgroup.id);
     })();
 
-  let droppable;
+  $: getIllegalParents = req => {
+    const illegalParents = [];
+    // req
+    illegalParents.push(req);
+
+    // req's descendents
+    requirements
+      .filter(x => {
+        let currentReq = x;
+        while (currentReq.parent_requirement_id) {
+          if (
+            currentReq.id === req ||
+            currentReq.parent_requirement_id === req
+          ) {
+            return true;
+          }
+          currentReq = requirements.find(
+            y => y.id === currentReq.parent_requirement_id
+          );
+        }
+        return false;
+      })
+      .forEach(x => illegalParents.push(x.id));
+
+    // req's parent
+    illegalParents.push(
+      requirements.find(x => x.id === req).parent_requirement_id || -1
+    );
+
+    return illegalParents;
+  };
+
+  let draggable;
   let draggingRequirement;
+  let newParentRequirement;
+  $: hiddenPlaceholders =
+    (draggingRequirement &&
+      requirements &&
+      getIllegalParents(draggingRequirement)) ||
+    [];
+
+  const updateReqParent = async (childId, parentId) => {
+    await patch(
+      `/requirements/${childId}`,
+      {
+        parent_requirement_id: parentId === -1 ? null : parentId
+      },
+      $session.user && $session.user.jwt
+    );
+    updateReqs();
+  };
 
   onMount(() => {
     if (typeof window !== "undefined") {
       updateReqs();
-      import("@shopify/draggable").then(({ default: Draggable }) => {
+      import("@shopify/draggable").then(({ default: d }) => {
         const container = document.getElementById(`reqgroup-${reqgroup.id}`);
-        droppable = new Draggable.Droppable(container, {
+        draggable = new d.Draggable(container, {
           handle: ".reqHandle",
-          draggable: ".requirement",
+          draggable: ".draggable",
           dropzone: ".requirementContainer"
         });
-        droppable.on("drag:start", e => {
+        draggable.on("drag:start", e => {
           draggingRequirement = e.source.dataset.reqid;
+        });
+        draggable.on("drag:over", e => {
+          if (e.over.dataset.isplaceholder) {
+            newParentRequirement =
+              e.over.dataset.parentid === "-1" ? -1 : e.over.dataset.parentid;
+          }
+        });
+        draggable.on("drag:out", e => {
+          newParentRequirement = undefined;
+        });
+        draggable.on("drag:stop", e => {
+          if (newParentRequirement) {
+            updateReqParent(draggingRequirement, newParentRequirement);
+          }
         });
       });
     }
   });
 
   onDestroy(() => {
-    if (droppable) {
-      droppable.destroy();
+    if (draggable) {
+      draggable.destroy();
     }
   });
 </script>
@@ -111,14 +176,15 @@
     isPrioritized={reqgroup.isPrioritized} />
   <ul class="reqWrapper">
     {#if requirements}
-      {#each requirements as requirement}
+      {#each requirements as requirement, index}
         <Requirement
           isPrioritized={reqgroup.isPrioritized}
           selected={selectedReqs.includes(requirement.id)}
           {toggleReq}
           update={updateReqs}
-          isDragging={requirement.id === draggingRequirement}
-          {requirement} />
+          {hiddenPlaceholders}
+          {requirement}
+          {index} />
       {/each}
     {/if}
   </ul>

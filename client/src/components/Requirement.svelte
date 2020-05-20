@@ -16,7 +16,8 @@
   export let selected;
   export let update;
   export let isPrioritized;
-  export let isDragging;
+  export let hiddenPlaceholders;
+  export let index;
 
   const getStatusColor = status => {
     switch (status) {
@@ -85,7 +86,12 @@
 
   li {
     display: block;
-    margin: 0;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    > * {
+      flex-grow: 1;
+    }
   }
 
   div.requirement > div {
@@ -106,6 +112,7 @@
   }
 
   div.requirement > div.controls span.reqHandle {
+    cursor: move;
     color: var(--secondaryText);
     padding: 0.8rem;
     &:hover {
@@ -144,6 +151,8 @@
 
   div.requirement {
     position: relative;
+    border-radius: 0.4rem;
+    overflow: hidden;
   }
 
   div.requirement.depth-1 {
@@ -167,6 +176,10 @@
     display: none;
     border-radius: 0.4rem;
 
+    &:hover {
+      background-color: var(--backdrop);
+    }
+
     &.depth-1 {
       margin-left: 3rem;
     }
@@ -189,9 +202,15 @@
   }
 </style>
 
+{#if index === 0}
+  <li
+    data-parentid={-1}
+    data-isplaceholder={1}
+    class={`draggable nestedPlaceholder depth-0 ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`} />
+{/if}
 <li class="requirementContainer draggable-dropzone--occupied">
   <div
-    class={`${selected ? 'selected' : ''} requirement depth-${requirement.depth}`}
+    class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
     on:click={() => toggleReq(requirement.id)}
     data-reqid={requirement.id}>
     <div class="controls">
@@ -254,4 +273,6 @@
   </div>
 </li>
 <li
-  class={`requirementContainer nestedPlaceholder depth-${requirement.depth + 1} ${isDragging ? 'hidden' : ''}`} />
+  data-parentid={requirement.id}
+  data-isplaceholder={1}
+  class={`draggable nestedPlaceholder depth-${requirement.depth + 1} ${hiddenPlaceholders.includes(requirement.id) ? 'hidden' : ''}`} />

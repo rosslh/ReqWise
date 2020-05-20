@@ -146,7 +146,7 @@ module.exports = async function (fastify, opts) {
         is_archived: { type: "boolean" },
         reqgroup_id: { type: "number" },
         project_id: { type: "number" },
-        parent_requirement_id: { type: "number" }
+        parent_requirement_id: { type: ["string", "null"] }
       },
     },
     queryString: {},
@@ -187,7 +187,7 @@ module.exports = async function (fastify, opts) {
           project_id,
           reqgroup_id,
           is_archived,
-          parent_requirement_id
+          parent_requirement_id: parent_requirement_id && fastify.deobfuscateId(parent_requirement_id)
         })
         .returning("id");
     }
