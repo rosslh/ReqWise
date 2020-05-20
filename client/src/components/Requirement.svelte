@@ -16,6 +16,7 @@
   export let selected;
   export let update;
   export let isPrioritized;
+  export let isDragging;
 
   const getStatusColor = status => {
     switch (status) {
@@ -55,7 +56,7 @@
 </script>
 
 <style lang="scss">
-  td.iconCell {
+  div.requirement > div.iconCell {
     position: absolute;
     right: 5rem;
     padding: 0 !important;
@@ -82,19 +83,29 @@
     }
   }
 
-  td.ppuid {
+  li {
+    display: block;
+    margin: 0;
+  }
+
+  div.requirement > div {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+  }
+
+  div.requirement > div.ppuid {
     color: var(--secondaryText);
   }
 
-  td.priority {
+  div.requirement > div.priority {
     text-transform: capitalize;
   }
 
-  td.status {
+  div.requirement > div.status {
     white-space: nowrap !important;
   }
 
-  td.controls span.reqHandle {
+  div.requirement > div.controls span.reqHandle {
     color: var(--secondaryText);
     padding: 0.8rem;
     &:hover {
@@ -102,78 +113,108 @@
     }
   }
 
-  td.history {
+  div.requirement > div.history {
     color: var(--secondaryText);
     text-decoration: underline;
     text-decoration-style: dashed;
   }
 
-  td:first-child {
+  div.requirement > div:first-child {
     padding-left: 1rem;
   }
 
-  td:nth-last-child(2) {
+  div.requirement > div:nth-last-child(2) {
     padding-right: 5rem;
   }
 
-  tr.requirement:hover {
+  div.requirement:hover {
     background-color: var(--background2);
     cursor: pointer;
   }
 
-  tr.requirement.selected {
+  div.requirement.selected {
     background-color: var(--backdrop);
     cursor: pointer;
   }
 
-  tr.requirement.selected:hover {
+  div.requirement.selected:hover {
     background-color: var(--background2);
     cursor: pointer;
   }
 
-  tr.requirement {
+  div.requirement {
     position: relative;
   }
 
-  tr.requirement.depth-1 {
+  div.requirement.depth-1 {
     left: 3rem;
-    td.iconCell {
+    div.iconCell {
       transform: translateX(-3rem);
     }
   }
 
-  tr.requirement.depth-2 {
+  div.requirement.depth-2 {
     left: 6rem;
-    td.iconCell {
+    div.iconCell {
       transform: translateX(-6rem);
     }
   }
+
+  .nestedPlaceholder {
+    height: 5rem;
+    background-color: var(--background2);
+    border: 2px dashed var(--secondaryText);
+    display: none;
+    border-radius: 0.4rem;
+
+    &.depth-1 {
+      margin-left: 3rem;
+    }
+
+    &.depth-2 {
+      margin-left: 6rem;
+    }
+
+    &.depth-3 {
+      margin-left: 9rem;
+    }
+  }
+
+  :global(.draggable-container--over .nestedPlaceholder) {
+    display: block !important;
+  }
+
+  :global(.draggable-container--over .nestedPlaceholder.hidden) {
+    display: none !important;
+  }
 </style>
 
-<tr
-  class={`${selected ? 'selected' : ''} requirement depth-${requirement.depth}`}
-  on:click={() => toggleReq(requirement.id)}>
-  <td class="controls">
-    <span class="reqHandle">&#10303;</span>
-  </td>
-  <td class="desc">{requirement.description}</td>
-  <td class="ppuid">#{requirement.ppuid}</td>
-  <td class="status">
-    {#if requirement.status === 'proposed'}
-      <span
-        class="iconWrapper"
-        style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaExclamation />
-      </span>
-      <span>Proposed</span>
-    {:else}
-      <span
-        class="iconWrapper"
-        style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaThumbsUp />
-      </span>
-      Accepted
-      <!-- {:else if requirement.status === 'inProgress'}
+<li class="requirementContainer draggable-dropzone--occupied">
+  <div
+    class={`${selected ? 'selected' : ''} requirement depth-${requirement.depth}`}
+    on:click={() => toggleReq(requirement.id)}
+    data-reqid={requirement.id}>
+    <div class="controls">
+      <span class="reqHandle">&#10303;</span>
+    </div>
+    <div class="desc">{requirement.description}</div>
+    <div class="ppuid">#{requirement.ppuid}</div>
+    <div class="status">
+      {#if requirement.status === 'proposed'}
+        <span
+          class="iconWrapper"
+          style={`color:var(--${getStatusColor(requirement.status)})`}>
+          <FaExclamation />
+        </span>
+        <span>Proposed</span>
+      {:else}
+        <span
+          class="iconWrapper"
+          style={`color:var(--${getStatusColor(requirement.status)})`}>
+          <FaThumbsUp />
+        </span>
+        Accepted
+        <!-- {:else if requirement.status === 'inProgress'}
       <span
         class="iconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
@@ -187,27 +228,30 @@
         <FaCheck />
       </span>
       Implemented -->
-    {/if}
-  </td>
-  {#if isPrioritized}
-    <td
-      class="priority"
-      style={`color:var(--${getPriorityColor(requirement.priority)})`}>
-      {requirement.priority}
-    </td>
-  {/if}
-  <td class="history">X at Y</td>
-  <td class="iconCell">
-    <button
-      on:click={e => {
-        requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
-      }}
-      class="commentIconWrapper">
-      {#if requirement.status === 'proposed'}
-        <FaRegComment />
-      {:else}
-        <FaRegEdit />
       {/if}
-    </button>
-  </td>
-</tr>
+    </div>
+    {#if isPrioritized}
+      <div
+        class="priority"
+        style={`color:var(--${getPriorityColor(requirement.priority)})`}>
+        {requirement.priority}
+      </div>
+    {/if}
+    <div class="history">X at Y</div>
+    <div class="iconCell">
+      <button
+        on:click={e => {
+          requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
+        }}
+        class="commentIconWrapper">
+        {#if requirement.status === 'proposed'}
+          <FaRegComment />
+        {:else}
+          <FaRegEdit />
+        {/if}
+      </button>
+    </div>
+  </div>
+</li>
+<li
+  class={`requirementContainer nestedPlaceholder depth-${requirement.depth + 1} ${isDragging ? 'hidden' : ''}`} />

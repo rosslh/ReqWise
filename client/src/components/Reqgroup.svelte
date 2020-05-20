@@ -52,25 +52,29 @@
       $reqgroupsToUpdate = $reqgroupsToUpdate.filter(x => x != reqgroup.id);
     })();
 
-  let draggable;
+  let droppable;
+  let draggingRequirement;
 
   onMount(() => {
     if (typeof window !== "undefined") {
       updateReqs();
       import("@shopify/draggable").then(({ default: Draggable }) => {
         const container = document.getElementById(`reqgroup-${reqgroup.id}`);
-        draggable = new Draggable.Draggable(container, {
+        droppable = new Draggable.Droppable(container, {
           handle: ".reqHandle",
-          draggable: ".requirement"
+          draggable: ".requirement",
+          dropzone: ".requirementContainer"
+        });
+        droppable.on("drag:start", e => {
+          draggingRequirement = e.source.dataset.reqid;
         });
       });
     }
   });
 
   onDestroy(() => {
-    if (draggable) {
-      alert("destroying");
-      draggable.destroy();
+    if (droppable) {
+      droppable.destroy();
     }
   });
 </script>
@@ -90,9 +94,11 @@
     width: 100%;
   }
 
-  div.tableWrapper {
+  ul.reqWrapper {
     width: 100%;
     overflow-x: auto;
+    list-style: none;
+    margin-top: 1rem;
   }
 </style>
 
@@ -103,35 +109,19 @@
     {selectedReqs}
     update={updateReqs}
     isPrioritized={reqgroup.isPrioritized} />
-  <div class="tableWrapper">
-    <table>
-      <thead>
-        <tr>
-          <th />
-          <th>Description</th>
-          <th>ID</th>
-          <th>Status</th>
-          {#if reqgroup.isPrioritized}
-            <th>Priority</th>
-          {/if}
-          <th>Updated</th>
-          <th />
-        </tr>
-      </thead>
-      {#if requirements}
-        <tbody>
-          {#each requirements as requirement}
-            <Requirement
-              isPrioritized={reqgroup.isPrioritized}
-              selected={selectedReqs.includes(requirement.id)}
-              {toggleReq}
-              update={updateReqs}
-              {requirement} />
-          {/each}
-        </tbody>
-      {/if}
-    </table>
-  </div>
+  <ul class="reqWrapper">
+    {#if requirements}
+      {#each requirements as requirement}
+        <Requirement
+          isPrioritized={reqgroup.isPrioritized}
+          selected={selectedReqs.includes(requirement.id)}
+          {toggleReq}
+          update={updateReqs}
+          isDragging={requirement.id === draggingRequirement}
+          {requirement} />
+      {/each}
+    {/if}
+  </ul>
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
