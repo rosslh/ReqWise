@@ -112,11 +112,14 @@
   }
 
   div.requirement > div.controls span.reqHandle {
-    cursor: move;
+    cursor: grab;
     color: var(--secondaryText);
     padding: 0.8rem;
     &:hover {
       color: var(--regularText);
+    }
+    &:active {
+      cursor: grabbing;
     }
   }
 
@@ -136,23 +139,21 @@
 
   div.requirement:hover {
     background-color: var(--background2);
-    cursor: pointer;
   }
 
   div.requirement.selected {
     background-color: var(--backdrop);
-    cursor: pointer;
   }
 
   div.requirement.selected:hover {
     background-color: var(--background2);
-    cursor: pointer;
   }
 
   div.requirement {
     position: relative;
     border-radius: 0.4rem;
     overflow: hidden;
+    cursor: pointer;
   }
 
   div.requirement.depth-1 {
@@ -208,7 +209,7 @@
     data-isplaceholder={1}
     class={`draggable nestedPlaceholder depth-0 ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`} />
 {/if}
-<li class="requirementContainer draggable-dropzone--occupied">
+<li class="requirementContainer">
   <div
     class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
     on:click={() => toggleReq(requirement.id)}

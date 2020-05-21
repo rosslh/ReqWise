@@ -113,8 +113,7 @@
         const container = document.getElementById(`reqgroup-${reqgroup.id}`);
         draggable = new d.Draggable(container, {
           handle: ".reqHandle",
-          draggable: ".draggable",
-          dropzone: ".requirementContainer"
+          draggable: ".draggable"
         });
         draggable.on("drag:start", e => {
           draggingRequirement = e.source.dataset.reqid;
@@ -131,6 +130,8 @@
         draggable.on("drag:stop", e => {
           if (newParentRequirement) {
             updateReqParent(draggingRequirement, newParentRequirement);
+            draggingRequirement = undefined;
+            newParentRequirement = undefined;
           }
         });
       });
@@ -159,6 +160,11 @@
     width: 100%;
   }
 
+  div.reqgroup.dragging,
+  :global(div.reqgroup.dragging *) {
+    cursor: grabbing !important;
+  }
+
   ul.reqWrapper {
     width: 100%;
     overflow-x: auto;
@@ -167,7 +173,9 @@
   }
 </style>
 
-<div class="reqgroup" id={`reqgroup-${reqgroup.id}`}>
+<div
+  class={`reqgroup ${draggingRequirement ? 'dragging' : ''}`}
+  id={`reqgroup-${reqgroup.id}`}>
   <ReqgroupHeader {reqgroup} />
   <ReqgroupStatusBar {requirements} />
   <ReqgroupSelectTools
