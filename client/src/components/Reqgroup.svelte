@@ -113,7 +113,11 @@
         const container = document.getElementById(`reqgroup-${reqgroup.id}`);
         draggable = new d.Draggable(container, {
           handle: ".reqHandle",
-          draggable: ".draggable"
+          draggable: ".draggable",
+          mirror: {
+            cursorOffsetX: 0,
+            cursorOffsetY: 15
+          }
         });
         draggable.on("drag:start", e => {
           draggingRequirement = e.source.dataset.reqid;

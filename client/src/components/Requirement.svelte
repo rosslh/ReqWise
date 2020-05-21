@@ -6,6 +6,7 @@
   import FaRegClock from "svelte-icons/fa/FaRegClock.svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
+  import FaGripVertical from "svelte-icons/fa/FaGripVertical.svelte";
 
   import { modalContent, modalProps } from "../stores.js";
   import ViewRequirementModal from "./ViewRequirementModal.svelte";
@@ -111,10 +112,13 @@
     white-space: nowrap !important;
   }
 
-  div.requirement > div.controls span.reqHandle {
+  div.requirement > div.reqHandle {
     cursor: grab;
     color: var(--secondaryText);
-    padding: 0.8rem;
+    box-sizing: content-box;
+    display: flex;
+    align-items: center;
+    max-width: 0.8rem;
     &:hover {
       color: var(--regularText);
     }
@@ -154,6 +158,8 @@
     border-radius: 0.4rem;
     overflow: hidden;
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 
   div.requirement.depth-1 {
@@ -214,8 +220,8 @@
     class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
     on:click={() => toggleReq(requirement.id)}
     data-reqid={requirement.id}>
-    <div class="controls">
-      <span class="reqHandle">&#10303;</span>
+    <div class="reqHandle">
+      <FaGripVertical />
     </div>
     <div class="desc">{requirement.description}</div>
     <div class="ppuid">#{requirement.ppuid}</div>
