@@ -153,6 +153,10 @@
     background-color: var(--background2);
   }
 
+  :global(div.reqgroup.dragging div.requirement) {
+    background: none !important;
+  }
+
   div.requirement {
     position: relative;
     border-radius: 0.4rem;
