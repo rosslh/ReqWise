@@ -130,9 +130,9 @@
         draggable.on("drag:stop", e => {
           if (newParentRequirement) {
             updateReqParent(draggingRequirement, newParentRequirement);
-            draggingRequirement = undefined;
-            newParentRequirement = undefined;
           }
+          draggingRequirement = undefined;
+          newParentRequirement = undefined;
         });
       });
     }
