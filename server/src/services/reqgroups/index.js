@@ -173,24 +173,27 @@ module.exports = async function (fastify, opts) {
       required: ["Authorization"],
     },
     response: {
-      200: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            reqgroup_id: { type: "number" },
-            project_id: { type: "number" },
-            ppuid: { type: "number" },
-            is_archived: { type: "boolean" },
-            account_id: { type: "number" },
-            priority: { type: "string" },
-            status: { type: "string" },
-            description: { type: "string" },
-            created_at: { type: "string" },
-          },
-        },
-      },
+      // 200: {
+      //   type: "array",
+      //   items: {
+      //     type: "object",
+      //     properties: {
+      //       id: { type: "number" },
+      //       reqgroup_id: { type: "number" },
+      //       project_id: { type: "number" },
+      //       ppuid: { type: "number" },
+      //       is_archived: { type: "boolean" },
+      //       account_id: { type: "number" },
+      //       priority: { type: "string" },
+      //       status: { type: "string" },
+      //       description: { type: "string" },
+      //       created_at: { type: "string" },
+      //       parent_requirement_id: {
+      //         type: "number"
+      //       }
+      //     },
+      //   },
+      // },
     },
   };
   fastify.get(
@@ -200,31 +203,44 @@ module.exports = async function (fastify, opts) {
       schema: getRequirementsSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
-        .from("requirement")
-        .select(
-          "requirement.id",
-          "requirement.reqgroup_id",
-          "requirement.project_id",
-          "requirement.per_project_unique_id as ppuid",
-          "requirement.is_archived",
-          "reqversion.account_id",
-          "reqversion.priority",
-          "reqversion.status",
-          "reqversion.description",
-          "reqversion.created_at"
-        )
-        .where("reqgroup_id", request.params.reqgroupId)
-        .andWhere("is_archived", false)
-        .join("reqversion", function () {
-          this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
-            "reqversion.created_at",
-            "=",
-            fastify.knex.raw(
-              "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
-            )
-          );
-        });
+      // TODO: Make recursive: http://knexjs.org/#Builder-withRecursive
+
+      const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+          "reqversion.created_at",
+          "=",
+          fastify.knex.raw(
+            "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+          )
+        );
+      };
+
+      const selectColumns = [
+        "requirement.id",
+        "requirement.parent_requirement_id",
+        "requirement.reqgroup_id",
+        "requirement.project_id",
+        "requirement.per_project_unique_id as ppuid",
+        "requirement.is_archived",
+        "reqversion.account_id",
+        "reqversion.priority",
+        "reqversion.status",
+        "reqversion.description",
+        "reqversion.created_at",
+      ]
+
+      const result = fastify.knex.withRecursive('ancestors', (qb) => {
+        qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("requirement.per_project_unique_id::text as hierarchical_id")).from('requirement')
+          .where('requirement.parent_requirement_id', null)
+          .andWhere("reqgroup_id", request.params.reqgroupId)
+          .andWhere("is_archived", false)
+          .join("reqversion", getReqversion)
+          .union((qb) => {
+            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', requirement.per_project_unique_id::text) as hierarchicalId")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
+          })
+      }).select('*').from('ancestors').orderBy('hierarchical_id');
+
+      return await result;
     }
   );
 
@@ -236,6 +252,7 @@ module.exports = async function (fastify, opts) {
         priority: { type: "string" },
         status: { type: "string" },
         ratonale: { type: "string" },
+        parent_requirement_id: { type: "string" }
       },
       required: ["description", "status", "rationale"],
     },
@@ -267,7 +284,7 @@ module.exports = async function (fastify, opts) {
       schema: postRequirementSchema,
     },
     async function (request, reply) {
-      const { description, priority, status, rationale } = request.body;
+      const { description, priority, status, rationale, parent_requirement_id } = request.body;
       const { reqgroupId: reqgroup_id } = request.params;
 
       const { project_id, isMaxOneRequirement } = (
@@ -306,6 +323,7 @@ module.exports = async function (fastify, opts) {
               reqgroup_id,
               project_id,
               per_project_unique_id: maxPpuid + 1,
+              parent_requirement_id
             })
             .returning("id")
         )[0];

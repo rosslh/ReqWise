@@ -1,7 +1,7 @@
 <script>
   import { stores } from "@sapper/app";
   const { session } = stores();
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import Requirement from "../components/Requirement.svelte";
   import ReqgroupSelectTools from "../components/ReqgroupSelectTools.svelte";
   import ReqgroupHeader from "../components/ReqgroupHeader.svelte";
@@ -9,19 +9,21 @@
   import ReqgroupFooter from "../components/ReqgroupFooter.svelte";
   import Skeleton from "../components/Skeleton.svelte";
 
-  import { get } from "../api.js";
+  import { get, patch } from "../api.js";
   import { reqgroupsToUpdate } from "../stores.js";
 
   export let reqgroup;
   export let update;
 
   let requirements = null;
-  const updateReqs = async () => {
+  const updateReqs = () => {
     if (reqgroup && reqgroup.id) {
-      requirements = await get(
+      get(
         `/reqgroups/${reqgroup.id}/requirements`,
         $session.user && $session.user.jwt
-      );
+      ).then(r => {
+        requirements = r;
+      });
     }
   };
 
@@ -31,8 +33,6 @@
       $session.user && $session.user.jwt
     );
   };
-
-  onMount(updateReqs);
 
   let showSelectTools = true;
 
@@ -53,6 +53,95 @@
       updateReqs();
       $reqgroupsToUpdate = $reqgroupsToUpdate.filter(x => x != reqgroup.id);
     })();
+
+  $: getIllegalParents = req => {
+    const illegalParents = [];
+    // req
+    illegalParents.push(req);
+
+    // req's descendents
+    requirements
+      .filter(x => {
+        let currentReq = x;
+        while (currentReq.parent_requirement_id) {
+          if (
+            currentReq.id === req ||
+            currentReq.parent_requirement_id === req
+          ) {
+            return true;
+          }
+          currentReq = requirements.find(
+            y => y.id === currentReq.parent_requirement_id
+          );
+        }
+        return false;
+      })
+      .forEach(x => illegalParents.push(x.id));
+
+    // req's parent
+    illegalParents.push(
+      requirements.find(x => x.id === req).parent_requirement_id || -1
+    );
+
+    return illegalParents;
+  };
+
+  let draggable;
+  let draggingRequirement;
+  let newParentRequirement;
+  $: hiddenPlaceholders =
+    (draggingRequirement &&
+      requirements &&
+      getIllegalParents(draggingRequirement)) ||
+    [];
+
+  const updateReqParent = async (childId, parentId) => {
+    await patch(
+      `/requirements/${childId}`,
+      {
+        parent_requirement_id: parentId === -1 ? null : parentId
+      },
+      $session.user && $session.user.jwt
+    );
+    updateReqs();
+  };
+
+  onMount(() => {
+    if (typeof window !== "undefined") {
+      updateReqs();
+      import("@shopify/draggable").then(({ default: d }) => {
+        const container = document.getElementById(`reqgroup-${reqgroup.id}`);
+        draggable = new d.Draggable(container, {
+          handle: ".reqHandle",
+          draggable: ".draggable",
+          dropzone: ".requirementContainer"
+        });
+        draggable.on("drag:start", e => {
+          draggingRequirement = e.source.dataset.reqid;
+        });
+        draggable.on("drag:over", e => {
+          if (e.over.dataset.isplaceholder) {
+            newParentRequirement =
+              e.over.dataset.parentid === "-1" ? -1 : e.over.dataset.parentid;
+          }
+        });
+        draggable.on("drag:out", e => {
+          newParentRequirement = undefined;
+        });
+        draggable.on("drag:stop", e => {
+          if (newParentRequirement) {
+            updateReqParent(draggingRequirement, newParentRequirement);
+          }
+        });
+      });
+    }
+  });
+
+  onDestroy(() => {
+    if (draggable) {
+      draggable.destroy();
+    }
+  });
 </script>
 
 <style>
@@ -70,48 +159,35 @@
     width: 100%;
   }
 
-  div.tableWrapper {
+  ul.reqWrapper {
     width: 100%;
     overflow-x: auto;
+    list-style: none;
+    margin-top: 1rem;
   }
 </style>
 
-<div class="reqgroup">
+<div class="reqgroup" id={`reqgroup-${reqgroup.id}`}>
   <ReqgroupHeader {reqgroup} />
   <ReqgroupStatusBar {requirements} />
   <ReqgroupSelectTools
     {selectedReqs}
     update={updateReqs}
     isPrioritized={reqgroup.isPrioritized} />
-  <div class="tableWrapper">
-    <table>
-      <thead>
-        <tr>
-          <th />
-          <th>Description</th>
-          <th>ID</th>
-          <th>Status</th>
-          {#if reqgroup.isPrioritized}
-            <th>Priority</th>
-          {/if}
-          <th>Updated</th>
-          <th />
-        </tr>
-      </thead>
-      {#if requirements}
-        <tbody>
-          {#each requirements as requirement}
-            <Requirement
-              isPrioritized={reqgroup.isPrioritized}
-              selected={selectedReqs.includes(requirement.id)}
-              {toggleReq}
-              update={updateReqs}
-              {requirement} />
-          {/each}
-        </tbody>
-      {/if}
-    </table>
-  </div>
+  <ul class="reqWrapper">
+    {#if requirements}
+      {#each requirements as requirement, index}
+        <Requirement
+          isPrioritized={reqgroup.isPrioritized}
+          selected={selectedReqs.includes(requirement.id)}
+          {toggleReq}
+          update={updateReqs}
+          {hiddenPlaceholders}
+          {requirement}
+          {index} />
+      {/each}
+    {/if}
+  </ul>
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}
