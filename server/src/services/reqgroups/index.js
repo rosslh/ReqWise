@@ -226,20 +226,21 @@ module.exports = async function (fastify, opts) {
         "reqversion.priority",
         "reqversion.status",
         "reqversion.description",
-        "reqversion.created_at"
+        "reqversion.created_at",
       ]
 
-      const result = await fastify.knex.withRecursive('ancestors', (qb) => {
-        qb.select(...selectColumns, fastify.knex.raw("0 as depth")).from('requirement')
+      const result = fastify.knex.withRecursive('ancestors', (qb) => {
+        qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("requirement.id::text as hierarchical_id")).from('requirement')
           .where('requirement.parent_requirement_id', null)
           .andWhere("reqgroup_id", request.params.reqgroupId)
           .andWhere("is_archived", false)
           .join("reqversion", getReqversion)
           .union((qb) => {
-            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
+            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', requirement.id::text) as hierarchicalId")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
           })
-      }).select('*').from('ancestors');
-      return result;
+      }).select('*').from('ancestors').orderBy('hierarchical_id');
+
+      return await result;
     }
   );
 
