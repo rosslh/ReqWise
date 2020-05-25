@@ -58,7 +58,7 @@
 </script>
 
 <style lang="scss">
-  div.requirement > div.iconCell {
+  tr.requirement > td.iconCell {
     position: absolute;
     right: 5rem;
     padding: 0 !important;
@@ -85,40 +85,25 @@
     }
   }
 
-  li {
-    display: block;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    > * {
-      flex-grow: 1;
-    }
-  }
-
-  div.requirement > div {
-    display: inline-block;
+  tr.requirement > td {
     padding: 0.6rem 1.2rem;
   }
 
-  div.requirement > div.ppuid {
+  tr.requirement > td.ppuid {
     color: var(--secondaryText);
   }
 
-  div.requirement > div.priority {
+  tr.requirement > td.priority {
     text-transform: capitalize;
   }
 
-  div.requirement > div.status {
+  tr.requirement > td.status {
     white-space: nowrap !important;
   }
 
-  div.requirement > div.reqHandle {
+  tr.requirement > td.reqHandle {
     cursor: grab;
     color: var(--secondaryText);
-    box-sizing: content-box;
-    display: flex;
-    align-items: center;
-    max-width: 0.8rem;
     &:hover {
       color: var(--regularText);
     }
@@ -127,85 +112,89 @@
     }
   }
 
-  div.requirement > div.history {
+  tr.requirement > td.history {
     color: var(--secondaryText);
     text-decoration: underline;
     text-decoration-style: dashed;
   }
 
-  div.requirement > div:first-child {
+  tr.requirement > td:first-child {
     padding-left: 1rem;
   }
 
-  div.requirement > div:nth-last-child(2) {
+  tr.requirement > td:nth-last-child(2) {
     padding-right: 5rem;
   }
 
-  div.requirement:hover {
+  tr.requirement:hover {
     background-color: var(--background2);
   }
 
-  div.requirement.selected {
+  tr.requirement.selected {
     background-color: var(--backdrop);
   }
 
-  div.requirement.selected:hover {
+  tr.requirement.selected:hover {
     background-color: var(--background2);
   }
 
-  :global(div.reqgroup.dragging div.requirement) {
+  :global(div.reqgroup.dragging tr.requirement) {
     background: none !important;
   }
 
-  div.requirement {
-    position: relative;
+  tr.requirement {
+    margin: 0.2rem 0;
     border-radius: 0.4rem;
     overflow: hidden;
     cursor: pointer;
-    display: flex;
-    align-items: center;
+    position: relative;
   }
 
-  div.requirement.depth-1 {
+  tr.requirement.depth-1 {
     left: 3rem;
-    div.iconCell {
+    td.iconCell {
       transform: translateX(-3rem);
     }
   }
 
-  div.requirement.depth-2 {
+  tr.requirement.depth-2 {
     left: 6rem;
-    div.iconCell {
+    td.iconCell {
       transform: translateX(-6rem);
     }
   }
 
   .nestedPlaceholder {
-    height: 5rem;
-    background-color: var(--background2);
-    border: 2px dashed var(--secondaryText);
     display: none;
-    border-radius: 0.4rem;
 
-    &:hover {
-      background-color: var(--backdrop);
-    }
+    > td {
+      height: 5rem;
+      border: 0.2rem dashed var(--secondaryText);
+      border-radius: 0.4rem;
+      background-color: var(--background2);
+      position: relative;
+      transform: scaleY(0.7); // give some padding, kinda hack
 
-    &.depth-1 {
-      margin-left: 3rem;
-    }
+      &:hover {
+        background-color: var(--backdrop);
+      }
 
-    &.depth-2 {
-      margin-left: 6rem;
-    }
+      &.depth-1 {
+        left: 3rem;
+      }
 
-    &.depth-3 {
-      margin-left: 9rem;
+      &.depth-2 {
+        left: 6rem;
+      }
+
+      &.depth-3 {
+        left: 9rem;
+      }
     }
   }
 
   :global(.draggable-container--over .nestedPlaceholder) {
-    display: block !important;
+    display: table-row !important;
   }
 
   :global(.draggable-container--over .nestedPlaceholder.hidden) {
@@ -214,37 +203,42 @@
 </style>
 
 {#if index === 0}
-  <li
-    data-parentid={-1}
-    data-isplaceholder={1}
-    class={`draggable nestedPlaceholder depth-0 ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`} />
+  <tr
+    class={`nestedPlaceholder ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`}>
+    <td
+      class="draggable depth-0"
+      data-parentid={-1}
+      data-isplaceholder={1}
+      colspan={isPrioritized ? 7 : 6} />
+  </tr>
 {/if}
-<li class="requirementContainer">
-  <div
-    class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
-    on:click={() => toggleReq(requirement.id)}
-    data-reqid={requirement.id}>
-    <div class="reqHandle">
+<tr
+  class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
+  on:click={() => toggleReq(requirement.id)}
+  data-reqid={requirement.id}>
+  <td class="reqHandle">
+    <div class="iconWrapper">
       <FaGripVertical />
     </div>
-    <div class="desc">{requirement.description}</div>
-    <div class="ppuid">#{requirement.ppuid}</div>
-    <div class="status">
-      {#if requirement.status === 'proposed'}
-        <span
-          class="iconWrapper"
-          style={`color:var(--${getStatusColor(requirement.status)})`}>
-          <FaExclamation />
-        </span>
-        <span>Proposed</span>
-      {:else}
-        <span
-          class="iconWrapper"
-          style={`color:var(--${getStatusColor(requirement.status)})`}>
-          <FaThumbsUp />
-        </span>
-        Accepted
-        <!-- {:else if requirement.status === 'inProgress'}
+  </td>
+  <td class="desc">{requirement.description}</td>
+  <td class="ppuid">#{requirement.ppuid}</td>
+  <td class="status">
+    {#if requirement.status === 'proposed'}
+      <span
+        class="iconWrapper"
+        style={`color:var(--${getStatusColor(requirement.status)})`}>
+        <FaExclamation />
+      </span>
+      <span>Proposed</span>
+    {:else}
+      <span
+        class="iconWrapper"
+        style={`color:var(--${getStatusColor(requirement.status)})`}>
+        <FaThumbsUp />
+      </span>
+      Accepted
+      <!-- {:else if requirement.status === 'inProgress'}
       <span
         class="iconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
@@ -258,32 +252,35 @@
         <FaCheck />
       </span>
       Implemented -->
-      {/if}
-    </div>
-    {#if isPrioritized}
-      <div
-        class="priority"
-        style={`color:var(--${getPriorityColor(requirement.priority)})`}>
-        {requirement.priority}
-      </div>
     {/if}
-    <div class="history">X at Y</div>
-    <div class="iconCell">
-      <button
-        on:click={e => {
-          requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
-        }}
-        class="commentIconWrapper">
-        {#if requirement.status === 'proposed'}
-          <FaRegComment />
-        {:else}
-          <FaRegEdit />
-        {/if}
-      </button>
-    </div>
-  </div>
-</li>
-<li
-  data-parentid={requirement.id}
-  data-isplaceholder={1}
-  class={`draggable nestedPlaceholder depth-${requirement.depth + 1} ${hiddenPlaceholders.includes(requirement.id) ? 'hidden' : ''}`} />
+  </td>
+  {#if isPrioritized}
+    <td
+      class="priority"
+      style={`color:var(--${getPriorityColor(requirement.priority)})`}>
+      {requirement.priority}
+    </td>
+  {/if}
+  <td class="history">X at Y</td>
+  <td class="iconCell">
+    <button
+      on:click={e => {
+        requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
+      }}
+      class="commentIconWrapper">
+      {#if requirement.status === 'proposed'}
+        <FaRegComment />
+      {:else}
+        <FaRegEdit />
+      {/if}
+    </button>
+  </td>
+</tr>
+<tr
+  class={`nestedPlaceholder ${hiddenPlaceholders.includes(requirement.id) ? 'hidden' : ''}`}>
+  <td
+    class={`draggable depth-${requirement.depth + 1}`}
+    colspan={isPrioritized ? 7 : 6}
+    data-parentid={requirement.id}
+    data-isplaceholder={1} />
+</tr>
