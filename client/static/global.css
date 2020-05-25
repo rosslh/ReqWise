@@ -459,7 +459,7 @@ label,
 legend {
   display: block;
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
@@ -565,7 +565,8 @@ th:last-child {
 }
 
 b,
-strong {
+strong,
+th {
   font-weight: 600 !important;
 }
 
@@ -579,7 +580,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 1.5rem;
   /* margin-top: 0; */
 }
@@ -611,7 +612,7 @@ h4 {
 h5,
 h6 {
   font-size: 1.6rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 img {
