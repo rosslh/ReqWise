@@ -18,21 +18,21 @@
       iframeOptions = null;
     };
 
-    let draft = localStorage.getItem(".draft-" + name);
+    // let draft = localStorage.getItem(".draft-" + name);
 
-    if (draft != null) {
-      draft = JSON.parse(draft);
+    // if (draft != null) {
+    //   draft = JSON.parse(draft);
 
-      if (
-        !confirm(
-          "A version of this page from " +
-            new Date(draft.lastModified) +
-            " is available. Would you like to continue editing?"
-        )
-      ) {
-        draft = null;
-      }
-    }
+    //   if (
+    //     !confirm(
+    //       "A version of this page from " +
+    //         new Date(draft.lastModified) +
+    //         " is available. Would you like to continue editing?"
+    //     )
+    //   ) {
+    //     draft = null;
+    //   }
+    // }
 
     const receive = evt => {
       if (evt.data.length > 0) {
@@ -53,39 +53,44 @@
             "*"
           );
         } else if (msg.event == "init") {
-          if (draft != null) {
-            iframe.contentWindow.postMessage(
-              JSON.stringify({ action: "load", autosave: 1, xml: draft.xml }),
-              "*"
-            );
-            iframe.contentWindow.postMessage(
-              JSON.stringify({ action: "status", modified: true }),
-              "*"
-            );
-          } else {
-            // Avoids unescaped < and > from innerHTML for valid XML
-            const svg = new XMLSerializer().serializeToString(elt.firstChild);
-            iframe.contentWindow.postMessage(
-              JSON.stringify({ action: "load", autosave: 1, xml: svg }),
-              "*"
-            );
-          }
+          // if (draft != null) {
+          //   iframe.contentWindow.postMessage(
+          //     JSON.stringify({ action: "load", autosave: 1, xml: draft.xml }),
+          //     "*"
+          //   );
+          //   iframe.contentWindow.postMessage(
+          //     JSON.stringify({ action: "status", modified: true }),
+          //     "*"
+          //   );
+          // }
+          // else {
+          // Avoids unescaped < and > from innerHTML for valid XML
+          const svg = new XMLSerializer().serializeToString(elt.firstChild);
+          iframe.contentWindow.postMessage(
+            JSON.stringify({ action: "load", autosave: 1, xml: svg }),
+            "*"
+          );
+          // }
         } else if (msg.event == "export") {
           // Extracts SVG DOM from data URI to enable links
           const svg = atob(msg.data.substring(msg.data.indexOf(",") + 1));
           elt.innerHTML = svg;
-          localStorage.setItem(
-            name,
-            JSON.stringify({ lastModified: new Date(), data: svg })
-          );
-          localStorage.removeItem(".draft-" + name);
-          draft = null;
+
+          // TODO: save to web API
+          // await POST...
+
+          // localStorage.setItem(
+          //   name,
+          //   JSON.stringify({ lastModified: new Date(), data: svg })
+          // );
+          // localStorage.removeItem(".draft-" + name);
+          // draft = null;
           close();
         } else if (msg.event == "autosave") {
-          localStorage.setItem(
-            ".draft-" + name,
-            JSON.stringify({ lastModified: new Date(), xml: msg.xml })
-          );
+          // localStorage.setItem(
+          //   ".draft-" + name,
+          //   JSON.stringify({ lastModified: new Date(), xml: msg.xml })
+          // );
         } else if (msg.event == "save") {
           iframe.contentWindow.postMessage(
             JSON.stringify({
@@ -96,13 +101,13 @@
             }),
             "*"
           );
-          localStorage.setItem(
-            ".draft-" + name,
-            JSON.stringify({ lastModified: new Date(), xml: msg.xml })
-          );
+          // localStorage.setItem(
+          //   ".draft-" + name,
+          //   JSON.stringify({ lastModified: new Date(), xml: msg.xml })
+          // );
         } else if (msg.event == "exit") {
-          localStorage.removeItem(".draft-" + name);
-          draft = null;
+          // localStorage.removeItem(".draft-" + name);
+          // draft = null;
           close();
         }
       }
@@ -117,15 +122,15 @@
   };
 
   const start = () => {
-    name = "default";
-    var current = localStorage.getItem(name);
+    // name = "default";
+    // var current = localStorage.getItem(name);
 
-    if (current != null) {
-      var entry = JSON.parse(current);
-      document.getElementById("diagram").innerHTML = entry.data;
-    } else {
-      document.getElementById("diagram").innerHTML = initial;
-    }
+    // if (current != null) {
+    //   var entry = JSON.parse(current);
+    //   document.getElementById("diagram").innerHTML = entry.data;
+    // } else {
+    document.getElementById("diagram").innerHTML = initial;
+    // }
   };
 
   onMount(load);

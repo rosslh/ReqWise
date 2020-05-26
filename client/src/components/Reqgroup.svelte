@@ -169,10 +169,11 @@
     cursor: grabbing !important;
   }
 
-  table.reqWrapper {
+  ul.reqWrapper {
     width: 100%;
     overflow-x: auto;
     margin-top: 1rem;
+    list-style-type: none;
   }
 </style>
 
@@ -185,7 +186,7 @@
     {selectedReqs}
     update={updateReqs}
     isPrioritized={reqgroup.isPrioritized} />
-  <table class="reqWrapper">
+  <ul class="reqWrapper">
     {#if requirements}
       {#each requirements as requirement, index}
         <Requirement
@@ -198,7 +199,7 @@
           {index} />
       {/each}
     {/if}
-  </table>
+  </ul>
   {#if !requirements}
     <Skeleton rows={2} noPadding />
   {/if}

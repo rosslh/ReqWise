@@ -13,7 +13,7 @@
 
 <section class="contentWrapper">
   <h2>Models and Diagrams</h2>
-  <p>
+  <p class="infoBlurb">
     Visual models and diagrams provide a level of understanding and
     communication that goes beyond what textual representation of requirements
     can provide.
