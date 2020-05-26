@@ -174,6 +174,7 @@
     overflow-x: auto;
     margin: 1rem -1.2rem 0;
     list-style-type: none;
+    padding: 1rem 0 1.25rem; /* account for placeholder negative margin */
   }
 </style>
 

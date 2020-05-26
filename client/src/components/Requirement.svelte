@@ -153,51 +153,48 @@
     align-items: center;
   }
 
-  @for $i from 1 through 10 {
+  @for $i from 0 through 10 {
     li.requirement.depth-#{$i} {
       left: 3rem * $i;
     }
 
-    .nestedPlaceholder > div.depth-#{$i} {
-      left: 3rem * $i;
+    .nestedPlaceholder.depth-#{$i} {
+      left: 1rem + 3rem * $i;
     }
   }
 
   .nestedPlaceholder {
-    display: none;
-
-    > div {
+    visibility: hidden;
+    height: 2.25rem;
+    padding: 0;
+    margin: -1rem 0 -1.25rem;
+    transition: opacity 0.2s ease, height 0.2s ease;
+    border-radius: 0.4rem;
+    position: relative;
+    box-sizing: content-box;
+    background-clip: padding-box;
+    &:hover {
       height: 5rem;
-      border: 0.2rem dashed var(--secondaryText);
-      border-radius: 0.4rem;
-      background-color: var(--background2);
-      position: relative;
-      transform: scaleY(0.7); // give some padding, kinda hack
-
-      &:hover {
-        background-color: var(--backdrop);
-      }
+      opacity: 1;
+      background-color: var(--backdrop);
+      border: 1rem solid transparent;
     }
   }
 
   :global(.draggable-container--over .nestedPlaceholder) {
-    display: block !important;
+    visibility: visible !important;
   }
 
   :global(.draggable-container--over .nestedPlaceholder.hidden) {
-    display: none !important;
+    visibility: hidden !important;
   }
 </style>
 
 {#if index === 0}
   <li
-    class={`nestedPlaceholder ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`}>
-    <div
-      class="draggable depth-0"
-      data-parentid={-1}
-      data-isplaceholder={1}
-      colspan={isPrioritized ? 7 : 6} />
-  </li>
+    class={`nestedPlaceholder draggable depth-0 ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`}
+    data-parentid={-1}
+    data-isplaceholder={1} />
 {/if}
 <li
   class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
@@ -264,10 +261,6 @@
   </div>
 </li>
 <li
-  class={`nestedPlaceholder ${hiddenPlaceholders.includes(requirement.id) ? 'hidden' : ''}`}>
-  <div
-    class={`draggable depth-${requirement.depth + 1}`}
-    colspan={isPrioritized ? 7 : 6}
-    data-parentid={requirement.id}
-    data-isplaceholder={1} />
-</li>
+  data-parentid={requirement.id}
+  data-isplaceholder={1}
+  class={`nestedPlaceholder draggable depth-${requirement.depth + 1} ${hiddenPlaceholders.includes(requirement.id) ? 'hidden' : ''}`} />
