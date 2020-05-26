@@ -91,6 +91,7 @@
 
   tr.requirement > td.ppuid {
     color: var(--secondaryText);
+    font-weight: 300;
   }
 
   tr.requirement > td.priority {

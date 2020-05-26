@@ -41,6 +41,7 @@
 
   .reqgroupPpuid {
     color: var(--secondaryText);
+    font-weight: 300;
     margin-left: 0.5rem;
   }
 </style>
