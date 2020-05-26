@@ -172,7 +172,7 @@
   ul.reqWrapper {
     width: 100%;
     overflow-x: auto;
-    margin-top: 1rem;
+    margin: 1rem -1.2rem 0;
     list-style-type: none;
   }
 </style>

@@ -1,4 +1,7 @@
 <script>
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
   export let selectedReqs;
   export let close;
   export let update;
@@ -6,7 +9,11 @@
   import { del } from "../api.js";
 
   const deleteRequirements = async () => {
-    await Promise.all(selectedReqs.map(id => del(`/requirements/${id}`)));
+    await Promise.all(
+      selectedReqs.map(id =>
+        del(`/requirements/${id}`, $session.user && $session.user.jwt)
+      )
+    );
 
     await update();
     close();

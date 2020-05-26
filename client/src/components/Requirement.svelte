@@ -88,8 +88,8 @@
   }
 
   li.requirement > div.desc {
-    text-transform: capitalize;
     flex-grow: 1;
+    padding-left: 0;
   }
 
   li.requirement > div.ppuid {
@@ -106,8 +106,12 @@
   }
 
   li.requirement > div.reqHandle {
+    visibility: hidden;
+    padding-right: 0.3rem;
+    padding-left: 0.5rem;
     cursor: grab;
     color: var(--secondaryText);
+    border: none;
     &:hover {
       color: var(--regularText);
     }
@@ -122,16 +126,10 @@
     text-decoration-style: dashed;
   }
 
-  li.requirement > div:first-child {
-    padding-left: 1rem;
-  }
-
-  li.requirement > div:nth-last-child(2) {
-    padding-right: 5rem;
-  }
-
   li.requirement:hover {
-    background-color: var(--background2);
+    .reqHandle {
+      visibility: visible;
+    }
   }
 
   li.requirement.selected {
