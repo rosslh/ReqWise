@@ -123,9 +123,17 @@
           draggingRequirement = e.source.dataset.reqid;
         });
         draggable.on("drag:over", e => {
-          if (e.over.dataset.isplaceholder) {
+          if (
+            e.over.dataset.isplaceholder &&
+            !hiddenPlaceholders.includes(e.over.dataset.parentid)
+          ) {
             newParentRequirement =
               e.over.dataset.parentid === "-1" ? -1 : e.over.dataset.parentid;
+          } else if (
+            e.over.dataset.isplaceholder &&
+            hiddenPlaceholders.includes(e.over.dataset.parentid)
+          ) {
+            console.error("Illegal drag and drop");
           }
         });
         draggable.on("drag:out", e => {
