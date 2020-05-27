@@ -99,7 +99,7 @@
   }
 
   a.newSection {
-    border-top: 1px solid var(--borderColor);
+    border-top: 0.1rem solid var(--borderColor);
   }
   a span {
     line-height: 2rem;
@@ -135,7 +135,7 @@
 
   div.separator {
     height: 1rem;
-    border-top: 1px solid var(--borderColor);
+    border-top: 0.1rem solid var(--borderColor);
     margin: 1rem -1.5rem 0;
   }
 

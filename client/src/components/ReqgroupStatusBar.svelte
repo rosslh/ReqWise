@@ -90,7 +90,7 @@
     align-items: center;
     padding: 0.8rem 0;
     font-weight: 600;
-    border-bottom: 1px solid var(--borderColor);
+    border-bottom: 0.1rem solid var(--borderColor);
     margin: 0 -1.2rem; /* accounts for reqgroup padding */
     /* border-top: none; */
     border-bottom-left-radius: 0.4rem;

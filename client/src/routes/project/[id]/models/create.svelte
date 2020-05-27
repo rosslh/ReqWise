@@ -1,8 +1,17 @@
 <script>
   import { onMount } from "svelte";
+  import { post } from "../../../../api.js";
+  import { stores, goto } from "@sapper/app";
+
+  const { session, page } = stores();
+  const { id: projectId } = $page.params;
 
   let iframe;
   let iframeOptions = null;
+
+  let name = "";
+  let description = "";
+
   const editor =
     "https://www.draw.io/?embed=1&ui=min&spin=1&proto=json&configure=1";
 
@@ -15,7 +24,7 @@
       iframeOptions = null;
     };
 
-    const receive = evt => {
+    const receive = async evt => {
       if (evt.data.length > 0) {
         const msg = JSON.parse(evt.data);
 
@@ -42,12 +51,20 @@
           // Extracts SVG DOM from data URI to enable links
           const svg = atob(msg.data.substring(msg.data.indexOf(",") + 1));
 
-          console.log(svg);
-
           // TODO: save to web API
           // await POST...
+          await post(
+            `/projects/${projectId}/models`,
+            {
+              name,
+              description,
+              svg
+            },
+            $session.user && $session.user.jwt
+          );
 
           close();
+          goto(`/project/${projectId}/models`);
         } else if (msg.event == "save") {
           iframe.contentWindow.postMessage(
             JSON.stringify({
@@ -88,6 +105,14 @@
         bind:this={iframe} />
     </div>
   {:else}
-    <button on:click={e => edit(e.currentTarget)}>Start editing</button>
+    <fieldset>
+      <label for="name">Diagram name</label>
+      <input id="name" bind:value={name} type="text" />
+    </fieldset>
+    <fieldset>
+      <label for="desc">Description</label>
+      <input id="desc" bind:value={description} type="text" />
+    </fieldset>
+    <button on:click={edit}>Start editing</button>
   {/if}
 </section>

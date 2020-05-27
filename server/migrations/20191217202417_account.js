@@ -193,11 +193,34 @@ exports.up = function (knex) {
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.boolean("isAdmin").notNullable();
     }),
+    knex.schema.createTable("model", (table) => {
+      table.increments("id").primary();
+      table.string("name").notNullable();
+      table.string("description");
+      table.text("svg");
+      table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.integer("created_by")
+        .references("account.id")
+        .unsigned().notNullable();
+      table.timestamp("updated_at").defaultTo(knex.fn.now());
+      table.integer("updated_by")
+        .references("account.id")
+        .unsigned().notNullable();
+      table
+        .integer("project_id")
+        .references("project.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+    }),
   ]);
 };
 
 exports.down = function (knex) {
   return Promise.all([
+    knex.schema.dropTable("model"),
+
     knex.schema.dropTable("stakeholder_reqgroup"),
     knex.schema.dropTable("stakeholder_requirement"),
     knex.schema.dropTable("teamInvite"),

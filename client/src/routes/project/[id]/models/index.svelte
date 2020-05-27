@@ -1,5 +1,17 @@
+<script context="module">
+  export async function preload({ params }, { user }) {
+    const { id } = params;
+    const models = await get(`/projects/${id}/models`, user && user.jwt);
+    return { models };
+  }
+</script>
+
 <script>
+  export let models;
+
   import { stores } from "@sapper/app";
+  import { get } from "../../../../api.js";
+  import ModelPreview from "../../../../components/ModelPreview.svelte";
 
   const { page } = stores();
   const { id } = $page.params;
@@ -25,4 +37,9 @@
     Create Model
   </a>
   <button class="button button-outline">Upload Model</button>
+</section>
+<section class="contentWrapper">
+  {#each models as model}
+    <ModelPreview {model} />
+  {/each}
 </section>

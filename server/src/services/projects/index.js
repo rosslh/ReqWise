@@ -132,6 +132,38 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getProjectModelsSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/projects/:projectId/models",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectModelsSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("model")
+        .select("*")
+        .where({ project_id: request.params.projectId });
+    }
+  );
+
   const getArchivedSchema = {
     body: {},
     queryString: {},
@@ -239,6 +271,61 @@ module.exports = async function (fastify, opts) {
           per_project_unique_id: maxPpuid + 1,
           created_by: request.user.id,
           updated_by: request.user.id,
+        })
+        .returning("id");
+    }
+  );
+  const postModelSchema = {
+    body: {
+      type: "object",
+      required: ["name"],
+      properties: {
+        name: { type: "string" },
+        description: { type: "string" },
+        svg: { type: "string" },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "number" },
+      },
+    },
+  };
+  fastify.post(
+    "/projects/:projectId/models",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postModelSchema,
+    },
+    async function (request, reply) {
+      const { name, description, svg } = request.body;
+      const { projectId: project_id } = request.params;
+
+      return await fastify
+        .knex("model")
+        .insert({
+          project_id,
+          name,
+          description,
+          created_by: request.user.id,
+          updated_by: request.user.id,
+          svg
         })
         .returning("id");
     }

@@ -64,7 +64,7 @@
 
     button.commentIconWrapper {
       background-color: var(--background1);
-      border: 1px solid var(--borderColor);
+      border: 0.1rem solid var(--borderColor);
       border-radius: 50%;
       height: 3.3rem;
       width: 3.3rem;
