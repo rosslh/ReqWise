@@ -9,7 +9,7 @@
 
   let { name, description, id } = model;
 
-  $: update = async () => {
+  $: save = async () => {
     await put(
       `/models/${id}`,
       {
@@ -33,5 +33,5 @@
     <label for="desc">Description</label>
     <input type="text" id="desc" bind:value={description} />
   </fieldset>
-  <button class="button-caution" on:click|preventDefault={update}>Save</button>
+  <button class="button-caution" on:click|preventDefault={save}>Save</button>
 </form>

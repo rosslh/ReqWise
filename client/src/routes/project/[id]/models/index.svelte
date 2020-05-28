@@ -1,5 +1,8 @@
 <script context="module">
   export async function preload({ params }, { user }) {
+    if (!user) {
+      return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
+    }
     const { id } = params;
     const models = await get(`/projects/${id}/models`, user && user.jwt);
     return { models };
@@ -47,6 +50,6 @@
 </section>
 <section class="contentWrapper">
   {#each models as model}
-    <ModelPreview {model} {update} />
+    <ModelPreview projectId={id} {model} {update} />
   {/each}
 </section>

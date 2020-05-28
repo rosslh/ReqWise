@@ -1,6 +1,8 @@
 <script>
   export let update;
   export let model;
+  export let projectId;
+
   import { modalContent, modalProps } from "../stores.js";
   import EditModelDetailsModal from "../components/EditModelDetailsModal.svelte";
   import DeleteModelModal from "../components/DeleteModelModal.svelte";
@@ -9,7 +11,6 @@
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import MdEdit from "svelte-icons/md/MdEdit.svelte";
 
-  const editModelDiagram = () => {};
   const editModelDetails = model => {
     modalContent.set(EditModelDetailsModal);
     modalProps.set({
@@ -75,7 +76,7 @@
   .footer button {
     margin: 0;
   }
-  button.editModelDiagram {
+  a.editModelDiagram {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -92,7 +93,7 @@
     color: var(--secondaryText);
   }
 
-  button.editModelDiagram .iconWrapper {
+  a.editModelDiagram .editIconWrapper {
     margin: 0;
     height: 1.8rem;
     width: 1.8rem;
@@ -101,11 +102,13 @@
 
 <div class="modelPreview">
   <div class="diagramWrapper">
-    <button on:click={editModelDiagram} class="editModelDiagram">
-      <div class="iconWrapper">
+    <a
+      href={`/project/${projectId}/models/${model.id}/edit`}
+      class="button editModelDiagram">
+      <div class="editIconWrapper">
         <MdEdit />
       </div>
-    </button>
+    </a>
     {@html model.svg}
   </div>
   <div class="textContent">

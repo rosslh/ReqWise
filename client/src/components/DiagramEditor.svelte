@@ -2,9 +2,10 @@
   import { onMount } from "svelte";
   export let initialSvg;
   export let callback;
+  export let title;
 
   let iframe;
-  let iframeOptions = { title: "Diagram Editor", frameborder: 0 };
+  let iframeOptions = { title: title || "Diagram Editor", frameborder: 0 };
 
   const editor =
     "https://www.draw.io/?embed=1&ui=min&spin=1&proto=json&configure=1";
@@ -45,7 +46,7 @@
 
           close();
         } else if (msg.event == "save") {
-          iframe.style.visibility = "hidden"; // prevent double save (kinda hack)
+          iframe.style.pointerEvents = "none"; // prevent double save
           iframe.contentWindow.postMessage(
             JSON.stringify({
               action: "export",

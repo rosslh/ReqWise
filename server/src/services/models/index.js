@@ -23,6 +23,7 @@ module.exports = async function (fastify, opts) {
                     name: { type: "string" },
                     description: { type: "string" },
                     svg: { type: "string" },
+                    project_id: { type: "number" }
                 },
             },
         },

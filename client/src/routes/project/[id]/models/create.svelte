@@ -30,7 +30,7 @@
 <section class="contentWrapper">
   <h2>Create diagram</h2>
   {#if editing}
-    <DiagramEditor initialSvg={null} callback={onSave} />
+    <DiagramEditor initialSvg={null} callback={onSave} title={name} />
   {:else}
     <fieldset>
       <label for="name">Diagram name</label>
