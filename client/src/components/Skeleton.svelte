@@ -21,6 +21,7 @@
     margin: 0;
     margin-bottom: 1rem;
     padding: 0;
+    opacity: 0.1;
   }
 </style>
 
@@ -31,6 +32,8 @@
         width={inline ? '14rem' : '100%'}
         height={height || '3rem'}
         borderRadius="0.5rem"
+        baseColor="var(--normalText)"
+        highlightColor="var(--backdrop)"
         animationLength={typeof window === 'undefined' ? '2.4s' : '1.2s'} />
     </div>
   {/each}
