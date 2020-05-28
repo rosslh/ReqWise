@@ -6,7 +6,7 @@
     const team = await get(`/teams/${params.id}`, user && user.jwt);
     const { name, description, isAdmin } = team;
     const title = name;
-    return { name, title, description, isAdmin };
+    return { name, title, description, isAdmin, id: params.id, user };
   }
 </script>
 
@@ -22,19 +22,19 @@
   import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
   import Spinner from "../../components/Spinner.svelte";
 
-  $: user = $session.user;
-  $: id = $page.params.id;
+  export let id;
+  export let user;
 
   export let name = "";
   export let description = "";
   export let isAdmin = false;
   export let title = "";
 
-  $: projects = get(`/teams/${id}/projects`, user && user.jwt);
-  $: members = get(`/teams/${id}/members`, user && user.jwt);
-  $: invites = get(`/teams/${id}/invites`, user && user.jwt);
+  let projects = get(`/teams/${id}/projects`, user && user.jwt);
+  let members = get(`/teams/${id}/members`, user && user.jwt);
+  let invites = get(`/teams/${id}/invites`, user && user.jwt);
 
-  $: update = async () => {
+  const update = async () => {
     get(`/teams/${id}`, user && user.jwt).then(r => {
       ({ name, description, isAdmin } = r);
       title = name;
@@ -50,7 +50,7 @@
     });
   };
 
-  $: updateTeam = async () => {
+  const updateTeam = async () => {
     await put(`/teams/${id}`, { name, description }, user && user.jwt)
       .then(() => {
         update();
@@ -58,17 +58,17 @@
       .catch(() => alert("Failure"));
   };
 
-  $: deleteTeam = async () => {
+  const deleteTeam = async () => {
     await del(`/teams/${id}`, user && user.jwt);
     goto("/teams");
   };
 
-  $: deleteInvite = async inviteId => {
+  const deleteInvite = async inviteId => {
     await del(`/teams/${id}/invites/${inviteId}`, user && user.jwt);
     update();
   };
 
-  $: deleteMember = async memberId => {
+  const deleteMember = async memberId => {
     await del(`/teams/${id}/members/${memberId}`, user && user.jwt);
     update();
   };
