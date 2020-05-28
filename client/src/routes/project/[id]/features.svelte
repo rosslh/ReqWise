@@ -1,27 +1,19 @@
-<script context="module">
-  export async function preload({ params }, { user }) {
-    const { id } = params;
-    const reqgroups = await get(
-      `/projects/${id}/reqgroups?type=feature`,
-      user && user.jwt
-    );
-    return { reqgroups };
-  }
-</script>
-
 <script>
-  import { onMount } from "svelte";
   import { get, post } from "../../../api.js";
   import { projectShouldUpdate } from "../../../stores.js";
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
   import AddFeature from "../../../components/AddFeature.svelte";
+  import Spinner from "../../../components/Spinner.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
 
-  export let reqgroups = [];
+  export let reqgroups = get(
+    `/projects/${id}/reqgroups?type=feature`,
+    $session.user && $session.user.jwt
+  );
 
   const update = async () => {
     reqgroups = await get(
@@ -49,10 +41,18 @@
   </p>
   <AddFeature {update} {id} />
 </section>
-{#if reqgroups.length}
+{#await reqgroups}
   <section class="contentWrapper">
-    {#each reqgroups as reqgroup (reqgroup.id)}
+    <Spinner />
+  </section>
+{:then result}
+  <section class="contentWrapper">
+    {#each result as reqgroup (reqgroup.id)}
       <Reqgroup {reqgroup} {update} />
     {/each}
   </section>
-{/if}
+{:catch error}
+  <section class="contentWrapper">
+    <p style="color: red">{error.message}</p>
+  </section>
+{/await}

@@ -1,8 +1,5 @@
 <script context="module">
   export async function preload({ params, path }, { user }) {
-    if (!user) {
-      return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
-    }
     const model = await get(`/models/${params.model}`, user && user.jwt);
     return { model };
   }

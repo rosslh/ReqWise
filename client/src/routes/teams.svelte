@@ -6,15 +6,6 @@
         `/login?redirect=${encodeURIComponent(page.path)}`
       );
     }
-    const teams = await get(
-      `/users/${session.user.id}/teams`,
-      session.user && session.user.jwt
-    );
-    const invites = await get(
-      `/users/${session.user.id}/invites`,
-      session.user && session.user.jwt
-    );
-    return { teams, invites };
   }
 </script>
 
@@ -24,8 +15,16 @@
   const { session } = stores();
   import { modalContent, modalProps } from "../stores.js";
   import AddTeamModal from "../components/AddTeamModal.svelte";
-  export let teams = [];
-  export let invites = [];
+  import Skeleton from "../components/Skeleton.svelte";
+
+  let teams = get(
+    `/users/${$session.user.id}/teams`,
+    $session.user && $session.user.jwt
+  );
+  let invites = get(
+    `/users/${$session.user.id}/invites`,
+    $session.user && $session.user.jwt
+  );
 
   const update = async () => {
     teams = await get(
@@ -71,72 +70,88 @@
 
 <div class="contentWrapper">
   <h1>My Teams</h1>
-  <table class="compact">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      {#each teams as team (team.id)}
+  {#await teams}
+    <Skeleton rows={2} />
+  {:then result}
+    <table class="compact">
+      <thead>
         <tr>
-          <td>
-            <a href={`/team/${team.id}`}>{team.name}</a>
-          </td>
-          <td>{team.description}</td>
-          <td class="membership">
-            {#if team.isOwner}
-              (You own this team)
-            {:else}
+          <th>Name</th>
+          <th>Description</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {#each result as team (team.id)}
+          <tr>
+            <td>
+              <a href={`/team/${team.id}`}>{team.name}</a>
+            </td>
+            <td>{team.description}</td>
+            <td class="membership">
+              {#if team.isOwner}
+                (You own this team)
+              {:else}
+                <button
+                  class="button-danger button-small button-outline"
+                  style="margin: 0;"
+                  on:click={() => leaveTeam(team.id)}>
+                  Leave team
+                </button>
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:catch error}
+    <section class="contentWrapper">
+      <p style="color: red">{error.message}</p>
+    </section>
+  {/await}
+  <h2>Invites</h2>
+  {#await invites}
+    <Skeleton rows={2} />
+  {:then result}
+    <table class="compact">
+      <thead>
+        <tr>
+          <th>Team name</th>
+          <th>Inviter name</th>
+          <th />
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {#each result as invite (invite.id)}
+          <tr>
+            <td>{invite.teamName}</td>
+            <td>{invite.inviterName}</td>
+            <td>
+              <button
+                class="button-success button-small button-outline"
+                style="margin: 0;"
+                on:click={() => acceptInvite(invite.id)}>
+                Accept
+              </button>
+            </td>
+            <td>
               <button
                 class="button-danger button-small button-outline"
                 style="margin: 0;"
-                on:click={() => leaveTeam(team.id)}>
-                Leave team
+                on:click={() => deleteInvite(invite.id)}>
+                Delete
               </button>
-            {/if}
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-  <h2>Invites</h2>
-  <table class="compact">
-    <thead>
-      <tr>
-        <th>Team name</th>
-        <th>Inviter name</th>
-        <th />
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      {#each invites as invite (invite.id)}
-        <tr>
-          <td>{invite.teamName}</td>
-          <td>{invite.inviterName}</td>
-          <td>
-            <button
-              class="button-success button-small button-outline"
-              style="margin: 0;"
-              on:click={() => acceptInvite(invite.id)}>
-              Accept
-            </button>
-          </td>
-          <td>
-            <button
-              class="button-danger button-small button-outline"
-              style="margin: 0;"
-              on:click={() => deleteInvite(invite.id)}>
-              Delete
-            </button>
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  {:catch error}
+    <section class="contentWrapper">
+      <p style="color: red">{error.message}</p>
+    </section>
+  {/await}
   <button
     class="button-create"
     on:click={() => {

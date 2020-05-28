@@ -6,13 +6,7 @@
     const team = await get(`/teams/${params.id}`, user && user.jwt);
     const { name, description, isAdmin } = team;
     const title = name;
-    const projects = await get(
-      `/teams/${params.id}/projects`,
-      user && user.jwt
-    );
-    const members = await get(`/teams/${params.id}/members`, user && user.jwt);
-    const invites = await get(`/teams/${params.id}/invites`, user && user.jwt);
-    return { name, title, description, projects, members, invites, isAdmin };
+    return { name, title, description, isAdmin };
   }
 </script>
 
@@ -26,21 +20,21 @@
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
   import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
+  import Spinner from "../../components/Spinner.svelte";
+
+  $: user = $session.user;
+  $: id = $page.params.id;
 
   export let name = "";
   export let description = "";
-
-  export let projects = null;
-  export let members = null;
-  export let invites = null;
   export let isAdmin = false;
-
-  const { user } = $session;
-  const { id } = $page.params;
-
   export let title = "";
 
-  const update = async () => {
+  $: projects = get(`/teams/${id}/projects`, user && user.jwt);
+  $: members = get(`/teams/${id}/members`, user && user.jwt);
+  $: invites = get(`/teams/${id}/invites`, user && user.jwt);
+
+  $: update = async () => {
     get(`/teams/${id}`, user && user.jwt).then(r => {
       ({ name, description, isAdmin } = r);
       title = name;
@@ -56,7 +50,7 @@
     });
   };
 
-  const updateTeam = async () => {
+  $: updateTeam = async () => {
     await put(`/teams/${id}`, { name, description }, user && user.jwt)
       .then(() => {
         update();
@@ -64,17 +58,17 @@
       .catch(() => alert("Failure"));
   };
 
-  const deleteTeam = async () => {
+  $: deleteTeam = async () => {
     await del(`/teams/${id}`, user && user.jwt);
     goto("/teams");
   };
 
-  const deleteInvite = async inviteId => {
+  $: deleteInvite = async inviteId => {
     await del(`/teams/${id}/invites/${inviteId}`, user && user.jwt);
     update();
   };
 
-  const deleteMember = async memberId => {
+  $: deleteMember = async memberId => {
     await del(`/teams/${id}/members/${memberId}`, user && user.jwt);
     update();
   };
@@ -103,22 +97,32 @@
   </section>
   <section>
     <h2>Projects</h2>
-    <table class="compact">
-      <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each projects as project (project.id)}
+    {#await projects}
+      <section class="contentWrapper">
+        <Spinner />
+      </section>
+    {:then result}
+      <table class="compact">
+        <thead>
           <tr>
-            <td>
-              <a href={`/project/${project.id}`}>{project.name}</a>
-            </td>
+            <th>Name</th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {#each result as project (project.id)}
+            <tr>
+              <td>
+                <a href={`/project/${project.id}`}>{project.name}</a>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:catch error}
+      <section class="contentWrapper">
+        <p style="color: red">{error.message}</p>
+      </section>
+    {/await}
     {#if isAdmin}
       <div>
         <button
@@ -134,73 +138,93 @@
   </section>
   <section>
     <h2>Members</h2>
-    <table class="compact">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Is admin</th>
-          <th>Is owner</th>
-          {#if isAdmin}
-            <th />
-          {/if}
-        </tr>
-      </thead>
-      <tbody>
-        {#each members as member (member.id)}
+    {#await members}
+      <section class="contentWrapper">
+        <Spinner />
+      </section>
+    {:then result}
+      <table class="compact">
+        <thead>
           <tr>
-            <td>{member.name}</td>
-            <td>{member.email}</td>
-            <td>{member.isAdmin}</td>
-            <td>{member.isOwner}</td>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Is admin</th>
+            <th>Is owner</th>
             {#if isAdmin}
-              <td class="userActions">
-                {#if member.id !== $session.user.id}
-                  {#if !member.isOwner}
-                    <button
-                      class="button-danger button-small button-outline"
-                      style="margin: 0;"
-                      on:click={() => deleteMember(member.id)}>
-                      Remove member
-                    </button>
-                  {/if}
-                {:else}(You){/if}
-              </td>
+              <th />
             {/if}
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {#each result as member (member.id)}
+            <tr>
+              <td>{member.name}</td>
+              <td>{member.email}</td>
+              <td>{member.isAdmin}</td>
+              <td>{member.isOwner}</td>
+              {#if isAdmin}
+                <td class="userActions">
+                  {#if member.id !== $session.user.id}
+                    {#if !member.isOwner}
+                      <button
+                        class="button-danger button-small button-outline"
+                        style="margin: 0;"
+                        on:click={() => deleteMember(member.id)}>
+                        Remove member
+                      </button>
+                    {/if}
+                  {:else}(You){/if}
+                </td>
+              {/if}
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:catch error}
+      <section class="contentWrapper">
+        <p style="color: red">{error.message}</p>
+      </section>
+    {/await}
     <h3>Invites</h3>
-    <table class="compact">
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Is admin</th>
-          {#if isAdmin}
-            <th />
-          {/if}
-        </tr>
-      </thead>
-      <tbody>
-        {#each invites as invite (invite.id)}
+    {#await invites}
+      <section class="contentWrapper">
+        <Spinner />
+      </section>
+    {:then result}
+      <table class="compact">
+        <thead>
           <tr>
-            <td>{invite.inviteeEmail}</td>
-            <td>{invite.isAdmin}</td>
+            <th>Email</th>
+            <th>Is admin</th>
             {#if isAdmin}
-              <td>
-                <button
-                  class="button-danger button-small button-outline"
-                  style="margin: 0;"
-                  on:click={() => deleteInvite(invite.id)}>
-                  Delete invite
-                </button>
-              </td>
+              <th />
             {/if}
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {#each result as invite (invite.id)}
+            <tr>
+              <td>{invite.inviteeEmail}</td>
+              <td>{invite.isAdmin}</td>
+              {#if isAdmin}
+                <td>
+                  <button
+                    class="button-danger button-small button-outline"
+                    style="margin: 0;"
+                    on:click={() => deleteInvite(invite.id)}>
+                    Delete invite
+                  </button>
+                </td>
+              {/if}
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:catch error}
+      <section class="contentWrapper">
+        <p style="color: red">{error.message}</p>
+      </section>
+    {/await}
     {#if isAdmin}
       <div>
         <button

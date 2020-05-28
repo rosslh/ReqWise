@@ -31,8 +31,6 @@
         width={inline ? '14rem' : '100%'}
         height={height || '3rem'}
         borderRadius="0.5rem"
-        baseColor="var(--backdrop)"
-        highlightColor="var(--background1)"
         animationLength={typeof window === 'undefined' ? '2.4s' : '1.2s'} />
     </div>
   {/each}

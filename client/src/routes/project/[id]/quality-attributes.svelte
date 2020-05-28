@@ -1,14 +1,3 @@
-<script context="module">
-  export async function preload({ params }, { user }) {
-    const { id } = params;
-    const reqgroups = await get(
-      `/projects/${id}/reqgroups?type=quality`,
-      user && user.jwt
-    );
-    return { reqgroups };
-  }
-</script>
-
 <script>
   import { onMount } from "svelte";
   import { get, post } from "../../../api.js";
@@ -16,6 +5,7 @@
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
   import { projectShouldUpdate } from "../../../stores.js";
+  import Spinner from "../../../components/Spinner.svelte";
 
   import { modalContent, modalProps } from "../../../stores.js";
   import AddQaGroupModal from "../../../components/AddQaGroupModal.svelte";
@@ -23,7 +13,10 @@
   const { page, session } = stores();
   const { id } = $page.params;
 
-  export let reqgroups = [];
+  let reqgroups = get(
+    `/projects/${id}/reqgroups?type=quality`,
+    $session.user && $session.user.jwt
+  );
 
   const update = async () => {
     reqgroups = await get(
@@ -58,10 +51,18 @@
   </p>
   <button on:click={showAddQaModal}>Add quality attribute</button>
 </section>
-{#if reqgroups.length}
+{#await reqgroups}
   <section class="contentWrapper">
-    {#each reqgroups as reqgroup (reqgroup.id)}
+    <Spinner />
+  </section>
+{:then result}
+  <section class="contentWrapper">
+    {#each result as reqgroup (reqgroup.id)}
       <Reqgroup {reqgroup} {update} />
     {/each}
   </section>
-{/if}
+{:catch error}
+  <section class="contentWrapper">
+    <p style="color: red">{error.message}</p>
+  </section>
+{/await}

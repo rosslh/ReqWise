@@ -1,14 +1,3 @@
-<script context="module">
-  export async function preload({ params }, { user }) {
-    const { id } = params;
-    const reqgroups = await get(
-      `/projects/${id}/reqgroups?type=business`,
-      user && user.jwt
-    );
-    return { reqgroups };
-  }
-</script>
-
 <script>
   import { onMount } from "svelte";
   import { projectShouldUpdate } from "../../../stores.js";
@@ -19,11 +8,15 @@
 
   import { modalContent, modalProps } from "../../../stores.js";
   import AddBrGroupModal from "../../../components/AddBrGroupModal.svelte";
+  import Spinner from "../../../components/Spinner.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
 
-  export let reqgroups = [];
+  let reqgroups = get(
+    `/projects/${id}/reqgroups?type=business`,
+    $session.user && $session.user.jwt
+  );
 
   const update = async () => {
     reqgroups = await get(
@@ -31,6 +24,8 @@
       $session.user && $session.user.jwt
     );
   };
+
+  onMount(update);
 
   const showAddBrModal = async () => {
     modalContent.set(AddBrGroupModal);
@@ -53,10 +48,18 @@
   </p>
   <button on:click={showAddBrModal}>Add requirement group</button>
 </section>
-{#if reqgroups.length}
+{#await reqgroups}
   <section class="contentWrapper">
-    {#each reqgroups as reqgroup (reqgroup.id)}
+    <Spinner />
+  </section>
+{:then result}
+  <section class="contentWrapper">
+    {#each result as reqgroup (reqgroup.id)}
       <Reqgroup {reqgroup} {update} />
     {/each}
   </section>
-{/if}
+{:catch error}
+  <section class="contentWrapper">
+    <p style="color: red">{error.message}</p>
+  </section>
+{/await}

@@ -1,23 +1,16 @@
-<script context="module">
-  export async function preload({ params }, { user }) {
-    if (!user) {
-      return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
-    }
-    const { id } = params;
-    const models = await get(`/projects/${id}/models`, user && user.jwt);
-    return { models };
-  }
-</script>
-
 <script>
-  export let models;
-
   import { stores } from "@sapper/app";
   import { get } from "../../../../api.js";
   import ModelPreview from "../../../../components/ModelPreview.svelte";
+  import Spinner from "../../../../components/Spinner.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
+
+  let models = get(
+    `/projects/${id}/models`,
+    $session.user && $session.user.jwt
+  );
 
   const update = async () => {
     models = await get(
@@ -48,8 +41,18 @@
   </a>
   <button class="button button-outline">Upload Model</button>
 </section>
-<section class="contentWrapper">
-  {#each models as model}
-    <ModelPreview projectId={id} {model} {update} />
-  {/each}
-</section>
+{#await models}
+  <section class="contentWrapper">
+    <Spinner />
+  </section>
+{:then result}
+  <section class="contentWrapper">
+    {#each result as model (model.id)}
+      <ModelPreview projectId={id} {model} {update} />
+    {/each}
+  </section>
+{:catch error}
+  <section class="contentWrapper">
+    <p style="color: red">{error.message}</p>
+  </section>
+{/await}
