@@ -48,31 +48,37 @@
 </style>
 
 <h3>Update Priority for Requirements</h3>
-<fieldset class="inline">
-  <label for="priority">Priority</label>
-  <div class="selectWrapper">
-    <Select
-      inputAttributes={{ id: 'priority' }}
-      isClearable={false}
-      isSearchable={false}
-      items={priorityOptions}
-      bind:selectedValue={priority} />
-  </div>
-</fieldset>
-<fieldset>
-  <label for="desc">Reason for change</label>
-  <input
-    type="text"
-    id="rationale"
-    name="rationale"
-    class="newReqInput"
-    bind:value={rationale} />
-</fieldset>
-<fieldset>
-  <input id="repropose" type="checkbox" bind:checked={repropose} />
-  <label class="label-inline" for="repropose">
-    Change status to
-    <span class="proposed">Proposed</span>
-  </label>
-</fieldset>
-<button class="button-caution" on:click={updateRequirements}>Update</button>
+<form>
+  <fieldset class="inline">
+    <label for="priority">Priority</label>
+    <div class="selectWrapper">
+      <Select
+        inputAttributes={{ id: 'priority' }}
+        isClearable={false}
+        isSearchable={false}
+        items={priorityOptions}
+        bind:selectedValue={priority} />
+    </div>
+  </fieldset>
+  <fieldset>
+    <label for="desc">Reason for change</label>
+    <input
+      type="text"
+      id="rationale"
+      name="rationale"
+      class="newReqInput"
+      bind:value={rationale} />
+  </fieldset>
+  <fieldset>
+    <input id="repropose" type="checkbox" bind:checked={repropose} />
+    <label class="label-inline" for="repropose">
+      Change status to
+      <span class="proposed">Proposed</span>
+    </label>
+  </fieldset>
+  <button
+    class="button-caution"
+    on:click|preventDefault|once={updateRequirements}>
+    Update
+  </button>
+</form>

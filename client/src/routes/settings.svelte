@@ -74,18 +74,20 @@
 
 <div class="contentWrapper">
   <h2>Settings</h2>
-  <fieldset>
-    <label for="name">Your name</label>
-    <input bind:value={name} type="text" id="name" />
-  </fieldset>
-  <fieldset>
-    <label for="theme">Interface theme</label>
-    <Select
-      inputAttributes={{ id: 'theme' }}
-      items={themeOptions}
-      bind:selectedValue={theme} />
-  </fieldset>
-  <button on:click={submit}>Submit</button>
+  <form>
+    <fieldset>
+      <label for="name">Your name</label>
+      <input bind:value={name} type="text" id="name" />
+    </fieldset>
+    <fieldset>
+      <label for="theme">Interface theme</label>
+      <Select
+        inputAttributes={{ id: 'theme' }}
+        items={themeOptions}
+        bind:selectedValue={theme} />
+    </fieldset>
+    <button on:click|preventDefault={submit}>Submit</button>
+  </form>
 </div>
 <div class="contentWrapper changePassword">
   <a href="/reset/request">Change password</a>

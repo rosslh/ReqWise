@@ -7,8 +7,7 @@
   export let update;
   export let close;
 
-  $: addReqGroup = async e => {
-    e.preventDefault();
+  $: addReqGroup = async () => {
     await post(
       `/projects/${id}/reqgroups`,
       {
@@ -30,5 +29,7 @@
     <label for="type">Business Requirement Type</label>
     <input type="text" bind:value={type} id="type" />
   </fieldset>
-  <button class="button-create" on:click={addReqGroup}>+ Add</button>
+  <button class="button-create" on:click|preventDefault|once={addReqGroup}>
+    + Add
+  </button>
 </form>

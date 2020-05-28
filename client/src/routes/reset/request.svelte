@@ -16,9 +16,11 @@
 
 <div class="contentWrapper">
   <h2>Request password reset</h2>
-  <fieldset>
-    <label for="email">Email</label>
-    <input autocomplete="email" bind:value={email} type="email" id="email" />
-    <button on:click={submit}>Send Reset Request</button>
-  </fieldset>
+  <form>
+    <fieldset>
+      <label for="email">Email</label>
+      <input autocomplete="email" bind:value={email} type="email" id="email" />
+    </fieldset>
+    <button on:click|preventDefault={submit}>Send Reset Request</button>
+  </form>
 </div>

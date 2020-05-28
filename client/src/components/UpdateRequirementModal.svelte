@@ -59,50 +59,56 @@
 </style>
 
 <h3>Update Requirement</h3>
-<fieldset>
-  <label for="desc">Description</label>
-  {#if description || description === ''}
+<form>
+  <fieldset>
+    <label for="desc">Description</label>
+    {#if description || description === ''}
+      <input
+        type="text"
+        id="desc"
+        name="desc"
+        class="newReqInput"
+        bind:value={description} />
+    {:else}
+      <Skeleton noPadding />
+    {/if}
+  </fieldset>
+  {#if isPrioritized}
+    <fieldset class="inline">
+      <label for="priority">Priority</label>
+      <div class="selectWrapper">
+        {#if priority || priority === ''}
+          <Select
+            inputAttributes={{ id: 'priority' }}
+            isClearable={false}
+            isSearchable={false}
+            items={priorityOptions}
+            bind:selectedValue={priority} />
+        {:else}
+          <Skeleton noPadding inline />
+        {/if}
+      </div>
+    </fieldset>
+  {/if}
+  <fieldset>
+    <label for="desc">Reason for change</label>
     <input
       type="text"
-      id="desc"
-      name="desc"
+      id="rationale"
+      name="rationale"
       class="newReqInput"
-      bind:value={description} />
-  {:else}
-    <Skeleton noPadding />
-  {/if}
-</fieldset>
-{#if isPrioritized}
-  <fieldset class="inline">
-    <label for="priority">Priority</label>
-    <div class="selectWrapper">
-      {#if priority || priority === ''}
-        <Select
-          inputAttributes={{ id: 'priority' }}
-          isClearable={false}
-          isSearchable={false}
-          items={priorityOptions}
-          bind:selectedValue={priority} />
-      {:else}
-        <Skeleton noPadding inline />
-      {/if}
-    </div>
+      bind:value={rationale} />
   </fieldset>
-{/if}
-<fieldset>
-  <label for="desc">Reason for change</label>
-  <input
-    type="text"
-    id="rationale"
-    name="rationale"
-    class="newReqInput"
-    bind:value={rationale} />
-</fieldset>
-<fieldset>
-  <input id="repropose" type="checkbox" bind:checked={repropose} />
-  <label class="label-inline" for="repropose">
-    Change status to
-    <span class="proposed">Proposed</span>
-  </label>
-</fieldset>
-<button class="button-caution" on:click={updateRequirement}>Save</button>
+  <fieldset>
+    <input id="repropose" type="checkbox" bind:checked={repropose} />
+    <label class="label-inline" for="repropose">
+      Change status to
+      <span class="proposed">Proposed</span>
+    </label>
+  </fieldset>
+  <button
+    class="button-caution"
+    on:click|preventDefault|once={updateRequirement}>
+    Save
+  </button>
+</form>

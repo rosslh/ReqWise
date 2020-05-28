@@ -10,8 +10,7 @@
   export let reqgroup;
   let { name } = reqgroup;
 
-  $: update = async e => {
-    e.preventDefault();
+  $: update = async () => {
     await put(
       `/reqgroups/${reqgroupId}`,
       {
@@ -35,5 +34,7 @@
       class="newReqInput"
       bind:value={name} />
   </fieldset>
-  <button class="button-caution" on:click={update}>Save</button>
+  <button class="button-caution" on:click|preventDefault|once={update}>
+    Save
+  </button>
 </form>

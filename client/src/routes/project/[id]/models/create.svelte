@@ -32,14 +32,16 @@
   {#if editing}
     <DiagramEditor initialSvg={null} callback={onSave} title={name} />
   {:else}
-    <fieldset>
-      <label for="name">Diagram name</label>
-      <input id="name" bind:value={name} type="text" />
-    </fieldset>
-    <fieldset>
-      <label for="desc">Description</label>
-      <input id="desc" bind:value={description} type="text" />
-    </fieldset>
-    <button on:click={startEditing}>Start editing</button>
+    <form>
+      <fieldset>
+        <label for="name">Diagram name</label>
+        <input id="name" bind:value={name} type="text" />
+      </fieldset>
+      <fieldset>
+        <label for="desc">Description</label>
+        <input id="desc" bind:value={description} type="text" />
+      </fieldset>
+      <button on:click|preventDefault={startEditing}>Start editing</button>
+    </form>
   {/if}
 </section>

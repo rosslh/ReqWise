@@ -20,8 +20,12 @@
 </script>
 
 <h3>Create project</h3>
-<fieldset>
-  <label for="projectName">Project name</label>
-  <input type="text" bind:value={newProjectName} />
-</fieldset>
-<button class="button-create" on:click={submitNewProject}>Create</button>
+<form>
+  <fieldset>
+    <label for="projectName">Project name</label>
+    <input type="text" bind:value={newProjectName} />
+  </fieldset>
+  <button class="button-create" on:click|preventDefault|once={submitNewProject}>
+    Create
+  </button>
+</form>

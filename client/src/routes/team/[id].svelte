@@ -89,17 +89,17 @@
 <div class="contentWrapper">
   <h1>{title}</h1>
   <section>
-    <fieldset>
-      <label for="name">Team name</label>
-      <input id="name" type="text" bind:value={name} />
-    </fieldset>
-    <fieldset>
-      <label for="description">Description</label>
-      <input id="description" type="text" bind:value={description} />
-    </fieldset>
-    <div>
-      <button on:click={updateTeam}>Update</button>
-    </div>
+    <form>
+      <fieldset>
+        <label for="name">Team name</label>
+        <input id="name" type="text" bind:value={name} />
+      </fieldset>
+      <fieldset>
+        <label for="description">Description</label>
+        <input id="description" type="text" bind:value={description} />
+      </fieldset>
+      <button on:click|preventDefault={updateTeam}>Update</button>
+    </form>
   </section>
   <section>
     <h2>Projects</h2>

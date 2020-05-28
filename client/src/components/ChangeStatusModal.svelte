@@ -40,24 +40,30 @@
 </script>
 
 <h3>Update Status for Requirements</h3>
-<fieldset class="inline">
-  <label for="status">Status</label>
-  <div class="selectWrapper">
-    <Select
-      inputAttributes={{ id: 'status' }}
-      isClearable={false}
-      isSearchable={false}
-      items={statusOptions}
-      bind:selectedValue={status} />
-  </div>
-</fieldset>
-<fieldset>
-  <label for="desc">Reason for change</label>
-  <input
-    type="text"
-    id="rationale"
-    name="rationale"
-    class="newReqInput"
-    bind:value={rationale} />
-</fieldset>
-<button class="button-caution" on:click={updateRequirements}>Update</button>
+<form>
+  <fieldset class="inline">
+    <label for="status">Status</label>
+    <div class="selectWrapper">
+      <Select
+        inputAttributes={{ id: 'status' }}
+        isClearable={false}
+        isSearchable={false}
+        items={statusOptions}
+        bind:selectedValue={status} />
+    </div>
+  </fieldset>
+  <fieldset>
+    <label for="desc">Reason for change</label>
+    <input
+      type="text"
+      id="rationale"
+      name="rationale"
+      class="newReqInput"
+      bind:value={rationale} />
+  </fieldset>
+  <button
+    class="button-caution"
+    on:click|preventDefault|once={updateRequirements}>
+    Update
+  </button>
+</form>

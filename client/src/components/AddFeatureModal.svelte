@@ -10,7 +10,6 @@
   let description = "";
 
   $: addFeature = async e => {
-    e.preventDefault();
     await post(
       `/projects/${id}/reqgroups`,
       {
@@ -35,5 +34,7 @@
       class="newReqInput"
       bind:value={description} />
   </fieldset>
-  <button class="button-create" on:click={addFeature}>+ Add</button>
+  <button class="button-create" on:click|preventDefault|once={addFeature}>
+    + Add
+  </button>
 </form>

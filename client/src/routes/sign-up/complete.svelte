@@ -44,26 +44,28 @@
 
 <div class="contentWrapper">
   <h2>Complete sign up</h2>
-  <fieldset>
-    <label for="email">Email</label>
-    <input
-      autocomplete="email"
-      value={email}
-      type="email"
-      disabled
-      id="email" />
-  </fieldset>
-  <fieldset>
-    <label for="name">Name</label>
-    <input autocomplete="name" bind:value={name} type="text" id="name" />
-  </fieldset>
-  <fieldset>
-    <label for="pwd">Password</label>
-    <input
-      autocomplete="new-password"
-      bind:value={password}
-      type="password"
-      id="pwd" />
-    <button on:click={submit}>Submit</button>
-  </fieldset>
+  <form>
+    <fieldset>
+      <label for="email">Email</label>
+      <input
+        autocomplete="email"
+        value={email}
+        type="email"
+        disabled
+        id="email" />
+    </fieldset>
+    <fieldset>
+      <label for="name">Name</label>
+      <input autocomplete="name" bind:value={name} type="text" id="name" />
+    </fieldset>
+    <fieldset>
+      <label for="pwd">Password</label>
+      <input
+        autocomplete="new-password"
+        bind:value={password}
+        type="password"
+        id="pwd" />
+      <button on:click|preventDefault={submit}>Submit</button>
+    </fieldset>
+  </form>
 </div>

@@ -33,5 +33,7 @@
     <label for="desc">Description</label>
     <input type="text" id="desc" bind:value={description} />
   </fieldset>
-  <button class="button-caution" on:click|preventDefault={save}>Save</button>
+  <button class="button-caution" on:click|preventDefault|once={save}>
+    Save
+  </button>
 </form>

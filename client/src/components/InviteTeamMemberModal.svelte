@@ -21,14 +21,18 @@
 </script>
 
 <h3>Invite member</h3>
-<fieldset>
-  <label for="inviteeEmail">Invitee email address</label>
-  <input type="email" id="inviteeEmail" bind:value={inviteeEmail} />
-</fieldset>
-<fieldset>
-  <input type="checkbox" id="isAdmin" bind:checked={isAdmin} />
-  <label class="label-inline" for="isAdmin">Make administrator</label>
-</fieldset>
-<fieldset>
-  <button class="button-create" on:click={inviteMember}>Invite</button>
-</fieldset>
+<form>
+  <fieldset>
+    <label for="inviteeEmail">Invitee email address</label>
+    <input type="email" id="inviteeEmail" bind:value={inviteeEmail} />
+  </fieldset>
+  <fieldset>
+    <input type="checkbox" id="isAdmin" bind:checked={isAdmin} />
+    <label class="label-inline" for="isAdmin">Make administrator</label>
+  </fieldset>
+  <fieldset>
+    <button class="button-create" on:click|preventDefault|once={inviteMember}>
+      Invite
+    </button>
+  </fieldset>
+</form>

@@ -39,19 +39,21 @@
 
 <div class="contentWrapper panel">
   <h2>Log in</h2>
-  <fieldset>
-    <label for="email">Email</label>
-    <input autocomplete="email" bind:value={email} type="text" id="email" />
-  </fieldset>
-  <fieldset>
-    <label for="pwd">Password</label>
-    <input
-      autocomplete="password"
-      bind:value={password}
-      type="password"
-      id="pwd" />
-  </fieldset>
-  <button on:click={submit}>Submit</button>
+  <form>
+    <fieldset>
+      <label for="email">Email</label>
+      <input autocomplete="email" bind:value={email} type="text" id="email" />
+    </fieldset>
+    <fieldset>
+      <label for="pwd">Password</label>
+      <input
+        autocomplete="password"
+        bind:value={password}
+        type="password"
+        id="pwd" />
+    </fieldset>
+    <button on:click|preventDefault={submit}>Submit</button>
+  </form>
 </div>
 <div class="contentWrapper forgotPwd">
   <a href="/reset/request">Forgot password?</a>
