@@ -1,5 +1,4 @@
 <script>
-  import Select from "svelte-select";
   import { del } from "../api.js";
   import { stores } from "@sapper/app";
   const { session } = stores();

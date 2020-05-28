@@ -13,8 +13,15 @@
   import { get } from "../../../../api.js";
   import ModelPreview from "../../../../components/ModelPreview.svelte";
 
-  const { page } = stores();
+  const { page, session } = stores();
   const { id } = $page.params;
+
+  const update = async () => {
+    models = await get(
+      `/projects/${id}/models`,
+      $session.user && $session.user.jwt
+    );
+  };
 </script>
 
 <style>
@@ -40,6 +47,6 @@
 </section>
 <section class="contentWrapper">
   {#each models as model}
-    <ModelPreview {model} />
+    <ModelPreview {model} {update} />
   {/each}
 </section>
