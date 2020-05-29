@@ -168,7 +168,7 @@ module.exports = async function (fastify, opts) {
       200: {
         type: "array",
         maxItems: 1,
-        items: { type: "number" },
+        items: { type: "string" },
       },
     },
   };
@@ -180,7 +180,7 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { project_id, reqgroup_id, is_archived, parent_requirement_id } = request.body;
-      return await fastify
+      const requirement_reqgroup_id = (await fastify
         .knex("requirement")
         .where("id", request.params.requirementId)
         .update({
@@ -189,7 +189,17 @@ module.exports = async function (fastify, opts) {
           is_archived,
           parent_requirement_id: parent_requirement_id && fastify.deobfuscateId(parent_requirement_id)
         })
-        .returning("id");
+        .returning("reqgroup_id"))[0];
+
+      await fastify
+        .knex("reqgroup")
+        .where("id", requirement_reqgroup_id)
+        .update({
+          updated_at: new Date(Date.now()),
+          updated_by: request.user.id
+        });
+
+      return ["success"];
     }
   );
 

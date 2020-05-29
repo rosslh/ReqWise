@@ -41,10 +41,11 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("reqgroup")
-        .select("*")
+        .select("*", "per_project_unique_id.readable_id as ppuid")
         .where({
           id: request.params.reqgroupId,
         })
+        .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
         .first();
     }
   );
