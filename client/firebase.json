@@ -1,7 +1,22 @@
 {
   "hosting": {
+    "headers": [
+      {
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800, must-revalidate, s-maxage=2419200, proxy-revalidate, stale-while-revalidate=86400, stale-if-error=604800"
+          }
+        ],
+        "source": "**"
+      }
+    ],
     "public": "static",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "source": "**",
