@@ -21,13 +21,16 @@
     margin: 0;
     margin-bottom: 1rem;
     padding: 0;
-    opacity: 0.1;
+  }
+
+  .skeletonWrapper {
+    opacity: 0.1 !important;
   }
 </style>
 
 <div class={noPadding ? 'noPadding' : 'yesPadding'}>
   {#each Array(rows) as i}
-    <div class={rows > 1 ? 'rowWrapper' : 'noPadding'}>
+    <div class={`skeletonWrapper ${rows > 1 ? 'rowWrapper' : 'noPadding'}`}>
       <Skeleton
         width={inline ? '14rem' : '100%'}
         height={height || '3rem'}

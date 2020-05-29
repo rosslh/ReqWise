@@ -46,7 +46,10 @@
 </script>
 
 <style>
-
+  .secondary {
+    color: var(--secondaryText);
+    font-weight: 400;
+  }
 </style>
 
 <h3>Add a Requirement</h3>
@@ -85,12 +88,16 @@
     </div>
   </fieldset>
   <fieldset>
-    <label for="desc">Reason for change</label>
+    <label for="desc">
+      Reason for requirement
+      <span class="secondary">(optional)</span>
+    </label>
     <input
       type="text"
       id="rationale"
       name="rationale"
       class="newReqInput"
+      placeholder="e.g. Discussed with client"
       bind:value={rationale} />
   </fieldset>
   <button class="button-create" on:click|preventDefault|once={addReq}>
