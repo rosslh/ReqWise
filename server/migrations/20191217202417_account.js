@@ -255,6 +255,7 @@ exports.down = function (knex) {
     knex.schema.dropTable("reqversion"),
     knex.schema.dropTable("requirement"),
     knex.schema.dropTable("reqgroup"),
+    knex.schema.dropTable("per_project_unique_id"),
     knex.schema.dropTable("project"),
     knex.schema.dropTable("account_team"),
     knex.schema.dropTable("team"),
