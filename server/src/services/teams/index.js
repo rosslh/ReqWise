@@ -598,6 +598,14 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       await Promise.all(businessReqgroupSeeds.map(async (reqgroup, i) => {
+        const ppuid_id = (await fastify
+          .knex("per_project_unique_id")
+          .insert({
+            project_id,
+            readable_id: i + 1
+          })
+          .returning("id"))[0];
+
         await fastify
           .knex("reqgroup")
           .insert({
@@ -605,7 +613,7 @@ module.exports = async function (fastify, opts) {
             name: reqgroup.name,
             description: reqgroup.description,
             type: "business",
-            per_project_unique_id: i + 1,
+            ppuid_id,
             isMaxOneRequirement: reqgroup.isMaxOneRequirement,
             isDeletable: false,
             isPrioritized: false,

@@ -98,6 +98,12 @@
     height: 1.8rem;
     width: 1.8rem;
   }
+
+  .modelPpuid {
+    color: var(--secondaryText);
+    font-weight: 300;
+    margin-left: 0.5rem;
+  }
 </style>
 
 <div class="modelPreview">
@@ -112,7 +118,10 @@
     {@html model.svg}
   </div>
   <div class="textContent">
-    <h3>{model.name}</h3>
+    <h3>
+      {model.name}
+      <span class="modelPpuid">#{model.ppuid}</span>
+    </h3>
     <p>{model.description}</p>
   </div>
   <div class="footer">

@@ -127,8 +127,9 @@ module.exports = async function (fastify, opts) {
       const { type } = request.query;
       return await fastify.knex
         .from("reqgroup")
-        .select("*", "per_project_unique_id as ppuid")
-        .where({ project_id: request.params.projectId, type });
+        .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
+        .where({ "reqgroup.project_id": request.params.projectId, type });
     }
   );
 
@@ -159,8 +160,9 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("model")
-        .select("*")
-        .where({ project_id: request.params.projectId });
+        .select("model.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "model.ppuid_id")
+        .where({ "model.project_id": request.params.projectId });
     }
   );
 
@@ -205,7 +207,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("requirement")
-        .select("*", "per_project_unique_id as ppuid")
+        .select("*")
         .where({ is_archived: true, project_id: request.params.projectId });
     }
   );
@@ -254,13 +256,21 @@ module.exports = async function (fastify, opts) {
       const maxPpuid =
         (
           await fastify
-            .knex("reqgroup")
+            .knex("per_project_unique_id")
             .where({ project_id })
-            .max("per_project_unique_id")
+            .max("readable_id")
             .first()
         ).max || 0;
 
       await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
+
+      const ppuid_id = (await fastify
+        .knex("per_project_unique_id")
+        .insert({
+          project_id,
+          readable_id: maxPpuid + 1
+        })
+        .returning("id"))[0];
 
       return await fastify
         .knex("reqgroup")
@@ -268,7 +278,7 @@ module.exports = async function (fastify, opts) {
           project_id,
           name: capitalizeFirstLetter(name),
           type,
-          per_project_unique_id: maxPpuid + 1,
+          ppuid_id,
           created_by: request.user.id,
           updated_by: request.user.id,
         })
@@ -316,6 +326,21 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name, description, svg } = request.body;
       const { projectId: project_id } = request.params;
+      const maxPpuid =
+        (
+          await fastify
+            .knex("per_project_unique_id")
+            .where({ project_id })
+            .max("readable_id")
+            .first()
+        ).max || 0;
+      const ppuid_id = (await fastify
+        .knex("per_project_unique_id")
+        .insert({
+          project_id,
+          readable_id: maxPpuid + 1
+        })
+        .returning("id"))[0];
 
       return await fastify
         .knex("model")
@@ -323,6 +348,7 @@ module.exports = async function (fastify, opts) {
           project_id,
           name,
           description,
+          ppuid_id,
           created_by: request.user.id,
           updated_by: request.user.id,
           svg

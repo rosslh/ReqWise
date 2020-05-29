@@ -41,7 +41,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("reqgroup")
-        .select("*", "per_project_unique_id as ppuid")
+        .select("*")
         .where({
           id: request.params.reqgroupId,
         })
@@ -220,23 +220,26 @@ module.exports = async function (fastify, opts) {
         "requirement.parent_requirement_id",
         "requirement.reqgroup_id",
         "requirement.project_id",
-        "requirement.per_project_unique_id as ppuid",
         "requirement.is_archived",
         "reqversion.account_id",
         "reqversion.priority",
         "reqversion.status",
         "reqversion.description",
         "reqversion.created_at",
+        "per_project_unique_id.readable_id as ppuid"
       ]
 
       const result = fastify.knex.withRecursive('ancestors', (qb) => {
-        qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("requirement.per_project_unique_id::text as hierarchical_id")).from('requirement')
+        qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
           .where('requirement.parent_requirement_id', null)
           .andWhere("reqgroup_id", request.params.reqgroupId)
           .andWhere("is_archived", false)
           .join("reqversion", getReqversion)
+          .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
           .union((qb) => {
-            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', requirement.per_project_unique_id::text) as hierarchicalId")).from('requirement').join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
+            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', LPAD(per_project_unique_id.readable_id::text, 5, '0')) as hierarchical_id")).from('requirement')
+              .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+              .join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
           })
       }).select('*').from('ancestors').orderBy('hierarchical_id');
 
@@ -310,11 +313,19 @@ module.exports = async function (fastify, opts) {
         const maxPpuid =
           (
             await fastify
-              .knex("requirement")
+              .knex("per_project_unique_id")
               .where({ project_id })
-              .max("per_project_unique_id")
+              .max("readable_id")
               .first()
           ).max || 0;
+
+        const ppuid_id = (await fastify
+          .knex("per_project_unique_id")
+          .insert({
+            project_id,
+            readable_id: maxPpuid + 1
+          })
+          .returning("id"))[0];
 
         const requirement_id = (
           await fastify
@@ -322,7 +333,7 @@ module.exports = async function (fastify, opts) {
             .insert({
               reqgroup_id,
               project_id,
-              per_project_unique_id: maxPpuid + 1,
+              ppuid_id,
               parent_requirement_id
             })
             .returning("id")

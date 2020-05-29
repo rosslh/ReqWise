@@ -92,6 +92,11 @@ exports.up = function (knex) {
     knex.schema.createTable("reqgroup", (table) => {
       table.increments("id").primary();
       table
+        .integer("ppuid_id")
+        .references("per_project_unique_id.id")
+        .unsigned()
+        .notNullable(); /* uniqueness enforced in business logic */
+      table
         .integer("project_id")
         .references("project.id")
         .onUpdate("CASCADE")
@@ -99,7 +104,6 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.string("name").notNullable();
-      table.integer("per_project_unique_id").notNullable().unsigned();
       table.string("description", 2000);
       table.boolean("isMaxOneRequirement").defaultTo(false);
       table.boolean("isDeletable").defaultTo(true);
@@ -117,6 +121,11 @@ exports.up = function (knex) {
     knex.schema.createTable("requirement", (table) => {
       table.increments("id").primary();
       table
+        .integer("ppuid_id")
+        .references("per_project_unique_id.id")
+        .unsigned()
+        .notNullable(); /* uniqueness enforced in business logic */
+      table
         .integer("reqgroup_id")
         .references("reqgroup.id")
         .onUpdate("CASCADE")
@@ -133,7 +142,6 @@ exports.up = function (knex) {
         .integer("parent_requirement_id")
         .references("requirement.id")
         .unsigned();
-      table.integer("per_project_unique_id").notNullable().unsigned();
       table.boolean("is_archived").defaultTo(false);
     }),
     knex.schema.createTable("reqversion", (table) => {
@@ -195,6 +203,11 @@ exports.up = function (knex) {
     }),
     knex.schema.createTable("model", (table) => {
       table.increments("id").primary();
+      table
+        .integer("ppuid_id")
+        .references("per_project_unique_id.id")
+        .unsigned()
+        .notNullable(); /* uniqueness enforced in business logic */
       table.string("name").notNullable();
       table.string("description");
       table.text("svg");
@@ -214,6 +227,19 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
     }),
+    knex.schema.createTable("per_project_unique_id", (table) => {
+      table.increments("id").primary();
+      table
+        .integer("project_id")
+        .references("project.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table.integer("readable_id")
+        .unsigned().notNullable();
+      table.unique(["project_id", "readable_id"]);
+    })
   ]);
 };
 
