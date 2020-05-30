@@ -24,7 +24,7 @@ const expressServer = express()
       name: "__session", // this name is required by GCP cloud functions
       secret: "replace-this-secret-1aqwsedrftgyhu",
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true, // TODO: investigate why disabling this setting breaks logout button
       cookie: {
         maxAge: 31536000,
       },
