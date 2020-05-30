@@ -7,7 +7,8 @@
     "test": "tap test/**/*.test.js",
     "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js",
     "dev": "fastify start -l info -P -w src/index.js --port 3001",
-    "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise=tcp:1111"
+    "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise=tcp:1111",
+    "lint": "eslint src/**/*.js"
   },
   "engines": {
     "node": "12.x"
@@ -41,6 +42,7 @@
     "yargs-parser": "^16.0.0"
   },
   "devDependencies": {
+    "eslint": "^7.1.0",
     "pre-commit": "^1.2.2",
     "standard": "^14.0.0",
     "tap": "^14.8.2"

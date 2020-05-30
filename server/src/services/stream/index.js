@@ -44,7 +44,7 @@ module.exports = async function (fastify, opts) {
 
             const interval = 6000;
 
-            while (true) {
+            while (true) { // eslint-disable-line no-constant-condition
                 await sleep(interval);
                 const projectUpdated = !!(
                     await fastify.knex
@@ -101,7 +101,7 @@ module.exports = async function (fastify, opts) {
             }
 
             const interval = 2500;
-            while (true) {
+            while (true) { // eslint-disable-line no-constant-condition
                 await sleep(interval);
                 const newComments = (await fastify.knex
                     .from("comment")
