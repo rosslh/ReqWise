@@ -7,7 +7,7 @@
   export let update;
   export let close;
 
-  $: deleteModel = async e => {
+  $: deleteModel = async () => {
     await del(`/models/${model.id}`, $session.user && $session.user.jwt);
     await update();
     close();

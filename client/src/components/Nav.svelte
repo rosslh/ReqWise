@@ -1,5 +1,5 @@
 <script>
-  import { stores, goto } from "@sapper/app";
+  import { stores } from "@sapper/app";
 
   import MdMenu from "svelte-icons/md/MdMenu.svelte";
 

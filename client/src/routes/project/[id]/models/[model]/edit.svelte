@@ -1,5 +1,6 @@
 <script context="module">
-  export async function preload({ params, path }, { user }) {
+  import { get } from "../../../../../api.js";
+  export async function preload({ params, _path }, { user }) {
     const model = await get(`/models/${params.model}`, user && user.jwt);
     return { model };
   }
@@ -7,7 +8,7 @@
 
 <script>
   export let model;
-  import { get, put } from "../../../../../api.js";
+  import { put } from "../../../../../api.js";
   import DiagramEditor from "../../../../../components/DiagramEditor.svelte";
 
   import { stores, goto } from "@sapper/app";

@@ -9,13 +9,12 @@
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
 
-  import { put } from "../api.js";
-
   export let selectedReqs;
   export let update;
   export let isPrioritized;
 
-  const moveToReqgroup = async newReqgroupId => {};
+  const moveToReqgroup = async newReqgroupId => newReqgroupId;
+
   const changeStatus = async () => {
     modalContent.set(ChangeStatusModal);
     modalProps.set({ selectedReqs, update });

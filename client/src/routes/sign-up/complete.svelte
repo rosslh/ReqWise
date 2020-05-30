@@ -2,7 +2,7 @@
   // the (optional) preload function takes a
   // `{ path, params, query }` object and turns it into
   // the data we need to render the page
-  export async function preload(page, session) {
+  export async function preload(page, _session) {
     // the `slug` parameter is available because this file
     // is called [slug].svelte
     const { token, email } = page.query;
@@ -13,7 +13,7 @@
 
 <script>
   import { goto, stores } from "@sapper/app";
-  import { put, post } from "../../api";
+  import { put } from "../../api";
 
   export let token;
   export let email;
@@ -38,7 +38,7 @@
         $session.user = { jwt: r.token, id: r.userId };
         goto("/teams");
       })
-      .catch(err => alert("Incorrect email or password"));
+      .catch(() => alert("Incorrect email or password"));
   };
 </script>
 

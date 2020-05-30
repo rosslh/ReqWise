@@ -1,10 +1,7 @@
 <script>
   import FaRegComment from "svelte-icons/fa/FaRegComment.svelte";
-  import FaGithub from "svelte-icons/fa/FaGithub.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
-  import FaRegClock from "svelte-icons/fa/FaRegClock.svelte";
-  import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
   import FaGripVertical from "svelte-icons/fa/FaGripVertical.svelte";
 

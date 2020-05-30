@@ -1,5 +1,5 @@
 <script>
-  import { get, post } from "../../../api.js";
+  import { get } from "../../../api.js";
   import { projectShouldUpdate } from "../../../stores.js";
   import { stores } from "@sapper/app";
 

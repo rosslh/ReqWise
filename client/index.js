@@ -14,7 +14,7 @@ expressServer.get('/', (request, response) => {
         )
         response.send(expressServer)
     } catch (error) {
-        console.error('error in Sapper SSR function: ', error)
+        console.error('Error in Sapper SSR function: ', error)
     }
 })
 

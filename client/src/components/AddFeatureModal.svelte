@@ -9,7 +9,7 @@
 
   let description = "";
 
-  $: addFeature = async e => {
+  $: addFeature = async () => {
     await post(
       `/projects/${id}/reqgroups`,
       {

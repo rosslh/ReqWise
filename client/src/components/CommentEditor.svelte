@@ -22,7 +22,7 @@
           theme: "snow" // or 'bubble'
         });
 
-        quill.on("text-change", (delta, oldDelta, source) => {
+        quill.on("text-change", (_delta, _oldDelta, _source) => {
           quillDelta = quill.getContents();
           plaintext = container.innerText;
         });

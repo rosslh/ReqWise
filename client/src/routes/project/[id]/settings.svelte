@@ -15,9 +15,11 @@
   });
 
   const deleteProject = async () => {
-    await del(`/projects/${id}`, $session.user && $session.user.jwt).then(r => {
-      goto(`/team/${team_id}`);
-    });
+    await del(`/projects/${id}`, $session.user && $session.user.jwt).then(
+      () => {
+        goto(`/team/${team_id}`);
+      }
+    );
   };
 </script>
 

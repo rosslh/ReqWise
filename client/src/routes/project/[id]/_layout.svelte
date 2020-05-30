@@ -1,4 +1,5 @@
 <script context="module">
+  import { get } from "../../../api.js";
   export async function preload({ params, path }, { user }) {
     if (!user) {
       return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
@@ -18,7 +19,7 @@
     reqgroupsToUpdate,
     projectShouldUpdate
   } from "../../../stores.js";
-  import { get, stream } from "../../../api.js";
+  import { stream } from "../../../api.js";
 
   export let project;
   $currentProject = project;
@@ -28,8 +29,6 @@
   $: ({ path, params } = $page);
   $: tab = path.split("/").pop();
   $: id = params.id;
-
-  let title = null;
 
   let closeStream;
 

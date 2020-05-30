@@ -7,7 +7,7 @@
   export let update;
   export let close;
 
-  $: deleteFeature = async e => {
+  $: deleteFeature = async () => {
     await del(`/reqgroups/${reqgroupId}`, $session.user && $session.user.jwt);
     await update();
     close();

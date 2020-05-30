@@ -5,7 +5,6 @@
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
-  import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaShapes from "svelte-icons/fa/FaShapes.svelte";
   import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
@@ -14,8 +13,6 @@
   export let name;
   export let id;
   export let tab;
-
-  import Skeleton from "../components/Skeleton.svelte";
 
   const tabs = [
     {

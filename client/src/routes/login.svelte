@@ -27,7 +27,7 @@
           goto("/teams");
         }
       })
-      .catch(err => alert("Incorrect email or password"));
+      .catch(_err => alert("Incorrect email or password"));
   };
 </script>
 

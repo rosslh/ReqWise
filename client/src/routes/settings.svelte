@@ -1,4 +1,5 @@
 <script context="module">
+  import { get } from "../api.js";
   export async function preload(page, session) {
     if (!session.user) {
       return this.redirect(
@@ -17,10 +18,10 @@
 <script>
   import Select from "svelte-select";
 
-  import { get, put } from "../api.js";
+  import { put } from "../api.js";
 
   import { goto, stores } from "@sapper/app";
-  const { session, page } = stores();
+  const { session } = stores();
   import { onMount } from "svelte";
 
   export let user;
@@ -56,7 +57,7 @@
       }
     })
       .then(r => r.json())
-      .then(r => {
+      .then(() => {
         $session.user = {
           ...$session.user,
           theme: theme.value

@@ -5,7 +5,7 @@
 
   const submit = () => {
     post(`/users/${encodeURIComponent(email)}/resets`, {})
-      .then(r =>
+      .then(() =>
         alert(
           "To finish resetting your password, please follow the link emailed to you."
         )

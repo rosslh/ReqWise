@@ -34,8 +34,6 @@
     );
   };
 
-  let showSelectTools = true;
-
   let selectedReqs = [];
 
   const toggleReq = id => {
@@ -136,10 +134,10 @@
             console.error("Illegal drag and drop");
           }
         });
-        draggable.on("drag:out", e => {
+        draggable.on("drag:out", () => {
           newParentRequirement = undefined;
         });
-        draggable.on("drag:stop", e => {
+        draggable.on("drag:stop", () => {
           if (newParentRequirement) {
             updateReqParent(draggingRequirement, newParentRequirement);
           }

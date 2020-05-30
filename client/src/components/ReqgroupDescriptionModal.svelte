@@ -1,6 +1,4 @@
 <script>
-  import { stores } from "@sapper/app";
-
   export let name;
   export let description;
 </script>

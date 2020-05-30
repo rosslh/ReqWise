@@ -12,11 +12,10 @@
 
 <script>
   import { stores, goto } from "@sapper/app";
-  import { onMount } from "svelte";
 
   import { modalContent, modalProps } from "../../stores.js";
   import { get, put, del } from "../../api.js";
-  const { page, session } = stores();
+  const { session } = stores();
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
   import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
