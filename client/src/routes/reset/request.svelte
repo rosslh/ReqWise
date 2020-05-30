@@ -14,6 +14,9 @@
   };
 </script>
 
+<svelte:head>
+  <title>Reset password - ReqWise</title>
+</svelte:head>
 <div class="contentWrapper">
   <h2>Request password reset</h2>
   <form>

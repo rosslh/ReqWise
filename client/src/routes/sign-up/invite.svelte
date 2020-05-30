@@ -10,6 +10,9 @@
   };
 </script>
 
+<svelte:head>
+  <title>Sign up - ReqWise</title>
+</svelte:head>
 <div class="contentWrapper">
   <h2>Sign up</h2>
   <form>

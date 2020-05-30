@@ -7,7 +7,9 @@
     font-size: 2rem;
   }
 </style>
-
+<svelte:head>
+  <title>ReqWise | Requirements Management</title>
+</svelte:head>
 <div class="contentWrapper">
   <h1>ReqWise</h1>
   <p class="first">The next-gen requirements management tool.</p>

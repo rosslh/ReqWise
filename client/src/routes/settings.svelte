@@ -72,6 +72,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>Settings - ReqWise</title>
+</svelte:head>
 <div class="contentWrapper">
   <h2>Settings</h2>
   <form>

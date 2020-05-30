@@ -37,6 +37,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>Login - ReqWise</title>
+</svelte:head>
 <div class="contentWrapper panel">
   <h2>Log in</h2>
   <form>

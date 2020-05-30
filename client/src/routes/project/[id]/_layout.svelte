@@ -126,6 +126,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>{$currentProject.name} - ReqWise</title>
+</svelte:head>
 <div class={$sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>
   <div class="projectColumnRight">
     <slot />

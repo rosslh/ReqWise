@@ -68,6 +68,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>Teams - ReqWise</title>
+</svelte:head>
 <div class="contentWrapper">
   <h1>My Teams</h1>
   {#await teams}

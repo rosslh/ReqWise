@@ -80,6 +80,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>{name} - ReqWise</title>
+</svelte:head>
 <div class="contentWrapper">
   <h1>{title}</h1>
   <section>
