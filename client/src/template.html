@@ -5,63 +5,39 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <meta name="theme-color" content="#333333" />
-
-  %sapper.base%
-
-  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,200..700;1,200..700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="global.css" />
-  <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
-  <link rel="icon" type="image/png" href="w-logo.png" />
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="prefetch stylesheet" />
-
-  <!-- Sapper generates a <style> tag containing critical CSS
-	     for the current page. CSS for the rest of the app is
-	     lazily loaded when it precaches secondary pages -->
-  %sapper.styles%
-
-  <!-- This contains the contents of the <svelte:head> component, if
-	     the current page has one -->
-  %sapper.head%
-
-  <!-- HTML Meta Tags -->
   <meta name="description" content="The next-gen requirements management tool. Coming Summer 2020.">
-
-  <!-- Google / Search Engine Tags -->
   <meta itemprop="name" content="ReqWise | Requirements Management">
   <meta itemprop="description" content="The next-gen requirements management tool. Coming Summer 2020.">
   <meta itemprop="image" content="https://reqwise.com/metadataImage.png">
-
-  <!-- Facebook Meta Tags -->
   <meta property="og:url" content="https://reqwise.com">
   <meta property="og:type" content="website">
   <meta property="og:title" content="ReqWise | Requirements Management">
   <meta property="og:description" content="The next-gen requirements management tool. Coming Summer 2020.">
   <meta property="og:image" content="https://reqwise.com/metadataImage.png">
-
-  <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ReqWise | Requirements Management">
   <meta name="twitter:description" content="The next-gen requirements management tool. Coming Summer 2020.">
   <meta name="twitter:image" content="https://reqwise.com/metadataImage.png">
 
-  <!-- Meta Tags Generated via http://heymeta.com -->
+  %sapper.base%
+
+  <link rel="stylesheet" href="global.css" />
+  <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
+  <link rel="icon" type="image/png" href="w-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,200..700;1,200..700&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="prefetch stylesheet" />
+
+  %sapper.styles%
+  %sapper.head%
 </head>
 
 <body>
-  <!-- The application will be rendered inside this element,
-	     because `src/client.js` references it -->
   <div id="sapper">%sapper.html%</div>
-
   <!-- The core Firebase JS SDK is always required and must be listed first -->
   <script src="/__/firebase/7.13.2/firebase-app.js"></script>
-
   <!-- Initialize Firebase -->
   <script src="/__/firebase/init.js"></script>
-
-  <!-- Sapper creates a <script> tag containing `src/client.js`
-	     and anything else it needs to hydrate the app and
-	     initialise the router -->
   %sapper.scripts%
 </body>
 

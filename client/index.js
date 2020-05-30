@@ -18,5 +18,4 @@ expressServer.get('/', (request, response) => {
     }
 })
 
-
 exports.ssr = functions.runWith({ memory: '2GB', timeoutSeconds: 540 }).https.onRequest(expressServer);
