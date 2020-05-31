@@ -1,10 +1,3 @@
-<script context="module">
-  import { setLoginParam } from "../utils.js";
-  export async function preload(page, { user }) {
-    setLoginParam(page, user, this.redirect);
-  }
-</script>
-
 <style>
   p.first {
     font-size: 2.5rem;

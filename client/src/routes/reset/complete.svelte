@@ -1,8 +1,5 @@
 <script context="module">
-  import { setLoginParam } from "../../utils.js";
   export async function preload(page, session) {
-    setLoginParam(page, session.user, this.redirect);
-
     const { token, email } = page.query;
 
     return { token, email };

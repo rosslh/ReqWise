@@ -1,14 +1,3 @@
-<script context="module">
-  import { setLoginParam } from "../../utils.js";
-  export async function preload(page, { user }) {
-    setLoginParam(page, user, this.redirect);
-
-    const { token, email } = page.query;
-
-    return { token, email };
-  }
-</script>
-
 <script>
   import { goto, stores } from "@sapper/app";
   import { put } from "../../api";
