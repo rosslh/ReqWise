@@ -179,8 +179,9 @@
     width: 100%;
     overflow-x: auto;
     list-style-type: none;
-    padding: 1rem 0 1.25rem; /* account for child negative margin */
+    padding: 1rem 0 1.25rem; /* account for child placeholder negative margin */
     position: relative;
+    margin-left: -1.2rem; /* account for parent padding */
   }
 </style>
 

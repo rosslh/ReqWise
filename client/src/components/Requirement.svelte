@@ -142,7 +142,7 @@
   }
 
   li.requirement {
-    margin: 0.2rem 0 0 -0.6rem;
+    margin: 0.2rem 0;
     border-radius: 0.4rem;
     cursor: pointer;
     display: flex;
@@ -157,7 +157,7 @@
 
     .nestedPlaceholder.depth-#{$i} {
       left: 1rem + 3rem * $i;
-      width: calc(100% - (1rem + 3rem * #{$i}));
+      width: calc(95% - (2rem + 3rem * #{$i}));
     }
   }
 

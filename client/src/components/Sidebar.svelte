@@ -133,7 +133,7 @@
   div.separator {
     height: 1rem;
     border-top: 0.1rem solid var(--borderColor);
-    margin: 1rem -1.5rem 0;
+    margin: 1rem 0 0;
   }
 
   nav {
@@ -141,7 +141,6 @@
     height: 100%;
     position: relative;
     overflow-y: auto;
-    overflow-x: hidden;
     font-size: 1.5rem;
   }
 
