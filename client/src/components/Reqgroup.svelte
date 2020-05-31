@@ -178,9 +178,9 @@
   ul.reqWrapper {
     width: 100%;
     overflow-x: auto;
-    margin: 1rem -1.2rem 0;
     list-style-type: none;
-    padding: 1rem 0 1.25rem; /* account for placeholder negative margin */
+    padding: 1rem 0 1.25rem; /* account for child negative margin */
+    position: relative;
   }
 </style>
 

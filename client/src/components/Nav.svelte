@@ -99,7 +99,7 @@
     </a>
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
-        <arel="prefetch"  href="/sign-up/invite">Sign Up</a>
+        <a rel="prefetch" href="/sign-up/invite">Sign Up</a>
 
         <a rel="prefetch" href="/login">Login</a>
       {:else}

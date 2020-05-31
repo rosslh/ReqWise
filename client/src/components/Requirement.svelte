@@ -142,21 +142,22 @@
   }
 
   li.requirement {
-    margin: 0.2rem 0;
+    margin: 0.2rem 0 0 -0.6rem;
     border-radius: 0.4rem;
     cursor: pointer;
-    position: relative;
     display: flex;
     align-items: center;
   }
 
   @for $i from 0 through 10 {
     li.requirement.depth-#{$i} {
-      left: 3rem * $i;
+      transform: translateX(3rem * $i);
+      margin-right: 3rem * $i;
     }
 
     .nestedPlaceholder.depth-#{$i} {
       left: 1rem + 3rem * $i;
+      width: calc(100% - (1rem + 3rem * #{$i}));
     }
   }
 

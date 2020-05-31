@@ -62,7 +62,7 @@
         type="password"
         id="pwd" />
     </fieldset>
-    <button on:click|preventDefault={submit}>Submit</button>
+    <button on:click|preventDefault|once={submit}>Submit</button>
   </form>
 </div>
 <div class="contentWrapper forgotPwd">
