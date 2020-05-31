@@ -83,7 +83,7 @@
         </button>
       </div>
     {/if}
-    <a class="logoWrapper" href=".">
+    <a rel="prefetch" class="logoWrapper" href=".">
       {#if $session.user && $session.user.theme === 'dark'}
         <img src="logo-white.png" alt="ReqWise" />
       {:else if $session.user && $session.user.theme === 'system'}
@@ -99,12 +99,12 @@
     </a>
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
-        <a href="/sign-up/invite">Sign Up</a>
+        <arel="prefetch"  href="/sign-up/invite">Sign Up</a>
 
-        <a href="/login">Login</a>
+        <a rel="prefetch" href="/login">Login</a>
       {:else}
-        <a href="/teams">My Teams</a>
-        <a href="/settings">Settings</a>
+        <a rel="prefetch" href="/teams">My Teams</a>
+        <a rel="prefetch" href="/settings">Settings</a>
         <button class="button button-small button-outline" on:click={logout}>
           Log out
         </button>
