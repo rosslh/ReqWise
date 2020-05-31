@@ -1,3 +1,10 @@
+<script context="module">
+  import { setLoginParam } from "../utils.js";
+  export async function preload(page, { user }) {
+    setLoginParam(page, user, this.redirect);
+  }
+</script>
+
 <script>
   import { goto, stores } from "@sapper/app";
   const { session, page } = stores();

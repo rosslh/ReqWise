@@ -8,10 +8,9 @@ const oneMonth = oneWeek * 4
 
 expressServer.get('/', (request, response) => {
     try {
-        console.log("User", request.user)
         response.set(
             'Cache-Control',
-            `public, no-cache, max-age=${oneWeek}, must-revalidate, s-maxage=${oneMonth}, proxy-revalidate, stale-while-revalidate=${oneDay}, stale-if-error=${oneWeek}`
+            `public, max-age=${oneWeek}, must-revalidate, s-maxage=${oneMonth}, proxy-revalidate, stale-while-revalidate=${oneDay}, stale-if-error=${oneWeek}`
         );
         response.send(expressServer)
     } catch (error) {

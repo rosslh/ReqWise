@@ -1,10 +1,8 @@
 <script context="module">
-  // the (optional) preload function takes a
-  // `{ path, params, query }` object and turns it into
-  // the data we need to render the page
-  export async function preload(page, _session) {
-    // the `slug` parameter is available because this file
-    // is called [slug].svelte
+  import { setLoginParam } from "../../utils.js";
+  export async function preload(page, session) {
+    setLoginParam(page, session.user, this.redirect);
+
     const { token, email } = page.query;
 
     return { token, email };
