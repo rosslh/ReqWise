@@ -11,7 +11,7 @@
       method: "POST",
       credentials: "include"
     });
-    $session.user = undefined;
+    $session.user = null;
     // goto("/login");
   };
 </script>
