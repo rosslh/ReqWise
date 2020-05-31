@@ -8,13 +8,17 @@
 
 <script>
   import { post } from "../../api";
+  import SubmitButton from "../../components/SubmitButton.svelte";
 
   let email = "";
 
-  const submit = () => {
-    post(`/users`, { email })
-      .then(() => alert("Please check your email to finish signing up"))
-      .catch(err => alert(JSON.stringify(err)));
+  const submit = async () => {
+    try {
+      await post(`/users`, { email });
+      alert("Please check your email to finish signing up");
+    } catch {
+      alert("Error. Please try again later.");
+    }
   };
 </script>
 
@@ -27,7 +31,7 @@
     <fieldset>
       <label for="email">Email</label>
       <input autocomplete="email" bind:value={email} type="email" id="email" />
-      <button on:click|preventDefault={submit}>Send Invite</button>
+      <SubmitButton handler={submit}>Send Invite</SubmitButton>
     </fieldset>
   </form>
 </div>

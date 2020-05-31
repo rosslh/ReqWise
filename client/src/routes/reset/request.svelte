@@ -7,17 +7,19 @@
 
 <script>
   import { post } from "../../api";
+  import SubmitButton from "../../components/SubmitButton.svelte";
 
   let email = "";
 
-  const submit = () => {
-    post(`/users/${encodeURIComponent(email)}/resets`, {})
-      .then(() =>
-        alert(
-          "To finish resetting your password, please follow the link emailed to you."
-        )
-      )
-      .catch(err => alert(JSON.stringify(err)));
+  const submit = async () => {
+    try {
+      await post(`/users/${encodeURIComponent(email)}/resets`, {});
+      alert(
+        "To finish resetting your password, please follow the link emailed to you."
+      );
+    } catch {
+      alert("Error. Please try again later.");
+    }
   };
 </script>
 
@@ -31,6 +33,6 @@
       <label for="email">Email</label>
       <input autocomplete="email" bind:value={email} type="email" id="email" />
     </fieldset>
-    <button on:click|preventDefault={submit}>Send Reset Request</button>
+    <SubmitButton handler={submit}>Send Reset Request</SubmitButton>
   </form>
 </div>

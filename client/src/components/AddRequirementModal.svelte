@@ -4,6 +4,8 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   export let reqgroupId;
   export let update;
   export let close;
@@ -13,7 +15,6 @@
   let rationale = "";
 
   $: addReq = async e => {
-    e.preventDefault();
     await post(
       `/reqgroups/${reqgroupId}/requirements`,
       {
@@ -100,7 +101,5 @@
       placeholder="e.g. Discussed with client"
       bind:value={rationale} />
   </fieldset>
-  <button class="button-create" on:click|preventDefault|once={addReq}>
-    + Add
-  </button>
+  <SubmitButton handler={addReq}>+ Add</SubmitButton>
 </form>

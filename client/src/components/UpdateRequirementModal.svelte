@@ -5,6 +5,7 @@
   import { get, post } from "../api.js";
   import { onMount } from "svelte";
   import Skeleton from "./Skeleton.svelte";
+  import SubmitButton from "./SubmitButton.svelte";
 
   export let id;
   export let update;
@@ -106,9 +107,7 @@
       <span class="proposed">Proposed</span>
     </label>
   </fieldset>
-  <button
-    class="button-caution"
-    on:click|preventDefault|once={updateRequirement}>
+  <SubmitButton className="button-caution" handler={updateRequirement}>
     Save
-  </button>
+  </SubmitButton>
 </form>

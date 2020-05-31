@@ -1,6 +1,8 @@
 <script>
   import { post } from "../api.js";
   import { stores } from "@sapper/app";
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   const { session } = stores();
 
   export let id;
@@ -29,7 +31,5 @@
     <label for="type">Business Requirement Type</label>
     <input type="text" bind:value={type} id="type" />
   </fieldset>
-  <button class="button-create" on:click|preventDefault|once={addReqGroup}>
-    + Add
-  </button>
+  <SubmitButton handler={addReqGroup}>Add</SubmitButton>
 </form>

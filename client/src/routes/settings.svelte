@@ -17,9 +17,9 @@
 
 <script>
   import Select from "svelte-select";
+  import SubmitButton from "../components/SubmitButton.svelte";
 
   import { put } from "../api.js";
-
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
   import { onMount } from "svelte";
@@ -90,7 +90,7 @@
         items={themeOptions}
         bind:selectedValue={theme} />
     </fieldset>
-    <button on:click|preventDefault={submit}>Submit</button>
+    <SubmitButton handler={submit}>Submit</SubmitButton>
   </form>
 </div>
 <div class="contentWrapper changePassword">

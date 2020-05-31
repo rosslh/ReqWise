@@ -12,6 +12,7 @@
 <script>
   import { goto } from "@sapper/app";
   import { put } from "../../api";
+  import SubmitButton from "../../components/SubmitButton.svelte";
 
   export let token;
   export let email;
@@ -47,7 +48,7 @@
         bind:value={password}
         type="password"
         id="pwd" />
-      <button on:click|preventDefault={submit}>Submit</button>
+      <SubmitButton handler={submit}>Submit</SubmitButton>
     </fieldset>
   </form>
 </div>

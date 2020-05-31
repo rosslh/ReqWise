@@ -7,6 +7,7 @@
   export let update;
 
   import Select from "svelte-select";
+  import SubmitButton from "../components/SubmitButton.svelte";
 
   import { post } from "../api.js";
 
@@ -61,9 +62,7 @@
       class="newReqInput"
       bind:value={rationale} />
   </fieldset>
-  <button
-    class="button-caution"
-    on:click|preventDefault|once={updateRequirements}>
+  <SubmitButton className="button-caution" handler={updateRequirements}>
     Update
-  </button>
+  </SubmitButton>
 </form>

@@ -4,7 +4,6 @@
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
   import { projectShouldUpdate } from "../../../stores.js";
-  import Spinner from "../../../components/Spinner.svelte";
 
   import { modalContent, modalProps } from "../../../stores.js";
   import AddQaGroupModal from "../../../components/AddQaGroupModal.svelte";
@@ -51,9 +50,7 @@
   <button on:click={showAddQaModal}>Add quality attribute</button>
 </section>
 {#await reqgroups}
-  <section class="contentWrapper">
-    <Spinner />
-  </section>
+  <!-- loading -->
 {:then result}
   <section class="contentWrapper">
     {#each result as reqgroup (reqgroup.id)}

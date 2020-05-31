@@ -4,6 +4,7 @@
   const { session, page } = stores();
   const { id: projectId } = $page.params;
   import { post } from "../../../../api.js";
+  import SubmitButton from "../../../../components/SubmitButton.svelte";
 
   let name = "";
   let description = "";
@@ -41,7 +42,7 @@
         <label for="desc">Description</label>
         <input id="desc" bind:value={description} type="text" />
       </fieldset>
-      <button on:click|preventDefault={startEditing}>Start editing</button>
+      <SubmitButton handler={startEditing}>Start editing</SubmitButton>
     </form>
   {/if}
 </section>

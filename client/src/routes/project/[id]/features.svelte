@@ -5,7 +5,6 @@
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
   import AddFeature from "../../../components/AddFeature.svelte";
-  import Spinner from "../../../components/Spinner.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -42,9 +41,7 @@
   <AddFeature {update} {id} />
 </section>
 {#await reqgroups}
-  <section class="contentWrapper">
-    <Spinner />
-  </section>
+  <!-- loading -->
 {:then result}
   <section class="contentWrapper">
     {#each result as reqgroup (reqgroup.id)}

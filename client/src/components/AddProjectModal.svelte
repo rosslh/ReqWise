@@ -3,6 +3,8 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   export let id;
   export let update;
   export let close;
@@ -25,7 +27,5 @@
     <label for="projectName">Project name</label>
     <input type="text" bind:value={newProjectName} />
   </fieldset>
-  <button class="button-create" on:click|preventDefault|once={submitNewProject}>
-    Create
-  </button>
+  <SubmitButton handler={submitNewProject}>Create</SubmitButton>
 </form>

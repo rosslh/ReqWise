@@ -112,6 +112,14 @@
       <p style="color: red">{error.message}</p>
     </section>
   {/await}
+  <button
+    class="button-create"
+    on:click={() => {
+      modalContent.set(AddTeamModal);
+      modalProps.set({ update });
+    }}>
+    Create team
+  </button>
   <h2>Invites</h2>
   {#await invites}
     <Skeleton rows={2} />
@@ -155,12 +163,4 @@
       <p style="color: red">{error.message}</p>
     </section>
   {/await}
-  <button
-    class="button-create"
-    on:click={() => {
-      modalContent.set(AddTeamModal);
-      modalProps.set({ update });
-    }}>
-    Create team
-  </button>
 </div>

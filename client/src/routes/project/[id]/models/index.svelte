@@ -2,7 +2,6 @@
   import { stores } from "@sapper/app";
   import { get } from "../../../../api.js";
   import ModelPreview from "../../../../components/ModelPreview.svelte";
-  import Spinner from "../../../../components/Spinner.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -42,9 +41,7 @@
   <button class="button button-outline">Upload Model</button>
 </section>
 {#await models}
-  <section class="contentWrapper">
-    <Spinner />
-  </section>
+  <!-- loading -->
 {:then result}
   <section class="contentWrapper">
     {#each result as model (model.id)}

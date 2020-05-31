@@ -2,6 +2,7 @@
   import { put } from "../api.js";
   import { stores } from "@sapper/app";
   const { session } = stores();
+  import SubmitButton from "../components/SubmitButton.svelte";
 
   export let reqgroupId;
   export let updateReqgroup;
@@ -34,7 +35,5 @@
       class="newReqInput"
       bind:value={name} />
   </fieldset>
-  <button class="button-caution" on:click|preventDefault|once={update}>
-    Save
-  </button>
+  <SubmitButton className="button-caution" handler={update}>Save</SubmitButton>
 </form>

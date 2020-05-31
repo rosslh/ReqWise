@@ -19,7 +19,8 @@
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
   import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
-  import Spinner from "../../components/Spinner.svelte";
+  import Skeleton from "../../components/Skeleton.svelte";
+  import SubmitButton from "../../components/SubmitButton.svelte";
 
   export let id;
   export let user;
@@ -94,15 +95,13 @@
         <label for="description">Description</label>
         <input id="description" type="text" bind:value={description} />
       </fieldset>
-      <button on:click|preventDefault={updateTeam}>Update</button>
+      <SubmitButton handler={updateTeam}>Update</SubmitButton>
     </form>
   </section>
   <section>
     <h2>Projects</h2>
     {#await projects}
-      <section class="contentWrapper">
-        <Spinner />
-      </section>
+      <Skeleton rows={3} />
     {:then result}
       <table class="compact">
         <thead>
@@ -121,9 +120,7 @@
         </tbody>
       </table>
     {:catch error}
-      <section class="contentWrapper">
-        <p style="color: red">{error.message}</p>
-      </section>
+      <p style="color: red">{error.message}</p>
     {/await}
     {#if isAdmin}
       <div>
@@ -141,9 +138,7 @@
   <section>
     <h2>Members</h2>
     {#await members}
-      <section class="contentWrapper">
-        <Spinner />
-      </section>
+      <Skeleton rows={3} />
     {:then result}
       <table class="compact">
         <thead>
@@ -183,15 +178,11 @@
         </tbody>
       </table>
     {:catch error}
-      <section class="contentWrapper">
-        <p style="color: red">{error.message}</p>
-      </section>
+      <p style="color: red">{error.message}</p>
     {/await}
     <h3>Invites</h3>
     {#await invites}
-      <section class="contentWrapper">
-        <Spinner />
-      </section>
+      <Skeleton rows={3} />
     {:then result}
       <table class="compact">
         <thead>
@@ -223,9 +214,7 @@
         </tbody>
       </table>
     {:catch error}
-      <section class="contentWrapper">
-        <p style="color: red">{error.message}</p>
-      </section>
+      <p style="color: red">{error.message}</p>
     {/await}
     {#if isAdmin}
       <div>

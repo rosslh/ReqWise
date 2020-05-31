@@ -2,6 +2,8 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   export let selectedReqs;
   export let close;
   export let update;
@@ -76,9 +78,7 @@
       <span class="proposed">Proposed</span>
     </label>
   </fieldset>
-  <button
-    class="button-caution"
-    on:click|preventDefault|once={updateRequirements}>
+  <SubmitButton className="button-caution" handler={updateRequirements}>
     Update
-  </button>
+  </SubmitButton>
 </form>

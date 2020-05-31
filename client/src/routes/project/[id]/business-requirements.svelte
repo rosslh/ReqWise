@@ -8,7 +8,6 @@
 
   import { modalContent, modalProps } from "../../../stores.js";
   import AddBrGroupModal from "../../../components/AddBrGroupModal.svelte";
-  import Spinner from "../../../components/Spinner.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -49,9 +48,7 @@
   <button on:click={showAddBrModal}>Add requirement group</button>
 </section>
 {#await reqgroups}
-  <section class="contentWrapper">
-    <Spinner />
-  </section>
+  <!-- loading -->
 {:then result}
   <section class="contentWrapper">
     {#each result as reqgroup (reqgroup.id)}

@@ -4,6 +4,8 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   export let id;
   export let update;
   export let close;
@@ -53,5 +55,5 @@
       items={attributeOptions}
       bind:selectedValue={attribute} />
   </fieldset>
-  <button class="button-create" on:click={addReqGroup}>+ Add</button>
+  <SubmitButton handler={addReqGroup}>Add</SubmitButton>
 </form>

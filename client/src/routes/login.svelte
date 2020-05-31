@@ -9,32 +9,30 @@
   import { goto, stores } from "@sapper/app";
   const { session, page } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   let email = "";
   let password = "";
 
-  const submit = () => {
-    fetch("auth/login", {
+  const submit = async () => {
+    const r = await fetch("auth/login", {
       method: "POST",
       credentials: "include",
       body: JSON.stringify({ email, password }),
       headers: {
         "Content-Type": "application/json"
       }
-    })
-      .then(r => r.json())
-      .then(r => {
-        $session.user = {
-          jwt: r.token,
-          id: r.userId,
-          theme: r.theme
-        };
-        if ($page.query.redirect) {
-          goto($page.query.redirect);
-        } else {
-          goto("/teams");
-        }
-      })
-      .catch(_err => alert("Incorrect email or password"));
+    }).then(r => r.json());
+    $session.user = {
+      jwt: r.token,
+      id: r.userId,
+      theme: r.theme
+    };
+    if ($page.query.redirect) {
+      goto($page.query.redirect);
+    } else {
+      goto("/teams");
+    }
   };
 </script>
 
@@ -62,7 +60,7 @@
         type="password"
         id="pwd" />
     </fieldset>
-    <button on:click|preventDefault|once={submit}>Submit</button>
+    <SubmitButton handler={submit}>Submit</SubmitButton>
   </form>
 </div>
 <div class="contentWrapper forgotPwd">

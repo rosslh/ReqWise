@@ -3,6 +3,8 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   export let close;
   export let update;
   export let model;
@@ -33,7 +35,5 @@
     <label for="desc">Description</label>
     <input type="text" id="desc" bind:value={description} />
   </fieldset>
-  <button class="button-caution" on:click|preventDefault|once={save}>
-    Save
-  </button>
+  <SubmitButton className="button-caution" handler={save}>Save</SubmitButton>
 </form>

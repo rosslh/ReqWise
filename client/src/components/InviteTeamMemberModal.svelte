@@ -5,6 +5,7 @@
   export let close;
   export let id;
   import { post } from "../api.js";
+  import SubmitButton from "../components/SubmitButton.svelte";
 
   let inviteeEmail = "";
   let isAdmin = false;
@@ -31,8 +32,8 @@
     <label class="label-inline" for="isAdmin">Make administrator</label>
   </fieldset>
   <fieldset>
-    <button class="button-create" on:click|preventDefault|once={inviteMember}>
+    <SubmitButton className="button-create" handler={inviteMember}>
       Invite
-    </button>
+    </SubmitButton>
   </fieldset>
 </form>

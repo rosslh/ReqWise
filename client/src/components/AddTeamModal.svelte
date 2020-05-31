@@ -6,6 +6,8 @@
   export let close;
   import { post } from "../api.js";
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   let teamName = "";
   let teamDesc = "";
 
@@ -31,8 +33,6 @@
     <textarea bind:value={teamDesc} />
   </fieldset>
   <fieldset>
-    <button class="button-create" on:click|preventDefault|once={submitNewTeam}>
-      Create
-    </button>
+    <SubmitButton handler={submitNewTeam}>Create</SubmitButton>
   </fieldset>
 </form>

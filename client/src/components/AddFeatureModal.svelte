@@ -3,6 +3,8 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
+  import SubmitButton from "../components/SubmitButton.svelte";
+
   export let id;
   export let update;
   export let close;
@@ -34,7 +36,5 @@
       class="newReqInput"
       bind:value={description} />
   </fieldset>
-  <button class="button-create" on:click|preventDefault|once={addFeature}>
-    + Add
-  </button>
+  <SubmitButton handler={addFeature}>+ Add</SubmitButton>
 </form>
