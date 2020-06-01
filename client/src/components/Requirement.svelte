@@ -61,7 +61,6 @@
 
 <style lang="scss">
   li.requirement > div.iconCell {
-    padding: 0 !important;
     border: none;
 
     button.commentIconWrapper {
@@ -87,11 +86,13 @@
     padding: 0.6rem 1.6rem;
     border-bottom: 0.1rem solid var(--borderColor);
     margin: 0;
+    height: 4.5rem;
+    display: flex;
+    align-items: center;
   }
 
   li.requirement > div.desc {
     flex-grow: 1;
-    padding-left: 0;
   }
 
   li.requirement > div.ppuid {
@@ -109,7 +110,7 @@
 
   li.requirement > div.reqHandle {
     visibility: hidden;
-    padding-right: 0.3rem;
+    padding-right: 0.5rem;
     padding-left: 0.5rem;
     cursor: grab;
     color: var(--secondaryText);
@@ -119,6 +120,11 @@
     }
     &:active {
       cursor: grabbing;
+    }
+
+    .gripWrapper {
+      height: 1.7rem;
+      width: 1.7rem;
     }
   }
 
@@ -142,10 +148,20 @@
   }
 
   li.requirement.selected {
-    background-color: var(--backdrop);
+    div:not(:first-child) {
+      background-color: var(--backdrop);
+    }
+    div:nth-child(2) {
+      border-top-left-radius: 0.4rem;
+      border-bottom-left-radius: 0.4rem;
+    }
+    div:last-child {
+      border-top-right-radius: 0.4rem;
+      border-bottom-right-radius: 0.4rem;
+    }
   }
 
-  li.requirement.selected:hover {
+  li.requirement.selected:hover > div:not(:first-child) {
     background-color: var(--background2);
   }
 
@@ -156,7 +172,6 @@
   li.requirement {
     font-size: 1.4rem;
     margin: 0.2rem 0;
-    border-radius: 0.4rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -185,7 +200,7 @@
     box-sizing: content-box;
     background-clip: padding-box;
     &:hover {
-      height: 5rem;
+      height: 4.5rem;
       opacity: 1;
       background-color: var(--backdrop);
       border: 1rem solid transparent;
@@ -212,7 +227,7 @@
   on:click={() => toggleReq(requirement.id)}
   data-reqid={requirement.id}>
   <div class="reqHandle">
-    <div class="iconWrapper">
+    <div class="gripWrapper">
       <FaGripVertical />
     </div>
   </div>

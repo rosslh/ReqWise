@@ -113,7 +113,7 @@
           handle: ".reqHandle",
           draggable: ".draggable",
           mirror: {
-            cursorOffsetX: 0,
+            cursorOffsetX: 15,
             cursorOffsetY: 15
           }
         });
