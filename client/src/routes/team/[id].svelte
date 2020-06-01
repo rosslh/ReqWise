@@ -14,7 +14,7 @@
   import { stores, goto } from "@sapper/app";
 
   import { modalContent, modalProps } from "../../stores.js";
-  import { get, put, del } from "../../api.js";
+  import { get, put, del, post } from "../../api.js";
   const { session } = stores();
 
   import AddProjectModal from "../../components/AddProjectModal.svelte";
@@ -70,6 +70,16 @@
 
   const deleteMember = async memberId => {
     await del(`/teams/${id}/members/${memberId}`, user && user.jwt);
+    update();
+  };
+
+  const makeAdmin = async accountId => {
+    await post(`/teams/${id}/admins`, { accountId }, user && user.jwt);
+    update();
+  };
+
+  const removeAdmin = async memberId => {
+    await del(`/teams/${id}/admins/${memberId}`, user && user.jwt);
     update();
   };
 </script>
@@ -169,6 +179,22 @@
                         on:click={() => deleteMember(member.id)}>
                         Remove member
                       </button>
+                      &nbsp;
+                      {#if !member.isAdmin}
+                        <button
+                          class="button-caution button-small button-outline"
+                          style="margin: 0;"
+                          on:click={() => makeAdmin(member.id)}>
+                          Make admin
+                        </button>
+                      {:else}
+                        <button
+                          class="button-caution button-small button-outline"
+                          style="margin: 0;"
+                          on:click={() => removeAdmin(member.id)}>
+                          Remove as admin
+                        </button>
+                      {/if}
                     {/if}
                   {:else}(You){/if}
                 </td>

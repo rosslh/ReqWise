@@ -1,3 +1,10 @@
+<script context="module">
+  export async function preload(page, { user }) {
+    const { token, email } = page.query;
+    return { token, email };
+  }
+</script>
+
 <script>
   import { goto, stores } from "@sapper/app";
   import { put } from "../../api";

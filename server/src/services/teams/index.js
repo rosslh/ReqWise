@@ -262,6 +262,94 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const postTeamAdminSchema = {
+    body: {
+      type: "object",
+      properties: {
+        accountId: { type: ["number", "string"] },
+      }
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/teams/:teamId/admins",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: postTeamAdminSchema,
+    },
+    async function (request, reply) {
+      return await fastify
+        .knex("account_team")
+        .where({ account_id: fastify.deobfuscateId(request.body.accountId), team_id: request.params.teamId })
+        .update({
+          isAdmin: true
+        })
+        .returning("id");
+    }
+  );
+
+  const deleteTeamAdminSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+        adminId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.delete(
+    "/teams/:teamId/admins/:adminId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: deleteTeamAdminSchema,
+    },
+    async function (request, reply) {
+      const membership = await fastify
+        .knex("account_team")
+        .select("*")
+        .where({
+          account_id: request.params.adminId,
+          team_id: request.params.teamId,
+        })
+        .first();
+
+      if (!membership.isOwner) {
+        return await fastify
+          .knex("account_team")
+          .where({ account_id: request.params.adminId, team_id: request.params.teamId })
+          .update({
+            isAdmin: false
+          })
+          .returning("id");
+      }
+      return ["Owner must be admin"]
+    }
+  );
+
   const getTeamInvitesSchema = {
     body: {},
     queryString: {},
