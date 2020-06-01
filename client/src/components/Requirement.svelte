@@ -7,7 +7,9 @@
 
   import { modalContent, modalProps } from "../stores.js";
   import ViewRequirementModal from "./ViewRequirementModal.svelte";
+  import ViewRequirementHistoryModal from "./ViewRequirementHistoryModal.svelte";
   import UpdateRequirementModal from "./UpdateRequirementModal.svelte";
+
   import { formatRelative } from "date-fns";
 
   export let requirement;
@@ -45,18 +47,19 @@
   };
 
   const viewRequirement = (event, id) => {
-    event.stopPropagation();
     modalContent.set(ViewRequirementModal);
     modalProps.set({ id, update, url: `/requirements/${id}`, isPrioritized });
   };
 
   const proposeChange = (event, id) => {
-    event.stopPropagation();
     modalContent.set(UpdateRequirementModal);
     modalProps.set({ id, update, url: `/requirements/${id}`, isPrioritized });
   };
 
-  const showHistoryModal = () => {};
+  const showHistoryModal = id => {
+    modalContent.set(ViewRequirementHistoryModal);
+    modalProps.set({ id, update, url: `/requirements/${id}/history` });
+  };
 </script>
 
 <style lang="scss">
@@ -148,6 +151,9 @@
   }
 
   li.requirement.selected {
+    div {
+      border-bottom: none;
+    }
     div:not(:first-child) {
       background-color: var(--backdrop);
     }
@@ -272,13 +278,13 @@
     </div>
   {/if}
   <div class="history">
-    <button on:click|stopPropagation={showHistoryModal}>
+    <button on:click|stopPropagation={() => showHistoryModal(requirement.id)}>
       {requirement.author} {formatDatetime(requirement.created_at)}
     </button>
   </div>
   <div class="iconCell">
     <button
-      on:click={e => {
+      on:click|stopPropagation={e => {
         requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
       }}
       class="commentIconWrapper">

@@ -268,4 +268,43 @@ module.exports = async function (fastify, opts) {
       return requirement_id;
     }
   );
+
+  const getRequirementVersionsSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/requirements/:requirementId/versions",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getRequirementVersionsSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("reqversion")
+        .select(
+          "reqversion.*",
+          "account.name as authorName",
+          "account.email as authorEmail"
+        )
+        .where({
+          requirement_id: request.params.requirementId,
+        })
+        .join("account", "account.id", "=", "reqversion.account_id")
+        .orderBy("created_at", "desc");
+    });
 };
