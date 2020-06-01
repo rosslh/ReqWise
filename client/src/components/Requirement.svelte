@@ -8,6 +8,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import ViewRequirementModal from "./ViewRequirementModal.svelte";
   import UpdateRequirementModal from "./UpdateRequirementModal.svelte";
+  import { formatRelative } from "date-fns";
 
   export let requirement;
   export let toggleReq;
@@ -16,6 +17,8 @@
   export let isPrioritized;
   export let hiddenPlaceholders;
   export let index;
+
+  const formatDatetime = dt => formatRelative(new Date(dt), new Date());
 
   const getStatusColor = status => {
     switch (status) {
@@ -52,6 +55,8 @@
     modalContent.set(UpdateRequirementModal);
     modalProps.set({ id, update, url: `/requirements/${id}`, isPrioritized });
   };
+
+  const showHistoryModal = () => {};
 </script>
 
 <style lang="scss">
@@ -117,10 +122,17 @@
     }
   }
 
-  li.requirement > div.history {
+  li.requirement > div.history button {
     color: var(--secondaryText);
-    text-decoration: underline;
-    text-decoration-style: dashed;
+    text-decoration: underline !important;
+    text-decoration-style: dashed !important;
+    background: none;
+    border: none;
+    text-transform: unset;
+    font-weight: 400;
+    font-size: 1.4rem;
+    height: unset;
+    padding: 0.2rem;
   }
 
   li.requirement:hover {
@@ -142,6 +154,7 @@
   }
 
   li.requirement {
+    font-size: 1.4rem;
     margin: 0.2rem 0;
     border-radius: 0.4rem;
     cursor: pointer;
@@ -243,7 +256,11 @@
       {requirement.priority}
     </div>
   {/if}
-  <div class="history">X at Y</div>
+  <div class="history">
+    <button on:click|stopPropagation={showHistoryModal}>
+      {requirement.author} {formatDatetime(requirement.created_at)}
+    </button>
+  </div>
   <div class="iconCell">
     <button
       on:click={e => {
