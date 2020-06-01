@@ -23,6 +23,7 @@
         $session.user && $session.user.jwt
       ).then(r => {
         requirements = r;
+        selectedReqs = [];
       });
     }
   };
