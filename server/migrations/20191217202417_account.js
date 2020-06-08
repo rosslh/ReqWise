@@ -78,6 +78,7 @@ exports.up = function (knex) {
         .unsigned()
         .notNullable();
       table.string("description", 2000);
+      table.unique(["stakeholderGroup_id", "account_id"]);
     }),
     knex.schema.createTable("stakeholderGroup_reqgroup", (table) => {
       table.increments("id").primary();

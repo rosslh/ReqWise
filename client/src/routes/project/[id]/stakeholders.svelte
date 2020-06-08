@@ -28,19 +28,19 @@
 
 <section class="contentWrapper">
   <h2>Stakeholders</h2>
-  <p class="infoBlurb">...</p>
+  <p class="infoBlurb">
+    A stakeholder is an individual, group, or organization that is actively
+    involved in a project, is affected by its process or outcome, or can
+    influence its process or outcome.
+  </p>
   <button class="button-success" on:click={createStakeholderGroup}>
     Add stakeholder group
   </button>
 </section>
 <section class="contentWrapper">
-  {#await models}
-    <!-- loading -->
-  {:then result}
+  {#await models then result}
     {#each result as stakeholderGroup (stakeholderGroup.id)}
       <StakeholderGroup group={stakeholderGroup} {update} />
     {/each}
-  {:catch error}
-    <p style="color: var(--red)">{error.message}</p>
   {/await}
 </section>

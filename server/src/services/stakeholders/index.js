@@ -5,7 +5,7 @@ module.exports = async function (fastify, opts) {
         params: {
             type: "object",
             properties: {
-                teamId: { type: "number" },
+                stakeholderGroupId: { type: "number" },
             },
         },
         headers: {
@@ -66,7 +66,7 @@ module.exports = async function (fastify, opts) {
     fastify.post(
         "/stakeholders/:stakeholderGroupId/users",
         {
-            preValidation: [fastify.authenticate],
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: postStakeholderSchema,
         },
         async function (request, reply) {
@@ -81,6 +81,190 @@ module.exports = async function (fastify, opts) {
                     description
                 })
                 .returning("id");
+        }
+    );
+
+    const deleteStakeholderGroupSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/stakeholders/:stakeholderGroupId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deleteStakeholderGroupSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("stakeholderGroup")
+                .where("id", request.params.stakeholderGroupId)
+                .del();
+            return ["success"];
+        }
+    );
+
+    const putStakeholderGroupSchema = {
+        body: {
+            type: "object",
+            properties: {
+                name: { type: "string" },
+                description: { type: "string" },
+            },
+            required: ["name"],
+        },
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "number" },
+            },
+        },
+    };
+    fastify.put(
+        "/stakeholders/:stakeholderGroupId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: putStakeholderGroupSchema,
+        },
+        async function (request, reply) {
+            const { name, description } = request.body;
+            return await fastify
+                .knex("stakeholderGroup")
+                .where("id", request.params.stakeholderGroupId)
+                .update({
+                    name,
+                    description,
+                    updated_at: new Date(Date.now()),
+                    updated_by: request.user.id,
+                })
+                .returning("id");
+        }
+    );
+
+    const putStakeholderSchema = {
+        body: {
+            type: "object",
+            properties: {
+                description: { type: "string" },
+            },
+            required: ["description"],
+        },
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+                accountId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "number" },
+            },
+        },
+    };
+    fastify.put(
+        "/stakeholders/:stakeholderGroupId/users/:accountId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: putStakeholderSchema,
+        },
+        async function (request, reply) {
+            const { description } = request.body;
+            return await fastify
+                .knex("account_stakeholderGroup")
+                .where({
+                    "stakeholderGroup_id": request.params.stakeholderGroupId,
+                    "account_id": request.params.accountId,
+                })
+                .update({
+                    description
+                })
+                .returning("id");
+        }
+    );
+
+    const deleteStakeholderSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/stakeholders/:stakeholderGroupId/users/:accountId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deleteStakeholderSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("account_stakeholderGroup")
+                .where({
+                    "stakeholderGroup_id": request.params.stakeholderGroupId,
+                    "account_id": request.params.accountId,
+                }).del();
+            return ["success"];
         }
     );
 };

@@ -43,15 +43,6 @@
 
 <h3>Add a Stakeholder</h3>
 <form>
-  <fieldset>
-    <label for="desc">Notes</label>
-    <input
-      type="text"
-      id="desc"
-      name="desc"
-      class="newReqInput"
-      bind:value={description} />
-  </fieldset>
   <fieldset class="inline">
     <label for="user">User</label>
     <div class="selectWrapper">
@@ -68,6 +59,15 @@
         <p style="color: var(--red)">{err.message}</p>
       {/await}
     </div>
+  </fieldset>
+  <fieldset>
+    <label for="desc">Notes</label>
+    <input
+      type="text"
+      id="desc"
+      name="desc"
+      class="newReqInput"
+      bind:value={description} />
   </fieldset>
   <SubmitButton handler={addStakeholder}>Add</SubmitButton>
 </form>

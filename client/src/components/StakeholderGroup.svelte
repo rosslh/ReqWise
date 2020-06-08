@@ -5,9 +5,12 @@
   import { modalContent, modalProps } from "../stores.js";
   import Skeleton from "./Skeleton.svelte";
   import AddStakeholderModal from "./AddStakeholderModal.svelte";
+  import EditStakeholderGroupModal from "./EditStakeholderGroupModal.svelte";
+  import DeleteStakeholderGroupModal from "./DeleteStakeholderGroupModal.svelte";
   import Stakeholder from "./Stakeholder.svelte";
+  import ReqgroupHeader from "./ReqgroupHeader.svelte";
 
-  import { get } from "../api.js";
+  import { get, del } from "../api.js";
 
   import { stores } from "@sapper/app";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
@@ -19,15 +22,32 @@
 
   $: addStakeholder = () => {
     modalContent.set(AddStakeholderModal);
-    modalProps.set({ stakeholderGroupId: group.id, projectId, update });
+    modalProps.set({
+      stakeholderGroupId: group.id,
+      projectId,
+      update: updateStakeholders
+    });
   };
-  const editGroup = () => {};
-  const deleteGroup = () => {};
+  const editGroup = () => {
+    modalContent.set(EditStakeholderGroupModal);
+    modalProps.set({ group, updateStakeholderGroup: update });
+  };
+  const deleteGroup = async () => {
+    modalContent.set(DeleteStakeholderGroupModal);
+    modalProps.set({ group, update });
+  };
 
-  const stakeholders = get(
+  let stakeholders = get(
     `/stakeholders/${group.id}/users`,
     $session.user && $session.user.jwt
   );
+
+  const updateStakeholders = () => {
+    stakeholders = get(
+      `/stakeholders/${group.id}/users`,
+      $session.user && $session.user.jwt
+    );
+  };
 </script>
 
 <style>
@@ -39,21 +59,8 @@
     overflow: hidden;
   }
 
-  .textContent {
-    padding: 2rem 2rem 1rem;
-  }
-
   .users {
     padding: 0 2rem 2rem 2rem;
-  }
-
-  .textContent p {
-    margin-bottom: 0;
-  }
-
-  .textContent h3 {
-    margin-top: 0;
-    font-size: 1.8rem;
   }
 
   .footer {
@@ -67,22 +74,14 @@
     margin: 0;
   }
 
-  .stakeholderGroupPpuid {
-    color: var(--secondaryText);
-    font-weight: 300;
-    margin-left: 0.5rem;
+  .headerWrapper {
+    margin: 2rem 2rem 0;
   }
 </style>
 
 <div class="stakeholderGroupWrapper">
-  <div class="textContent">
-    <h3>
-      {group.name}
-      <span class="stakeholderGroupPpuid">#{group.ppuid}</span>
-    </h3>
-    {#if group.description}
-      <p>{group.description}</p>
-    {/if}
+  <div class="headerWrapper">
+    <ReqgroupHeader reqgroup={group} />
   </div>
   <div class="users">
     {#await stakeholders}
@@ -97,8 +96,11 @@
           </tr>
         </thead>
         <tbody>
-          {#each result as user (user.id)}
-            <Stakeholder {user} />
+          {#each result as user}
+            <Stakeholder
+              {user}
+              stakeholderGroupId={group.id}
+              update={updateStakeholders} />
           {/each}
         </tbody>
       </table>

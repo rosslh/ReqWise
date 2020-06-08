@@ -57,6 +57,46 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isTeamMemberByStakeholderGroupId = async (request, reply, isAdmin = false) => {
+    const membership = (
+      await fastify.knex
+        .from("stakeholderGroup")
+        .join("project", "project.id", "stakeholderGroup.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "stakeholderGroup.id": request.params.stakeholderGroupId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
+  const isTeamMemberByModelId = async (request, reply, isAdmin = false) => {
+    const membership = (
+      await fastify.knex
+        .from("model")
+        .join("project", "project.id", "model.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "model.id": request.params.modelId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
   const isTeamMemberByReqgroupId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -149,7 +189,14 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByTeamId(request, reply);
     } else if (request.params.projectId) {
       return isTeamMemberByProjectId(request, reply);
-    } else if (request.params.reqgroupId) {
+    }
+    else if (request.params.stakeholderGroupId) {
+      return isTeamMemberByStakeholderGroupId(request, reply, true);
+    }
+    else if (request.params.modelId) {
+      return isTeamMemberByModelId(request, reply, true);
+    }
+    else if (request.params.reqgroupId) {
       return isTeamMemberByReqgroupId(request, reply);
     } else if (request.params.requirementId) {
       return isTeamMemberByRequirementId(request, reply);
@@ -167,7 +214,14 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByTeamId(request, reply, true);
     } else if (request.params.projectId) {
       return isTeamMemberByProjectId(request, reply, true);
-    } else if (request.params.reqgroupId) {
+    }
+    else if (request.params.stakeholderGroupId) {
+      return isTeamMemberByStakeholderGroupId(request, reply, true);
+    }
+    else if (request.params.modelId) {
+      return isTeamMemberByModelId(request, reply, true);
+    }
+    else if (request.params.reqgroupId) {
       return isTeamMemberByReqgroupId(request, reply, true);
     } else if (request.params.requirementId) {
       return isTeamMemberByRequirementId(request, reply, true);
