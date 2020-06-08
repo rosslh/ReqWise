@@ -130,7 +130,7 @@
         </tbody>
       </table>
     {:catch error}
-      <p style="color: red">{error.message}</p>
+      <p style="color: var(--red)">{error.message}</p>
     {/await}
     {#if isAdmin}
       <div>
@@ -204,7 +204,7 @@
         </tbody>
       </table>
     {:catch error}
-      <p style="color: red">{error.message}</p>
+      <p style="color: var(--red)">{error.message}</p>
     {/await}
     <h3>Invites</h3>
     {#await invites}
@@ -240,7 +240,7 @@
         </tbody>
       </table>
     {:catch error}
-      <p style="color: red">{error.message}</p>
+      <p style="color: var(--red)">{error.message}</p>
     {/await}
     {#if isAdmin}
       <div>

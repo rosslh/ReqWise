@@ -17,6 +17,6 @@
       modalContent.set(AddFeatureModal);
       modalProps.set({ id, update });
     }}>
-    + Add Feature
+    Add Feature
   </button>
 </div>

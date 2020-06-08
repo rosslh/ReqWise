@@ -59,6 +59,6 @@
   </section>
 {:catch error}
   <section class="contentWrapper">
-    <p style="color: red">{error.message}</p>
+    <p style="color: var(--red)">{error.message}</p>
   </section>
 {/await}

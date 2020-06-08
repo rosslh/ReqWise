@@ -3,24 +3,28 @@
   export let group;
 
   import { modalContent, modalProps } from "../stores.js";
+  import Skeleton from "./Skeleton.svelte";
+  import AddStakeholderModal from "./AddStakeholderModal.svelte";
 
+  import { get } from "../api.js";
+
+  import { stores } from "@sapper/app";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
 
-  const editGroup = model => {
-    // modalContent.set(EditModelDetailsModal);
-    modalProps.set({
-      model,
-      update
-    });
+  const { session } = stores();
+
+  const addStakeholder = () => {
+    modalContent.set(AddStakeholderModal);
+    modalProps.set({ id, update });
   };
-  const deleteGroup = () => {
-    // modalContent.set(deleteGroupModal);
-    modalProps.set({
-      model,
-      update
-    });
-  };
+  const editGroup = () => {};
+  const deleteGroup = () => {};
+
+  const stakeholders = get(
+    `/stakeholders/${group.id}/users`,
+    $session.user && $session.user.jwt
+  );
 </script>
 
 <style>
@@ -36,6 +40,10 @@
     padding: 2rem;
   }
 
+  .users {
+    padding: 0 2rem 2rem 2rem;
+  }
+
   .textContent p {
     margin-bottom: 0;
   }
@@ -47,7 +55,8 @@
 
   .footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     padding: 0 2rem 2rem;
   }
 
@@ -55,7 +64,7 @@
     margin: 0;
   }
 
-  .modelPpuid {
+  .stakeholderGroupPpuid {
     color: var(--secondaryText);
     font-weight: 300;
     margin-left: 0.5rem;
@@ -66,26 +75,61 @@
   <div class="textContent">
     <h3>
       {group.name}
-      <span class="modelPpuid">#{group.ppuid}</span>
+      <span class="stakeholderGroupPpuid">#{group.ppuid}</span>
     </h3>
-    <p>{group.description}</p>
+    {#if group.description}
+      <p>{group.description}</p>
+    {/if}
+  </div>
+  <div class="users">
+    {#await stakeholders}
+      <Skeleton rows={2} />
+    {:then result}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {#each result as user (user.id)}
+            <tr>
+              <td>{user.name}</td>
+              <td class="membership">(buttons here)</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:catch error}
+      <section class="contentWrapper">
+        <p style="color: var(--red)">{error.message}</p>
+      </section>
+    {/await}
   </div>
   <div class="footer">
-    <button
-      on:click={() => editGroup(model)}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegEdit />
-      </div>
-      Edit
-    </button>
-    <button
-      on:click={deleteGroup}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegTrashAlt />
-      </div>
-      Delete
-    </button>
+    <div class="footerLeft">
+      <button class="button-create" on:click={addStakeholder}>
+        Add stakeholder
+      </button>
+    </div>
+    <div class="footerRight">
+      <button
+        on:click={editGroup}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegEdit />
+        </div>
+        Edit
+      </button>
+      <button
+        on:click={deleteGroup}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+        Delete
+      </button>
+    </div>
   </div>
 </div>

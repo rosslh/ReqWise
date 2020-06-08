@@ -61,6 +61,23 @@ exports.up = function (knex) {
         .references("account.id")
         .unsigned(); // can be created by seed script
     }),
+    knex.schema.createTable("account_stakeholderGroup", (table) => {
+      table.increments("id").primary();
+      table
+        .integer("stakeholderGroup_id")
+        .references("stakeholderGroup.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table
+        .integer("account_id")
+        .references("account.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+    }),
     knex.schema.createTable("stakeholderGroup_reqgroup", (table) => {
       table.increments("id").primary();
       table
@@ -272,6 +289,7 @@ exports.down = function (knex) {
   return Promise.all([
     knex.schema.dropTable("model"),
 
+    knex.schema.dropTable("account_stakeholderGroup"),
     knex.schema.dropTable("stakeholderGroup_reqgroup"),
     knex.schema.dropTable("stakeholderGroup_requirement"),
     knex.schema.dropTable("stakeholderGroup"),

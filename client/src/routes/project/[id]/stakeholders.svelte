@@ -41,6 +41,6 @@
       <StakeholderGroup group={stakeholderGroup} />
     {/each}
   {:catch error}
-    <p style="color: red">{error.message}</p>
+    <p style="color: var(--red)">{error.message}</p>
   {/await}
 </section>

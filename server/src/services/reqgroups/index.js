@@ -258,7 +258,7 @@ module.exports = async function (fastify, opts) {
         description: { type: "string" },
         priority: { type: "string" },
         status: { type: "string" },
-        ratonale: { type: "string" },
+        rationale: { type: "string" },
         parent_requirement_id: { type: "string" }
       },
       required: ["description", "status", "rationale"],

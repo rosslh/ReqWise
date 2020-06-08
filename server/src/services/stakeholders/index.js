@@ -1,6 +1,44 @@
 module.exports = async function (fastify, opts) {
-    const postStakeholderSchema = {
+    const getStakeholderGroupUsers = {
         body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                teamId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/stakeholders/:stakeholderGroupId/users",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getStakeholderGroupUsers,
+        },
+        async function (request, reply) {
+            return await fastify.knex
+                .from("account_stakeholderGroup")
+                .select("*", "account.*")
+                .join("account", "account.id", "account_stakeholderGroup.account_id")
+                .where("stakeholderGroup_id", request.params.stakeholderGroupId);
+        }
+    );
+
+    const postStakeholderSchema = {
+        body: {
+            type: "object",
+            properties: {
+                account_id: { type: "number" }
+            }
+        },
         queryString: {},
         params: {
             type: "object",
@@ -32,7 +70,16 @@ module.exports = async function (fastify, opts) {
             schema: postStakeholderSchema,
         },
         async function (request, reply) {
-            // fetch
+            const { account_id } = request.body;
+            const { stakeholderGroupId } = request.params;
+
+            return await fastify
+                .knex("account_stakeholder")
+                .insert({
+                    account_id,
+                    stakeholderGroup_id: stakeholderGroupId
+                })
+                .returning("id");
         }
     );
 };

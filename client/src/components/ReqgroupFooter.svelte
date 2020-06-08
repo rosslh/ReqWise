@@ -44,7 +44,7 @@
           isPrioritized: reqgroup.isPrioritized
         });
       }}>
-      + Add Requirement
+      Add Requirement
     </button>
   {:else}
     <div />
