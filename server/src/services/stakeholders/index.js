@@ -36,7 +36,7 @@ module.exports = async function (fastify, opts) {
         body: {
             type: "object",
             properties: {
-                account_id: { type: "number" }
+                account_id: { type: ["number", "string"] }
             }
         },
         queryString: {},
@@ -70,14 +70,15 @@ module.exports = async function (fastify, opts) {
             schema: postStakeholderSchema,
         },
         async function (request, reply) {
-            const { account_id } = request.body;
+            const { account_id, description } = request.body;
             const { stakeholderGroupId } = request.params;
 
             return await fastify
-                .knex("account_stakeholder")
+                .knex("account_stakeholderGroup")
                 .insert({
-                    account_id,
-                    stakeholderGroup_id: stakeholderGroupId
+                    account_id: fastify.deobfuscateId(account_id),
+                    stakeholderGroup_id: stakeholderGroupId,
+                    description
                 })
                 .returning("id");
         }

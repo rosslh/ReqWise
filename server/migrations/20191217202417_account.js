@@ -77,6 +77,7 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .unsigned()
         .notNullable();
+      table.string("description", 2000);
     }),
     knex.schema.createTable("stakeholderGroup_reqgroup", (table) => {
       table.increments("id").primary();

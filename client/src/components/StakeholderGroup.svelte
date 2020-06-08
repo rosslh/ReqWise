@@ -5,6 +5,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import Skeleton from "./Skeleton.svelte";
   import AddStakeholderModal from "./AddStakeholderModal.svelte";
+  import Stakeholder from "./Stakeholder.svelte";
 
   import { get } from "../api.js";
 
@@ -12,11 +13,13 @@
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
 
-  const { session } = stores();
+  const { session, page } = stores();
 
-  const addStakeholder = () => {
+  $: projectId = $page.params.id;
+
+  $: addStakeholder = () => {
     modalContent.set(AddStakeholderModal);
-    modalProps.set({ id, update });
+    modalProps.set({ stakeholderGroupId: group.id, projectId, update });
   };
   const editGroup = () => {};
   const deleteGroup = () => {};
@@ -37,7 +40,7 @@
   }
 
   .textContent {
-    padding: 2rem;
+    padding: 2rem 2rem 1rem;
   }
 
   .users {
@@ -89,15 +92,13 @@
         <thead>
           <tr>
             <th>Name</th>
+            <th>Notes</th>
             <th />
           </tr>
         </thead>
         <tbody>
           {#each result as user (user.id)}
-            <tr>
-              <td>{user.name}</td>
-              <td class="membership">(buttons here)</td>
-            </tr>
+            <Stakeholder {user} />
           {/each}
         </tbody>
       </table>

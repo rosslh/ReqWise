@@ -38,7 +38,7 @@
     <!-- loading -->
   {:then result}
     {#each result as stakeholderGroup (stakeholderGroup.id)}
-      <StakeholderGroup group={stakeholderGroup} />
+      <StakeholderGroup group={stakeholderGroup} {update} />
     {/each}
   {:catch error}
     <p style="color: var(--red)">{error.message}</p>
