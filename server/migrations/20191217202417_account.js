@@ -36,11 +36,36 @@ exports.up = function (knex) {
       table.boolean("isOwner").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
     }),
-    knex.schema.createTable("stakeholder_reqgroup", (table) => {
+    knex.schema.createTable("stakeholderGroup", (table) => {
       table.increments("id").primary();
       table
-        .integer("account_id")
+        .integer("ppuid_id")
+        .references("per_project_unique_id.id")
+        .unsigned()
+        .notNullable(); /* uniqueness enforced in business logic */
+      table
+        .integer("project_id")
+        .references("project.id")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE")
+        .unsigned()
+        .notNullable();
+      table.string("name").notNullable();
+      table.string("description", 2000);
+      table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.integer("created_by")
         .references("account.id")
+        .unsigned(); // can be created by seed script
+      table.timestamp("updated_at").defaultTo(knex.fn.now());
+      table.integer("updated_by")
+        .references("account.id")
+        .unsigned(); // can be created by seed script
+    }),
+    knex.schema.createTable("stakeholderGroup_reqgroup", (table) => {
+      table.increments("id").primary();
+      table
+        .integer("stakeholderGroup_id")
+        .references("stakeholderGroup.id")
         .onUpdate("CASCADE")
         .onDelete("CASCADE")
         .unsigned()
@@ -54,11 +79,11 @@ exports.up = function (knex) {
         .notNullable();
       table.string("role").notNullable();
     }),
-    knex.schema.createTable("stakeholder_requirement", (table) => {
+    knex.schema.createTable("stakeholderGroup_requirement", (table) => {
       table.increments("id").primary();
       table
-        .integer("account_id")
-        .references("account.id")
+        .integer("stakeholderGroup_id")
+        .references("stakeholderGroup.id")
         .onUpdate("CASCADE")
         .onDelete("CASCADE")
         .unsigned()
@@ -247,8 +272,9 @@ exports.down = function (knex) {
   return Promise.all([
     knex.schema.dropTable("model"),
 
-    knex.schema.dropTable("stakeholder_reqgroup"),
-    knex.schema.dropTable("stakeholder_requirement"),
+    knex.schema.dropTable("stakeholderGroup_reqgroup"),
+    knex.schema.dropTable("stakeholderGroup_requirement"),
+    knex.schema.dropTable("stakeholderGroup"),
     knex.schema.dropTable("teamInvite"),
 
     knex.schema.dropTable("comment"),

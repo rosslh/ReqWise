@@ -356,4 +356,108 @@ module.exports = async function (fastify, opts) {
         .returning("id");
     }
   );
+
+  const getProjectStakeholderGroupsSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/projects/:projectId/stakeholders",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectStakeholderGroupsSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("stakeholderGroup")
+        .select("stakeholderGroup.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "stakeholderGroup.ppuid_id")
+        .where({ "stakeholderGroup.project_id": request.params.projectId });
+    }
+  );
+
+  const postStakeholderGroupSchema = {
+    body: {
+      type: "object",
+      required: ["name"],
+      properties: {
+        name: { type: "string" },
+        description: { type: "string" },
+        svg: { type: "string" },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "number" },
+      },
+    },
+  };
+  fastify.post(
+    "/projects/:projectId/stakeholders",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postStakeholderGroupSchema,
+    },
+    async function (request, reply) {
+      const { name, description } = request.body;
+      const { projectId: project_id } = request.params;
+      const maxPpuid =
+        (
+          await fastify
+            .knex("per_project_unique_id")
+            .where({ project_id })
+            .max("readable_id")
+            .first()
+        ).max || 0;
+      const ppuid_id = (await fastify
+        .knex("per_project_unique_id")
+        .insert({
+          project_id,
+          readable_id: maxPpuid + 1
+        })
+        .returning("id"))[0];
+
+      return await fastify
+        .knex("stakeholderGroup")
+        .insert({
+          project_id,
+          name,
+          description,
+          ppuid_id,
+          created_by: request.user.id,
+          updated_by: request.user.id,
+        })
+        .returning("id");
+    }
+  );
 };

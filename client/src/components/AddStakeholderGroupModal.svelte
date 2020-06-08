@@ -9,14 +9,15 @@
   export let update;
   export let close;
 
+  let name = "";
   let description = "";
 
-  $: addFeature = async () => {
+  $: addGroup = async () => {
     await post(
-      `/projects/${id}/reqgroups`,
+      `/projects/${id}/stakeholders`,
       {
-        name: description,
-        type: "feature"
+        name,
+        description
       },
       $session.user && $session.user.jwt
     );
@@ -25,16 +26,25 @@
   };
 </script>
 
-<h3>Add a Feature</h3>
+<h3>Add a Stakeholder Group</h3>
 <form>
   <fieldset>
-    <label for="desc">Title</label>
+    <label for="name">Title</label>
     <input
+      type="text"
+      id="name"
+      name="name"
+      class="newReqInput"
+      bind:value={name} />
+  </fieldset>
+  <fieldset>
+    <label for="desc">Description</label>
+    <textarea
       type="text"
       id="desc"
       name="desc"
       class="newReqInput"
       bind:value={description} />
   </fieldset>
-  <SubmitButton handler={addFeature}>Add</SubmitButton>
+  <SubmitButton handler={addGroup}>Add</SubmitButton>
 </form>

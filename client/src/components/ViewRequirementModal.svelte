@@ -194,7 +194,6 @@
     position: relative;
   }
   .column.comments > .commentsBottom {
-    background-color: var(--background1);
     height: 24rem;
   }
   h3 {

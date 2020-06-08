@@ -101,5 +101,5 @@
       placeholder="e.g. Discussed with client"
       bind:value={rationale} />
   </fieldset>
-  <SubmitButton handler={addReq}>+ Add</SubmitButton>
+  <SubmitButton handler={addReq}>Add</SubmitButton>
 </form>
