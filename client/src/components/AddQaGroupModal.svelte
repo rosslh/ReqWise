@@ -10,8 +10,7 @@
   export let update;
   export let close;
 
-  $: addReqGroup = async e => {
-    e.preventDefault();
+  $: addReqGroup = async () => {
     await post(
       `/projects/${id}/reqgroups`,
       {

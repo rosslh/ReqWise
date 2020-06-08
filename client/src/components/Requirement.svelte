@@ -139,7 +139,6 @@
     border: none;
     text-transform: unset;
     font-weight: 400;
-    font-size: 1.4rem;
     height: unset;
     padding: 0.2rem;
   }
@@ -176,7 +175,6 @@
   }
 
   li.requirement {
-    font-size: 1.4rem;
     margin: 0.2rem 0;
     cursor: pointer;
     display: flex;

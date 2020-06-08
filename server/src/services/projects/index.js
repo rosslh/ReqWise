@@ -129,7 +129,8 @@ module.exports = async function (fastify, opts) {
         .from("reqgroup")
         .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
-        .where({ "reqgroup.project_id": request.params.projectId, type });
+        .where({ "reqgroup.project_id": request.params.projectId, type })
+        .orderBy("ppuid", "asc");
     }
   );
 
@@ -162,7 +163,8 @@ module.exports = async function (fastify, opts) {
         .from("model")
         .select("model.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "model.ppuid_id")
-        .where({ "model.project_id": request.params.projectId });
+        .where({ "model.project_id": request.params.projectId })
+        .orderBy("ppuid", "asc");
     }
   );
 
@@ -386,7 +388,8 @@ module.exports = async function (fastify, opts) {
         .from("stakeholderGroup")
         .select("stakeholderGroup.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "stakeholderGroup.ppuid_id")
-        .where({ "stakeholderGroup.project_id": request.params.projectId });
+        .where({ "stakeholderGroup.project_id": request.params.projectId })
+        .orderBy("ppuid", "asc");
     }
   );
 
