@@ -301,9 +301,9 @@ module.exports = async function (fastify, opts) {
           "account.name as authorName",
           "account.email as authorEmail"
         )
-        .select(fastify.knex.raw('lag(reqversion.priority) over (order by reqversion.created_at) as previousPriority'))
-        .select(fastify.knex.raw('lag(reqversion.status) over (order by reqversion.created_at) as previousStatus'))
-        .select(fastify.knex.raw('lag(reqversion.description) over (order by reqversion.created_at) as previousDescription'))
+        .select(fastify.knex.raw('lag(reqversion.priority) over (order by reqversion.created_at) as previous_priority'))
+        .select(fastify.knex.raw('lag(reqversion.status) over (order by reqversion.created_at) as previous_status'))
+        .select(fastify.knex.raw('lag(reqversion.description) over (order by reqversion.created_at) as previous_description'))
         .where({
           requirement_id: request.params.requirementId,
         })

@@ -3,13 +3,13 @@
   const { session } = stores();
 
   import { onMount, onDestroy, tick } from "svelte";
-  import Diff from "text-diff";
-  const diff = new Diff();
 
   import { get, post, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
+  import SimpleDiff from "./SimpleDiff.svelte";
+  import DescDiff from "./DescDiff.svelte";
 
   export let isPrioritized;
   export let id;
@@ -62,14 +62,6 @@
     );
     scrollToBottom();
   };
-
-  $: descriptionDiff =
-    newDescription &&
-    (() => {
-      let difference = diff.main(oldDescription || "", newDescription);
-      diff.cleanupSemantic(difference);
-      return diff.prettyHtml(difference);
-    })();
 
   $: postComment = async () => {
     await post(
@@ -130,23 +122,6 @@
     margin-top: 2.5rem;
     margin-bottom: 0.6rem;
   }
-  :global(.reqversionContent ins) {
-    color: var(--green);
-    background-color: var(--lightGreen);
-  }
-
-  :global(.reqversionContent del) {
-    color: var(--red);
-    background-color: var(--lightRed);
-  }
-
-  :global(.descDiff > *:first-child) {
-    padding-left: 0;
-  }
-
-  :global(.descDiff > *:last-child) {
-    padding-right: 0;
-  }
 
   .reqversionContent {
     border: 0.1rem solid var(--borderColor);
@@ -154,15 +129,6 @@
     border-radius: 0.3rem;
     padding: 0.2rem 0.6rem;
   }
-
-  .capitalize {
-    text-transform: capitalize;
-  }
-
-  span.priorityDiff {
-    color: var(--secondaryText);
-  }
-
   .authorEmail {
     color: var(--secondaryText);
   }
@@ -212,29 +178,16 @@
       {#if !isInitialVersion}change{/if}
     </h3>
     <h4>Description</h4>
-    {#if typeof descriptionDiff === 'undefined'}
+    {#if typeof newDescription === 'undefined'}
       <Skeleton noPadding />
     {:else}
-      <div class="reqversionContent descDiff">
-        {@html descriptionDiff}
-      </div>
+      <DescDiff {oldDescription} {newDescription} />
     {/if}
     {#if isPrioritized}
       <h4>Priority</h4>
       {#if newPriority}
         <div class="reqversionContent">
-          {#if typeof oldPriority === 'undefined'}
-            <span class="capitalize">{newPriority}</span>
-          {:else if oldPriority !== newPriority}
-            <span class="capitalize priorityDiff">
-              <del>{oldPriority}</del>
-              &rarr;
-              <ins>{newPriority}</ins>
-            </span>
-          {:else}
-            <span class="capitalize">{newPriority}</span>
-            (no change)
-          {/if}
+          <SimpleDiff oldText={oldPriority} newText={newPriority} />
         </div>
       {:else}
         <Skeleton noPadding />

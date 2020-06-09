@@ -58,7 +58,12 @@
 
   const showHistoryModal = id => {
     modalContent.set(ViewRequirementHistoryModal);
-    modalProps.set({ id, update, url: `/requirements/${id}/history` });
+    modalProps.set({
+      id,
+      isPrioritized,
+      update,
+      url: `/requirements/${id}/history`
+    });
   };
 </script>
 

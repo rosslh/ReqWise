@@ -58,6 +58,7 @@
     max-height: 90vh;
     /* max-width: 90vw; */
     box-sizing: content-box;
+    overflow-y: scroll;
   }
 </style>
 
