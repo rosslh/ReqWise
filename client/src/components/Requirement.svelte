@@ -125,9 +125,10 @@
       cursor: grabbing;
     }
 
-    .gripWrapper {
+    :global(.gripWrapper svg) {
       height: 1.7rem;
       width: 1.7rem;
+      vertical-align: middle;
     }
   }
 
@@ -135,6 +136,7 @@
     color: var(--secondaryText);
     text-decoration: underline !important;
     text-decoration-style: dashed !important;
+    font-size: 1.5rem;
     background: none;
     border: none;
     text-transform: unset;
@@ -218,6 +220,15 @@
   :global(.draggable-container--over .nestedPlaceholder.hidden) {
     visibility: hidden !important;
   }
+
+  .statusIconWrapper {
+    margin-right: 0.5rem;
+  }
+  :global(.statusIconWrapper svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.8rem;
+  }
 </style>
 
 {#if index === 0}
@@ -240,28 +251,28 @@
   <div class="status">
     {#if requirement.status === 'proposed'}
       <span
-        class="iconWrapper"
+        class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaExclamation />
       </span>
       <span>Proposed</span>
     {:else}
       <span
-        class="iconWrapper"
+        class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaThumbsUp />
       </span>
       Accepted
       <!-- {:else if requirement.status === 'inProgress'}
       <span
-        class="iconWrapper"
+        class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaRegClock />
       </span>
       In Progress
     {:else}
       <span
-        class="iconWrapper"
+        class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaCheck />
       </span>
