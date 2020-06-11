@@ -121,6 +121,7 @@
   h4 {
     margin-top: 2.5rem;
     margin-bottom: 0.6rem;
+    font-size: 1.6rem;
   }
 
   .reqversionContent {

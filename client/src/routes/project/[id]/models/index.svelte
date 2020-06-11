@@ -2,6 +2,8 @@
   import { stores } from "@sapper/app";
   import { get } from "../../../../api.js";
   import ModelPreview from "../../../../components/ModelPreview.svelte";
+  import UploadModelModal from "../../../../components/UploadModelModal.svelte";
+  import { modalContent, modalProps } from "../../../../stores.js";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -16,6 +18,11 @@
       `/projects/${id}/models`,
       $session.user && $session.user.jwt
     );
+  };
+
+  const upload = async () => {
+    modalContent.set(UploadModelModal);
+    modalProps.set({ projectId: id, update });
   };
 </script>
 
@@ -38,7 +45,7 @@
     id="create-model-button">
     Create Model
   </a>
-  <button class="button button-outline">Upload Model</button>
+  <button class="button button-outline" on:click={upload}>Upload Model</button>
 </section>
 {#await models}
   <!-- loading -->

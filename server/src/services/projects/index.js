@@ -1,4 +1,8 @@
 module.exports = async function (fastify, opts) {
+  // const { Storage } = require('@google-cloud/storage');
+  // const storage = new Storage();
+  // const myBucket = storage.bucket('user-file-storage');
+
   const getProjectSchema = {
     body: {},
     queryString: {},
@@ -295,6 +299,7 @@ module.exports = async function (fastify, opts) {
         name: { type: "string" },
         description: { type: "string" },
         svg: { type: "string" },
+        file: { type: "string" },
       },
     },
     queryString: {},
@@ -326,7 +331,7 @@ module.exports = async function (fastify, opts) {
       schema: postModelSchema,
     },
     async function (request, reply) {
-      const { name, description, svg } = request.body;
+      const { name, description, svg, file } = request.body;
       const { projectId: project_id } = request.params;
       const maxPpuid =
         (
@@ -344,18 +349,38 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
-      return await fastify
-        .knex("model")
-        .insert({
-          project_id,
-          name,
-          description,
-          ppuid_id,
-          created_by: request.user.id,
-          updated_by: request.user.id,
-          svg
-        })
-        .returning("id");
+      if (file) {
+        console.log(file.length);
+        // const fileUrl = "";
+        // // upload to cloud
+        // return await fastify
+        //   .knex("model")
+        //   .insert({
+        //     project_id,
+        //     name,
+        //     description,
+        //     ppuid_id,
+        //     created_by: request.user.id,
+        //     updated_by: request.user.id,
+        //     fileUrl
+        //   })
+        //   .returning("id");
+        return [-1];
+      }
+      else {
+        return await fastify
+          .knex("model")
+          .insert({
+            project_id,
+            name,
+            description,
+            ppuid_id,
+            created_by: request.user.id,
+            updated_by: request.user.id,
+            svg
+          })
+          .returning("id");
+      }
     }
   );
 
