@@ -1,7 +1,6 @@
 module.exports = async function (fastify, opts) {
   const { Storage } = require('@google-cloud/storage');
   const { v4: uuidv4 } = require('uuid');
-  var fs = require('fs');
   const storage = new Storage();
 
   const getProjectSchema = {
@@ -351,19 +350,13 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
-      if (file) {
+      if (fileName) {
         const uploadedFileName = `${uuidv4()}-${fileName}`;
-        let data = Buffer.from(file.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
-        fs.writeFileSync(uploadedFileName, data);
 
-        await storage.bucket('user-file-storage').upload(uploadedFileName, {
-          gzip: true,
-          metadata: {
-            cacheControl: 'no-cache',
-          },
-        });
+        const data = Buffer.from(file.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
 
-        fs.unlinkSync(uploadedFileName);
+        const gcloudFile = storage.bucket('user-file-storage').file(uploadedFileName);
+        await gcloudFile.save(data);
 
         return await fastify
           .knex("model")
