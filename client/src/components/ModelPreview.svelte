@@ -10,6 +10,8 @@
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import MdEdit from "svelte-icons/md/MdEdit.svelte";
+  import MdFileDownload from "svelte-icons/md/MdFileDownload.svelte";
+  import MdCloudUpload from "svelte-icons/md/MdCloudUpload.svelte";
 
   const editModelDetails = model => {
     modalContent.set(EditModelDetailsModal);
@@ -76,10 +78,14 @@
   .footer button {
     margin: 0;
   }
-  a.editModelDiagram {
+
+  .modelButtonWrapper {
     position: absolute;
     top: 1rem;
     right: 1rem;
+    display: flex;
+  }
+  .modelButton {
     border-radius: 50%;
     height: 2.8rem;
     width: 2.8rem;
@@ -91,9 +97,10 @@
     margin: 0;
     background-color: var(--background1);
     color: var(--secondaryText);
+    margin-left: 0.3rem;
   }
 
-  a.editModelDiagram .editIconWrapper {
+  .modelButton .modelIconWrapper {
     margin: 0;
     height: 1.8rem;
     width: 1.8rem;
@@ -104,18 +111,48 @@
     font-weight: 300;
     margin-left: 0.5rem;
   }
+
+  div.diagramWrapper img.uploadedImage {
+    max-height: inherit;
+    max-width: inherit;
+  }
 </style>
 
 <div class="modelPreview">
   <div class="diagramWrapper">
-    <a
-      href={`/project/${projectId}/models/${model.id}/edit`}
-      class="button editModelDiagram">
-      <div class="editIconWrapper">
-        <MdEdit />
+    {#if model.type === 'diagram'}
+      <div class="modelButtonWrapper">
+        <a
+          title="Edit"
+          href={`/project/${projectId}/models/${model.id}/edit`}
+          class="button modelButton">
+          <div class="modelIconWrapper">
+            <MdEdit />
+          </div>
+        </a>
       </div>
-    </a>
-    {@html model.svg}
+      {@html model.svg}
+    {:else}
+      <div class="modelButtonWrapper">
+        <button title="Download" on:click={() => {}} class="button modelButton">
+          <div class="modelIconWrapper">
+            <MdFileDownload />
+          </div>
+        </button>
+        <button
+          title="Upload new version"
+          on:click={() => {}}
+          class="button modelButton">
+          <div class="modelIconWrapper">
+            <MdCloudUpload />
+          </div>
+        </button>
+      </div>
+      <img
+        class="uploadedImage"
+        src={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}
+        alt={model.name} />
+    {/if}
   </div>
   <div class="textContent">
     <h3>

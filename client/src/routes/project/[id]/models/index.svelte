@@ -40,7 +40,7 @@
     href={`/project/${id}/models/create`}
     class="button"
     id="create-model-button">
-    Create Model
+    Draw Diagram
   </a>
   <button class="button button-outline" on:click={upload}>Upload Model</button>
 </section>
