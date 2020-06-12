@@ -14,10 +14,7 @@
   );
 
   const update = async () => {
-    models = await get(
-      `/projects/${id}/models`,
-      $session.user && $session.user.jwt
-    );
+    models = get(`/projects/${id}/models`, $session.user && $session.user.jwt);
   };
 
   const upload = async () => {

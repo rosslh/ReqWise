@@ -19,6 +19,7 @@
   ],
   "author": "Ross Hill <ross@rosshill.ca>",
   "dependencies": {
+    "@google-cloud/storage": "^5.1.0",
     "bcrypt": "^3.0.7",
     "dotenv": "^8.2.0",
     "fastify": "^2.4.1",
@@ -39,6 +40,7 @@
     "quill-delta-to-html": "^0.11.0",
     "resolve-from": "^5.0.0",
     "socket.io": "^2.3.0",
+    "uuid": "^8.1.0",
     "yargs-parser": "^16.0.0"
   },
   "devDependencies": {
