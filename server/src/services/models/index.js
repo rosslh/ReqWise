@@ -142,7 +142,12 @@ module.exports = async function (fastify, opts) {
                 .first();
 
             if (model.type === "upload") {
-                await storage.bucket('user-file-storage').file(model.fileName).delete();
+                try {
+                    await storage.bucket('user-file-storage').file(model.fileName).delete();
+                }
+                catch (e) {
+                    console.error(e);
+                }
             }
 
             await fastify

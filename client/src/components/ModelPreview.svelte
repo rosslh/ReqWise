@@ -155,13 +155,13 @@
       {#if isImageFile(model.fileName)}
         <img
           class="uploadedImage"
-          src={`https://storage.googleapis.com/user-file-storage/${model.fileName}`}
+          src={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}
           alt={model.name} />
       {:else}
         <a
           target="_blank"
           rel="noopener"
-          href={`https://storage.googleapis.com/user-file-storage/${model.fileName}`}>
+          href={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}>
           View file
         </a>
       {/if}
