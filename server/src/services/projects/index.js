@@ -353,7 +353,7 @@ module.exports = async function (fastify, opts) {
       if (fileName) {
         const uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_-]/g, '')}`; // remove illegal characters
 
-        const data = Buffer.from(file.replace(/^data:[a-zA-Z]*\/[a-zA-Z]*;base64,/, ''), 'base64');
+        const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
 
         const gcloudFile = storage.bucket('user-file-storage').file(uploadedFileName);
         await gcloudFile.save(data);

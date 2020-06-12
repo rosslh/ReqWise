@@ -27,6 +27,9 @@
       update
     });
   };
+
+  const isImageFile = fileName =>
+    /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/.test(fileName);
 </script>
 
 <style>
@@ -149,10 +152,19 @@
           </div>
         </button>
       </div>
-      <img
-        class="uploadedImage"
-        src={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}
-        alt={model.name} />
+      {#if isImageFile(model.fileName)}
+        <img
+          class="uploadedImage"
+          src={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}
+          alt={model.name} />
+      {:else}
+        <a
+          target="_blank"
+          rel="noopener"
+          href={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}>
+          View file
+        </a>
+      {/if}
     {/if}
   </div>
   <div class="textContent">
