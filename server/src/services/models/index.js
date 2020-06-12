@@ -1,4 +1,7 @@
 module.exports = async function (fastify, opts) {
+    const { Storage } = require('@google-cloud/storage');
+    const storage = new Storage();
+
     const getModelSchema = {
         body: {},
         queryString: {},
@@ -130,6 +133,18 @@ module.exports = async function (fastify, opts) {
             schema: deleteModelSchema,
         },
         async function (request, reply) {
+            const model = await fastify.knex
+                .from("model")
+                .select("*")
+                .where({
+                    id: request.params.modelId,
+                })
+                .first();
+
+            if (model.type === "upload") {
+                await storage.bucket('user-file-storage').file(model.fileName).delete();
+            }
+
             await fastify
                 .knex("model")
                 .where("id", request.params.modelId)

@@ -65,6 +65,7 @@
   .diffSection {
     background-color: var(--background2);
     padding: 1rem 2rem 3rem;
+    border-top: 0.1rem solid var(--borderColor);
   }
 
   .diffSection h4 {

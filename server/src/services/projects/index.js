@@ -1,4 +1,8 @@
 module.exports = async function (fastify, opts) {
+  const { Storage } = require('@google-cloud/storage');
+  const { v4: uuidv4 } = require('uuid');
+  const storage = new Storage();
+
   const getProjectSchema = {
     body: {},
     queryString: {},
@@ -295,6 +299,8 @@ module.exports = async function (fastify, opts) {
         name: { type: "string" },
         description: { type: "string" },
         svg: { type: "string" },
+        file: { type: "string" },
+        fileName: { type: "string" }
       },
     },
     queryString: {},
@@ -326,7 +332,7 @@ module.exports = async function (fastify, opts) {
       schema: postModelSchema,
     },
     async function (request, reply) {
-      const { name, description, svg } = request.body;
+      const { name, description, svg, file, fileName } = request.body;
       const { projectId: project_id } = request.params;
       const maxPpuid =
         (
@@ -344,18 +350,43 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
-      return await fastify
-        .knex("model")
-        .insert({
-          project_id,
-          name,
-          description,
-          ppuid_id,
-          created_by: request.user.id,
-          updated_by: request.user.id,
-          svg
-        })
-        .returning("id");
+      if (fileName) {
+        const uploadedFileName = `${uuidv4()}-${fileName}`;
+
+        const data = Buffer.from(file.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
+
+        const gcloudFile = storage.bucket('user-file-storage').file(uploadedFileName);
+        await gcloudFile.save(data);
+
+        return await fastify
+          .knex("model")
+          .insert({
+            project_id,
+            name,
+            description,
+            ppuid_id,
+            created_by: request.user.id,
+            updated_by: request.user.id,
+            fileName: uploadedFileName,
+            type: "upload"
+          })
+          .returning("id");
+      }
+      else {
+        return await fastify
+          .knex("model")
+          .insert({
+            project_id,
+            name,
+            description,
+            ppuid_id,
+            created_by: request.user.id,
+            updated_by: request.user.id,
+            svg,
+            type: "diagram"
+          })
+          .returning("id");
+      }
     }
   );
 

@@ -117,3 +117,4 @@ dist
 .vscode-test
 .vscode/settings.json
 server/cloud_sql_proxy_x64.exe
+server/ReqWise-0a5c141543a9.json
