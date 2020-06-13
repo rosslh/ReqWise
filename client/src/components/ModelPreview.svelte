@@ -6,6 +6,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import EditModelDetailsModal from "../components/EditModelDetailsModal.svelte";
   import DeleteModelModal from "../components/DeleteModelModal.svelte";
+  import UploadModelModal from "../components/UploadModelModal.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
@@ -25,6 +26,14 @@
     modalProps.set({
       model,
       update
+    });
+  };
+  const uploadNewVersion = async () => {
+    modalContent.set(UploadModelModal);
+    modalProps.set({
+      projectId,
+      update,
+      model
     });
   };
 
@@ -138,14 +147,18 @@
       {@html model.svg}
     {:else}
       <div class="modelButtonWrapper">
-        <button title="Download" on:click={() => {}} class="button modelButton">
+        <a
+          title="Download"
+          href={`https://storage.googleapis.com/user-file-storage/${model.fileName}?t=${model.updated_at}`}
+          download
+          class="button modelButton">
           <div class="modelIconWrapper">
             <MdFileDownload />
           </div>
-        </button>
+        </a>
         <button
           title="Upload new version"
-          on:click={() => {}}
+          on:click={uploadNewVersion}
           class="button modelButton">
           <div class="modelIconWrapper">
             <MdCloudUpload />
@@ -155,13 +168,13 @@
       {#if isImageFile(model.fileName)}
         <img
           class="uploadedImage"
-          src={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}
+          src={`https://storage.googleapis.com/user-file-storage/${model.fileName}?t=${model.updated_at}`}
           alt={model.name} />
       {:else}
         <a
           target="_blank"
           rel="noopener"
-          href={`https://storage.cloud.google.com/user-file-storage/${model.fileName}?authuser=0`}>
+          href={`https://storage.googleapis.com/user-file-storage/${model.fileName}?t=${model.updated_at}`}>
           View file
         </a>
       {/if}

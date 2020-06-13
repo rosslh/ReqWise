@@ -56,6 +56,7 @@ module.exports = async function (fastify, opts) {
                 name: { type: "string" },
                 description: { type: "string" },
                 svg: { type: "string" },
+                file: { type: "string" }
             }
         },
         queryString: {},
@@ -87,18 +88,45 @@ module.exports = async function (fastify, opts) {
             schema: putModelSchema,
         },
         async function (request, reply) {
-            const { name, description, svg } = request.body;
-            return await fastify
-                .knex("model")
-                .where("id", request.params.modelId)
-                .update({
-                    name,
-                    description,
-                    svg,
-                    updated_at: new Date(Date.now()),
-                    updated_by: request.user.id,
+            const { name, description, svg, file } = request.body;
+            const model = await fastify.knex
+                .from("model")
+                .select("*")
+                .where({
+                    id: request.params.modelId,
                 })
-                .returning("id");
+                .first();
+            if (model.type === "upload") {
+                const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
+                const gcloudFile = await storage.bucket('user-file-storage').file(model.fileName);
+                await gcloudFile.save(data);
+                await gcloudFile.makePublic();
+                console.log("new version uploaded");
+
+                return await fastify
+                    .knex("model")
+                    .where("id", request.params.modelId)
+                    .update({
+                        name,
+                        description,
+                        updated_at: new Date(Date.now()),
+                        updated_by: request.user.id,
+                    })
+                    .returning("id");
+            }
+            else {
+                return await fastify
+                    .knex("model")
+                    .where("id", request.params.modelId)
+                    .update({
+                        name,
+                        description,
+                        svg,
+                        updated_at: new Date(Date.now()),
+                        updated_by: request.user.id,
+                    })
+                    .returning("id");
+            }
         }
     );
 

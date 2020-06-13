@@ -1,7 +1,8 @@
 <script>
   import { stores } from "@sapper/app";
+  import { onMount } from "svelte";
 
-  import { post } from "../api.js";
+  import { post, put } from "../api.js";
   import SubmitButton from "../components/SubmitButton.svelte";
 
   const { session } = stores();
@@ -9,9 +10,10 @@
   export let projectId;
   export let update;
   export let close;
+  export let model;
 
-  let name = "";
-  let description = "";
+  let name = model ? model.name : "";
+  let description = model ? model.description : "";
   let files;
 
   const toBase64 = file =>
@@ -23,22 +25,40 @@
     });
 
   $: addModel = async () => {
-    await post(
-      `/projects/${projectId}/models`,
-      {
-        name,
-        description,
-        file: await toBase64(files.item(0)),
-        fileName: files[0].name
-      },
-      $session.user && $session.user.jwt
-    );
-    update();
-    close();
+    if (!files || !files.length) {
+      alert("No file selected");
+      return;
+    }
+    if (model) {
+      await put(
+        `/models/${model.id}`,
+        {
+          name,
+          description,
+          file: await toBase64(files.item(0))
+        },
+        $session.user && $session.user.jwt
+      );
+      update();
+      close();
+    } else {
+      await post(
+        `/projects/${projectId}/models`,
+        {
+          name,
+          description,
+          file: await toBase64(files.item(0)),
+          fileName: files[0].name
+        },
+        $session.user && $session.user.jwt
+      );
+      update();
+      close();
+    }
   };
 </script>
 
-<h3>Upload a Model</h3>
+<h3>Upload a {model ? 'new version' : 'model'}</h3>
 <form>
   <fieldset>
     <label for="name">Title</label>
