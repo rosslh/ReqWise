@@ -35,7 +35,8 @@
         {
           name,
           description,
-          file: await toBase64(files.item(0))
+          file: await toBase64(files.item(0)),
+          fileName: files[0].name
         },
         $session.user && $session.user.jwt
       );

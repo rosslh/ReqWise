@@ -1,5 +1,6 @@
 module.exports = async function (fastify, opts) {
     const { Storage } = require('@google-cloud/storage');
+    const { v4: uuidv4 } = require('uuid');
     const storage = new Storage();
 
     const getModelSchema = {
@@ -56,7 +57,8 @@ module.exports = async function (fastify, opts) {
                 name: { type: "string" },
                 description: { type: "string" },
                 svg: { type: "string" },
-                file: { type: "string" }
+                file: { type: "string" },
+                fileName: { type: "string" },
             }
         },
         queryString: {},
@@ -88,7 +90,7 @@ module.exports = async function (fastify, opts) {
             schema: putModelSchema,
         },
         async function (request, reply) {
-            const { name, description, svg, file } = request.body;
+            const { name, description, svg, file, fileName } = request.body;
             const model = await fastify.knex
                 .from("model")
                 .select("*")
@@ -98,10 +100,11 @@ module.exports = async function (fastify, opts) {
                 .first();
             if (model.type === "upload") {
                 const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
-                const gcloudFile = await storage.bucket('user-file-storage').file(model.fileName);
+                const uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
+                const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
                 await gcloudFile.save(data);
                 await gcloudFile.makePublic();
-                console.log("new version uploaded");
+                await storage.bucket('user-file-storage').file(model.fileName).delete();
 
                 return await fastify
                     .knex("model")
@@ -111,6 +114,7 @@ module.exports = async function (fastify, opts) {
                         description,
                         updated_at: new Date(Date.now()),
                         updated_by: request.user.id,
+                        fileName: uploadedFileName
                     })
                     .returning("id");
             }
