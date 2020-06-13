@@ -245,7 +245,7 @@ exports.up = function (knex) {
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.boolean("isAdmin").notNullable();
     }),
-    knex.schema.createTable("model", (table) => {
+    knex.schema.createTable("file", (table) => {
       table.increments("id").primary();
       table
         .integer("ppuid_id")

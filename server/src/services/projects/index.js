@@ -138,7 +138,7 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const getProjectModelsSchema = {
+  const getProjectFilesSchema = {
     body: {},
     queryString: {},
     params: {
@@ -157,17 +157,17 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/projects/:projectId/models",
+    "/projects/:projectId/files",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getProjectModelsSchema,
+      schema: getProjectFilesSchema,
     },
     async function (request, reply) {
       return await fastify.knex
-        .from("model")
-        .select("model.*", "per_project_unique_id.readable_id as ppuid")
-        .join("per_project_unique_id", "per_project_unique_id.id", "model.ppuid_id")
-        .where({ "model.project_id": request.params.projectId })
+        .from("file")
+        .select("file.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
+        .where({ "file.project_id": request.params.projectId })
         .orderBy("ppuid", "asc");
     }
   );
@@ -291,7 +291,7 @@ module.exports = async function (fastify, opts) {
         .returning("id");
     }
   );
-  const postModelSchema = {
+  const postFileSchema = {
     body: {
       type: "object",
       required: ["name"],
@@ -326,10 +326,10 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/projects/:projectId/models",
+    "/projects/:projectId/files",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: postModelSchema,
+      schema: postFileSchema,
     },
     async function (request, reply) {
       const { name, description, svg, file, fileName } = request.body;
@@ -358,7 +358,7 @@ module.exports = async function (fastify, opts) {
         await gcloudFile.makePublic();
 
         return await fastify
-          .knex("model")
+          .knex("file")
           .insert({
             project_id,
             name,
@@ -373,7 +373,7 @@ module.exports = async function (fastify, opts) {
       }
       else {
         return await fastify
-          .knex("model")
+          .knex("file")
           .insert({
             project_id,
             name,

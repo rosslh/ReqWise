@@ -16,7 +16,7 @@
 
   const onSave = async svg => {
     await post(
-      `/projects/${projectId}/models`,
+      `/projects/${projectId}/files`,
       {
         name,
         description,
@@ -24,7 +24,7 @@
       },
       $session.user && $session.user.jwt
     );
-    goto(`/project/${projectId}/models`);
+    goto(`/project/${projectId}/files`);
   };
 </script>
 

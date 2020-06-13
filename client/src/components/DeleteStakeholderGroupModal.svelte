@@ -7,7 +7,7 @@
   export let update;
   export let close;
 
-  $: deleteStaeholderGroup = async () => {
+  $: deleteStakeholderGroup = async () => {
     await del(`/stakeholders/${group.id}`, $session.user && $session.user.jwt);
     await update();
     close();
@@ -18,6 +18,6 @@
 
 </style>
 
-<h3>Delete Model</h3>
+<h3>Delete Stakeholder Group</h3>
 <p>This action cannot be undone.</p>
-<button class="button-danger" on:click={deleteStaeholderGroup}>Delete</button>
+<button class="button-danger" on:click={deleteStakeholderGroup}>Delete</button>

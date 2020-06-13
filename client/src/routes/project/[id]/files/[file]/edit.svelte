@@ -1,13 +1,13 @@
 <script context="module">
   import { get } from "../../../../../api.js";
   export async function preload({ params, _path }, { user }) {
-    const model = await get(`/models/${params.model}`, user && user.jwt);
-    return { model };
+    const file = await get(`/files/${params.file}`, user && user.jwt);
+    return { file };
   }
 </script>
 
 <script>
-  export let model;
+  export let file;
   import { put } from "../../../../../api.js";
   import DiagramEditor from "../../../../../components/DiagramEditor.svelte";
 
@@ -16,17 +16,17 @@
 
   $: onSave = async svg => {
     await put(
-      `/models/${model.id}`,
+      `/files/${file.id}`,
       {
         svg
       },
       $session.user && $session.user.jwt
     );
-    goto(`/project/${model.project_id}/models`);
+    goto(`/project/${file.project_id}/files`);
   };
 </script>
 
 <section class="contentWrapper">
   <h2>Edit diagram</h2>
-  <DiagramEditor initialSvg={model.svg} callback={onSave} title={model.name} />
+  <DiagramEditor initialSvg={file.svg} callback={onSave} title={file.name} />
 </section>

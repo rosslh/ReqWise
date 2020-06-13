@@ -8,13 +8,13 @@
   const { page, session } = stores();
   const { id } = $page.params;
 
-  let models = get(
+  let stakeholders = get(
     `/projects/${id}/stakeholders`,
     $session.user && $session.user.jwt
   );
 
   const update = async () => {
-    models = await get(
+    stakeholders = await get(
       `/projects/${id}/stakeholders`,
       $session.user && $session.user.jwt
     );
@@ -38,7 +38,7 @@
   </button>
 </section>
 <section class="contentWrapper">
-  {#await models then result}
+  {#await stakeholders then result}
     {#each result as stakeholderGroup (stakeholderGroup.id)}
       <StakeholderGroup group={stakeholderGroup} {update} />
     {/each}

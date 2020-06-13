@@ -10,10 +10,10 @@
   export let projectId;
   export let update;
   export let close;
-  export let model;
+  export let file;
 
-  let name = model ? model.name : "";
-  let description = model ? model.description : "";
+  let name = file ? file.name : "";
+  let description = file ? file.description : "";
   let files;
 
   const toBase64 = file =>
@@ -24,14 +24,14 @@
       reader.onerror = error => reject(error);
     });
 
-  $: addModel = async () => {
+  $: addFile = async () => {
     if (!files || !files.length) {
       alert("No file selected");
       return;
     }
-    if (model) {
+    if (file) {
       await put(
-        `/models/${model.id}`,
+        `/files/${file.id}`,
         {
           name,
           description,
@@ -44,7 +44,7 @@
       close();
     } else {
       await post(
-        `/projects/${projectId}/models`,
+        `/projects/${projectId}/files`,
         {
           name,
           description,
@@ -59,7 +59,7 @@
   };
 </script>
 
-<h3>Upload a {model ? 'new version' : 'model'}</h3>
+<h3>Upload a {file ? 'new version' : 'file'}</h3>
 <form>
   <fieldset>
     <label for="name">Title</label>
@@ -83,5 +83,5 @@
     <label for="file">File to upload</label>
     <input type="file" id="file" name="file" bind:files />
   </fieldset>
-  <SubmitButton handler={addModel}>Add</SubmitButton>
+  <SubmitButton handler={addFile}>Add</SubmitButton>
 </form>

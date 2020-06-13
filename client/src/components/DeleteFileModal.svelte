@@ -3,12 +3,12 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  export let model;
+  export let file;
   export let update;
   export let close;
 
-  $: deleteModel = async () => {
-    await del(`/models/${model.id}`, $session.user && $session.user.jwt);
+  $: deleteFile = async () => {
+    await del(`/files/${file.id}`, $session.user && $session.user.jwt);
     await update();
     close();
   };
@@ -18,6 +18,6 @@
 
 </style>
 
-<h3>Delete Model</h3>
+<h3>Delete File</h3>
 <p>This action cannot be undone.</p>
-<button class="button-danger" on:click={deleteModel}>Delete</button>
+<button class="button-danger" on:click={deleteFile}>Delete</button>

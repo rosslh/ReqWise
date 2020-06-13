@@ -3,13 +3,13 @@ module.exports = async function (fastify, opts) {
     const { v4: uuidv4 } = require('uuid');
     const storage = new Storage();
 
-    const getModelSchema = {
+    const getFileSchema = {
         body: {},
         queryString: {},
         params: {
             type: "object",
             properties: {
-                modelId: { type: "number" },
+                fileId: { type: "number" },
             },
         },
         headers: {
@@ -33,24 +33,24 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.get(
-        "/models/:modelId",
+        "/files/:fileId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
-            schema: getModelSchema,
+            schema: getFileSchema,
         },
         async function (request, reply) {
             return await fastify.knex
-                .from("model")
+                .from("file")
                 .select("*")
                 .where({
-                    id: request.params.modelId,
+                    id: request.params.fileId,
                 })
                 .first();
         }
     );
 
 
-    const putModelSchema = {
+    const putFileSchema = {
         body: {
             type: "object",
             properties: {
@@ -65,7 +65,7 @@ module.exports = async function (fastify, opts) {
         params: {
             type: "object",
             properties: {
-                modelId: { type: "number" },
+                fileId: { type: "number" },
             },
         },
         headers: {
@@ -84,31 +84,31 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/models/:modelId",
+        "/files/:fileId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
-            schema: putModelSchema,
+            schema: putFileSchema,
         },
         async function (request, reply) {
             const { name, description, svg, file, fileName } = request.body;
-            const model = await fastify.knex
-                .from("model")
+            const currentFile = await fastify.knex
+                .from("file")
                 .select("*")
                 .where({
-                    id: request.params.modelId,
+                    id: request.params.fileId,
                 })
                 .first();
-            if (model.type === "upload") {
+            if (currentFile.type === "upload") {
                 const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
                 const uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
                 const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
                 await gcloudFile.save(data);
                 await gcloudFile.makePublic();
-                await storage.bucket('user-file-storage').file(model.fileName).delete();
+                await storage.bucket('user-file-storage').file(currentFile.fileName).delete();
 
                 return await fastify
-                    .knex("model")
-                    .where("id", request.params.modelId)
+                    .knex("file")
+                    .where("id", request.params.fileId)
                     .update({
                         name,
                         description,
@@ -120,8 +120,8 @@ module.exports = async function (fastify, opts) {
             }
             else {
                 return await fastify
-                    .knex("model")
-                    .where("id", request.params.modelId)
+                    .knex("file")
+                    .where("id", request.params.fileId)
                     .update({
                         name,
                         description,
@@ -134,13 +134,13 @@ module.exports = async function (fastify, opts) {
         }
     );
 
-    const deleteModelSchema = {
+    const deleteFileSchema = {
         body: {},
         queryString: {},
         params: {
             type: "object",
             properties: {
-                modelId: { type: "number" },
+                fileId: { type: "number" },
             },
         },
         headers: {
@@ -159,23 +159,23 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/models/:modelId",
+        "/files/:fileId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
-            schema: deleteModelSchema,
+            schema: deleteFileSchema,
         },
         async function (request, reply) {
-            const model = await fastify.knex
-                .from("model")
+            const file = await fastify.knex
+                .from("file")
                 .select("*")
                 .where({
-                    id: request.params.modelId,
+                    id: request.params.fileId,
                 })
                 .first();
 
-            if (model.type === "upload") {
+            if (file.type === "upload") {
                 try {
-                    await storage.bucket('user-file-storage').file(model.fileName).delete();
+                    await storage.bucket('user-file-storage').file(file.fileName).delete();
                 }
                 catch (e) {
                     console.error(e);
@@ -183,8 +183,8 @@ module.exports = async function (fastify, opts) {
             }
 
             await fastify
-                .knex("model")
-                .where("id", request.params.modelId)
+                .knex("file")
+                .where("id", request.params.fileId)
                 .del();
             return ["success"];
         }

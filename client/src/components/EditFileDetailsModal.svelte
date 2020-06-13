@@ -7,13 +7,13 @@
 
   export let close;
   export let update;
-  export let model;
+  export let file;
 
-  let { name, description, id } = model;
+  let { name, description, id } = file;
 
   $: save = async () => {
     await put(
-      `/models/${id}`,
+      `/files/${id}`,
       {
         name,
         description
@@ -25,7 +25,7 @@
   };
 </script>
 
-<h3>Update model details</h3>
+<h3>Update file details</h3>
 <form>
   <fieldset>
     <label for="name">Name</label>

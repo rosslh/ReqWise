@@ -77,15 +77,15 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
-  const isTeamMemberByModelId = async (request, reply, isAdmin = false) => {
+  const isTeamMemberByFileId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
-        .from("model")
-        .join("project", "project.id", "model.project_id")
+        .from("file")
+        .join("project", "project.id", "file.project_id")
         .join("account_team", "account_team.team_id", "project.team_id")
         .select("account_team.id")
         .where({
-          "model.id": request.params.modelId,
+          "file.id": request.params.fileId,
           "account_team.account_id": request.user.id,
           ...(isAdmin && { isAdmin }),
         })
@@ -193,8 +193,8 @@ module.exports = fp(async function (fastify, opts) {
     else if (request.params.stakeholderGroupId) {
       return isTeamMemberByStakeholderGroupId(request, reply, true);
     }
-    else if (request.params.modelId) {
-      return isTeamMemberByModelId(request, reply, true);
+    else if (request.params.fileId) {
+      return isTeamMemberByFileId(request, reply, true);
     }
     else if (request.params.reqgroupId) {
       return isTeamMemberByReqgroupId(request, reply);
@@ -218,8 +218,8 @@ module.exports = fp(async function (fastify, opts) {
     else if (request.params.stakeholderGroupId) {
       return isTeamMemberByStakeholderGroupId(request, reply, true);
     }
-    else if (request.params.modelId) {
-      return isTeamMemberByModelId(request, reply, true);
+    else if (request.params.fileId) {
+      return isTeamMemberByFileId(request, reply, true);
     }
     else if (request.params.reqgroupId) {
       return isTeamMemberByReqgroupId(request, reply, true);

@@ -1,12 +1,12 @@
 <script>
   export let update;
-  export let model;
+  export let file;
   export let projectId;
 
   import { modalContent, modalProps } from "../stores.js";
-  import EditModelDetailsModal from "../components/EditModelDetailsModal.svelte";
-  import DeleteModelModal from "../components/DeleteModelModal.svelte";
-  import UploadModelModal from "../components/UploadModelModal.svelte";
+  import EditFileDetailsModal from "../components/EditFileDetailsModal.svelte";
+  import DeleteFileModal from "../components/DeleteFileModal.svelte";
+  import UploadFileModal from "../components/UploadFileModal.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
@@ -14,26 +14,26 @@
   import MdFileDownload from "svelte-icons/md/MdFileDownload.svelte";
   import MdCloudUpload from "svelte-icons/md/MdCloudUpload.svelte";
 
-  const editModelDetails = model => {
-    modalContent.set(EditModelDetailsModal);
+  const editFileDetails = file => {
+    modalContent.set(EditFileDetailsModal);
     modalProps.set({
-      model,
+      file,
       update
     });
   };
-  const deleteModel = () => {
-    modalContent.set(DeleteModelModal);
+  const deleteFile = () => {
+    modalContent.set(DeleteFileModal);
     modalProps.set({
-      model,
+      file,
       update
     });
   };
   const uploadNewVersion = async () => {
-    modalContent.set(UploadModelModal);
+    modalContent.set(UploadFileModal);
     modalProps.set({
       projectId,
       update,
-      model
+      file
     });
   };
 
@@ -42,7 +42,7 @@
 </script>
 
 <style>
-  .modelPreview {
+  .filePreview {
     border: 0.1rem solid var(--borderColor);
     border-radius: 0.4rem;
     margin: 2rem 0;
@@ -92,13 +92,13 @@
     margin: 0;
   }
 
-  .modelButtonWrapper {
+  .fileButtonWrapper {
     position: absolute;
     top: 1rem;
     right: 1rem;
     display: flex;
   }
-  .modelButton {
+  .fileButton {
     border-radius: 50%;
     height: 2.8rem;
     width: 2.8rem;
@@ -113,13 +113,13 @@
     margin-left: 0.3rem;
   }
 
-  .modelButton .modelIconWrapper {
+  .fileButton .fileIconWrapper {
     margin: 0;
     height: 1.8rem;
     width: 1.8rem;
   }
 
-  .modelPpuid {
+  .filePpuid {
     color: var(--secondaryText);
     font-weight: 300;
     margin-left: 0.5rem;
@@ -131,50 +131,50 @@
   }
 </style>
 
-<div class="modelPreview">
+<div class="filePreview">
   <div class="diagramWrapper">
-    {#if model.type === 'diagram'}
-      <div class="modelButtonWrapper">
+    {#if file.type === 'diagram'}
+      <div class="fileButtonWrapper">
         <a
           title="Edit"
-          href={`/project/${projectId}/models/${model.id}/edit`}
-          class="button modelButton">
-          <div class="modelIconWrapper">
+          href={`/project/${projectId}/files/${file.id}/edit`}
+          class="button fileButton">
+          <div class="fileIconWrapper">
             <MdEdit />
           </div>
         </a>
       </div>
-      {@html model.svg}
+      {@html file.svg}
     {:else}
-      <div class="modelButtonWrapper">
+      <div class="fileButtonWrapper">
         <a
           title="Download"
-          href={`https://storage.googleapis.com/user-file-storage/${model.fileName}`}
+          href={`https://storage.googleapis.com/user-file-storage/${file.fileName}`}
           download
-          class="button modelButton">
-          <div class="modelIconWrapper">
+          class="button fileButton">
+          <div class="fileIconWrapper">
             <MdFileDownload />
           </div>
         </a>
         <button
           title="Upload new version"
           on:click={uploadNewVersion}
-          class="button modelButton">
-          <div class="modelIconWrapper">
+          class="button fileButton">
+          <div class="fileIconWrapper">
             <MdCloudUpload />
           </div>
         </button>
       </div>
-      {#if isImageFile(model.fileName)}
+      {#if isImageFile(file.fileName)}
         <img
           class="uploadedImage"
-          src={`https://storage.googleapis.com/user-file-storage/${model.fileName}`}
-          alt={model.name} />
+          src={`https://storage.googleapis.com/user-file-storage/${file.fileName}`}
+          alt={file.name} />
       {:else}
         <a
           target="_blank"
           rel="noopener"
-          href={`https://storage.googleapis.com/user-file-storage/${model.fileName}`}>
+          href={`https://storage.googleapis.com/user-file-storage/${file.fileName}`}>
           View file
         </a>
       {/if}
@@ -182,14 +182,14 @@
   </div>
   <div class="textContent">
     <h3>
-      {model.name}
-      <span class="modelPpuid">#{model.ppuid}</span>
+      {file.name}
+      <span class="filePpuid">#{file.ppuid}</span>
     </h3>
-    <p>{model.description}</p>
+    <p>{file.description}</p>
   </div>
   <div class="footer">
     <button
-      on:click={() => editModelDetails(model)}
+      on:click={() => editFileDetails(file)}
       class="button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
         <FaRegEdit />
@@ -197,7 +197,7 @@
       Edit details
     </button>
     <button
-      on:click={deleteModel}
+      on:click={deleteFile}
       class="button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
         <FaRegTrashAlt />

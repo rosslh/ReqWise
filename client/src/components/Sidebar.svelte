@@ -40,8 +40,8 @@
       icon: IoMdRibbon
     },
     {
-      label: "Models and Diagrams",
-      slug: "models",
+      label: "Diagrams and Files",
+      slug: "files",
       icon: FaShapes,
       newSection: true,
       extraPadding: true
