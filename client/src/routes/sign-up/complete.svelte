@@ -1,5 +1,5 @@
 <script context="module">
-  export async function preload(page, { user }) {
+  export async function preload(page) {
     const { token, email } = page.query;
     return { token, email };
   }

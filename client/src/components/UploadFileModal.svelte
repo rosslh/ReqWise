@@ -1,6 +1,5 @@
 <script>
   import { stores } from "@sapper/app";
-  import { onMount } from "svelte";
 
   import { post, put } from "../api.js";
   import SubmitButton from "../components/SubmitButton.svelte";

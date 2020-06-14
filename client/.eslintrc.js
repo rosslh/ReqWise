@@ -23,7 +23,8 @@ module.exports = {
     ],
     "ignorePatterns": [
         "__sapper__/",
-        "node_modules/"
+        "node_modules/",
+        "cypress/"
     ],
     "rules": {
         "no-unused-vars": [

@@ -10,7 +10,7 @@
   import Stakeholder from "./Stakeholder.svelte";
   import ReqgroupHeader from "./ReqgroupHeader.svelte";
 
-  import { get, del } from "../api.js";
+  import { get } from "../api.js";
 
   import { stores } from "@sapper/app";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";

@@ -14,7 +14,7 @@
   let description = "";
   let rationale = "";
 
-  $: addReq = async e => {
+  $: addReq = async () => {
     await post(
       `/reqgroups/${reqgroupId}/requirements`,
       {

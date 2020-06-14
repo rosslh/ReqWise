@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { stores } from "@sapper/app";
   import { get } from "../api.js";
   import Skeleton from "../components/Skeleton.svelte";
