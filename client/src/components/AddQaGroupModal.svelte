@@ -44,15 +44,23 @@
   let attribute = attributeOptions[0];
 </script>
 
-<h3>Add a Quality Attribute</h3>
-<form>
-  <fieldset>
-    <label for="attribute">Quality Attribute</label>
-    <Select
-      inputAttributes={{ id: 'attribute' }}
-      isCreatable={true}
-      items={attributeOptions}
-      bind:selectedValue={attribute} />
-  </fieldset>
-  <SubmitButton handler={addReqGroup}>Add</SubmitButton>
-</form>
+<style>
+  .qaWrapper {
+    min-height: 70vh;
+  }
+</style>
+
+<div class="qaWrapper">
+  <h3>Add a Quality Attribute</h3>
+  <form>
+    <fieldset>
+      <label for="attribute">Quality Attribute</label>
+      <Select
+        inputAttributes={{ id: 'attribute' }}
+        isCreatable={true}
+        items={attributeOptions}
+        bind:selectedValue={attribute} />
+    </fieldset>
+    <SubmitButton handler={addReqGroup}>Add</SubmitButton>
+  </form>
+</div>

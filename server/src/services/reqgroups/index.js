@@ -43,7 +43,7 @@ module.exports = async function (fastify, opts) {
         .from("reqgroup")
         .select("*", "per_project_unique_id.readable_id as ppuid")
         .where({
-          id: request.params.reqgroupId,
+          "reqgroup.id": request.params.reqgroupId,
         })
         .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
         .first();
