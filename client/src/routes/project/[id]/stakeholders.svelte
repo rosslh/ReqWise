@@ -31,7 +31,8 @@
   <p class="infoBlurb">
     A stakeholder is an individual, group, or organization that is actively
     involved in a project, is affected by its process or outcome, or can
-    influence its process or outcome.
+    influence its process or outcome. Some examples might be the product owners,
+    developers, or customers.
   </p>
   <button class="button-success" on:click={createStakeholderGroup}>
     Add stakeholder group
