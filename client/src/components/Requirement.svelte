@@ -3,6 +3,7 @@
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
+  import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import FaGripVertical from "svelte-icons/fa/FaGripVertical.svelte";
 
   import { modalContent, modalProps } from "../stores.js";
@@ -28,7 +29,7 @@
         return "red";
       case "accepted":
         return "indigo";
-      case "inProgress":
+      case "modified":
         return "orange";
       default:
         return "green";
@@ -252,28 +253,28 @@
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaExclamation />
       </span>
-      <span>Proposed</span>
-    {:else}
+      Proposed
+    {:else if requirement.status === 'accepted'}
       <span
         class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaThumbsUp />
       </span>
       Accepted
-      <!-- {:else if requirement.status === 'inProgress'}
+    {:else if requirement.status === 'modified'}
       <span
         class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaRegClock />
+        <FaExclamation />
       </span>
-      In Progress
+      Modified
     {:else}
       <span
         class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaCheck />
       </span>
-      Implemented -->
+      Implemented
     {/if}
   </div>
   {#if isPrioritized}

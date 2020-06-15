@@ -11,17 +11,17 @@
       name: "accepted",
       color: "indigo",
       label: "Accepted"
+    },
+    {
+      name: "modified",
+      color: "orange",
+      label: "Modified"
+    },
+    {
+      name: "implemented",
+      color: "green",
+      label: "Implemented"
     }
-    // {
-    //   name: "inProgress",
-    //   color: "orange",
-    //   label: "In Progress"
-    // },
-    // {
-    //   name: "implemented",
-    //   color: "green",
-    //   label: "Implemented"
-    // }
   ];
 
   $: entries = requirements

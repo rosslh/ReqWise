@@ -13,9 +13,9 @@
 
   const statusOptions = [
     { value: "proposed", label: "Proposed" },
-    { value: "accepted", label: "Accepted" }
-    // { value: "inProgress", label: "In Progress" },
-    // { value: "implemented", label: "Implemented" }
+    { value: "accepted", label: "Accepted" },
+    { value: "modified", label: "Modified" },
+    { value: "implemented", label: "Implemented" }
   ];
 
   let status = statusOptions[0];
