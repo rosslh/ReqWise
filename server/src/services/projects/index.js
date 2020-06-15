@@ -300,7 +300,8 @@ module.exports = async function (fastify, opts) {
         description: { type: "string" },
         svg: { type: "string" },
         file: { type: "string" },
-        fileName: { type: "string" }
+        fileName: { type: "string" },
+        url: { type: "string" },
       },
     },
     queryString: {},
@@ -332,7 +333,10 @@ module.exports = async function (fastify, opts) {
       schema: postFileSchema,
     },
     async function (request, reply) {
-      const { name, description, svg, file, fileName } = request.body;
+      const { name, description, svg, file, fileName, url } = request.body;
+      if (!(svg || fileName || url)) {
+        reply.code(400).send("Missing svg or file or url");
+      }
       const { projectId: project_id } = request.params;
       const maxPpuid =
         (
@@ -368,6 +372,21 @@ module.exports = async function (fastify, opts) {
             updated_by: request.user.id,
             fileName: uploadedFileName,
             type: "upload"
+          })
+          .returning("id");
+      }
+      else if (url) {
+        return await fastify
+          .knex("file")
+          .insert({
+            project_id,
+            name,
+            description,
+            ppuid_id,
+            created_by: request.user.id,
+            updated_by: request.user.id,
+            url,
+            type: "externalResource"
           })
           .returning("id");
       }

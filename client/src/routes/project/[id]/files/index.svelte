@@ -3,6 +3,7 @@
   import { get } from "../../../../api.js";
   import FilePreview from "../../../../components/FilePreview.svelte";
   import UploadFileModal from "../../../../components/UploadFileModal.svelte";
+  import LinkResourceModal from "../../../../components/LinkResourceModal.svelte";
   import { modalContent, modalProps } from "../../../../stores.js";
 
   const { page, session } = stores();
@@ -21,13 +22,12 @@
     modalContent.set(UploadFileModal);
     modalProps.set({ projectId: id, update });
   };
-</script>
 
-<style>
-  a#create-file-button {
-    margin-right: 1.5rem;
-  }
-</style>
+  const link = async () => {
+    modalContent.set(LinkResourceModal);
+    modalProps.set({ projectId: id, update });
+  };
+</script>
 
 <section class="contentWrapper">
   <h2>Diagrams and Files</h2>
@@ -43,6 +43,7 @@
     Draw Diagram
   </a>
   <button class="button button-outline" on:click={upload}>Upload File</button>
+  <button class="button button-outline" on:click={link}>Link Resource</button>
 </section>
 {#await files}
   <!-- loading -->

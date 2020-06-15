@@ -145,6 +145,10 @@
         </a>
       </div>
       {@html file.svg}
+    {:else if file.type === 'externalResource'}
+      <a target="_blank" rel="noopener" href={file.url}>
+        View external resource
+      </a>
     {:else}
       <div class="fileButtonWrapper">
         <a

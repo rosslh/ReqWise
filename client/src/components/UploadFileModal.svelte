@@ -60,27 +60,29 @@
 
 <h3>Upload a {file ? 'new version' : 'file'}</h3>
 <form>
-  <fieldset>
-    <label for="name">Title</label>
-    <input
-      type="text"
-      id="name"
-      name="name"
-      class="newReqInput"
-      bind:value={name} />
-  </fieldset>
-  <fieldset>
-    <label for="desc">Description</label>
-    <input
-      type="text"
-      id="desc"
-      name="desc"
-      class="newReqInput"
-      bind:value={description} />
-  </fieldset>
+  {#if !file}
+    <fieldset>
+      <label for="name">Title</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="newReqInput"
+        bind:value={name} />
+    </fieldset>
+    <fieldset>
+      <label for="desc">Description</label>
+      <input
+        type="text"
+        id="desc"
+        name="desc"
+        class="newReqInput"
+        bind:value={description} />
+    </fieldset>
+  {/if}
   <fieldset>
     <label for="file">File to upload</label>
     <input type="file" id="file" name="file" bind:files />
   </fieldset>
-  <SubmitButton handler={addFile}>Add</SubmitButton>
+  <SubmitButton handler={addFile}>Upload</SubmitButton>
 </form>
