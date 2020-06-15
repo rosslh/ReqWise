@@ -1,7 +1,47 @@
+<script>
+  import { stores } from "@sapper/app";
+
+  import { modalContent, modalProps } from "../../../stores.js";
+  import AddUserclassModal from "../../../components/AddUserclassModal.svelte";
+  import Userclass from "../../../components/Userclass.svelte";
+  import { get } from "../../../api.js";
+
+  const { page, session } = stores();
+  const { id } = $page.params;
+
+  const update = () => {};
+
+  const addUserclass = async () => {
+    modalContent.set(AddUserclassModal);
+    modalProps.set({ id, update });
+  };
+
+  let userclasses = get(
+    `/projects/${id}/userclasses`,
+    $session.user && $session.user.jwt
+  );
+</script>
+
 <section class="contentWrapper">
   <h2>User Classes</h2>
   <p class="infoBlurb">
     A user class is a group of users who have similar characteristics and
     requirements for the system.
   </p>
+  <button class="button button-success" on:click={addUserclass}>
+    Add user class
+  </button>
 </section>
+{#await userclasses}
+  <!-- loading -->
+{:then result}
+  <section class="contentWrapper">
+    {#each result as userclass (userclass.id)}
+      <Userclass {userclass} />
+    {/each}
+  </section>
+{:catch error}
+  <section class="contentWrapper">
+    <p style="color: var(--red)">{error.message}</p>
+  </section>
+{/await}

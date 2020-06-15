@@ -493,4 +493,112 @@ module.exports = async function (fastify, opts) {
         .returning("id");
     }
   );
+
+  const getProjectUserclassesSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/projects/:projectId/userclasses",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectUserclassesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("userclass")
+        .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
+        .where({ "userclass.project_id": request.params.projectId })
+        .orderBy("ppuid", "asc");
+    }
+  );
+
+  const postUserclassSchema = {
+    body: {
+      type: "object",
+      required: ["name"],
+      properties: {
+        name: { type: "string" },
+        description: { type: "string" },
+        persona: { type: "string" },
+        importance: { type: "string" },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "number" },
+      },
+    },
+  };
+  fastify.post(
+    "/projects/:projectId/userclasses",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postUserclassSchema,
+    },
+    async function (request, reply) {
+      const { name, description, persona, importance } = request.body;
+      const { projectId: project_id } = request.params;
+      const maxPpuid =
+        (
+          await fastify
+            .knex("per_project_unique_id")
+            .where({ project_id })
+            .max("readable_id")
+            .first()
+        ).max || 0;
+      const ppuid_id = (await fastify
+        .knex("per_project_unique_id")
+        .insert({
+          project_id,
+          readable_id: maxPpuid + 1
+        })
+        .returning("id"))[0];
+
+      return await fastify
+        .knex("userclass")
+        .insert({
+          project_id,
+          name,
+          description,
+          persona,
+          importance,
+          ppuid_id,
+          created_by: request.user.id,
+          updated_by: request.user.id,
+        })
+        .returning("id");
+    }
+  );
 };
