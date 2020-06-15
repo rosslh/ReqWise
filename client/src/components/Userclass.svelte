@@ -1,27 +1,27 @@
 <script>
-  //   export let update;
+  export let update;
   export let userclass;
-  //   export let projectId;
 
   import { modalContent, modalProps } from "../stores.js";
+  import DeleteUserclassModal from "../components/DeleteUserclassModal.svelte";
+  import EditUserclassModal from "../components/EditUserclassModal.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
 
   const deleteUserclass = () => {
-    // modalContent.set(DeleteFileModal);
-    // modalProps.set({
-    //   file,
-    //   update
-    // });
+    modalContent.set(DeleteUserclassModal);
+    modalProps.set({
+      userclass,
+      update
+    });
   };
   const editUserclass = async () => {
-    // modalContent.set(UploadFileModal);
-    // modalProps.set({
-    //   projectId,
-    //   update,
-    //   file
-    // });
+    modalContent.set(EditUserclassModal);
+    modalProps.set({
+      update,
+      userclass
+    });
   };
 
   const getImportanceColor = status => {
@@ -33,7 +33,7 @@
       case "ignored":
         return "red";
       default:
-        return "secondaryText";
+        return "indigo";
     }
   };
 </script>
@@ -47,20 +47,18 @@
     overflow: hidden;
   }
 
-  .textContent {
-    padding: 2rem;
-  }
-
-  .textContent p {
-    margin-bottom: 0;
+  .description,
+  .persona,
+  .champions {
+    padding: 0 2rem;
   }
 
   div.userclassHeader {
-    padding: 2rem;
+    padding: 2rem 2rem 0;
   }
 
   div.userclassHeader h3 {
-    margin-top: 0;
+    margin: 0;
     font-size: 1.8rem;
   }
 
@@ -92,6 +90,22 @@
     font-size: 1.3rem;
     font-weight: 500;
   }
+
+  h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.6rem;
+  }
+
+  .twoCol {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .twoCol > * {
+    flex-grow: 1;
+    min-width: 40rem;
+  }
 </style>
 
 <div class="userclassWrapper">
@@ -110,13 +124,23 @@
       </span>
     </div>
   </div>
-  <div class="textContent">
-    <p>{userclass.description}</p>
-    <p>{userclass.persona}</p>
+  <div class="twoCol">
+    <div class="description">
+      <h4>Description</h4>
+      <blockquote>{userclass.description}</blockquote>
+    </div>
+    <div class="persona">
+      <h4>User Persona</h4>
+      <blockquote>{userclass.persona}</blockquote>
+    </div>
+  </div>
+  <div class="champions">
+    <h4>Product Champions</h4>
+    ...
   </div>
   <div class="footer">
     <button
-      on:click={() => {}}
+      on:click={editUserclass}
       class="button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
         <FaRegEdit />

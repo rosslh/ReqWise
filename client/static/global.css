@@ -292,6 +292,10 @@ body {
 
 blockquote {
   border-left: 0.3rem solid var(--borderColor);
+  background-color: var(--background2);
+  color: var(--secondaryText);
+  border-top-right-radius: 0.4rem;
+  border-bottom-right-radius: 0.4rem;
   margin-left: 0;
   margin-right: 0;
   padding: 1rem 1.5rem;

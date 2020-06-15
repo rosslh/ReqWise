@@ -9,17 +9,22 @@
   const { page, session } = stores();
   const { id } = $page.params;
 
-  const update = () => {};
+  let userclasses = get(
+    `/projects/${id}/userclasses`,
+    $session.user && $session.user.jwt
+  );
+
+  const update = async () => {
+    userclasses = await get(
+      `/projects/${id}/userclasses`,
+      $session.user && $session.user.jwt
+    );
+  };
 
   const addUserclass = async () => {
     modalContent.set(AddUserclassModal);
     modalProps.set({ id, update });
   };
-
-  let userclasses = get(
-    `/projects/${id}/userclasses`,
-    $session.user && $session.user.jwt
-  );
 </script>
 
 <section class="contentWrapper">
@@ -37,7 +42,7 @@
 {:then result}
   <section class="contentWrapper">
     {#each result as userclass (userclass.id)}
-      <Userclass {userclass} />
+      <Userclass {userclass} {update} />
     {/each}
   </section>
 {:catch error}

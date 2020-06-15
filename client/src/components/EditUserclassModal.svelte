@@ -1,0 +1,83 @@
+<script>
+  import Select from "svelte-select";
+  import { put } from "../api.js";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
+
+  import SubmitButton from "../components/SubmitButton.svelte";
+  import MdInfoOutline from "svelte-icons/md/MdInfoOutline.svelte";
+
+  export let close;
+  export let update;
+  export let userclass;
+
+  let { name, description, id, persona, importance } = userclass;
+
+  const capitalizeFirstLetter = str =>
+    str.charAt(0).toUpperCase() + str.slice(1);
+
+  const importanceOptions = ["favored", "disfavored", "ignored", "other"].map(
+    attr => ({ value: attr, label: capitalizeFirstLetter(attr) })
+  );
+
+  let newImportance = importanceOptions.find(x => x.value === importance);
+
+  $: save = async () => {
+    await put(
+      `/userclasses/${id}`,
+      {
+        name,
+        description,
+        persona,
+        importance: newImportance.value
+      },
+      $session.user && $session.user.jwt
+    );
+    await update();
+    close();
+  };
+</script>
+
+<style>
+  .personaInfoIcon {
+    padding-left: 0.5rem;
+  }
+  :global(.personaInfoIcon svg) {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+</style>
+
+<h3>Update userclass details</h3>
+<form>
+  <fieldset>
+    <label for="name">Name</label>
+    <input type="text" id="name" bind:value={name} />
+  </fieldset>
+  <fieldset>
+    <label for="desc">Description</label>
+    <input type="text" id="desc" bind:value={description} />
+  </fieldset>
+  <fieldset>
+    <label for="persona">
+      User persona
+      <a
+        href="http://www.agilemodeling.com/artifacts/personas.htm"
+        target="_blank"
+        rel="noopener"
+        class="personaInfoIcon">
+        <MdInfoOutline />
+      </a>
+    </label>
+    <textarea id="persona" bind:value={persona} />
+  </fieldset>
+  <fieldset>
+    <label for="importance">Importance</label>
+    <Select
+      inputAttributes={{ id: 'importance' }}
+      isCreatable={true}
+      items={importanceOptions}
+      bind:selectedValue={newImportance} />
+  </fieldset>
+  <SubmitButton className="button-caution" handler={save}>Save</SubmitButton>
+</form>
