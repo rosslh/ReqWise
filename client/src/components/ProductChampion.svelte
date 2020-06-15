@@ -1,18 +1,18 @@
 <script>
-  export let user;
-  export let stakeholderGroupId;
+  export let champion;
+  export let userclassId;
   export let update;
 
   import { put, del } from "../api.js";
 
   import { stores } from "@sapper/app";
 
-  const initialDesc = user.description;
-  let newDesc = user.description;
+  const initialDesc = champion.description;
+  let newDesc = champion.description;
 
-  const removeStakeholder = async () => {
+  const removeChampion = async () => {
     await del(
-      `/stakeholders/${stakeholderGroupId}/users/${user.id}`,
+      `/userclasses/${userclassId}/champions/${champion.id}`,
       $session.user && $session.user.jwt
     );
     update();
@@ -26,7 +26,7 @@
 
   const saveEdit = async () => {
     await put(
-      `/stakeholders/${stakeholderGroupId}/users/${user.id}`,
+      `/userclasses/${userclassId}/champions/${champion.id}`,
       { description: newDesc },
       $session.user && $session.user.jwt
     );
@@ -35,22 +35,23 @@
 </script>
 
 <style>
-  fieldset.stakeholderNotes {
+  fieldset.championNotes {
     margin-bottom: 0;
   }
 
-  fieldset.stakeholderNotes input {
+  fieldset.championNotes input {
     margin-left: 0;
   }
+
   td:last-child {
     text-align: right;
   }
 </style>
 
 <tr>
-  <td>{user.name}</td>
+  <td>{champion.name}</td>
   <td>
-    <fieldset class="inline stakeholderNotes">
+    <fieldset class="inline championNotes">
       <input type="text" bind:value={newDesc} />
     </fieldset>
   </td>
@@ -72,8 +73,8 @@
       <button
         class="button-danger button-small button-outline"
         style="margin: 0;"
-        on:click={() => removeStakeholder(user.id)}>
-        Remove stakeholder
+        on:click={() => removeChampion(champion.id)}>
+        Remove champion
       </button>
     {/if}
   </td>

@@ -1,13 +1,20 @@
 <script>
   export let update;
   export let userclass;
+  export let projectId;
 
   import { modalContent, modalProps } from "../stores.js";
+  import { get } from "../api.js";
   import DeleteUserclassModal from "../components/DeleteUserclassModal.svelte";
   import EditUserclassModal from "../components/EditUserclassModal.svelte";
+  import AddProductChampionModal from "../components/AddProductChampionModal.svelte";
+  import Skeleton from "../components/Skeleton.svelte";
+  import ProductChampion from "../components/ProductChampion.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   const deleteUserclass = () => {
     modalContent.set(DeleteUserclassModal);
@@ -36,6 +43,27 @@
         return "indigo";
     }
   };
+
+  let champions = get(
+    `/userclasses/${userclass.id}/champions`,
+    $session.user && $session.user.jwt
+  );
+
+  const updateChampions = () => {
+    champions = get(
+      `/userclasses/${userclass.id}/champions`,
+      $session.user && $session.user.jwt
+    );
+  };
+
+  const addChampion = () => {
+    modalContent.set(AddProductChampionModal);
+    modalProps.set({
+      update: updateChampions,
+      userclassId: userclass.id,
+      projectId
+    });
+  };
 </script>
 
 <style>
@@ -55,6 +83,8 @@
 
   div.userclassHeader {
     padding: 2rem 2rem 0;
+    display: flex;
+    justify-content: space-between;
   }
 
   div.userclassHeader h3 {
@@ -70,17 +100,12 @@
 
   .footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 0 2rem 2rem;
   }
 
   .footer button {
     margin: 0;
-  }
-
-  div.userclassHeader {
-    display: flex;
-    justify-content: space-between;
   }
 
   div.userclassHeader span.importanceLabel {
@@ -109,6 +134,14 @@
 
   .twoCol blockquote {
     margin-bottom: 0.5rem;
+  }
+
+  .championEmptyState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    margin-bottom: 2rem;
   }
 </style>
 
@@ -140,24 +173,65 @@
   </div>
   <div class="champions">
     <h4>Product Champions</h4>
-    ...
+    {#await champions}
+      <Skeleton rows={2} />
+    {:then result}
+      {#if !result.length}
+        <div class="championEmptyState">
+          <button
+            class="button button-small button-outline"
+            on:click={addChampion}>
+            add product champion
+          </button>
+        </div>
+      {/if}
+      <table>
+        <tbody>
+          {#each result as champion}
+            <ProductChampion
+              {champion}
+              userclassId={userclass.id}
+              update={updateChampions} />
+          {/each}
+        </tbody>
+      </table>
+    {:catch error}
+      <section class="contentWrapper">
+        <p style="color: var(--red)">{error.message}</p>
+      </section>
+    {/await}
   </div>
   <div class="footer">
-    <button
-      on:click={editUserclass}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegEdit />
-      </div>
-      Edit details
-    </button>
-    <button
-      on:click={deleteUserclass}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegTrashAlt />
-      </div>
-      Delete
-    </button>
+    <div class="left">
+      {#await champions}
+        <Skeleton rows={2} />
+      {:then result}
+        {#if result.length}
+          <button
+            class="button button-success button-small button-outline"
+            on:click={addChampion}>
+            add champion
+          </button>
+        {/if}
+      {/await}
+    </div>
+    <div class="right">
+      <button
+        on:click={editUserclass}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegEdit />
+        </div>
+        Edit details
+      </button>
+      <button
+        on:click={deleteUserclass}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+        Delete
+      </button>
+    </div>
   </div>
 </div>

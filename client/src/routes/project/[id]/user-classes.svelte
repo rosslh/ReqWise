@@ -42,7 +42,7 @@
 {:then result}
   <section class="contentWrapper">
     {#each result as userclass (userclass.id)}
-      <Userclass {userclass} {update} />
+      <Userclass {userclass} {update} projectId={id} />
     {/each}
   </section>
 {:catch error}

@@ -88,13 +88,6 @@
       <Skeleton rows={2} />
     {:then result}
       <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Notes</th>
-            <th />
-          </tr>
-        </thead>
         <tbody>
           {#each result as user}
             <Stakeholder
