@@ -120,7 +120,7 @@
     }}>
     Create team
   </button>
-  <h2>Invites</h2>
+  <h1>Invites</h1>
   {#await invites}
     <Skeleton rows={2} />
   {:then result}

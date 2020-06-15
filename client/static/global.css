@@ -590,7 +590,8 @@ h6 {
 }
 
 h1 {
-  font-size: 4.57rem;
+  /* font-size: 4.57rem; */
+  font-size: 3.515rem;
 }
 
 /* 1.2 */
@@ -641,8 +642,8 @@ img {
   --background1:#ffffff;
   --background2: #F7FAFC;
 
-  --normalText: #4a5568;
-  --secondaryText: #647287;
+  --normalText: #2D3748;
+  --secondaryText: #4A5568;
   --borderColor: #d7dfe8;
 
   --themeColor: #38a169;

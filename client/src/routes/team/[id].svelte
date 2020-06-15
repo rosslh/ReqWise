@@ -109,7 +109,7 @@
     </form>
   </section>
   <section>
-    <h2>Projects</h2>
+    <h1>Projects</h1>
     {#await projects}
       <Skeleton rows={3} />
     {:then result}
@@ -146,7 +146,7 @@
     {/if}
   </section>
   <section>
-    <h2>Members</h2>
+    <h1>Members</h1>
     {#await members}
       <Skeleton rows={3} />
     {:then result}
@@ -257,7 +257,7 @@
   </section>
   {#if isAdmin}
     <section>
-      <h2>Danger Zone</h2>
+      <h1>Danger Zone</h1>
       <button class="button-danger" on:click={deleteTeam}>Delete team</button>
     </section>
   {/if}

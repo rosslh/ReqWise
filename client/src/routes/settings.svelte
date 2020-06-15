@@ -77,7 +77,7 @@
   <title>Settings - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
-  <h2>Settings</h2>
+  <h1>Settings</h1>
   <form>
     <fieldset>
       <label for="name">Your name</label>

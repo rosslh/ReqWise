@@ -323,7 +323,8 @@ h6 {
 }
 
 h1 {
-  font-size: 4.57rem;
+  /* font-size: 4.57rem; */
+  font-size: 3.515rem;
 }
 /* 1.2 */
 h2 {

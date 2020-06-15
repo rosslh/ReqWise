@@ -41,7 +41,7 @@
   <title>Complete sign up - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
-  <h2>Complete sign up</h2>
+  <h1>Complete sign up</h1>
   <form>
     <fieldset>
       <label for="email">Email</label>

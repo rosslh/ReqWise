@@ -39,7 +39,7 @@
   <title>Login - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper panel">
-  <h2>Log in</h2>
+  <h1>Log in</h1>
   <form>
     <fieldset>
       <label for="email">Email</label>

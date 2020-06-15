@@ -29,7 +29,7 @@
   <title>Complete password reset - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
-  <h2>Complete password reset</h2>
+  <h1>Complete password reset</h1>
   <form>
     <fieldset>
       <label for="email">Email</label>
