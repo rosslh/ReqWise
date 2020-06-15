@@ -92,7 +92,7 @@
   }
 
   h4 {
-    margin-top: 2rem;
+    margin-top: 1.8rem;
     margin-bottom: 0.6rem;
     font-size: 1.6rem;
   }
@@ -105,6 +105,10 @@
   .twoCol > * {
     flex-grow: 1;
     min-width: 40rem;
+  }
+
+  .twoCol blockquote {
+    margin-bottom: 0.5rem;
   }
 </style>
 
