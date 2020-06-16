@@ -4,6 +4,7 @@
   import FilePreview from "../../../../components/FilePreview.svelte";
   import UploadFileModal from "../../../../components/UploadFileModal.svelte";
   import LinkResourceModal from "../../../../components/LinkResourceModal.svelte";
+  import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
   import { modalContent, modalProps } from "../../../../stores.js";
 
   const { page, session } = stores();
@@ -27,6 +28,8 @@
     modalContent.set(LinkResourceModal);
     modalProps.set({ projectId: id, update });
   };
+
+  let searchResults = [];
 </script>
 
 <section class="contentWrapper">
@@ -49,7 +52,12 @@
   <!-- loading -->
 {:then result}
   <section class="contentWrapper">
-    {#each result as file (file.id)}
+    <SearchSortFilter
+      bind:searchResults
+      list={result}
+      searchKeys={['name', 'description']}
+      sortKeys={['name', 'description', 'updated_at']} />
+    {#each searchResults.length ? searchResults : result as file (file.id)}
       <FilePreview projectId={id} {file} {update} />
     {/each}
   </section>

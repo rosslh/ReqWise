@@ -3,6 +3,7 @@
 
   import { modalContent, modalProps } from "../../../stores.js";
   import AddUserclassModal from "../../../components/AddUserclassModal.svelte";
+  import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
   import Userclass from "../../../components/Userclass.svelte";
   import { get } from "../../../api.js";
 
@@ -25,6 +26,8 @@
     modalContent.set(AddUserclassModal);
     modalProps.set({ id, update });
   };
+
+  let searchResults = [];
 </script>
 
 <section class="contentWrapper">
@@ -41,7 +44,12 @@
   <!-- loading -->
 {:then result}
   <section class="contentWrapper">
-    {#each result as userclass (userclass.id)}
+    <SearchSortFilter
+      bind:searchResults
+      list={result}
+      searchKeys={['name', 'description', 'persona']}
+      sortKeys={['name', 'description', 'updated_at']} />
+    {#each searchResults.length ? searchResults : result as userclass (userclass.id)}
       <Userclass {userclass} {update} projectId={id} />
     {/each}
   </section>

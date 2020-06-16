@@ -5,6 +5,7 @@
 
   import Reqgroup from "../../../components/Reqgroup.svelte";
   import AddFeature from "../../../components/AddFeature.svelte";
+  import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -27,6 +28,8 @@
       update();
       $projectShouldUpdate = false;
     })();
+
+  let searchResults = [];
 </script>
 
 <section class="contentWrapper">
@@ -44,7 +47,12 @@
   <!-- loading -->
 {:then result}
   <section class="contentWrapper">
-    {#each result as reqgroup (reqgroup.id)}
+    <SearchSortFilter
+      bind:searchResults
+      list={result}
+      searchKeys={['name', 'description']}
+      sortKeys={['name', 'description', 'updated_at']} />
+    {#each searchResults.length ? searchResults : result as reqgroup (reqgroup.id)}
       <Reqgroup {reqgroup} {update} />
     {/each}
   </section>

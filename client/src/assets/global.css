@@ -47,6 +47,10 @@ body {
   --multiItemBG:  var(--background2);
 }
 
+.selectContainer {
+  margin-bottom: 1.5rem;
+}
+
 .contentWrapper {
   max-width: 100rem;
   width: 100%;

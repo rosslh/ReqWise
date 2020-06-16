@@ -3,6 +3,7 @@
   import { get } from "../../../api.js";
   import { modalContent, modalProps } from "../../../stores.js";
   import AddStakeholderGroupModal from "../../../components/AddStakeholderGroupModal.svelte";
+  import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
   import StakeholderGroup from "../../../components/StakeholderGroup.svelte";
 
   const { page, session } = stores();
@@ -24,6 +25,8 @@
     modalContent.set(AddStakeholderGroupModal);
     modalProps.set({ id, update });
   };
+
+  let searchResults = [];
 </script>
 
 <section class="contentWrapper">
@@ -40,7 +43,12 @@
 </section>
 <section class="contentWrapper">
   {#await stakeholders then result}
-    {#each result as stakeholderGroup (stakeholderGroup.id)}
+    <SearchSortFilter
+      bind:searchResults
+      list={result}
+      searchKeys={['name', 'description']}
+      sortKeys={['name', 'description', 'updated_at']} />
+    {#each searchResults.length ? searchResults : result as stakeholderGroup (stakeholderGroup.id)}
       <StakeholderGroup group={stakeholderGroup} {update} />
     {/each}
   {/await}

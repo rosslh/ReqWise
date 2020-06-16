@@ -4,6 +4,7 @@
   import { get } from "../../../api.js";
   import { stores } from "@sapper/app";
 
+  import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
   import Reqgroup from "../../../components/Reqgroup.svelte";
 
   import { modalContent, modalProps } from "../../../stores.js";
@@ -37,6 +38,8 @@
       update();
       $projectShouldUpdate = false;
     })();
+
+  let searchResults = [];
 </script>
 
 <section class="contentWrapper">
@@ -51,7 +54,12 @@
   <!-- loading -->
 {:then result}
   <section class="contentWrapper">
-    {#each result as reqgroup (reqgroup.id)}
+    <SearchSortFilter
+      bind:searchResults
+      list={result}
+      searchKeys={['name', 'description']}
+      sortKeys={['name', 'description', 'updated_at']} />
+    {#each searchResults.length ? searchResults : result as reqgroup (reqgroup.id)}
       <Reqgroup {reqgroup} {update} />
     {/each}
   </section>
