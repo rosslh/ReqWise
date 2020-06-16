@@ -25,4 +25,9 @@
   This action will permanently delete the selected requirements. If you are
   unsure you want to do that, you may want to archive the requirements instead.
 </p>
-<button class="button-danger" on:click={deleteRequirements}>Delete</button>
+<button
+  id="confirmReqDeleteButton"
+  class="button-danger"
+  on:click={deleteRequirements}>
+  Delete
+</button>

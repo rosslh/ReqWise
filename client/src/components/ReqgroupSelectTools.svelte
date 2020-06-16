@@ -112,6 +112,7 @@
         Archive
       </button>
       <button
+        id="deleteRequirementButton"
         on:click={deleteSelected}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">

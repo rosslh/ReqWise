@@ -123,7 +123,9 @@
           {#each result as project (project.id)}
             <tr>
               <td>
-                <a href={`/project/${project.id}`}>{project.name}</a>
+                <a class="projectLink" href={`/project/${project.id}`}>
+                  {project.name}
+                </a>
               </td>
             </tr>
           {/each}
@@ -222,13 +224,14 @@
         </thead>
         <tbody>
           {#each result as invite (invite.id)}
-            <tr>
-              <td>{invite.inviteeEmail}</td>
+            <tr class="inviteeRow">
+              <td class="inviteeEmail">{invite.inviteeEmail}</td>
               <td>{invite.isAdmin}</td>
               {#if isAdmin}
                 <td>
                   <button
-                    class="button-danger button-small button-outline"
+                    class="deleteInviteButton button-danger button-small
+                    button-outline"
                     style="margin: 0;"
                     on:click={() => deleteInvite(invite.id)}>
                     Delete invite
@@ -245,6 +248,7 @@
     {#if isAdmin}
       <div>
         <button
+          id="inviteMemberButton"
           on:click={() => {
             modalContent.set(InviteTeamMemberModal);
             modalProps.set({ id, update });
@@ -258,7 +262,9 @@
   {#if isAdmin}
     <section>
       <h1>Danger Zone</h1>
-      <button class="button-danger" on:click={deleteTeam}>Delete team</button>
+      <button id="deleteTeamButton" class="button-danger" on:click={deleteTeam}>
+        Delete team
+      </button>
     </section>
   {/if}
 </div>

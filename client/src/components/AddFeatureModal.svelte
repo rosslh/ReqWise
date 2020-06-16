@@ -36,5 +36,7 @@
       class="newReqInput"
       bind:value={description} />
   </fieldset>
-  <SubmitButton handler={addFeature}>Add</SubmitButton>
+  <SubmitButton id="addFeatureModalButton" handler={addFeature}>
+    Add
+  </SubmitButton>
 </form>

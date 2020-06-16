@@ -35,7 +35,7 @@
 <div class="reqgroupFooter">
   {#if !reqgroup.isMaxOneRequirement || (requirements && !requirements.length)}
     <button
-      class="button-create"
+      class="addRequirementButton button-create"
       on:click={() => {
         modalContent.set(AddRequirementModal);
         modalProps.set({
@@ -61,7 +61,8 @@
     {#if reqgroup.isDeletable}
       <button
         on:click={deleteReqgroup}
-        class="button-outline button-small button-secondary button-clear">
+        class="deleteReqgroupButton button-outline button-small button-secondary
+        button-clear">
         <div class="iconWrapper">
           <FaRegTrashAlt />
         </div>

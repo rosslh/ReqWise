@@ -1,6 +1,7 @@
 <script>
   export let handler;
   export let className;
+  export let id;
 
   import FaSpinner from "svelte-icons/fa/FaSpinner.svelte";
   let spinning = false;
@@ -32,7 +33,10 @@
   }
 </style>
 
-<button class={className} on:click|preventDefault={handleClick}>
+<button
+  {id}
+  class={`${className} submitButton`}
+  on:click|preventDefault={handleClick}>
   {#if spinning}
     <div class="iconWrapper">
       <FaSpinner />
