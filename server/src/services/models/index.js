@@ -104,7 +104,12 @@ module.exports = async function (fastify, opts) {
                 const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
                 await gcloudFile.save(data);
                 await gcloudFile.makePublic();
-                await storage.bucket('user-file-storage').file(currentFile.fileName).delete();
+                try {
+                    await storage.bucket('user-file-storage').file(currentFile.fileName).delete();
+                }
+                catch (e) {
+                    console.error(e);
+                }
 
                 return await fastify
                     .knex("file")

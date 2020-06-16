@@ -217,11 +217,21 @@ module.exports = async (fastify, opts) => {
         await gcloudFile.save(data);
         await gcloudFile.makePublic();
         if (currentImageName) {
-          await storage.bucket('user-file-storage').file(currentImageName).delete();
+          try {
+            await storage.bucket('user-file-storage').file(currentImageName).delete();
+          }
+          catch (e) {
+            console.error(e);
+          }
         }
       }
       else if (file === "") {
-        await storage.bucket('user-file-storage').file(currentImageName).delete();
+        try {
+          await storage.bucket('user-file-storage').file(currentImageName).delete();
+        }
+        catch (e) {
+          console.error(e);
+        }
         uploadedFileName = null;
       }
 
