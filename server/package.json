@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "tap test/**/*.test.js",
-    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js",
-    "dev": "fastify start -l info -P -w src/index.js --port 3001",
+    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152",
+    "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152",
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise=tcp:1111",
     "lint": "eslint src/**/*.js"
   },
@@ -28,6 +28,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-jwt": "^1.2.1",
     "fastify-plugin": "^1.6.0",
+    "generate-avatar": "^1.4.1",
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",
     "is-docker": "^2.0.0",

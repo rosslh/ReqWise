@@ -20,12 +20,13 @@
   import SubmitButton from "../components/SubmitButton.svelte";
 
   import { put } from "../api.js";
+  import { toBase64, validateFileSize } from "../utils.js";
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
   import { onMount } from "svelte";
 
   export let user;
-  let name = "";
+  let { name } = user;
 
   const capitalizeFirstLetter = str =>
     str.charAt(0).toUpperCase() + str.slice(1);
@@ -35,19 +36,11 @@
     label: capitalizeFirstLetter(attr)
   }));
 
-  let theme = themeOptions[0];
+  let theme = themeOptions.find(x => x.value === user.theme);
+  $: currentImage = user.imageName;
 
-  onMount(() => {
-    ({ name } = user);
-    theme = themeOptions.find(x => x.value === user.theme);
-  });
-
-  const submit = async () => {
-    await put(
-      `/users/${$session.user.id}/settings`,
-      { name, theme: theme.value },
-      $session.user && $session.user.jwt
-    );
+  const refetchSettings = () => {
+    files = [];
     fetch("auth/changeTheme", {
       method: "PUT",
       credentials: "include",
@@ -65,11 +58,68 @@
         goto(`/settings`, { replaceState: true });
       });
   };
+
+  const submit = async () => {
+    if (!files.length || files[0]["type"].split("/")[0] === "image") {
+      if (files.length && !validateFileSize(files[0])) {
+        alert("File too large");
+        return;
+      }
+      await put(
+        `/users/${$session.user.id}/settings`,
+        {
+          name,
+          theme: theme.value,
+          file: files.length ? await toBase64(files.item(0)) : undefined,
+          fileName: files.length ? files[0].name : undefined
+        },
+        $session.user && $session.user.jwt
+      );
+    } else {
+      alert("Invalid image file");
+      return;
+    }
+    refetchSettings();
+  };
+
+  const deleteImage = async () => {
+    await put(
+      `/users/${$session.user.id}/settings`,
+      {
+        file: ""
+      },
+      $session.user && $session.user.jwt
+    );
+    refetchSettings();
+  };
+
+  let files = [];
 </script>
 
 <style>
   .changePassword {
     margin-top: 2rem;
+  }
+
+  .profileImageWrapper {
+    height: 9rem;
+    width: 9rem;
+    border: 0.1rem solid var(--borderColor);
+    border-radius: 0.4rem;
+    overflow: hidden;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .profileImageWrapper img,
+  :global(.profileImageWrapper svg) {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  .finishUploadMessage {
+    color: var(--orange);
+    font-weight: 600;
+    margin-top: 1rem;
   }
 </style>
 
@@ -82,6 +132,28 @@
     <fieldset>
       <label for="name">Your name</label>
       <input bind:value={name} type="text" id="name" />
+    </fieldset>
+    <fieldset>
+      <label for="file">Profile image</label>
+      <div class="profileImageWrapper">
+        {#if currentImage}
+          <img
+            src={`https://storage.googleapis.com/user-file-storage/${currentImage}`}
+            alt={user.name} />
+        {:else}
+          {@html user.placeholderImage}
+        {/if}
+      </div>
+      <input type="file" id="file" name="file" bind:files />
+      {#if files.length}
+        <p class="finishUploadMessage">Click submit to finish uploading</p>
+      {:else if currentImage}
+        <button
+          class="button button-danger button-small button-outline"
+          on:click|preventDefault={deleteImage}>
+          Delete current image
+        </button>
+      {/if}
     </fieldset>
     <fieldset>
       <label for="theme">Interface theme</label>

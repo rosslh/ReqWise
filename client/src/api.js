@@ -33,7 +33,8 @@ const fetcher = (endpoint, options, token) => {
         throwError(options.method || "GET");
       }
     })
-    .catch(() => {
+    .catch((e) => {
+      console.error(e);
       throwError(options.method || "GET");
     });
 };

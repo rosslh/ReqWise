@@ -3,6 +3,10 @@
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const { v4: generateUuid } = require("uuid");
+const { generateFromString } = require('generate-avatar');
+const { Storage } = require('@google-cloud/storage');
+const { v4: uuidv4 } = require('uuid');
+const storage = new Storage();
 
 module.exports = async (fastify, opts) => {
   // Generate test SMTP service account from ethereal.email
@@ -47,12 +51,14 @@ module.exports = async (fastify, opts) => {
   fastify.post("/users", { schema: postUserSchema }, async (request, reply) => {
     const { email } = request.body;
     const verification_token = generateUuid();
+    const placeholderImage = generateFromString(email);
     const userId = await fastify
       .knex("account")
       .insert({
         email,
         verification_token,
         is_verified: false,
+        placeholderImage
       })
       .returning("id");
 
@@ -149,10 +155,11 @@ module.exports = async (fastify, opts) => {
   const putUserSettingsSchema = {
     body: {
       type: "object",
-      required: ["name", "theme"],
       properties: {
         name: { type: "string" },
-        theme: { type: "string" }
+        theme: { type: "string" },
+        file: { type: "string" },
+        fileName: { type: "string" },
       },
     },
     queryString: {},
@@ -177,7 +184,9 @@ module.exports = async (fastify, opts) => {
         properties: {
           name: { type: "string" },
           email: { type: "string" },
-          theme: { type: "string" }
+          theme: { type: "string" },
+          file: { type: "string" },
+          fileName: { type: "string" }
         },
       },
     },
@@ -189,17 +198,43 @@ module.exports = async (fastify, opts) => {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
     },
     async function (request, reply) {
-      const { name, theme } = request.body;
+      const { name, theme, file, fileName } = request.body;
+
+      let uploadedFileName;
+
+      const { imageName: currentImageName } = await fastify.knex
+        .from("account")
+        .select("*")
+        .where({
+          id: request.params.userId,
+        })
+        .first();
+
+      if (file) {
+        const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
+        uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
+        const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
+        await gcloudFile.save(data);
+        await gcloudFile.makePublic();
+        if (currentImageName) {
+          await storage.bucket('user-file-storage').file(currentImageName).delete();
+        }
+      }
+      else if (file === "") {
+        await storage.bucket('user-file-storage').file(currentImageName).delete();
+        uploadedFileName = null;
+      }
 
       return (
         await fastify
           .knex("account")
           .update({
             name,
-            theme
+            theme,
+            imageName: uploadedFileName
           })
           .where("id", request.user.id)
-          .returning(["name", "email", "theme"])
+          .returning(["name", "email", "theme", "imageName", "placeholderImage"])
       )[0];
     }
   );
@@ -230,6 +265,8 @@ module.exports = async (fastify, opts) => {
           name: { type: "string" },
           email: { type: "string" },
           theme: { type: "string" },
+          placeholderImage: { type: "string" },
+          imageName: { type: "string" },
         },
       },
     },
@@ -244,7 +281,7 @@ module.exports = async (fastify, opts) => {
     async function (request, reply) {
       return await fastify
         .knex("account")
-        .select("name", "email", "theme")
+        .select("name", "email", "theme", "placeholderImage", "imageName")
         .where("id", request.params.userId)
         .first();
     }

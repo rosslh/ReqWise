@@ -2,6 +2,7 @@
   import { stores } from "@sapper/app";
 
   import { post, put } from "../api.js";
+  import { toBase64, validateFileSize } from "../utils.js";
   import SubmitButton from "../components/SubmitButton.svelte";
 
   const { session } = stores();
@@ -15,17 +16,12 @@
   let description = file ? file.description : "";
   let files;
 
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-
   $: addFile = async () => {
     if (!files || !files.length) {
       alert("No file selected");
+      return;
+    } else if (!validateFileSize(files[0])) {
+      alert("File too large");
       return;
     }
     if (file) {
