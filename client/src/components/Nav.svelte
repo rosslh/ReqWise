@@ -99,9 +99,9 @@
     </a>
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
-        <a rel="prefetch" href="/sign-up/invite">Sign Up</a>
+        <a rel="prefetch" id="signupLink" href="/sign-up/invite">Sign Up</a>
 
-        <a rel="prefetch" href="/login">Login</a>
+        <a rel="prefetch" id="loginLink" href="/login">Login</a>
       {:else}
         <a rel="prefetch" href="/teams">My Teams</a>
         <a rel="prefetch" href="/settings">Settings</a>

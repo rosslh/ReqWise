@@ -26,11 +26,11 @@
 <form>
   <fieldset>
     <label for="teamName">Team name</label>
-    <input type="text" bind:value={teamName} />
+    <input type="text" id="teamName" bind:value={teamName} />
   </fieldset>
   <fieldset>
     <label for="teamDesc">Description</label>
-    <textarea bind:value={teamDesc} />
+    <textarea id="teamDesc" bind:value={teamDesc} />
   </fieldset>
   <fieldset>
     <SubmitButton handler={submitNewTeam}>Create</SubmitButton>

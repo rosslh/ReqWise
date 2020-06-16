@@ -88,7 +88,7 @@
         {#each result as team (team.id)}
           <tr>
             <td>
-              <a href={`/team/${team.id}`}>{team.name}</a>
+              <a class="teamLink" href={`/team/${team.id}`}>{team.name}</a>
             </td>
             <td>{team.description}</td>
             <td class="membership">
@@ -114,6 +114,7 @@
   {/await}
   <button
     class="button-create"
+    id="createTeamButton"
     on:click={() => {
       modalContent.set(AddTeamModal);
       modalProps.set({ update });

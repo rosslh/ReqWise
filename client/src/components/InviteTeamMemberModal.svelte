@@ -32,7 +32,10 @@
     <label class="label-inline" for="isAdmin">Make administrator</label>
   </fieldset>
   <fieldset>
-    <SubmitButton className="button-create" handler={inviteMember}>
+    <SubmitButton
+      id="inviteSubmitButton"
+      className="button-create"
+      handler={inviteMember}>
       Invite
     </SubmitButton>
   </fieldset>

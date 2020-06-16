@@ -13,6 +13,7 @@
 <div>
   <button
     class="button-create"
+    id="addFeatureButton"
     on:click={() => {
       modalContent.set(AddFeatureModal);
       modalProps.set({ id, update });

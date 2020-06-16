@@ -20,4 +20,9 @@
 
 <h3>Delete Feature</h3>
 <p>The reqgroup's requirements will be archived.</p>
-<button class="button-danger" on:click={deleteFeature}>Delete</button>
+<button
+  id="confirmReqgroupDelete"
+  class="button-danger"
+  on:click={deleteFeature}>
+  Delete
+</button>
