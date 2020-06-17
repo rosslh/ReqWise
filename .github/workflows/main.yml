@@ -18,6 +18,10 @@ jobs:
         working-directory: ./client
         run: |
           npm install
+      - name: Run tests
+        working-directory: ./client
+        run: |
+          npm run test
       - name: Build client
         working-directory: ./client
         run: |
