@@ -43,6 +43,26 @@
   #editor {
     height: 12rem;
   }
+
+  :global(.editorWrapper *, .editorWrapper *::before) {
+    color: var(--normalText) !important;
+    border-color: var(--borderColor) !important;
+  }
+
+  :global(.editorWrapper .ql-fill) {
+    fill: var(--normalText) !important;
+  }
+
+  :global(.editorWrapper .ql-stroke) {
+    stroke: var(--normalText) !important;
+  }
+
+  :global(.editorWrapper .ql-editor) {
+    background-color: var(--background2);
+  }
+  :global(.editorWrapper .ql-toolbar) {
+    background-color: var(--background1);
+  }
 </style>
 
 <div class="editorWrapper">

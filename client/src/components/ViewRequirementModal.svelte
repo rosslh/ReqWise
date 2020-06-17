@@ -194,6 +194,10 @@
     font-style: italic;
     color: var(--secondaryText);
   }
+
+  .actionButton {
+    margin-top: 0;
+  }
 </style>
 
 <div class="requirementContainer">
@@ -249,6 +253,16 @@
     {:else}
       <Skeleton noPadding />
     {/if}
+    <h4>Actions</h4>
+    <button class="actionButton button-success button-small button-outline">
+      Accept
+    </button>
+    <button class="actionButton button-caution button-small button-outline">
+      Modify
+    </button>
+    <button class="actionButton button-danger button-small button-outline">
+      Reject
+    </button>
   </div>
   <div class="column comments">
     <h4>Comments</h4>
