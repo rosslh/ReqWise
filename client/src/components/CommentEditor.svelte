@@ -44,7 +44,7 @@
     height: 12rem;
   }
 
-  :global(.editorWrapper *, .editorWrapper *::before) {
+  :global(.ql-toolbar *, .ql-toolbar *::before, #editor *) {
     color: var(--normalText) !important;
     border-color: var(--borderColor) !important;
   }
