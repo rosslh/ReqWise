@@ -14,6 +14,7 @@
   export let isPrioritized; // TODO: fetch this, don't pass as prop
   export let id;
 
+  let oldStatus;
   let oldPriority;
   let newPriority;
   let oldDescription;
@@ -38,6 +39,7 @@
       $session.user && $session.user.jwt
     );
     isInitialVersion = !requirement.previousVersion.id;
+    oldStatus = requirement.previousVersion.status;
     oldPriority = requirement.previousVersion.priority;
     newPriority = requirement.latestVersion.priority;
     oldDescription = requirement.previousVersion.description;
@@ -89,6 +91,11 @@
 
   let closeStream;
 
+  const getUnique = list =>
+    Array.from(new Set(list.map(a => a.id))).map(id => {
+      return list.find(a => a.id === id);
+    });
+
   $: startStream = function() {
     if (closeStream) {
       closeStream();
@@ -100,7 +107,7 @@
         $session.user.jwt,
         event => {
           const data = JSON.parse(event);
-          comments = [...comments, ...data];
+          comments = getUnique([...comments, ...data]);
           scrollToBottom();
         }
       );
@@ -119,6 +126,36 @@
     $session.user &&
     $session.user.jwt &&
     startStream();
+
+  const acceptProposal = async () => {
+    const data = {
+      status: "accepted",
+      rationale: "Proposed change accepted"
+    };
+    await post(
+      `/requirements/${id}/versions`,
+      data,
+      $session.user && $session.user.jwt
+    );
+    await update();
+    close();
+  };
+
+  const rejectProposal = async () => {
+    const data = {
+      status: oldStatus,
+      priority: oldPriority,
+      description: oldDescription,
+      rationale: "Proposed change rejected"
+    };
+    await post(
+      `/requirements/${id}/versions`,
+      data,
+      $session.user && $session.user.jwt
+    );
+    await update();
+    close();
+  };
 </script>
 
 <style>
@@ -228,7 +265,7 @@
     {:else}
       <div class="reqversionContent">
         {#if rationale}
-          rationale
+          {rationale}
         {:else}
           <span class="noRationale">No rationale</span>
         {/if}
@@ -254,13 +291,14 @@
       <Skeleton noPadding />
     {/if}
     <h4>Actions</h4>
-    <button class="actionButton button-success button-small button-outline">
+    <button
+      on:click={acceptProposal}
+      class="actionButton button-success button-small button-outline">
       Accept
     </button>
-    <button class="actionButton button-caution button-small button-outline">
-      Modify
-    </button>
-    <button class="actionButton button-danger button-small button-outline">
+    <button
+      on:click={rejectProposal}
+      class="actionButton button-danger button-small button-outline">
       Reject
     </button>
   </div>

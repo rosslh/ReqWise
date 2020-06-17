@@ -53,7 +53,7 @@ module.exports = async function (fastify, opts) {
                         .where({
                             "id": projectId
                         })
-                        .where('reqgroups_updated_at', '>', new Date(timestamp))
+                        .where('reqgroups_updated_at', '>', new Date(timestamp - interval))
                 ).length;
 
                 let updatedReqgroups = (
@@ -63,7 +63,7 @@ module.exports = async function (fastify, opts) {
                         .where({
                             "project_id": projectId
                         })
-                        .where('updated_at', '>', new Date(timestamp))
+                        .where('updated_at', '>', new Date(timestamp - interval))
                         .where('updated_by', "!=", user.id)
                 ).map(x => fastify.obfuscateId(x.id));
 
@@ -75,7 +75,7 @@ module.exports = async function (fastify, opts) {
                     .where({
                         "reqgroup.project_id": projectId
                     })
-                    .where('reqversion.created_at', '>', new Date(timestamp))
+                    .where('reqversion.created_at', '>', new Date(timestamp - interval))
                     .where('account_id', "!=", user.id)
                 ).map(x => fastify.obfuscateId(x.id));
 
@@ -115,7 +115,7 @@ module.exports = async function (fastify, opts) {
                     .join("account", "account.id", "=", "comment.account_id").where({
                         "comment.reqversion_id": reqversionId
                     })
-                    .where('comment.created_at', '>', new Date(timestamp))
+                    .where('comment.created_at', '>', new Date(timestamp - interval))
                 ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
 
                 if (newComments.length) {
