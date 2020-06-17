@@ -10,13 +10,14 @@
 <style>
   main {
     position: relative;
+    padding-bottom: 6rem;
   }
 </style>
 
 <svelte:head>
-  {#if $session.user && $session.user.theme === "dark"}
+  {#if $session.user && $session.user.theme === 'dark'}
     <link rel="stylesheet" href="dark-mode.css" />
-  {:else if $session.user && $session.user.theme === "system"}
+  {:else if $session.user && $session.user.theme === 'system'}
     <link rel="stylesheet" href="system-theme.css" />
   {/if}
 </svelte:head>

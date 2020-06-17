@@ -11,7 +11,7 @@
   import SimpleDiff from "./SimpleDiff.svelte";
   import DescDiff from "./DescDiff.svelte";
 
-  export let isPrioritized;
+  export let isPrioritized; // TODO: fetch this, don't pass as prop
   export let id;
 
   let oldPriority;
