@@ -10,6 +10,7 @@
 <style>
   main {
     position: relative;
+    padding-top: 5rem; /* account for navbar */
     padding-bottom: 6rem;
   }
 </style>

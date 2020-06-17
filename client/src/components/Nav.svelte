@@ -19,9 +19,13 @@
 <style>
   nav {
     background-color: var(--background1);
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 200;
   }
   div.contentWrapper {
-    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -49,15 +53,6 @@
     margin: 0 0.75rem;
   }
 
-  div.menuButtonWrapper {
-    height: 2.5rem;
-    width: 2.5rem;
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
   button#toggleMenu {
     background-color: var(--background1);
     border: none;
@@ -67,13 +62,19 @@
     padding: 0;
     outline: none;
     margin: 0;
+    margin-right: 1.5rem;
+  }
+
+  .logoMenuWrapper {
+    display: flex;
+    align-items: center;
   }
 </style>
 
 <nav>
   <div class="contentWrapper">
-    {#if $page.path.includes('/project/')}
-      <div class="menuButtonWrapper">
+    <div class="logoMenuWrapper">
+      {#if $page.path.includes('/project/')}
         <button
           id="toggleMenu"
           on:click={() => {
@@ -81,22 +82,22 @@
           }}>
           <MdMenu />
         </button>
-      </div>
-    {/if}
-    <a rel="prefetch" class="logoWrapper" href=".">
-      {#if $session.user && $session.user.theme === 'dark'}
-        <img src="logo-white.png" alt="ReqWise" />
-      {:else if $session.user && $session.user.theme === 'system'}
-        <picture>
-          <source
-            srcset="logo-white.png"
-            media="(prefers-color-scheme: dark)" />
-          <img src="logo.png" alt="ReqWise" />
-        </picture>
-      {:else}
-        <img src="logo.png" alt="ReqWise" />
       {/if}
-    </a>
+      <a rel="prefetch" class="logoWrapper" href=".">
+        {#if $session.user && $session.user.theme === 'dark'}
+          <img src="logo-white.png" alt="ReqWise" />
+        {:else if $session.user && $session.user.theme === 'system'}
+          <picture>
+            <source
+              srcset="logo-white.png"
+              media="(prefers-color-scheme: dark)" />
+            <img src="logo.png" alt="ReqWise" />
+          </picture>
+        {:else}
+          <img src="logo.png" alt="ReqWise" />
+        {/if}
+      </a>
+    </div>
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
         <a rel="prefetch" id="signupLink" href="/sign-up/invite">Sign Up</a>
