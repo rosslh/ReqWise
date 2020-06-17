@@ -34,14 +34,17 @@
     color: var(--normalText);
     padding: 1.5rem;
     transition: transform 0.3s ease;
+    width: 4rem;
+    height: 4rem;
   }
 
   button.viewDiff.rotate {
     transform: rotate(90deg);
   }
 
-  .secondary {
+  .authorEmail {
     color: var(--secondaryText);
+    margin-left: 0.3rem;
   }
 
   .noRationale {
@@ -55,6 +58,8 @@
 
   .bottom {
     font-size: 1.4rem;
+    display: flex;
+    align-items: center;
   }
 
   h3 {
@@ -73,6 +78,20 @@
     margin-bottom: 0.8rem;
     font-size: 1.6rem;
   }
+
+  .authorImageWrapper {
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    margin-right: 0.8rem;
+  }
+
+  .authorImageWrapper img,
+  :global(.authorImageWrapper svg) {
+    max-height: 100%;
+    max-width: 100%;
+  }
 </style>
 
 <div class="outerWrapper">
@@ -86,8 +105,17 @@
         {/if}
       </div>
       <div class="bottom">
+        <div class="authorImageWrapper">
+          {#if reqversion.authorImageName}
+            <img
+              src={`https://storage.googleapis.com/user-file-storage/${reqversion.authorImageName}`}
+              alt={reqversion.authorName} />
+          {:else if reqversion.authorPlaceholderImage}
+            {@html reqversion.authorPlaceholderImage}
+          {/if}
+        </div>
         {reqversion.authorName}
-        <span class="secondary">&lt;{reqversion.authorEmail}&gt;</span>
+        <span class="authorEmail">&lt;{reqversion.authorEmail}&gt;</span>
       </div>
     </div>
     <div class="right">

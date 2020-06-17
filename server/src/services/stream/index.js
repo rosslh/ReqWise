@@ -108,7 +108,9 @@ module.exports = async function (fastify, opts) {
                     .select(
                         "comment.*",
                         "account.name as authorName",
-                        "account.email as authorEmail"
+                        "account.email as authorEmail",
+                        "account.imageName as authorImageName",
+                        "account.placeholderImage as authorPlaceholderImage"
                     )
                     .join("account", "account.id", "=", "comment.account_id").where({
                         "comment.reqversion_id": reqversionId

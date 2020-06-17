@@ -22,14 +22,16 @@
     margin-left: 1rem;
   }
   div.imageWrapper {
-    width: 3rem;
-    margin-top: 1rem;
-  }
-  div.imgPlaceholder {
-    background-color: var(--borderColor);
-    border-radius: 50%;
     height: 3rem;
     width: 3rem;
+    border-radius: 0.4rem;
+    overflow: hidden;
+  }
+
+  div.imageWrapper img,
+  :global(div.imageWrapper svg) {
+    max-height: 100%;
+    max-width: 100%;
   }
   .createdAt {
     color: var(--secondaryText);
@@ -40,7 +42,13 @@
 
 <div class="commentWrapper">
   <div class="imageWrapper">
-    <div class="imgPlaceholder" />
+    {#if comment.authorImageName}
+      <img
+        src={`https://storage.googleapis.com/user-file-storage/${comment.authorImageName}`}
+        alt={comment.authorName} />
+    {:else if comment.authorPlaceholderImage}
+      {@html comment.authorPlaceholderImage}
+    {/if}
   </div>
   <div class="commentTextWrapper">
     <div>

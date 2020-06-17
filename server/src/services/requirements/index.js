@@ -44,6 +44,8 @@ module.exports = async function (fastify, opts) {
               rationale: { type: "string" },
               authorName: { type: "string" },
               authorEmail: { type: "string" },
+              authorImageName: { type: "string" },
+              authorPlaceholderImage: { type: "string" },
             },
           },
           previousVersion: {
@@ -74,7 +76,9 @@ module.exports = async function (fastify, opts) {
         .select(
           "reqversion.*",
           "account.name as authorName",
-          "account.email as authorEmail"
+          "account.email as authorEmail",
+          "account.imageName as authorImageName",
+          "account.placeholderImage as authorPlaceholderImage"
         )
         .where({
           requirement_id: request.params.requirementId,
@@ -299,7 +303,9 @@ module.exports = async function (fastify, opts) {
         .select(
           "reqversion.*",
           "account.name as authorName",
-          "account.email as authorEmail"
+          "account.email as authorEmail",
+          "account.imageName as authorImageName",
+          "account.placeholderImage as authorPlaceholderImage"
         )
         .select(fastify.knex.raw('lag(reqversion.priority) over (order by reqversion.created_at) as previous_priority'))
         .select(fastify.knex.raw('lag(reqversion.status) over (order by reqversion.created_at) as previous_status'))

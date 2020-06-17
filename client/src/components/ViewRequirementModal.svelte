@@ -21,6 +21,8 @@
   let rationale;
   let authorName;
   let authorEmail;
+  let authorImageName;
+  let authorPlaceholderImage;
 
   let isInitialVersion = false;
 
@@ -43,6 +45,8 @@
     rationale = requirement.latestVersion.rationale;
     authorName = requirement.latestVersion.authorName;
     authorEmail = requirement.latestVersion.authorEmail;
+    authorImageName = requirement.latestVersion.authorImageName;
+    authorPlaceholderImage = requirement.latestVersion.authorPlaceholderImage;
 
     reqversionId = requirement.latestVersion.id;
   };
@@ -119,19 +123,14 @@
 
 <style>
   h4 {
-    margin-top: 2.5rem;
+    /* margin-top: 2.5rem; */
     margin-bottom: 0.6rem;
     font-size: 1.6rem;
   }
 
-  .reqversionContent {
-    border: 0.1rem solid var(--borderColor);
-    background-color: var(--background2);
-    border-radius: 0.3rem;
-    padding: 0.2rem 0.6rem;
-  }
   .authorEmail {
     color: var(--secondaryText);
+    margin-left: 0.3rem;
   }
 
   .requirementContainer {
@@ -163,12 +162,37 @@
   .column.comments > .commentsBottom {
     height: 24rem;
   }
-  h3 {
+  /* h3 {
     margin: 1rem 0 0.5rem;
+  } */
+
+  /* h4 {
+    margin-top: 1rem;
+  } */
+
+  .authorImageWrapper {
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    margin-right: 0.8rem;
   }
 
-  h4 {
-    margin-top: 1rem;
+  .authorInfo {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+  }
+
+  .authorImageWrapper img,
+  :global(.authorImageWrapper svg) {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  .noRationale {
+    font-style: italic;
+    color: var(--secondaryText);
   }
 </style>
 
@@ -198,13 +222,28 @@
     {#if typeof rationale === 'undefined'}
       <Skeleton noPadding />
     {:else}
-      <div class="reqversionContent">{rationale || '\u200B'}</div>
+      <div class="reqversionContent">
+        {#if rationale}
+          rationale
+        {:else}
+          <span class="noRationale">No rationale</span>
+        {/if}
+      </div>
       <!-- zero-width-space to preserve height if rationale is empty-->
     {/if}
     <h4>Proposer</h4>
     {#if authorName}
-      <div class="reqversionContent">
-        {authorName}
+      <div class="authorInfo">
+        <div class="authorImageWrapper">
+          {#if authorImageName}
+            <img
+              src={`https://storage.googleapis.com/user-file-storage/${authorImageName}`}
+              alt={authorName} />
+          {:else if authorPlaceholderImage}
+            {@html authorPlaceholderImage}
+          {/if}
+        </div>
+        <span class="authorName">{authorName}</span>
         <span class="authorEmail">&lt;{authorEmail}&gt;</span>
       </div>
     {:else}
