@@ -41,10 +41,12 @@
   .ssfWrapper {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .ssfWrapper > * {
     margin-right: 0.5rem;
+    min-width: 30rem;
   }
 
   .ssfWrapper > *:last-child {

@@ -44,10 +44,10 @@
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.8);
-    z-index: 100;
+    z-index: 1000;
   }
   div.contentWrapper {
-    z-index: 200;
+    z-index: 2000;
     background-color: var(--backdrop);
     padding: 1rem 3rem 3rem;
     border-radius: 0.4rem;
