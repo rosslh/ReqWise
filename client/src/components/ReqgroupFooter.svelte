@@ -1,5 +1,6 @@
 <script>
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { modalContent, modalProps } from "../stores.js";
   import AddRequirementModal from "./AddRequirementModal.svelte";
@@ -21,6 +22,10 @@
   const deleteReqgroup = () => {
     modalContent.set(DeleteFeatureModal);
     modalProps.set({ reqgroupId: reqgroup.id, update });
+  };
+
+  const viewStakeholders = () => {
+    alert("view stakeholders");
   };
 </script>
 
@@ -50,6 +55,14 @@
     <div />
   {/if}
   <div>
+    <button
+      on:click={viewStakeholders}
+      class="button-outline button-small button-secondary button-clear">
+      <div class="iconWrapper">
+        <FaUserTie />
+      </div>
+      View stakeholders
+    </button>
     <button
       on:click={editReqgroup}
       class="button-outline button-small button-secondary button-clear">

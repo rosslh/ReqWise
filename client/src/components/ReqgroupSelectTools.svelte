@@ -7,6 +7,7 @@
   import FaEdit from "svelte-icons/fa/FaEdit.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
+  import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
 
   export let selectedReqs;
@@ -104,13 +105,22 @@
         </button>
       {/if}
       <button
+        id="viewUserclassesButton"
+        on:click={() => alert('view user classes')}
+        class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <IoMdPeople />
+        </div>
+        View user classes
+      </button>
+      <!-- <button
         on:click={archiveSelected}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
           <FaArchive />
         </div>
         Archive
-      </button>
+      </button> -->
       <button
         id="deleteRequirementButton"
         on:click={deleteSelected}
