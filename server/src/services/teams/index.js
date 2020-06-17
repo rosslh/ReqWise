@@ -633,7 +633,7 @@ module.exports = async function (fastify, opts) {
     { name: "Success metrics", description: "Specify the indicators that stakeholders will use to define and measure success on this project.", isMaxOneRequirement: false },
     { name: "Vision statement", description: "Write a concise vision statement that summarizes the long-term purpose and intent of the product.", isMaxOneRequirement: true },
     { name: "Business risks", description: "Summarize the major business risks associated with developing (or not developing) this product.", isMaxOneRequirement: false },
-    { name: "Business assumptions and dependencies", description: "An assumption is a statement that is believed to be true in the absence of proof or definitive knowledge. Incorrect assumptions can potentially keep you from meeting your business objectives. Also record any major dependencies the project has on external factors, such as government regulations or thid-party suppliers.", isMaxOneRequirement: false },
+    { name: "Business assumptions and dependencies", description: "An assumption is a statement that is believed to be true in the absence of proof or definitive knowledge. Incorrect assumptions can potentially keep you from meeting your business objectives. Also record any major dependencies the project has on external factors, such as government regulations or third-party suppliers.", isMaxOneRequirement: false },
   ];
 
   const postProjectSchema = {

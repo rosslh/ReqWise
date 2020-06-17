@@ -215,8 +215,7 @@ module.exports = async function (fastify, opts) {
         status: { type: "string" },
         description: { type: "string" },
         rationale: { type: "string" },
-      },
-      required: ["rationale"],
+      }
     },
     queryString: {},
     params: {
