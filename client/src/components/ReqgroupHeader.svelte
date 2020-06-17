@@ -29,6 +29,15 @@
     /* color: #333; */
   }
 
+  div.reqgroupHeader h3 a {
+    text-decoration: none;
+    color: var(--normalText);
+  }
+
+  div.reqgroupHeader h3 a:hover {
+    text-decoration: underline;
+  }
+
   div.reqgroupHeader button {
     margin: 0;
     padding: 0;
@@ -48,7 +57,9 @@
 
 <div class="reqgroupHeader">
   <h3>
-    {reqgroup.name}
+    <a href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
+      {reqgroup.name}
+    </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
   {#if reqgroup.description}

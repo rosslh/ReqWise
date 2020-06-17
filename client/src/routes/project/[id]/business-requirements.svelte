@@ -48,7 +48,9 @@
     Business requirements describe the reason behind a project and what
     objectives of the organization will be fulfilled by undertaking the project.
   </p>
-  <button on:click={showAddBrModal}>Add requirement group</button>
+  <button id="addReqGroupButton" on:click={showAddBrModal}>
+    Add requirement group
+  </button>
 </section>
 {#await reqgroups}
   <!-- loading -->

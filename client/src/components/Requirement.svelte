@@ -49,12 +49,22 @@
 
   const viewRequirement = (event, id) => {
     modalContent.set(ViewRequirementModal);
-    modalProps.set({ id, update, url: `/requirement/${id}`, isPrioritized });
+    modalProps.set({
+      id,
+      update,
+      url: `/project/${requirement.project_id}/requirement/${id}`,
+      isPrioritized
+    });
   };
 
   const proposeChange = (event, id) => {
     modalContent.set(UpdateRequirementModal);
-    modalProps.set({ id, update, url: `/requirement/${id}`, isPrioritized });
+    modalProps.set({
+      id,
+      update,
+      url: `/project/${requirement.project_id}/requirement/${id}`,
+      isPrioritized
+    });
   };
 
   const showHistoryModal = id => {
@@ -63,7 +73,7 @@
       id,
       isPrioritized,
       update,
-      url: `/requirement/${id}/history`
+      url: `/project/${requirement.project_id}/requirement/${id}/history`
     });
   };
 </script>

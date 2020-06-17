@@ -628,12 +628,12 @@ module.exports = async function (fastify, opts) {
   );
 
   const businessReqgroupSeeds = [
-    { name: "Business opportunity", description: "Describe the business problem being solved. For commercial products, also describe the market in which the product will be competing.", isMaxOneRequirement: false },
-    { name: "Business objectives", description: "Summarize the important business benefits the product will provide in a quantitative and measurable way.", isMaxOneRequirement: false },
-    { name: "Success metrics", description: "Specify the indicators that stakeholders will use to define and measure success on this project.", isMaxOneRequirement: false },
-    { name: "Vision statement", description: "Write a concise vision statement that summarizes the long-term purpose and intent of the product.", isMaxOneRequirement: true },
-    { name: "Business risks", description: "Summarize the major business risks associated with developing (or not developing) this product.", isMaxOneRequirement: false },
-    { name: "Business assumptions and dependencies", description: "An assumption is a statement that is believed to be true in the absence of proof or definitive knowledge. Incorrect assumptions can potentially keep you from meeting your business objectives. Also record any major dependencies the project has on external factors, such as government regulations or third-party suppliers.", isMaxOneRequirement: false },
+    { name: "Business opportunity", isPrioritized: true, description: "Describe the business problem being solved. For commercial products, also describe the market in which the product will be competing.", isMaxOneRequirement: false },
+    { name: "Business objectives", isPrioritized: true, description: "Summarize the important business benefits the product will provide in a quantitative and measurable way.", isMaxOneRequirement: false },
+    { name: "Success metrics", isPrioritized: true, description: "Specify the indicators that stakeholders will use to define and measure success on this project.", isMaxOneRequirement: false },
+    { name: "Vision statement", isPrioritized: false, description: "Write a concise vision statement that summarizes the long-term purpose and intent of the product.", isMaxOneRequirement: true },
+    { name: "Business risks", isPrioritized: false, description: "Summarize the major business risks associated with developing (or not developing) this product.", isMaxOneRequirement: false },
+    { name: "Business assumptions and dependencies", isPrioritized: false, description: "An assumption is a statement that is believed to be true in the absence of proof or definitive knowledge. Incorrect assumptions can potentially keep you from meeting your business objectives. Also record any major dependencies the project has on external factors, such as government regulations or third-party suppliers.", isMaxOneRequirement: false },
   ];
 
   const postProjectSchema = {
@@ -704,7 +704,7 @@ module.exports = async function (fastify, opts) {
             ppuid_id,
             isMaxOneRequirement: reqgroup.isMaxOneRequirement,
             isDeletable: false,
-            isPrioritized: false,
+            isPrioritized: reqgroup.isPrioritized,
           })
           .returning("id");
       }));

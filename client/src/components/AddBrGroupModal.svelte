@@ -31,5 +31,7 @@
     <label for="type">Business Requirement Type</label>
     <input type="text" bind:value={type} id="type" />
   </fieldset>
-  <SubmitButton handler={addReqGroup}>Add</SubmitButton>
+  <SubmitButton id="addReqGroupModalButton" handler={addReqGroup}>
+    Add
+  </SubmitButton>
 </form>

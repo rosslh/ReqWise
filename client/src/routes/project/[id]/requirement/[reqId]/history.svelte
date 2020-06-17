@@ -12,7 +12,7 @@
 
 <script>
   export let reqId;
-  import ViewRequirementHistoryModal from "../../../components/ViewRequirementHistoryModal.svelte";
+  import ViewRequirementHistoryModal from "../../../../../components/ViewRequirementHistoryModal.svelte";
 </script>
 
 <section class="contentWrapper">
