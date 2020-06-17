@@ -10,13 +10,15 @@
   export let close;
 
   let description = "";
+  let isPrioritized = true;
 
   $: addFeature = async () => {
     await post(
       `/projects/${id}/reqgroups`,
       {
         name: description,
-        type: "feature"
+        type: "feature",
+        isPrioritized
       },
       $session.user && $session.user.jwt
     );
@@ -35,6 +37,12 @@
       name="desc"
       class="newReqInput"
       bind:value={description} />
+  </fieldset>
+  <fieldset>
+    <input type="checkbox" id="isPrioritized" bind:checked={isPrioritized} />
+    <label class="label-inline" for="isPrioritized">
+      Requirements are prioritizable
+    </label>
   </fieldset>
   <SubmitButton id="addFeatureModalButton" handler={addFeature}>
     Add

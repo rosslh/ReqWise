@@ -55,6 +55,7 @@ module.exports = async function (fastify, opts) {
       type: "object",
       properties: {
         name: { type: "string" },
+        isPrioritized: { type: "boolean" }
       },
       required: ["name"],
     },
@@ -87,12 +88,13 @@ module.exports = async function (fastify, opts) {
       schema: putReqgroupSchema,
     },
     async function (request, reply) {
-      const { name } = request.body;
+      const { name, isPrioritized } = request.body;
       return await fastify
         .knex("reqgroup")
         .where("id", request.params.reqgroupId)
         .update({
           name,
+          isPrioritized,
           updated_at: new Date(Date.now()),
           updated_by: request.user.id,
         })

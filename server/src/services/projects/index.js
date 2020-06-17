@@ -226,6 +226,7 @@ module.exports = async function (fastify, opts) {
       required: ["name"],
       properties: {
         name: { type: "string" },
+        isPrioritized: { type: "boolean" },
       },
     },
     queryString: {},
@@ -257,7 +258,7 @@ module.exports = async function (fastify, opts) {
       schema: postReqgroupSchema,
     },
     async function (request, reply) {
-      const { name, type } = request.body;
+      const { name, type, isPrioritized } = request.body;
       const { projectId: project_id } = request.params;
       const maxPpuid =
         (
@@ -287,6 +288,7 @@ module.exports = async function (fastify, opts) {
           ppuid_id,
           created_by: request.user.id,
           updated_by: request.user.id,
+          isPrioritized
         })
         .returning("id");
     }

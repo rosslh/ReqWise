@@ -9,13 +9,14 @@
   export let close;
 
   export let reqgroup;
-  let { name } = reqgroup;
+  let { name, isPrioritized } = reqgroup;
 
   $: update = async () => {
     await put(
       `/reqgroups/${reqgroupId}`,
       {
-        name
+        name,
+        isPrioritized
       },
       $session.user && $session.user.jwt
     );
@@ -34,6 +35,12 @@
       name="desc"
       class="newReqInput"
       bind:value={name} />
+  </fieldset>
+  <fieldset>
+    <input type="checkbox" id="isPrioritized" bind:checked={isPrioritized} />
+    <label class="label-inline" for="isPrioritized">
+      Requirements are prioritizable
+    </label>
   </fieldset>
   <SubmitButton className="button-caution" handler={update}>Save</SubmitButton>
 </form>
