@@ -12,6 +12,7 @@
   import ProductChampion from "../components/ProductChampion.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { stores } from "@sapper/app";
   const { session } = stores();
@@ -216,6 +217,14 @@
       {/await}
     </div>
     <div class="right">
+      <button
+        on:click={() => alert('view reqs')}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaLink />
+        </div>
+        Requirements
+      </button>
       <button
         on:click={editUserclass}
         class="button-outline button-small button-secondary button-clear">

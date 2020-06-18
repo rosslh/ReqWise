@@ -9,6 +9,7 @@
   import UploadFileModal from "../components/UploadFileModal.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import MdEdit from "svelte-icons/md/MdEdit.svelte";
   import MdFileDownload from "svelte-icons/md/MdFileDownload.svelte";
@@ -192,6 +193,14 @@
     <p>{file.description}</p>
   </div>
   <div class="footer">
+    <button
+      on:click={() => alert('view reqs')}
+      class="button-outline button-small button-secondary button-clear">
+      <div class="iconWrapper">
+        <FaLink />
+      </div>
+      Requirements
+    </button>
     <button
       on:click={() => editFileDetails(file)}
       class="button-outline button-small button-secondary button-clear">

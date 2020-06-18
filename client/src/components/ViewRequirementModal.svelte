@@ -13,8 +13,10 @@
 
   export let isPrioritized; // TODO: fetch this, don't pass as prop
   export let id;
+  export let close = () => {};
 
   let oldStatus;
+  let newStatus;
   let oldPriority;
   let newPriority;
   let oldDescription;
@@ -25,21 +27,26 @@
   let authorImageName;
   let authorPlaceholderImage;
 
-  let isInitialVersion = false;
-
   let quillDelta;
   let plaintextComment = "";
 
   let comments;
   let reqversionId;
+  let ppuid;
+  let project_id;
+  let reqgroup_id;
+  let parent_requirement_id;
+  let reqgroupName;
+  let parent_ppuid;
+  let reqgroup_ppuid;
 
   const getRequirement = async () => {
     const requirement = await get(
       `/requirements/${id}`,
       $session.user && $session.user.jwt
     );
-    isInitialVersion = !requirement.previousVersion.id;
     oldStatus = requirement.previousVersion.status;
+    newStatus = requirement.latestVersion.status;
     oldPriority = requirement.previousVersion.priority;
     newPriority = requirement.latestVersion.priority;
     oldDescription = requirement.previousVersion.description;
@@ -49,8 +56,16 @@
     authorEmail = requirement.latestVersion.authorEmail;
     authorImageName = requirement.latestVersion.authorImageName;
     authorPlaceholderImage = requirement.latestVersion.authorPlaceholderImage;
-
     reqversionId = requirement.latestVersion.id;
+    ({
+      project_id,
+      reqgroup_id,
+      parent_requirement_id,
+      ppuid,
+      reqgroupName,
+      parent_ppuid,
+      reqgroup_ppuid
+    } = requirement);
   };
 
   const scrollToBottom = async () => {
@@ -156,14 +171,26 @@
     await update();
     close();
   };
+
+  const getStatusColor = status => {
+    switch (status) {
+      case "implemented":
+        return "green";
+      case "modified":
+        return "orange";
+      case "proposed":
+        return "red";
+      default:
+        return "indigo";
+    }
+  };
 </script>
 
 <style>
-  h4 {
-    /* margin-top: 2.5rem; */
+  /* h5 {
     margin-bottom: 0.6rem;
     font-size: 1.6rem;
-  }
+  } */
 
   .authorEmail {
     color: var(--secondaryText);
@@ -174,8 +201,6 @@
     display: flex;
     justify-content: space-between;
     /* min-height: 85vh; */
-    max-height: 90vh;
-    overflow: hidden;
   }
 
   .requirementContainer > .column {
@@ -199,11 +224,8 @@
   .column.comments > .commentsBottom {
     height: 24rem;
   }
-  /* h3 {
-    margin: 1rem 0 0.5rem;
-  } */
 
-  /* h4 {
+  /* h5 {
     margin-top: 1rem;
   } */
 
@@ -218,7 +240,7 @@
   .authorInfo {
     display: flex;
     align-items: center;
-    margin-right: 0.5rem;
+    margin-right: 1rem;
   }
 
   .authorImageWrapper img,
@@ -235,22 +257,94 @@
   .actionButton {
     margin-top: 0;
   }
+
+  .reqModalPpuid {
+    font-weight: 300;
+    margin-left: 0.5rem;
+    color: var(--secondaryText);
+  }
+  .revisionStatus {
+    padding: 0.4rem;
+    border-radius: 0.4rem;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-left: 1.5rem;
+    line-height: initial !important;
+  }
+
+  .viewReq2col {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .viewReq2col > * {
+    min-width: 20rem;
+  }
+  .viewReq2col > *:first-child {
+    margin-right: 0.5rem;
+  }
+
+  .latestRevisionHeading {
+    display: flex;
+    align-items: center;
+  }
 </style>
 
 <div class="requirementContainer">
   <div class="column">
     <h3>
-      Proposed requirement
-      {#if !isInitialVersion}change{/if}
+      Requirement
+      {#if ppuid}
+        <span class="reqModalPpuid">#{ppuid}</span>
+      {/if}
     </h3>
-    <h4>Description</h4>
+    <h4>Details</h4>
+    <div class="viewReq2col">
+      <div>
+        <h5>Requirement group</h5>
+        <div>
+          {#if reqgroup_ppuid}
+            <a
+              on:click={close}
+              href={`/project/${project_id}/reqgroup/${reqgroup_id}`}>
+              {reqgroupName} #{reqgroup_ppuid}
+            </a>
+          {:else}
+            <Skeleton noPadding />
+          {/if}
+        </div>
+      </div>
+      {#if parent_requirement_id}
+        <div>
+          <h5>Parent requirement</h5>
+          <div>
+            <a
+              on:click={close}
+              href={`/project/${project_id}/requirement/${parent_requirement_id}`}>
+              #{parent_ppuid}
+            </a>
+          </div>
+        </div>
+      {/if}
+    </div>
+    <h4 class="latestRevisionHeading">
+      <div>Latest revision</div>
+      {#if newStatus}
+        <div
+          class="revisionStatus"
+          style={`background-color: var(--${getStatusColor(newStatus)})`}>
+          {newStatus}
+        </div>
+      {/if}
+    </h4>
+    <h5>Description</h5>
     {#if typeof newDescription === 'undefined'}
       <Skeleton noPadding />
     {:else}
       <DescDiff {oldDescription} {newDescription} />
     {/if}
     {#if isPrioritized}
-      <h4>Priority</h4>
+      <h5>Priority</h5>
       {#if newPriority}
         <div class="reqversionContent">
           <SimpleDiff oldText={oldPriority} newText={newPriority} />
@@ -259,7 +353,7 @@
         <Skeleton noPadding />
       {/if}
     {/if}
-    <h4>Reason for change</h4>
+    <h5>Reason for change</h5>
     {#if typeof rationale === 'undefined'}
       <Skeleton noPadding />
     {:else}
@@ -272,7 +366,7 @@
       </div>
       <!-- zero-width-space to preserve height if rationale is empty-->
     {/if}
-    <h4>Proposer</h4>
+    <h5>Proposer</h5>
     {#if authorName}
       <div class="authorInfo">
         <div class="authorImageWrapper">
@@ -290,20 +384,29 @@
     {:else}
       <Skeleton noPadding />
     {/if}
-    <h4>Actions</h4>
-    <button
-      on:click={acceptProposal}
-      class="actionButton button-success button-small button-outline">
-      Accept
-    </button>
-    <button
-      on:click={rejectProposal}
-      class="actionButton button-danger button-small button-outline">
-      Reject
-    </button>
+    <h5>Actions</h5>
+    {#if newStatus !== 'accepted'}
+      <button
+        on:click={acceptProposal}
+        class="actionButton button-success button-small button-outline">
+        Accept
+      </button>
+      <button
+        on:click={rejectProposal}
+        class="actionButton button-danger button-small button-outline">
+        Reject
+      </button>
+    {:else}
+      <a
+        on:click={close}
+        href={`/project/${project_id}/requirement/${id}/edit`}
+        class="button actionButton button-caution button-small button-outline">
+        Edit requirement
+      </a>
+    {/if}
   </div>
   <div class="column comments">
-    <h4>Comments</h4>
+    <h5>Comments</h5>
     <div class="commentsTop">
       {#if comments}
         <div id="commentsTop" />

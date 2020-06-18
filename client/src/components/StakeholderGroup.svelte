@@ -15,6 +15,7 @@
   import { stores } from "@sapper/app";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
 
   const { session, page } = stores();
 
@@ -110,6 +111,14 @@
       </button>
     </div>
     <div class="footerRight">
+      <button
+        on:click={() => alert('view reqs')}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaLink />
+        </div>
+        Requirement groups
+      </button>
       <button
         on:click={editGroup}
         class="button-outline button-small button-secondary button-clear">

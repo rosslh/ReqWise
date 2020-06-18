@@ -659,7 +659,6 @@ img {
   --indigo: #8583ed;
 
   --sidebarWidth: 26rem;
-  --contentWrapperWidth: 100rem;
 }
 
 body {
@@ -691,7 +690,7 @@ body {
 }
 
 .contentWrapper {
-  max-width: 100rem;
+  max-width: 115rem;
   width: 100%;
   margin-left: auto;
   margin-right: auto;

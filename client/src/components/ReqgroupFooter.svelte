@@ -61,7 +61,7 @@
       <div class="iconWrapper">
         <FaUserTie />
       </div>
-      View stakeholders
+      Stakeholders
     </button>
     <button
       on:click={editReqgroup}

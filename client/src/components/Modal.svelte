@@ -46,10 +46,10 @@
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 1000;
   }
+
   div.contentWrapper {
     z-index: 2000;
     background-color: var(--backdrop);
-    padding: 1rem 3rem 3rem;
     border-radius: 0.4rem;
     position: fixed;
     top: 50%;
@@ -59,12 +59,19 @@
     /* max-width: 90vw; */
     box-sizing: content-box;
     overflow-y: scroll;
+    padding: 0;
+  }
+
+  div.slotWrapper {
+    margin: 3rem 5% 6rem;
   }
 </style>
 
 <div class="backdrop" on:click={close} />
 <div class="modal">
   <div class="contentWrapper">
-    <slot {close} />
+    <div class="slotWrapper">
+      <slot {close} />
+    </div>
   </div>
 </div>

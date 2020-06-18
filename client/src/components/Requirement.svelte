@@ -1,6 +1,5 @@
 <script>
   import FaRegComment from "svelte-icons/fa/FaRegComment.svelte";
-  import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
@@ -9,7 +8,6 @@
   import { modalContent, modalProps } from "../stores.js";
   import ViewRequirementModal from "./ViewRequirementModal.svelte";
   import ViewRequirementHistoryModal from "./ViewRequirementHistoryModal.svelte";
-  import UpdateRequirementModal from "./UpdateRequirementModal.svelte";
 
   import { formatRelative } from "date-fns";
 
@@ -49,16 +47,6 @@
 
   const viewRequirement = (event, id) => {
     modalContent.set(ViewRequirementModal);
-    modalProps.set({
-      id,
-      update,
-      url: `/project/${requirement.project_id}/requirement/${id}`,
-      isPrioritized
-    });
-  };
-
-  const proposeChange = (event, id) => {
-    modalContent.set(UpdateRequirementModal);
     modalProps.set({
       id,
       update,
@@ -301,15 +289,9 @@
   </div>
   <div class="iconCell">
     <button
-      on:click|stopPropagation={e => {
-        requirement.status === 'proposed' ? viewRequirement(e, requirement.id) : proposeChange(e, requirement.id);
-      }}
+      on:click|stopPropagation={e => viewRequirement(e, requirement.id)}
       class="commentIconWrapper">
-      {#if requirement.status === 'proposed'}
-        <FaRegComment />
-      {:else}
-        <FaRegEdit />
-      {/if}
+      <FaRegComment />
     </button>
   </div>
 </li>

@@ -5,7 +5,7 @@
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
-  import FaShapes from "svelte-icons/fa/FaShapes.svelte";
+  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
   import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
   import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
@@ -42,7 +42,7 @@
     {
       label: "Diagrams and Files",
       slug: "files",
-      icon: FaShapes,
+      icon: FaRegFileAlt,
       newSection: true,
       extraPadding: true
     },

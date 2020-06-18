@@ -20,7 +20,11 @@ module.exports = async function (fastify, opts) {
         type: "object",
         properties: {
           id: { type: "number" },
-          parent_requirement_id: { type: "number" },
+          parent_requirement_id: { type: ["number", "null"] },
+          reqgroupName: { type: "string" },
+          reqgroup_ppuid: { type: "number" },
+          parent_ppuid: { type: "number" },
+
           reqgroup_id: { type: "number" },
           project_id: { type: "number" },
           is_archived: { type: "boolean" },
@@ -94,7 +98,16 @@ module.exports = async function (fastify, opts) {
       const requirement = await fastify.knex
         .from("requirement")
         .join("reqgroup", "reqgroup.id", "=", "requirement.reqgroup_id")
-        .select("requirement.*")
+        .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+        .leftJoin("requirement as parent", "parent.id", "=", "requirement.parent_requirement_id")
+        .leftJoin("per_project_unique_id as p_ppuid", "p_ppuid.id", "parent.ppuid_id")
+        .join("per_project_unique_id as rg_ppuid", "rg_ppuid.id", "reqgroup.ppuid_id")
+        .select("requirement.*",
+          "per_project_unique_id.readable_id as ppuid",
+          "reqgroup.name as reqgroupName",
+          "p_ppuid.readable_id as parent_ppuid",
+          "rg_ppuid.readable_id as reqgroup_ppuid",
+        )
         .where({
           "requirement.id": request.params.requirementId,
         })

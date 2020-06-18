@@ -9,6 +9,7 @@
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
 
   export let selectedReqs;
   export let update;
@@ -31,6 +32,15 @@
   const deleteSelected = async () => {
     modalContent.set(DeleteRequirementsModal);
     modalProps.set({ selectedReqs, update });
+  };
+
+  const viewUserClasses = async () => {
+    // modalContent.set(ViewUserclassesModal);
+    // modalProps.set({ selectedReqs, update });
+  };
+  const viewFiles = async () => {
+    // modalContent.set(ViewFilesModal);
+    // modalProps.set({ selectedReqs, update });
   };
 </script>
 
@@ -64,6 +74,7 @@
   div.selectTools > div.buttons {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   div.selectTools > div.buttons > * {
@@ -78,6 +89,24 @@
       {selectedReqs.length} requirement{selectedReqs.length === 1 ? '' : 's'}:
     </div>
     <div class="buttons">
+      <button
+        id="viewUserclassesButton"
+        on:click={viewUserClasses}
+        class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <IoMdPeople />
+        </div>
+        User classes
+      </button>
+      <button
+        id="viewFilesButton"
+        on:click={viewFiles}
+        class="button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <FaRegFileAlt />
+        </div>
+        Files
+      </button>
       <button
         on:click={moveToReqgroup}
         class="button-small button-outline button-clear button-secondary">
@@ -104,15 +133,6 @@
           Change priority
         </button>
       {/if}
-      <button
-        id="viewUserclassesButton"
-        on:click={() => alert('view user classes')}
-        class="button-small button-outline button-clear button-secondary">
-        <div class="iconWrapper">
-          <IoMdPeople />
-        </div>
-        View user classes
-      </button>
       <!-- <button
         on:click={archiveSelected}
         class="button-small button-outline button-clear button-secondary">
