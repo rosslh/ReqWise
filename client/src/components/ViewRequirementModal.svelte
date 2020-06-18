@@ -18,6 +18,7 @@
   export let isPrioritized; // TODO: fetch this, don't pass as prop
   export let id;
   export let close = () => {};
+  export let update = () => {};
 
   let oldStatus;
   let newStatus;
@@ -40,7 +41,6 @@
   let project_id;
   let reqgroup_id;
   let parent_requirement_id;
-  let reqgroupName;
   let parent_ppuid;
   let reqgroup_ppuid;
   let loaded = false;
@@ -67,7 +67,6 @@
       reqgroup_id,
       parent_requirement_id,
       ppuid,
-      reqgroupName,
       parent_ppuid,
       reqgroup_ppuid
     } = requirement);

@@ -3,8 +3,6 @@
   import { get } from "../../../../../api.js";
   import FilePreview from "../../../../../components/FilePreview.svelte";
   import AddFileToRequirementModal from "../../../../../components/AddFileToRequirementModal.svelte";
-  import LinkResourceModal from "../../../../../components/LinkResourceModal.svelte";
-  import SearchSortFilter from "../../../../../components/SearchSortFilter.svelte";
   import { modalContent, modalProps } from "../../../../../stores.js";
 
   const { page, session } = stores();
@@ -26,8 +24,6 @@
     modalContent.set(AddFileToRequirementModal);
     modalProps.set({ projectId: id, requirementId: reqId, update });
   };
-
-  //   let searchResults = [];
 </script>
 
 <style>

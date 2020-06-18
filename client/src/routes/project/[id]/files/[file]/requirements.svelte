@@ -1,25 +1,14 @@
 <script>
   import { stores } from "@sapper/app";
   import { get } from "../../../../../api.js";
-  import FilePreview from "../../../../../components/FilePreview.svelte";
-  import AddFileToRequirementModal from "../../../../../components/AddFileToRequirementModal.svelte";
-  import LinkResourceModal from "../../../../../components/LinkResourceModal.svelte";
-  import { modalContent, modalProps } from "../../../../../stores.js";
 
   const { page, session } = stores();
-  const { file, id } = $page.params;
+  const { file } = $page.params;
 
   let requirements = get(
     `/files/${file}/requirements`,
     $session.user && $session.user.jwt
   );
-
-  const update = async () => {
-    requirements = await get(
-      `/files/${file}/requirements`,
-      $session.user && $session.user.jwt
-    );
-  };
 </script>
 
 <style>
@@ -39,7 +28,7 @@
       <ul>
         {#each result as req (req.id)}
           <li>
-            <a href={`/project/${id}/requirement/${req.id}`}>
+            <a href={`/project/${req.project_id}/requirement/${req.id}`}>
               #{req.ppuid} {req.description}
             </a>
           </li>

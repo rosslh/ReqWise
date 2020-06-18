@@ -1,25 +1,25 @@
 <script context="module">
-  import { get } from "../../../../../api.js";
-  export async function preload({ params, path }, { user }) {
+  // import { get } from "../../../../../api.js";
+  export async function preload({ path }, { user }) {
     if (!user) {
       return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
     }
-    const requirement = await get(
-      `/requirements/${params.reqId}`,
-      user && user.jwt
-    );
-    return { requirement };
+    // const requirement = await get(
+    //   `/requirements/${params.reqId}`,
+    //   user && user.jwt
+    // );
+    // return { requirement };
   }
 </script>
 
 <script>
-  export let requirement;
+  // export let requirement;
 </script>
 
 <style>
-  div.backLink {
+  /* div.backLink {
     padding: 1.5rem 0;
-  }
+  } */
 </style>
 
 <!-- <div class="contentWrapper">

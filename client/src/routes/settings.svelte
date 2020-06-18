@@ -23,7 +23,6 @@
   import { toBase64, validateFileSize } from "../utils.js";
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
-  import { onMount } from "svelte";
 
   export let user;
   let { name } = user;

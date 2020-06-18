@@ -2,14 +2,10 @@
   import { modalContent, modalProps } from "../stores.js";
   import ChangeStatusModal from "./ChangeStatusModal.svelte";
   import ChangePriorityModal from "./ChangePriorityModal.svelte";
-  import ArchiveRequirementsModal from "./ArchiveRequirementsModal.svelte";
   import DeleteRequirementsModal from "./DeleteRequirementsModal.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
-  import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
-  import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
 
   export let selectedReqs;
   export let update;
@@ -25,22 +21,13 @@
     modalContent.set(ChangePriorityModal);
     modalProps.set({ selectedReqs, update });
   };
-  const archiveSelected = async () => {
-    modalContent.set(ArchiveRequirementsModal);
-    modalProps.set({ selectedReqs, update });
-  };
+  // const archiveSelected = async () => {
+  //   modalContent.set(ArchiveRequirementsModal);
+  //   modalProps.set({ selectedReqs, update });
+  // };
   const deleteSelected = async () => {
     modalContent.set(DeleteRequirementsModal);
     modalProps.set({ selectedReqs, update });
-  };
-
-  const viewUserClasses = async () => {
-    // modalContent.set(ViewUserclassesModal);
-    // modalProps.set({ selectedReqs, update });
-  };
-  const viewFiles = async () => {
-    // modalContent.set(ViewFilesModal);
-    // modalProps.set({ selectedReqs, update });
   };
 </script>
 
@@ -89,24 +76,6 @@
       {selectedReqs.length} requirement{selectedReqs.length === 1 ? '' : 's'}:
     </div>
     <div class="buttons">
-      <button
-        id="viewUserclassesButton"
-        on:click={viewUserClasses}
-        class="button-small button-outline button-clear button-secondary">
-        <div class="iconWrapper">
-          <IoMdPeople />
-        </div>
-        User classes
-      </button>
-      <button
-        id="viewFilesButton"
-        on:click={viewFiles}
-        class="button-small button-outline button-clear button-secondary">
-        <div class="iconWrapper">
-          <FaRegFileAlt />
-        </div>
-        Files
-      </button>
       <button
         on:click={moveToReqgroup}
         class="button-small button-outline button-clear button-secondary">

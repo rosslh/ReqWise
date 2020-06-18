@@ -5,7 +5,7 @@
   import Reqgroup from "../../../../../components/Reqgroup.svelte";
 
   const { page, session } = stores();
-  const { reqgroupId, id } = $page.params;
+  const { reqgroupId } = $page.params;
 
   let reqgroup = get(
     `/reqgroups/${reqgroupId}`,
