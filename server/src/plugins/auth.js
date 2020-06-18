@@ -191,10 +191,10 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByProjectId(request, reply);
     }
     else if (request.params.stakeholderGroupId) {
-      return isTeamMemberByStakeholderGroupId(request, reply, true);
+      return isTeamMemberByStakeholderGroupId(request, reply);
     }
     else if (request.params.fileId) {
-      return isTeamMemberByFileId(request, reply, true);
+      return isTeamMemberByFileId(request, reply);
     }
     else if (request.params.reqgroupId) {
       return isTeamMemberByReqgroupId(request, reply);
