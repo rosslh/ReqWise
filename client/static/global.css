@@ -748,17 +748,40 @@ body {
   font-size: 1.1rem;
 }
 
+.button-small .iconWrapper svg{
+  max-height: 1.35rem;
+  max-width: 1.35rem;
+}
+
 .button-small .iconWrapper {
-  height: 1.1rem;
-  width: 1.1rem;
+  height: 1.35rem;
+  width: 1.35rem;
+  margin-right: 0.4rem;
 }
 
 .iconWrapper {
-  height: 1.8rem;
-  width: 1.4rem;
   margin-right: 0.5rem;
   display: inline-block;
-  box-sizing: border-box;
+  height: 1.8rem;
+  width: 1.8rem;
+  overflow: hidden;
+}
+
+.iconWrapper svg {
+  max-height: 1.8rem;
+  max-width: 1.8rem;
+}
+
+.iconWrapper-padded {
+  transform: scale(0.8);
+}
+
+.iconWrapper-mirrored {
+  transform: scaleX(-1);
+}
+
+.iconWrapper-padded.iconWrapper-mirrored {
+  transform: scale(-0.8, 0.8);
 }
 
 .button-clear {

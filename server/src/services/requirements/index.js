@@ -328,4 +328,82 @@ module.exports = async function (fastify, opts) {
         .join("account", "account.id", "=", "reqversion.account_id")
         .orderBy("created_at", "desc");
     });
+
+  const getRequirementFilesSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/requirements/:requirementId/files",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getRequirementFilesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("file")
+        .select("file.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
+        .join("file_requirement", "file.id", "file_requirement.file_id")
+        .where({ "file_requirement.requirement_id": request.params.requirementId })
+        .orderBy("ppuid", "asc");
+    });
+
+  const postRequirementFileSchema = {
+    body: {
+      type: "object",
+      properties: {
+        file_id: { type: ["number", "string"] }
+      }
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/requirements/:requirementId/files",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postRequirementFileSchema,
+    },
+    async function (request, reply) {
+      const { file_id } = request.body;
+      const { requirementId } = request.params;
+
+      return await fastify
+        .knex("file_requirement")
+        .insert({
+          file_id: fastify.deobfuscateId(file_id),
+          requirement_id: requirementId
+        })
+        .returning("id");
+    }
+  );
 };

@@ -20,30 +20,7 @@
   };
 </script>
 
-<style>
-  div.backLink {
-    padding: 1.5rem 0;
-  }
-</style>
-
 <section class="contentWrapper">
-  <div class="backLink">
-    {#await reqgroup}
-      <!-- loading -->
-    {:then result}
-      {#if result.type === 'business'}
-        <a href={`/project/${id}/business-requirements`}>
-          &larr;&nbsp;Go to business requirements
-        </a>
-      {:else if result.type === 'quality'}
-        <a href={`/project/${id}/quality-attributes`}>
-          &larr;&nbsp;Go to quality attributes
-        </a>
-      {:else}
-        <a href={`/project/${id}/features`}>&larr;&nbsp;Go to features</a>
-      {/if}
-    {/await}
-  </div>
   <h2>View requirement group</h2>
   {#await reqgroup}
     <!-- loading -->

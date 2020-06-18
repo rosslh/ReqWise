@@ -1,5 +1,7 @@
 <script>
+  import { fade } from "svelte/transition";
   import { onMount, onDestroy } from "svelte";
+
   import { modalContent, modalProps } from "../stores.js";
 
   let fromUrl;
@@ -69,7 +71,7 @@
 
 <div class="backdrop" on:click={close} />
 <div class="modal">
-  <div class="contentWrapper">
+  <div in:fade class="contentWrapper">
     <div class="slotWrapper">
       <slot {close} />
     </div>

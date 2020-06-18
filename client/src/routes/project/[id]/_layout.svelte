@@ -27,7 +27,10 @@
   const { page, session } = stores();
 
   $: ({ path, params } = $page);
-  $: tab = path.split("/").pop();
+  $: tab = path
+    .split("/")
+    .slice(3)
+    .join("/");
   $: id = params.id;
 
   let closeStream;

@@ -4,7 +4,7 @@
   import ChangePriorityModal from "./ChangePriorityModal.svelte";
   import ArchiveRequirementsModal from "./ArchiveRequirementsModal.svelte";
   import DeleteRequirementsModal from "./DeleteRequirementsModal.svelte";
-  import FaEdit from "svelte-icons/fa/FaEdit.svelte";
+  import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaArchive from "svelte-icons/fa/FaArchive.svelte";
   import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
@@ -119,7 +119,7 @@
         on:click={changeStatus}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
-          <FaEdit />
+          <FaRegEdit />
         </div>
         Change status
       </button>
@@ -128,7 +128,7 @@
           on:click={changePriority}
           class="button-small button-outline button-clear button-secondary">
           <div class="iconWrapper">
-            <FaEdit />
+            <FaRegEdit />
           </div>
           Change priority
         </button>

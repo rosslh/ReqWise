@@ -206,8 +206,6 @@ module.exports = async function (fastify, opts) {
       schema: getRequirementsSchema,
     },
     async function (request, reply) {
-      // TODO: Make recursive: http://knexjs.org/#Builder-withRecursive
-
       const getReqversion = function () {
         this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
           "reqversion.created_at",

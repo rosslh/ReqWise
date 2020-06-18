@@ -194,4 +194,91 @@ module.exports = async function (fastify, opts) {
             return ["success"];
         }
     );
+
+    const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+            "reqversion.created_at",
+            "=",
+            fastify.knex.raw(
+                "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+            )
+        );
+    };
+    const getFileRequirementsSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                fileId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/files/:fileId/requirements",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getFileRequirementsSchema,
+        },
+        async function (request, reply) {
+            return await fastify.knex
+                .from("requirement")
+                .select("requirement.*", "requirement.id as id", "reqversion.*", "per_project_unique_id.readable_id as ppuid")
+                .join("reqversion", getReqversion)
+                .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+                .join("file_requirement", "requirement.id", "file_requirement.requirement_id")
+                .where({ "file_requirement.file_id": request.params.fileId })
+                .orderBy("ppuid", "asc");
+        }
+    );
+
+    const deleteFileRequirementSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                fileId: { type: "number" },
+                requirementId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/files/:fileId/requirements/:requirementId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deleteFileRequirementSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("file_requirement")
+                .where({
+                    "file_id": request.params.fileId,
+                    "requirement_id": request.params.requirementId,
+                }).del();
+            return ["success"];
+        }
+    );
 };

@@ -2,18 +2,25 @@
   export let update;
   export let file;
   export let projectId;
+  export let unlinkRequirement;
+
+  import { stores } from "@sapper/app";
 
   import { modalContent, modalProps } from "../stores.js";
+  import { del } from "../api.js";
   import EditFileDetailsModal from "../components/EditFileDetailsModal.svelte";
   import DeleteFileModal from "../components/DeleteFileModal.svelte";
   import UploadFileModal from "../components/UploadFileModal.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
+  import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import MdEdit from "svelte-icons/md/MdEdit.svelte";
   import MdFileDownload from "svelte-icons/md/MdFileDownload.svelte";
   import MdCloudUpload from "svelte-icons/md/MdCloudUpload.svelte";
+
+  const { session } = stores();
 
   const editFileDetails = file => {
     modalContent.set(EditFileDetailsModal);
@@ -40,6 +47,14 @@
 
   const isImageFile = fileName =>
     /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/.test(fileName);
+
+  const unlinkFile = async () => {
+    await del(
+      `/files/${file.id}/requirements/${unlinkRequirement}`,
+      $session.user && $session.user.jwt
+    );
+    await update();
+  };
 </script>
 
 <style>
@@ -89,7 +104,8 @@
     padding: 0 2rem 2rem;
   }
 
-  .footer button {
+  .footer button,
+  .footer .button {
     margin: 0;
   }
 
@@ -193,14 +209,25 @@
     <p>{file.description}</p>
   </div>
   <div class="footer">
-    <button
-      on:click={() => alert('view reqs')}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaLink />
-      </div>
-      Requirements
-    </button>
+    {#if unlinkRequirement}
+      <button
+        on:click={unlinkFile}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper iconWrapper-padded">
+          <FaUnlink />
+        </div>
+        Unlink file
+      </button>
+    {:else}
+      <a
+        href={`/project/${projectId}/files/${file.id}/requirements`}
+        class="button button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper iconWrapper-padded">
+          <FaLink />
+        </div>
+        Requirements
+      </a>
+    {/if}
     <button
       on:click={() => editFileDetails(file)}
       class="button-outline button-small button-secondary button-clear">

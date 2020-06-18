@@ -62,9 +62,6 @@
 
 <section class="contentWrapper">
   <h2>Update Requirement</h2>
-  <h3>Details</h3>
-  <div>files & user classes</div>
-  <h3>Create new version</h3>
   <form>
     <fieldset>
       <label for="desc">Description</label>

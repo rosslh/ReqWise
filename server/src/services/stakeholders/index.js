@@ -54,14 +54,7 @@ module.exports = async function (fastify, opts) {
             },
             required: ["Authorization", "Content-Type"],
         },
-        response: {
-            200: {
-                type: "object",
-                properties: {
-                    team_id: { type: "number" },
-                },
-            },
-        },
+        response: {},
     };
     fastify.post(
         "/stakeholders/:stakeholderGroupId/users",

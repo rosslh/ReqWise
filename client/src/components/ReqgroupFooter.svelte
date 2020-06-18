@@ -58,7 +58,7 @@
     <button
       on:click={viewStakeholders}
       class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
+      <div class="iconWrapper iconWrapper-padded">
         <FaUserTie />
       </div>
       Stakeholders

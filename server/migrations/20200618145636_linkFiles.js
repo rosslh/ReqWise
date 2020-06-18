@@ -1,8 +1,7 @@
 
 exports.up = function (knex) {
     return Promise.all([
-        knex.schema.dropTable("stakeholderGroup_requirement"),
-        knex.schema.createTable("requirement_userclass", (table) => {
+        knex.schema.createTable("file_requirement", (table) => {
             table.increments("id").primary();
             table
                 .integer("requirement_id")
@@ -12,8 +11,8 @@ exports.up = function (knex) {
                 .unsigned()
                 .notNullable();
             table
-                .integer("userclass_id")
-                .references("userclass.id")
+                .integer("file_id")
+                .references("file.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
                 .unsigned()
@@ -22,5 +21,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-    knex.schema.dropTable("requirement_userclass")
+    knex.schema.dropTable("file_requirement")
 };

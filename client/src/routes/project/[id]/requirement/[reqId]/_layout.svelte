@@ -22,12 +22,12 @@
   }
 </style>
 
-<div class="contentWrapper">
+<!-- <div class="contentWrapper">
   <div class="backLink">
     <a
       href={`/project/${requirement.project_id}/reqgroup/${requirement.reqgroup_id}`}>
       &larr;&nbsp;Go to requirement group
     </a>
   </div>
-</div>
+</div> -->
 <slot />

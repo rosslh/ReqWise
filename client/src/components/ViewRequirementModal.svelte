@@ -3,6 +3,10 @@
   const { session } = stores();
 
   import { onMount, onDestroy, tick } from "svelte";
+  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
+  import MdFolder from "svelte-icons/md/MdFolder.svelte";
+  import FaLevelUpAlt from "svelte-icons/fa/FaLevelUpAlt.svelte";
+  import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
 
   import { get, post, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
@@ -39,6 +43,7 @@
   let reqgroupName;
   let parent_ppuid;
   let reqgroup_ppuid;
+  let loaded = false;
 
   const getRequirement = async () => {
     const requirement = await get(
@@ -66,6 +71,7 @@
       parent_ppuid,
       reqgroup_ppuid
     } = requirement);
+    loaded = true;
   };
 
   const scrollToBottom = async () => {
@@ -187,11 +193,6 @@
 </script>
 
 <style>
-  /* h5 {
-    margin-bottom: 0.6rem;
-    font-size: 1.6rem;
-  } */
-
   .authorEmail {
     color: var(--secondaryText);
     margin-left: 0.3rem;
@@ -224,10 +225,6 @@
   .column.comments > .commentsBottom {
     height: 24rem;
   }
-
-  /* h5 {
-    margin-top: 1rem;
-  } */
 
   .authorImageWrapper {
     height: 3.5rem;
@@ -273,60 +270,74 @@
     line-height: initial !important;
   }
 
-  .viewReq2col {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .viewReq2col > * {
-    min-width: 20rem;
-  }
-  .viewReq2col > *:first-child {
-    margin-right: 0.5rem;
-  }
-
   .latestRevisionHeading {
     display: flex;
     align-items: center;
+  }
+
+  .attachmentButtons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .attachmentButtons > *:not(:last-child) {
+    margin-right: 0.5rem;
   }
 </style>
 
 <div class="requirementContainer">
   <div class="column">
-    <h3>
-      Requirement
-      {#if ppuid}
+    <h2>
+      View requirement
+      {#if loaded}
         <span class="reqModalPpuid">#{ppuid}</span>
       {/if}
-    </h3>
-    <h4>Details</h4>
-    <div class="viewReq2col">
-      <div>
-        <h5>Requirement group</h5>
-        <div>
-          {#if reqgroup_ppuid}
-            <a
-              on:click={close}
-              href={`/project/${project_id}/reqgroup/${reqgroup_id}`}>
-              {reqgroupName} #{reqgroup_ppuid}
-            </a>
-          {:else}
-            <Skeleton noPadding />
-          {/if}
-        </div>
+    </h2>
+    {#if loaded}
+      <div class="attachmentButtons">
+        <a
+          class="button button-secondary button-small button-outline"
+          on:click={close}
+          href={`/project/${project_id}/reqgroup/${reqgroup_id}`}>
+          <span class="iconWrapper iconWrapper-padded">
+            <MdFolder />
+          </span>
+          Requirement group #{reqgroup_ppuid}
+        </a>
+        {#if parent_requirement_id}
+          <a
+            class="button button-secondary button-small button-outline"
+            on:click={close}
+            href={`/project/${project_id}/requirement/${parent_requirement_id}`}>
+            <span class="iconWrapper iconWrapper-padded iconWrapper-mirrored">
+              <FaLevelUpAlt />
+            </span>
+            Parent Requirement #{parent_ppuid}
+          </a>
+        {/if}
+        <a
+          on:click={close}
+          class="button button-secondary button-small button-outline"
+          href={`/project/${project_id}/requirement/${id}/files`}>
+          <span class="iconWrapper iconWrapper-padded">
+            <FaRegFileAlt />
+          </span>
+          Files
+        </a>
+        <a
+          on:click={close}
+          class="button button-secondary button-small button-outline"
+          href={`/project/${project_id}/requirement/${id}/user-classes`}>
+          <span class="iconWrapper">
+            <IoMdPeople />
+          </span>
+          User classes
+        </a>
       </div>
-      {#if parent_requirement_id}
-        <div>
-          <h5>Parent requirement</h5>
-          <div>
-            <a
-              on:click={close}
-              href={`/project/${project_id}/requirement/${parent_requirement_id}`}>
-              #{parent_ppuid}
-            </a>
-          </div>
-        </div>
-      {/if}
-    </div>
+    {:else}
+      <Skeleton rows={2} />
+    {/if}
     <h4 class="latestRevisionHeading">
       <div>Latest revision</div>
       {#if newStatus}
@@ -338,14 +349,14 @@
       {/if}
     </h4>
     <h5>Description</h5>
-    {#if typeof newDescription === 'undefined'}
+    {#if !loaded}
       <Skeleton noPadding />
     {:else}
       <DescDiff {oldDescription} {newDescription} />
     {/if}
     {#if isPrioritized}
       <h5>Priority</h5>
-      {#if newPriority}
+      {#if loaded}
         <div class="reqversionContent">
           <SimpleDiff oldText={oldPriority} newText={newPriority} />
         </div>
@@ -354,7 +365,7 @@
       {/if}
     {/if}
     <h5>Reason for change</h5>
-    {#if typeof rationale === 'undefined'}
+    {#if !loaded}
       <Skeleton noPadding />
     {:else}
       <div class="reqversionContent">
@@ -367,7 +378,7 @@
       <!-- zero-width-space to preserve height if rationale is empty-->
     {/if}
     <h5>Proposer</h5>
-    {#if authorName}
+    {#if loaded}
       <div class="authorInfo">
         <div class="authorImageWrapper">
           {#if authorImageName}
