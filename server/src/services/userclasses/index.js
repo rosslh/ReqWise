@@ -271,4 +271,91 @@ module.exports = async function (fastify, opts) {
             return ["success"];
         }
     );
+
+    const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+            "reqversion.created_at",
+            "=",
+            fastify.knex.raw(
+                "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+            )
+        );
+    };
+    const getUserclassRequirementsSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                userclassId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/userclasses/:userclassId/requirements",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getUserclassRequirementsSchema,
+        },
+        async function (request, reply) {
+            return await fastify.knex
+                .from("requirement")
+                .select("requirement.*", "reqversion.*", "per_project_unique_id.readable_id as ppuid", "requirement.id as id") // id overwrite must be at end
+                .join("reqversion", getReqversion)
+                .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+                .join("requirement_userclass", "requirement.id", "requirement_userclass.requirement_id")
+                .where({ "requirement_userclass.userclass_id": request.params.userclassId })
+                .orderBy("ppuid", "asc");
+        }
+    );
+
+    const deleteUserclassRequirementSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                userclassId: { type: "number" },
+                requirementId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/userclasses/:userclassId/requirements/:requirementId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deleteUserclassRequirementSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("requirement_userclass")
+                .where({
+                    "userclass_id": request.params.userclassId,
+                    "requirement_id": request.params.requirementId,
+                }).del();
+            return ["success"];
+        }
+    );
 };

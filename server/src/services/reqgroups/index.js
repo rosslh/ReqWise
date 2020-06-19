@@ -41,7 +41,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("reqgroup")
-        .select("*", "reqgroup.id as id", "per_project_unique_id.readable_id as ppuid")
+        .select("*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id")
         .where({
           "reqgroup.id": request.params.reqgroupId,
         })

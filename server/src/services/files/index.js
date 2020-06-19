@@ -231,7 +231,7 @@ module.exports = async function (fastify, opts) {
         async function (request, reply) {
             return await fastify.knex
                 .from("requirement")
-                .select("requirement.*", "requirement.id as id", "reqversion.*", "per_project_unique_id.readable_id as ppuid")
+                .select("requirement.*", "reqversion.*", "per_project_unique_id.readable_id as ppuid", "requirement.id as id") // id overwrite must be at end
                 .join("reqversion", getReqversion)
                 .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
                 .join("file_requirement", "requirement.id", "file_requirement.requirement_id")

@@ -99,10 +99,10 @@ module.exports = async function (fastify, opts) {
       return await fastify.knex
         .from("team")
         .select(
-          "team.id as id",
           "team.name as name",
           "team.description as description",
-          "account_team.isAdmin as isAdmin"
+          "account_team.isAdmin as isAdmin",
+          "team.id as id",
         )
         .where("team.id", request.params.teamId)
         .join("account_team", {

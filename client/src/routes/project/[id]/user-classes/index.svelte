@@ -1,11 +1,11 @@
 <script>
   import { stores } from "@sapper/app";
 
-  import { modalContent, modalProps } from "../../../stores.js";
-  import AddUserclassModal from "../../../components/AddUserclassModal.svelte";
-  import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
-  import Userclass from "../../../components/Userclass.svelte";
-  import { get } from "../../../api.js";
+  import { modalContent, modalProps } from "../../../../stores.js";
+  import AddUserclassModal from "../../../../components/AddUserclassModal.svelte";
+  import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
+  import Userclass from "../../../../components/Userclass.svelte";
+  import { get } from "../../../../api.js";
 
   const { page, session } = stores();
   const { id } = $page.params;

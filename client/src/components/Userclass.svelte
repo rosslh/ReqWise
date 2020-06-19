@@ -2,9 +2,10 @@
   export let update;
   export let userclass;
   export let projectId;
+  export let unlinkRequirement;
 
   import { modalContent, modalProps } from "../stores.js";
-  import { get } from "../api.js";
+  import { get, del } from "../api.js";
   import DeleteUserclassModal from "../components/DeleteUserclassModal.svelte";
   import EditUserclassModal from "../components/EditUserclassModal.svelte";
   import AddProductChampionModal from "../components/AddProductChampionModal.svelte";
@@ -12,6 +13,7 @@
   import ProductChampion from "../components/ProductChampion.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { stores } from "@sapper/app";
@@ -64,6 +66,14 @@
       userclassId: userclass.id,
       projectId
     });
+  };
+
+  const unlinkUserclass = async () => {
+    await del(
+      `/userclasses/${userclass.id}/requirements/${unlinkRequirement}`,
+      $session.user && $session.user.jwt
+    );
+    await update();
   };
 </script>
 
@@ -217,14 +227,26 @@
       {/await}
     </div>
     <div class="right">
-      <button
-        on:click={() => alert('view reqs')}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaLink />
-        </div>
-        Requirements
-      </button>
+      {#if unlinkRequirement}
+        <button
+          on:click={unlinkUserclass}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaUnlink />
+          </div>
+          Unlink user class
+        </button>
+      {:else}
+        <a
+          href={`/project/${projectId}/user-classes/${userclass.id}/requirements`}
+          class="button button-outline button-small button-secondary
+          button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaLink />
+          </div>
+          Requirements
+        </a>
+      {/if}
       <button
         on:click={editUserclass}
         class="button-outline button-small button-secondary button-clear">

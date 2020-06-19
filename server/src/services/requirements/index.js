@@ -406,4 +406,82 @@ module.exports = async function (fastify, opts) {
         .returning("id");
     }
   );
+
+  const getRequirementUserclassesSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/requirements/:requirementId/userclasses",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getRequirementUserclassesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("userclass")
+        .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
+        .join("requirement_userclass", "userclass.id", "requirement_userclass.userclass_id")
+        .where({ "requirement_userclass.requirement_id": request.params.requirementId })
+        .orderBy("ppuid", "asc");
+    });
+
+  const postRequirementUserclassSchema = {
+    body: {
+      type: "object",
+      properties: {
+        userclass_id: { type: ["number", "string"] }
+      }
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/requirements/:requirementId/userclasses",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postRequirementUserclassSchema,
+    },
+    async function (request, reply) {
+      const { userclass_id } = request.body;
+      const { requirementId } = request.params;
+
+      return await fastify
+        .knex("requirement_userclass")
+        .insert({
+          userclass_id: fastify.deobfuscateId(userclass_id),
+          requirement_id: requirementId
+        })
+        .returning("id");
+    }
+  );
 };
