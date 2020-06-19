@@ -26,6 +26,8 @@ jobs:
         working-directory: ./client
         run: |
           npm run test
+        env:
+          TESTING_API_URL: ${{secrets.TESTING_API_URL}}
       - uses: w9jds/firebase-action@master
         with:
           args: deploy
