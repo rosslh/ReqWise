@@ -38,7 +38,7 @@
   class={`${className} submitButton`}
   on:click|preventDefault={handleClick}>
   {#if spinning}
-    <div class="iconWrapper">
+    <div class="iconWrapper loadingSpinner">
       <FaSpinner />
     </div>
   {:else}

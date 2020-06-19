@@ -10,7 +10,24 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
+Cypress.Commands.add("login", () => {
+    cy.get("#email").click().type('test@reqwise.com');
+    cy.get("#email").should('have.value', "test@reqwise.com");
+    cy.get("#pwd").click().type('1234');
+    cy.get("#pwd").should('have.value', "1234");
+    cy.get(".submitButton").click();
+    cy.get('.loadingSpinner').should('not.exist');
+    cy.url().should('not.include', 'login');
+});
+
+Cypress.Commands.add("goToProject", () => {
+    cy.visit('/teams')
+    cy.login();
+    cy.contains('a', "Test team (don't delete)").click();
+    cy.url().should('include', 'team/');
+    cy.contains('a', "Test project (don't delete)").click();
+    cy.url().should('include', 'project/');
+});
 //
 //
 // -- This is a child command --
