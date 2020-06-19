@@ -32,10 +32,23 @@
     background: none;
     border: none;
     color: var(--normalText);
-    padding: 1.5rem;
     transition: transform 0.3s ease;
     width: 4rem;
     height: 4rem;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button.viewDiff .viewDiffIconWrapper {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  :global(button.viewDiff svg) {
+    max-height: 3rem;
+    max-width: 3rem;
   }
 
   button.viewDiff.rotate {
@@ -122,7 +135,9 @@
       <button
         class={`viewDiff ${showDiffs ? 'rotate' : ''}`}
         on:click={viewDiff}>
-        <MdChevronRight />
+        <div class="viewDiffIconWrapper">
+          <MdChevronRight />
+        </div>
       </button>
     </div>
   </div>

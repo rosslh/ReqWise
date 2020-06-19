@@ -7,6 +7,7 @@
   import MdFolder from "svelte-icons/md/MdFolder.svelte";
   import FaLevelUpAlt from "svelte-icons/fa/FaLevelUpAlt.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
+  import MdHistory from "svelte-icons/md/MdHistory.svelte";
 
   import { get, post, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
@@ -332,6 +333,15 @@
             <IoMdPeople />
           </span>
           User classes
+        </a>
+        <a
+          on:click={close}
+          class="button button-secondary button-small button-outline"
+          href={`/project/${project_id}/requirement/${id}/history`}>
+          <span class="iconWrapper">
+            <MdHistory />
+          </span>
+          History
         </a>
       </div>
     {:else}
