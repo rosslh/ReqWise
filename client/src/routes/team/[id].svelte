@@ -123,7 +123,7 @@
           {#each result as project (project.id)}
             <tr>
               <td>
-                <a class="projectLink" href={`/project/${project.id}`}>
+                <a class="projectLink" href={`/project/${project.id}/features`}>
                   {project.name}
                 </a>
               </td>

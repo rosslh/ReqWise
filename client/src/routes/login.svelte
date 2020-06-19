@@ -15,12 +15,16 @@
       headers: {
         "Content-Type": "application/json"
       }
-    }).then(r => r.json());
+    });
+
+    const data = await r.json();
+
     $session.user = {
-      jwt: r.token,
-      id: r.userId,
-      theme: r.theme
+      jwt: data.token,
+      id: data.userId,
+      theme: data.theme
     };
+
     if ($page.query.redirect) {
       goto($page.query.redirect);
     } else {

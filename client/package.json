@@ -16,7 +16,8 @@
     "cy:open": "cypress open",
     "test": "run-p --race dev cy:run",
     "testGui": "run-p --race dev cy:open",
-    "lint": "eslint src/**/*.svelte src/**/*.js"
+    "lint": "eslint src/**/*.svelte src/**/*.js",
+    "clearLocalSessions": "rm -rf sessions/"
   },
   "engines": {
     "node": "10"

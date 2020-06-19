@@ -1,12 +1,12 @@
 describe('Teams page', () => {
     beforeEach(() => {
         cy.visit('/teams')
-        cy.waitForSkeleton();
         cy.login();
+        cy.contains('h1', 'My Teams')
+        cy.waitForSkeleton();
     });
 
     it('has the correct content', () => {
-        cy.contains('h1', 'My Teams')
         cy.contains('a', "Test team (don't delete)");
     });
 
