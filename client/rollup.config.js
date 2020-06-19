@@ -26,10 +26,10 @@ const postcssPlugins = (purgecss = false) => {
     require("postcss-url")(),
     require("autoprefixer")(),
     purgecss &&
-      require("@fullhuman/postcss-purgecss")({
-        content: ["./src/**/*.svelte", "./src/**/*.html"],
-        defaultExtractor: (content) => content.match(/[A-Za-z0-9-_:/]+/g) || [],
-      }),
+    require("@fullhuman/postcss-purgecss")({
+      content: ["./src/**/*.svelte", "./src/**/*.html"],
+      defaultExtractor: (content) => content.match(/[A-Za-z0-9-_:/]+/g) || [],
+    }),
     !dev && require("cssnano")({ preset: "default" }),
   ].filter(Boolean);
 };
@@ -43,9 +43,9 @@ const preprocess = getPreprocessor({
 });
 
 const apiUrl =
-  mode === "development"
+  process.env.TESTING_API_URL || (mode === "development"
     ? '"http://localhost:3001"'
-    : '"https://reqwise.uc.r.appspot.com"';
+    : '"https://reqwise.uc.r.appspot.com"');
 
 export default {
   client: {
@@ -70,33 +70,33 @@ export default {
       commonjs(),
 
       legacy &&
-        babel({
-          extensions: [".js", ".mjs", ".html", ".svelte"],
-          runtimeHelpers: true,
-          exclude: ["node_modules/@babel/**"],
-          presets: [
-            [
-              "@babel/preset-env",
-              {
-                targets: "> 0.25%, not dead",
-              },
-            ],
+      babel({
+        extensions: [".js", ".mjs", ".html", ".svelte"],
+        runtimeHelpers: true,
+        exclude: ["node_modules/@babel/**"],
+        presets: [
+          [
+            "@babel/preset-env",
+            {
+              targets: "> 0.25%, not dead",
+            },
           ],
-          plugins: [
-            "@babel/plugin-syntax-dynamic-import",
-            [
-              "@babel/plugin-transform-runtime",
-              {
-                useESModules: true,
-              },
-            ],
+        ],
+        plugins: [
+          "@babel/plugin-syntax-dynamic-import",
+          [
+            "@babel/plugin-transform-runtime",
+            {
+              useESModules: true,
+            },
           ],
-        }),
+        ],
+      }),
 
       !dev &&
-        terser({
-          module: true,
-        }),
+      terser({
+        module: true,
+      }),
     ],
 
     onwarn,
@@ -127,7 +127,7 @@ export default {
     ],
     external: Object.keys(pkg.dependencies).concat(
       require("module").builtinModules ||
-        Object.keys(process.binding("natives"))
+      Object.keys(process.binding("natives"))
     ),
 
     onwarn,
