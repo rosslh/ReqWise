@@ -15,7 +15,7 @@ Cypress.Commands.add("login", () => {
     cy.get("#email").click().type('test@reqwise.com');
     cy.get("#pwd").click().type('1234');
     cy.get(".submitButton").click();
-    cy.waitForSpinner(15000); // timeout after 15 seconds
+    cy.waitForSpinner(60000); // timeout after 60 seconds
     cy.url().should('not.include', 'login');
 });
 
