@@ -23,10 +23,6 @@
     modalContent.set(DeleteFeatureModal);
     modalProps.set({ reqgroupId: reqgroup.id, update });
   };
-
-  const viewStakeholders = () => {
-    alert("view stakeholders");
-  };
 </script>
 
 <style>
@@ -55,14 +51,14 @@
     <div />
   {/if}
   <div>
-    <button
-      on:click={viewStakeholders}
-      class="button-outline button-small button-secondary button-clear">
+    <a
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}/stakeholders`}
+      class="button button-outline button-small button-secondary button-clear">
       <div class="iconWrapper iconWrapper-padded">
         <FaUserTie />
       </div>
       Stakeholders
-    </button>
+    </a>
     <button
       on:click={editReqgroup}
       class="button-outline button-small button-secondary button-clear">

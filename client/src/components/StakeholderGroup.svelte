@@ -157,7 +157,7 @@
           <div class="iconWrapper iconWrapper-padded">
             <FaUnlink />
           </div>
-          Unlink user class
+          Unlink stakeholder group
         </button>
       {:else}
         <a

@@ -33,7 +33,7 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Stakeholder groups linked to requirement</h2>
+  <h2>Stakeholders linked to requirement group</h2>
   <button class="button button-success" on:click={addStakeholderGroup}>
     Add stakeholder group
   </button>

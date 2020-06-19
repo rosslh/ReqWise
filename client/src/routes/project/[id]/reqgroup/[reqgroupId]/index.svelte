@@ -20,8 +20,23 @@
   };
 </script>
 
+<style>
+  .reqgroupPpuid {
+    color: var(--secondaryText);
+    font-weight: 300;
+    margin-left: 1rem;
+  }
+</style>
+
 <section class="contentWrapper">
-  <h2>View requirement group</h2>
+  <h2>
+    View requirement group
+    {#await reqgroup}
+      <!-- loading -->
+    {:then result}
+      <span class="reqgroupPpuid">#{result.ppuid}</span>
+    {/await}
+  </h2>
   {#await reqgroup}
     <!-- loading -->
   {:then result}

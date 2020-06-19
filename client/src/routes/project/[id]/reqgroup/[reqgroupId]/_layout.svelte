@@ -1,26 +1,25 @@
 <script context="module">
   import { get } from "../../../../../api.js";
   export async function preload({ params }, { user }) {
-    const requirement = await get(
-      `/requirements/${params.reqId}`,
+    const reqgroup = await get(
+      `/reqgroups/${params.reqgroupId}`,
       user && user.jwt
     );
-    return { requirement };
+    return { reqgroup };
   }
 </script>
 
 <script>
   import { stores } from "@sapper/app";
   const { page } = stores();
-  export let requirement;
+  export let reqgroup;
 </script>
 
 {#if $page.path.split('/').length > 5}
   <div class="contentWrapper">
     <div class="backLink">
-      <a
-        href={`/project/${requirement.project_id}/requirement/${requirement.id}`}>
-        &larr;&nbsp;Go to requirement
+      <a href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
+        &larr;&nbsp;Go to requirement group
       </a>
     </div>
   </div>
