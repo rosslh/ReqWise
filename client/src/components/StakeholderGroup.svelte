@@ -1,6 +1,7 @@
 <script>
   export let update;
   export let group;
+  export let unlinkReqgroup;
 
   import { modalContent, modalProps } from "../stores.js";
   import Skeleton from "./Skeleton.svelte";
@@ -8,14 +9,14 @@
   import EditStakeholderGroupModal from "./EditStakeholderGroupModal.svelte";
   import DeleteStakeholderGroupModal from "./DeleteStakeholderGroupModal.svelte";
   import Stakeholder from "./Stakeholder.svelte";
-  import ReqgroupHeader from "./ReqgroupHeader.svelte";
 
-  import { get } from "../api.js";
+  import { get, del } from "../api.js";
 
   import { stores } from "@sapper/app";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
+  import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
 
   const { session, page } = stores();
 
@@ -49,6 +50,14 @@
       $session.user && $session.user.jwt
     );
   };
+
+  const unlinkStakeholderGroup = async () => {
+    await del(
+      `/stakeholders/${group.id}/reqgroups/${unlinkReqgroup}`,
+      $session.user && $session.user.jwt
+    );
+    await update();
+  };
 </script>
 
 <style>
@@ -71,18 +80,48 @@
     padding: 0 2rem 2rem;
   }
 
-  .footer button {
+  .footer button,
+  .footer .button {
     margin: 0;
   }
 
   .headerWrapper {
     margin: 2rem 2rem 0;
   }
+
+  div.groupHeader {
+    background-color: var(--background1);
+    margin: -1.2rem -1.2rem 0 -1.2rem;
+    padding: 1.8rem 1.2rem;
+    border-bottom: 0.1rem solid var(--borderColor);
+    min-height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  div.groupHeader h3 {
+    font-size: 1.8rem;
+    display: inline;
+    margin: 0;
+    max-width: 50%;
+    /* color: #333; */
+  }
+
+  .groupPpuid {
+    color: var(--secondaryText);
+    font-weight: 300;
+    margin-left: 0.5rem;
+  }
 </style>
 
 <div class="stakeholderGroupWrapper">
   <div class="headerWrapper">
-    <ReqgroupHeader reqgroup={group} />
+    <div class="groupHeader">
+      <h3>
+        {group.name}
+        <span class="groupPpuid">#{group.ppuid}</span>
+      </h3>
+    </div>
   </div>
   <div class="users">
     {#await stakeholders}
@@ -111,14 +150,26 @@
       </button>
     </div>
     <div class="footerRight">
-      <button
-        on:click={() => alert('view reqs')}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaLink />
-        </div>
-        Requirement groups
-      </button>
+      {#if unlinkReqgroup}
+        <button
+          on:click={unlinkStakeholderGroup}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaUnlink />
+          </div>
+          Unlink user class
+        </button>
+      {:else}
+        <a
+          href={`/project/${projectId}/stakeholders/${group.id}/reqgroups`}
+          class="button button-outline button-small button-secondary
+          button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaLink />
+          </div>
+          Requirement groups
+        </a>
+      {/if}
       <button
         on:click={editGroup}
         class="button-outline button-small button-secondary button-clear">

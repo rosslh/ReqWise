@@ -114,8 +114,8 @@
     justify-content: space-between;
     padding: 0 2rem 2rem;
   }
-
-  .footer button {
+  .footer button,
+  .footer .button {
     margin: 0;
   }
 

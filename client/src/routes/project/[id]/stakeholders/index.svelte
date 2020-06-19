@@ -1,10 +1,10 @@
 <script>
   import { stores } from "@sapper/app";
-  import { get } from "../../../api.js";
-  import { modalContent, modalProps } from "../../../stores.js";
-  import AddStakeholderGroupModal from "../../../components/AddStakeholderGroupModal.svelte";
-  import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
-  import StakeholderGroup from "../../../components/StakeholderGroup.svelte";
+  import { get } from "../../../../api.js";
+  import { modalContent, modalProps } from "../../../../stores.js";
+  import AddStakeholderGroupModal from "../../../../components/AddStakeholderGroupModal.svelte";
+  import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
+  import StakeholderGroup from "../../../../components/StakeholderGroup.svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;

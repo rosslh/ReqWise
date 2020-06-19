@@ -361,4 +361,82 @@ module.exports = async function (fastify, opts) {
       }
     }
   );
+
+  const getReqgroupStakeholderGroupsSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reqgroupId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/reqgroups/:reqgroupId/stakeholders",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getReqgroupStakeholderGroupsSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("stakeholderGroup")
+        .select("stakeholderGroup.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "stakeholderGroup.ppuid_id")
+        .join("stakeholderGroup_reqgroup", "stakeholderGroup.id", "stakeholderGroup_reqgroup.stakeholderGroup_id")
+        .where({ "stakeholderGroup_reqgroup.reqgroup_id": request.params.reqgroupId })
+        .orderBy("ppuid", "asc");
+    });
+
+  const postRequirementUserclassSchema = {
+    body: {
+      type: "object",
+      properties: {
+        stakeholderGroup_id: { type: ["number", "string"] }
+      }
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reqgroupId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/reqgroups/:reqgroupId/stakeholders",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postRequirementUserclassSchema,
+    },
+    async function (request, reply) {
+      const { stakeholderGroup_id } = request.body;
+      const { reqgroupId } = request.params;
+
+      return await fastify
+        .knex("stakeholderGroup_reqgroup")
+        .insert({
+          stakeholderGroup_id: fastify.deobfuscateId(stakeholderGroup_id),
+          reqgroup_id: reqgroupId
+        })
+        .returning("id");
+    }
+  );
 };

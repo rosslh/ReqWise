@@ -260,4 +260,81 @@ module.exports = async function (fastify, opts) {
             return ["success"];
         }
     );
+
+    const getStakeholderGroupReqgroupsSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/stakeholders/:stakeholderGroupId/reqgroups",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getStakeholderGroupReqgroupsSchema,
+        },
+        async function (request, reply) {
+            return await fastify.knex
+                .from("reqgroup")
+                .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id") // id overwrite must be at end
+                .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
+                .join("stakeholderGroup_reqgroup", "reqgroup.id", "stakeholderGroup_reqgroup.reqgroup_id")
+                .where({ "stakeholderGroup_reqgroup.stakeholderGroup_id": request.params.stakeholderGroupId })
+                .orderBy("ppuid", "asc");
+        }
+    );
+
+    const deleteStakeholderGroupReqgroupSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+                reqgroupId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/stakeholders/:stakeholderGroupId/reqgroups/:reqgroupId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deleteStakeholderGroupReqgroupSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("stakeholderGroup_reqgroup")
+                .where({
+                    "stakeholderGroup_id": request.params.stakeholderGroupId,
+                    "reqgroup_id": request.params.reqgroupId,
+                }).del();
+            return ["success"];
+        }
+    );
 };
