@@ -23,6 +23,30 @@ describe('Features page', () => {
         cy.contains("li.requirement div.desc", "New requirement");
     });
 
+    it('can change requirement status', () => {
+        cy.get("li.requirement", { force: true }).click();
+        cy.get('#changeRequirementStatusButton').click();
+        cy.get(".statusSelectWrapper .selectContainer").click();
+        cy.get(".statusSelectWrapper .selectContainer .listItem").eq(1).click();
+        cy.get("input#rationale").click().type("test rationale");
+        cy.get("#changeStatusSubmitButton").click();
+        cy.contains("li.requirement span.statusText", "Accepted", { matchCase: false });
+        cy.reload(); // ensure data is persisted
+        cy.contains("li.requirement span.statusText", "Accepted", { matchCase: false });
+    });
+
+    it('can change requirement priority', () => {
+        cy.get("li.requirement", { force: true }).click();
+        cy.get('#changeRequirementPriorityButton').click();
+        cy.get(".prioritySelectWrapper .selectContainer").click();
+        cy.get(".prioritySelectWrapper .selectContainer .listItem").eq(2).click();
+        cy.get("input#rationale").click().type("test rationale");
+        cy.get("#changePrioritySubmitButton").click();
+        cy.contains("li.requirement div.priority", "Low", { matchCase: false });
+        cy.reload(); // ensure data is persisted
+        cy.contains("li.requirement div.priority", "Low", { matchCase: false });
+    });
+
     it('can delete requirement', () => {
         cy.get("li.requirement", { force: true }).click();
         cy.get('#deleteRequirementButton').click();

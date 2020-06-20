@@ -53,7 +53,7 @@
 <form>
   <fieldset class="inline">
     <label for="priority">Priority</label>
-    <div class="selectWrapper">
+    <div class="selectWrapper prioritySelectWrapper">
       <Select
         inputAttributes={{ id: 'priority' }}
         isClearable={false}
@@ -78,7 +78,10 @@
       change without discussion
     </label>
   </fieldset>
-  <SubmitButton className="button-caution" handler={updateRequirements}>
+  <SubmitButton
+    id="changePrioritySubmitButton"
+    className="button-caution"
+    handler={updateRequirements}>
     Update
   </SubmitButton>
 </form>

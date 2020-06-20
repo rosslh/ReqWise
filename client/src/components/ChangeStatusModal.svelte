@@ -44,7 +44,7 @@
 <form>
   <fieldset class="inline">
     <label for="status">Status</label>
-    <div class="selectWrapper">
+    <div class="selectWrapper statusSelectWrapper">
       <Select
         inputAttributes={{ id: 'status' }}
         isClearable={false}
@@ -62,7 +62,10 @@
       class="newReqInput"
       bind:value={rationale} />
   </fieldset>
-  <SubmitButton className="button-caution" handler={updateRequirements}>
+  <SubmitButton
+    id="changeStatusSubmitButton"
+    className="button-caution"
+    handler={updateRequirements}>
     Update
   </SubmitButton>
 </form>

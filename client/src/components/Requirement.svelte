@@ -251,28 +251,28 @@
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaExclamation />
       </span>
-      Proposed
+      <span class="statusText">Proposed</span>
     {:else if requirement.status === 'accepted'}
       <span
         class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaThumbsUp />
       </span>
-      Accepted
+      <span class="statusText">Accepted</span>
     {:else if requirement.status === 'modified'}
       <span
         class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaExclamation />
       </span>
-      Modified
+      <span class="statusText">Modified</span>
     {:else}
       <span
         class="statusIconWrapper"
         style={`color:var(--${getStatusColor(requirement.status)})`}>
         <FaCheck />
       </span>
-      Implemented
+      <span class="statusText">Implemented</span>
     {/if}
   </div>
   {#if isPrioritized}

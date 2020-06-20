@@ -85,6 +85,7 @@
         Move to feature
       </button>
       <button
+        id="changeRequirementStatusButton"
         on:click={changeStatus}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper">
@@ -94,6 +95,7 @@
       </button>
       {#if isPrioritized}
         <button
+          id="changeRequirementPriorityButton"
           on:click={changePriority}
           class="button-small button-outline button-clear button-secondary">
           <div class="iconWrapper">
