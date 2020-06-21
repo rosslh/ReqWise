@@ -8,6 +8,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import ViewRequirementModal from "./ViewRequirementModal.svelte";
   import ViewRequirementHistoryModal from "./ViewRequirementHistoryModal.svelte";
+  import RequirementDropzone from "./RequirementDropzone.svelte";
 
   import { formatRelative } from "date-fns";
 
@@ -184,29 +185,6 @@
       transform: translateX(3rem * $i);
       margin-right: 3rem * $i;
     }
-
-    .nestedPlaceholder.depth-#{$i} {
-      left: 1rem + 3rem * $i;
-      width: calc(95% - (2rem + 3rem * #{$i}));
-    }
-  }
-
-  .nestedPlaceholder {
-    visibility: hidden;
-    height: 2.25rem;
-    padding: 0;
-    margin: -1rem 0 -1.25rem;
-    transition: opacity 0.2s ease, height 0.2s ease;
-    border-radius: 0.4rem;
-    position: relative;
-    box-sizing: content-box;
-    background-clip: padding-box;
-    &:hover {
-      height: 4.5rem;
-      opacity: 1;
-      background-color: var(--backdrop);
-      border: 1rem solid transparent;
-    }
   }
 
   :global(.draggable-container--over .nestedPlaceholder) {
@@ -228,10 +206,7 @@
 </style>
 
 {#if index === 0}
-  <li
-    class={`nestedPlaceholder draggable depth-0 ${hiddenPlaceholders.includes(-1) ? 'hidden' : ''}`}
-    data-parentid={-1}
-    data-isplaceholder={1} />
+  <RequirementDropzone {hiddenPlaceholders} parentId={-1} depth={0} />
 {/if}
 <li
   class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
@@ -295,7 +270,7 @@
     </button>
   </div>
 </li>
-<li
-  data-parentid={requirement.id}
-  data-isplaceholder={1}
-  class={`nestedPlaceholder draggable depth-${requirement.depth + 1} ${hiddenPlaceholders.includes(requirement.id) ? 'hidden' : ''}`} />
+<RequirementDropzone
+  {hiddenPlaceholders}
+  parentId={requirement.id}
+  depth={requirement.depth + 1} />
