@@ -53,6 +53,7 @@
     height: calc(var(--sidebarWidth) - 9rem);
     width: calc(var(--sidebarWidth) - 9rem);
     margin: 1rem auto 0;
+    border: 0.1rem solid var(--borderColor);
   }
 
   div.userColumnLeft .button {
@@ -68,6 +69,12 @@
     color: var(--secondaryText);
     margin-bottom: 2.5rem;
   }
+
+  .profileImageWrapper img,
+  :global(.profileImageWrapper svg) {
+    max-height: 100%;
+    max-width: 100%;
+  }
 </style>
 
 <svelte:head>
@@ -79,9 +86,13 @@
   </div>
   <div class="userColumnLeft">
     <div class="profileImageWrapper">
-      <img
-        src={`https://storage.googleapis.com/user-file-storage/${user.imageName}`}
-        alt={user.name} />
+      {#if user.imageName}
+        <img
+          src={`https://storage.googleapis.com/user-file-storage/${user.imageName}`}
+          alt={user.name} />
+      {:else}
+        {@html user.placeholderImage}
+      {/if}
     </div>
     <h1>{user.name}</h1>
     <div class="emailAddress">{user.email}</div>
