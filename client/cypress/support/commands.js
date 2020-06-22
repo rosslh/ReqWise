@@ -1,6 +1,7 @@
 import 'cypress-wait-until';
 
 Cypress.Commands.add("login", () => {
+    cy.wait(2000); // wait for inputs interactive
     cy.get("#email").click().type('test@reqwise.com');
     cy.get("#pwd").click().type('1234');
     cy.get(".submitButton").click();

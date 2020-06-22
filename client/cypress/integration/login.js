@@ -4,7 +4,7 @@ describe('Login page', () => {
     });
 
     it('has the correct <h1>', () => {
-        cy.contains('h1', 'Log in')
+        cy.contains('h1', 'Sign in to ReqWise')
     });
 
     it('can login', () => {
