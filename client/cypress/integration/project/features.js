@@ -1,6 +1,10 @@
 describe('Features page', () => {
-    beforeEach(() => {
+    before(() => {
         cy.goToProject();
+    });
+
+    beforeEach(() => {
+        Cypress.Cookies.preserveOnce('__session');
     });
 
     it('can add feature', () => {

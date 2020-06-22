@@ -1,9 +1,13 @@
 describe('Account page', () => {
-    beforeEach(() => {
+    before(() => {
         cy.visit('/account')
         cy.login();
         cy.contains('h2', 'My Teams')
         cy.waitForSkeleton();
+    })
+
+    beforeEach(() => {
+        Cypress.Cookies.preserveOnce('__session');
     });
 
     it('has the correct content', () => {
@@ -22,13 +26,17 @@ describe('Account page', () => {
 });
 
 describe('Team page', () => {
-    beforeEach(() => {
+    before(() => {
         cy.visit('/account')
         cy.login();
         cy.url().should('include', '/account');
         cy.waitForSkeleton();
         cy.contains('a', "test name").click();
         cy.url().should('include', '/team/');
+    });
+
+    beforeEach(() => {
+        Cypress.Cookies.preserveOnce('__session');
     });
 
     it('can update name and description', () => {

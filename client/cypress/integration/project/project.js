@@ -1,6 +1,10 @@
 describe('Project page', () => {
-    beforeEach(() => {
+    before(() => {
         cy.goToProject();
+    });
+
+    beforeEach(() => {
+        Cypress.Cookies.preserveOnce('__session');
     });
 
     it('has the correct <h1>', () => {
