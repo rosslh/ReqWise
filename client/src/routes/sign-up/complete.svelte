@@ -37,19 +37,46 @@
   };
 </script>
 
+<style>
+  .loginWrapper {
+    max-width: 50rem;
+    margin: 0 auto;
+  }
+
+  .loginWrapper:first-child {
+    margin-top: 3rem;
+  }
+
+  .loginWrapper .loginContent {
+    border: 0.1rem solid var(--borderColor);
+    border-radius: 0.4rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--background1);
+  }
+
+  :global(.loginWrapper .loginContent button) {
+    width: 100%;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+  }
+</style>
+
 <svelte:head>
   <title>Complete sign up - ReqWise</title>
 </svelte:head>
-<div class="contentWrapper">
+<div class="contentWrapper loginWrapper">
   <h1>Complete sign up</h1>
-  <form>
+  <form class="loginContent">
     <fieldset>
       <label for="email">Email</label>
       <input
-        autocomplete="email"
-        value={email}
-        type="email"
         disabled
+        autocomplete="email"
+        bind:value={email}
+        type="text"
         id="email" />
     </fieldset>
     <fieldset>
@@ -59,11 +86,11 @@
     <fieldset>
       <label for="pwd">Password</label>
       <input
-        autocomplete="new-password"
+        autocomplete="password"
         bind:value={password}
         type="password"
         id="pwd" />
-      <SubmitButton handler={submit}>Submit</SubmitButton>
     </fieldset>
+    <SubmitButton handler={submit}>Sign in</SubmitButton>
   </form>
 </div>
