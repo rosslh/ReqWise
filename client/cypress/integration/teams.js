@@ -37,6 +37,7 @@ describe('Team page', () => {
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce('__session');
+        cy.waitForSkeleton();
     });
 
     it('can update name and description', () => {
