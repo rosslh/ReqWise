@@ -9,6 +9,6 @@ describe('Login page', () => {
 
     it('can login', () => {
         cy.login();
-        cy.url().should('include', 'teams');
+        cy.url().should('include', '/account');
     });
 });

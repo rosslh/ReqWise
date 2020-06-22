@@ -46,6 +46,15 @@ body {
   --multiItemBG:  var(--background2);
 }
 
+.panel {
+  background-color: var(--background1);
+  padding: 1.2rem 1.6rem;
+  margin: 0 -1.6rem 1.6rem;
+  border: .1rem solid var(--borderColor);
+  border-radius: 0.4rem;
+  /* display: inline-block; */
+}
+
 .selectContainer {
   margin-bottom: 1.5rem;
 }
@@ -55,8 +64,8 @@ body {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-left: 8%;
+  padding-right: 8%;
 }
 
 fieldset {
@@ -65,8 +74,8 @@ fieldset {
   max-width: 60rem;
 }
 
-table.compact {
-  max-width: 60rem;
+.compact {
+  max-width: 75rem;
 }
 
 fieldset input,

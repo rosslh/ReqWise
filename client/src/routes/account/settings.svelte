@@ -1,5 +1,5 @@
 <script context="module">
-  import { get } from "../api.js";
+  import { get } from "../../api.js";
   export async function preload(page, session) {
     if (!session.user) {
       return this.redirect(
@@ -17,10 +17,10 @@
 
 <script>
   import Select from "svelte-select";
-  import SubmitButton from "../components/SubmitButton.svelte";
+  import SubmitButton from "../../components/SubmitButton.svelte";
 
-  import { put } from "../api.js";
-  import { toBase64, validateFileSize } from "../utils.js";
+  import { put } from "../../api.js";
+  import { toBase64, validateFileSize } from "../../utils.js";
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
 
@@ -54,7 +54,7 @@
           ...$session.user,
           theme: theme.value
         };
-        goto(`/settings`, { replaceState: true });
+        goto("/account/settings", { replaceState: true });
       });
   };
 
@@ -126,8 +126,8 @@
   <title>Settings - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
-  <h1>Settings</h1>
-  <form>
+  <h2>Settings</h2>
+  <form class="panel">
     <fieldset>
       <label for="name">Your name</label>
       <input bind:value={name} type="text" id="name" />
@@ -163,7 +163,7 @@
     </fieldset>
     <SubmitButton handler={submit}>Submit</SubmitButton>
   </form>
-</div>
-<div class="contentWrapper changePassword">
-  <a href="/reset/request">Change password</a>
+  <div class="panel changePassword">
+    <a href="/reset/request">Change password</a>
+  </div>
 </div>

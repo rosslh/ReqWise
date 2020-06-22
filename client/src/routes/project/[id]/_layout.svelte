@@ -14,7 +14,6 @@
   import { onMount, onDestroy } from "svelte";
   import { stores } from "@sapper/app";
   import {
-    currentProject,
     sidebarHidden,
     reqgroupsToUpdate,
     projectShouldUpdate
@@ -22,7 +21,6 @@
   import { stream } from "../../../api.js";
 
   export let project;
-  $currentProject = project;
 
   const { page, session } = stores();
 
@@ -98,7 +96,7 @@
     overflow-y: scroll;
     background-color: var(--backdrop);
     border-top: 0.1rem solid var(--borderColor);
-    padding-top: 3.5rem;
+    padding-top: 1.5rem;
     transition: width 0.2s ease;
   }
 
@@ -129,13 +127,13 @@
 </style>
 
 <svelte:head>
-  <title>{$currentProject.name} - ReqWise</title>
+  <title>{project.name} - ReqWise</title>
 </svelte:head>
 <div class={$sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>
   <div class="projectColumnRight">
     <slot />
   </div>
   <div class="projectColumnLeft">
-    <Sidebar {tab} {id} name={$currentProject.name} />
+    <Sidebar {tab} {id} name={project.name} />
   </div>
 </div>

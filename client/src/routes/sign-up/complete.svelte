@@ -31,7 +31,7 @@
       .then(r => r.json())
       .then(r => {
         $session.user = { jwt: r.token, id: r.userId };
-        goto("/teams");
+        goto("/account");
       })
       .catch(() => alert("Incorrect email or password"));
   };

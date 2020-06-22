@@ -104,8 +104,8 @@
 
         <a rel="prefetch" id="loginLink" href="/login">Login</a>
       {:else}
-        <a rel="prefetch" href="/teams">My Teams</a>
-        <a rel="prefetch" href="/settings">Settings</a>
+        <a rel="prefetch" href="/account">My Account</a>
+        <a rel="prefetch" href="/account/settings">Settings</a>
         <button class="button button-small button-outline" on:click={logout}>
           Log out
         </button>

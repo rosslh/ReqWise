@@ -60,7 +60,7 @@
 
   const deleteTeam = async () => {
     await del(`/teams/${id}`, user && user.jwt);
-    goto("/teams");
+    goto("/account");
   };
 
   const deleteInvite = async inviteId => {
@@ -95,7 +95,7 @@
 </svelte:head>
 <div class="contentWrapper">
   <h1>{title}</h1>
-  <section>
+  <div class="panel compact">
     <form>
       <fieldset>
         <label for="name">Team name</label>
@@ -107,9 +107,9 @@
       </fieldset>
       <SubmitButton handler={updateTeam}>Update</SubmitButton>
     </form>
-  </section>
-  <section>
-    <h1>Projects</h1>
+  </div>
+  <h2>Projects</h2>
+  <div class="panel compact">
     {#await projects}
       <Skeleton rows={3} />
     {:then result}
@@ -146,9 +146,9 @@
         </button>
       </div>
     {/if}
-  </section>
-  <section>
-    <h1>Members</h1>
+  </div>
+  <h2>Members</h2>
+  <div class="panel compact">
     {#await members}
       <Skeleton rows={3} />
     {:then result}
@@ -208,7 +208,9 @@
     {:catch error}
       <p style="color: var(--red)">{error.message}</p>
     {/await}
-    <h3>Invites</h3>
+  </div>
+  <h3>Invites</h3>
+  <div class="panel compact">
     {#await invites}
       <Skeleton rows={3} />
     {:then result}
@@ -258,13 +260,13 @@
         </button>
       </div>
     {/if}
-  </section>
+  </div>
   {#if isAdmin}
-    <section>
-      <h1>Danger Zone</h1>
+    <h2>Danger Zone</h2>
+    <div class="panel compact">
       <button id="deleteTeamButton" class="button-danger" on:click={deleteTeam}>
         Delete team
       </button>
-    </section>
+    </div>
   {/if}
 </div>

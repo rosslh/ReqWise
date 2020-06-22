@@ -1,8 +1,8 @@
-describe('Teams page', () => {
+describe('Account page', () => {
     beforeEach(() => {
-        cy.visit('/teams')
+        cy.visit('/account')
         cy.login();
-        cy.contains('h1', 'My Teams')
+        cy.contains('h2', 'My Teams')
         cy.waitForSkeleton();
     });
 
@@ -23,9 +23,9 @@ describe('Teams page', () => {
 
 describe('Team page', () => {
     beforeEach(() => {
-        cy.visit('/teams')
+        cy.visit('/account')
         cy.login();
-        cy.url().should('include', '/teams');
+        cy.url().should('include', '/account');
         cy.waitForSkeleton();
         cy.contains('a', "test name").click();
         cy.url().should('include', '/team/');
@@ -62,8 +62,8 @@ describe('Team page', () => {
 
     it('can delete team', () => { // must be last
         cy.get("#deleteTeamButton").click();
-        cy.url().should('include', 'teams');
-        cy.contains('h1', 'My Teams')
+        cy.url().should('include', 'account');
+        cy.contains('h2', 'My Teams')
         cy.waitForSkeleton();
         cy.get("body").find("a.teamLink").should('have.length', 1);
     });

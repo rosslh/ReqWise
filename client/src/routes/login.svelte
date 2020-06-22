@@ -28,7 +28,7 @@
     if ($page.query.redirect) {
       goto($page.query.redirect);
     } else {
-      goto("/teams");
+      goto("/account");
     }
   };
 </script>

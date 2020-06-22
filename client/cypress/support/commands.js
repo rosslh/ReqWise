@@ -10,7 +10,7 @@ Cypress.Commands.add("login", () => {
 });
 
 Cypress.Commands.add("goToProject", () => {
-    cy.visit('/teams')
+    cy.visit('/account')
     cy.login();
     cy.waitForSkeleton();
     cy.contains('a', "Test team (don't delete)").click();

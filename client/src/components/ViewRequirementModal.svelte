@@ -5,7 +5,7 @@
   import { onMount, onDestroy, tick } from "svelte";
   import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
   import MdFolder from "svelte-icons/md/MdFolder.svelte";
-  import FaLevelUpAlt from "svelte-icons/fa/FaLevelUpAlt.svelte";
+  import MdSubdirectoryArrowLeft from "svelte-icons/md/MdSubdirectoryArrowLeft.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
 
@@ -284,6 +284,11 @@
   .attachmentButtons > *:not(:last-child) {
     margin-right: 0.5rem;
   }
+
+  .rotate90 {
+    display: inline-block;
+    transform: rotate(90deg) translateX(-0.4rem);
+  }
 </style>
 
 <div class="requirementContainer">
@@ -310,8 +315,10 @@
             class="button button-secondary button-small button-outline"
             on:click={close}
             href={`/project/${project_id}/requirement/${parent_requirement_id}`}>
-            <span class="iconWrapper iconWrapper-padded iconWrapper-mirrored">
-              <FaLevelUpAlt />
+            <span class="iconWrapper">
+              <span class="rotate90">
+                <MdSubdirectoryArrowLeft />
+              </span>
             </span>
             Parent Requirement #{parent_ppuid}
           </a>
