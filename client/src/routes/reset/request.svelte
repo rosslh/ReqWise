@@ -18,7 +18,7 @@
 
 <style>
   .loginWrapper {
-    max-width: 50rem;
+    max-width: 60rem;
     margin: 0 auto;
   }
 
