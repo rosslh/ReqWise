@@ -43,12 +43,9 @@ describe('Features page', () => {
         cy.get("#desc").click().type("Nested requirement");
         cy.get("#submitRequirementButton").click();
         cy.contains("li.requirement.depth-0 div.desc", "Nested requirement");
-        cy.get('.reqHandle').eq(1).invoke('show').invoke('attr', 'style', 'visibility: visible').should('be.visible');
-
-        cy.get('.reqHandle').eq(1).invoke('show').invoke('attr', 'style', 'visibility: visible');
 
         const dataTransfer = new DataTransfer();
-
+        cy.get('.reqHandle').eq(1).invoke('show').invoke('attr', 'style', 'visibility: visible').should('be.visible');
         cy.get('.reqHandle').eq(1)
             .trigger('mousedown', { button: 0 })
             .trigger('dragstart', { dataTransfer });
