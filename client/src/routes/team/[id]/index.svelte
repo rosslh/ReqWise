@@ -13,14 +13,14 @@
 <script>
   import { stores, goto } from "@sapper/app";
 
-  import { modalContent, modalProps } from "../../stores.js";
-  import { get, put, del, post } from "../../api.js";
+  import { modalContent, modalProps } from "../../../stores.js";
+  import { get, put, del, post } from "../../../api.js";
   const { session } = stores();
 
-  import AddProjectModal from "../../components/AddProjectModal.svelte";
-  import InviteTeamMemberModal from "../../components/InviteTeamMemberModal.svelte";
-  import Skeleton from "../../components/Skeleton.svelte";
-  import SubmitButton from "../../components/SubmitButton.svelte";
+  import AddProjectModal from "../../../components/AddProjectModal.svelte";
+  import InviteTeamMemberModal from "../../../components/InviteTeamMemberModal.svelte";
+  import Skeleton from "../../../components/Skeleton.svelte";
+  import SubmitButton from "../../../components/SubmitButton.svelte";
 
   export let id;
   export let user;
@@ -262,6 +262,19 @@
     {/if}
   </div>
   {#if isAdmin}
+    <h2>Integrations</h2>
+    <div class="panel compact">
+      <a
+        href={`https://slack.com/oauth/v2/authorize?redirect_uri=${encodeURIComponent(`https://reqwise.com/team/${id}/slack/confirm`)}&scope=${process.env.REQWISE_SLACK_SCOPES}&client_id=${process.env.REQWISE_SLACK_CLIENT_ID}`}>
+        <img
+          alt="Add to Slack"
+          height="40"
+          width="139"
+          src="https://platform.slack-edge.com/img/add_to_slack.png"
+          srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x,
+          https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+      </a>
+    </div>
     <h2>Danger Zone</h2>
     <div class="panel compact">
       <button id="deleteTeamButton" class="button-danger" on:click={deleteTeam}>
