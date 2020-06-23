@@ -10,7 +10,7 @@
   import ViewRequirementHistoryModal from "./ViewRequirementHistoryModal.svelte";
   import RequirementDropzone from "./RequirementDropzone.svelte";
 
-  import { formatRelative } from "date-fns";
+  import { formatDistanceToNow } from "date-fns";
 
   export let requirement;
   export let toggleReq;
@@ -20,7 +20,7 @@
   export let hiddenPlaceholders;
   export let index;
 
-  const formatDatetime = dt => formatRelative(new Date(dt), new Date());
+  const formatDatetime = dt => `${formatDistanceToNow(new Date(dt))} ago`;
 
   const getStatusColor = status => {
     switch (status) {

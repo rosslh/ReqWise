@@ -1,8 +1,8 @@
 <script>
   export let comment;
-  import { formatRelative } from "date-fns";
+  import { formatDistanceToNow } from "date-fns";
 
-  const formatDatetime = dt => formatRelative(new Date(dt), new Date());
+  const formatDatetime = dt => `${formatDistanceToNow(new Date(dt))} ago`;
 </script>
 
 <style>

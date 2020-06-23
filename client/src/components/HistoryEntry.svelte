@@ -4,6 +4,7 @@
   import DescDiff from "./DescDiff.svelte";
   import MdChevronRight from "svelte-icons/md/MdChevronRight.svelte";
   import { slide } from "svelte/transition";
+  import { format } from "date-fns";
 
   let showDiffs = false;
 
@@ -58,6 +59,11 @@
   .authorEmail {
     color: var(--secondaryText);
     margin-left: 0.3rem;
+  }
+
+  .date {
+    color: var(--secondaryText);
+    margin-left: 1rem;
   }
 
   .noRationale {
@@ -129,6 +135,9 @@
         </div>
         {reqversion.authorName}
         <span class="authorEmail">&lt;{reqversion.authorEmail}&gt;</span>
+        <time datetime={reqversion.created_at} class="date">
+          {format(new Date(reqversion.created_at), 'h:mm a, MMMM d, yyyy')}
+        </time>
       </div>
     </div>
     <div class="right">
