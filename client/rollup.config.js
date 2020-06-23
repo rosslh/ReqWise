@@ -11,6 +11,8 @@ import getPreprocessor from "svelte-preprocess";
 import path from "path";
 import postcss from "rollup-plugin-postcss";
 
+const sapperEnv = require('sapper-environment');
+
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
@@ -42,6 +44,8 @@ const preprocess = getPreprocessor({
   },
 });
 
+const envVars = sapperEnv('REQWISE');
+
 const apiUrl =
   process.env.TESTING_API_URL || (mode === "development"
     ? '"http://localhost:3001"'
@@ -53,7 +57,8 @@ export default {
     output: config.client.output(),
     plugins: [
       replace({
-        "process.env.SAPPER_APP_API_URL": apiUrl,
+        ...envVars,
+        "process.env.API_URL": apiUrl,
         "process.browser": true,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),
@@ -107,7 +112,8 @@ export default {
     output: config.server.output(),
     plugins: [
       replace({
-        "process.env.SAPPER_APP_API_URL": apiUrl,
+        ...envVars,
+        "process.env.API_URL": apiUrl,
         "process.browser": false,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),
@@ -139,6 +145,7 @@ export default {
     plugins: [
       resolve(),
       replace({
+        ...envVars,
         "process.browser": true,
         "process.env.NODE_ENV": JSON.stringify(mode),
       }),

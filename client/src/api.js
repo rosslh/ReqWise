@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-const host = process.env.SAPPER_APP_API_URL;
+const host = process.env.API_URL;
 
 const commonOptions = (token) => ({
   mode: "cors",
