@@ -164,11 +164,10 @@
     border: 0.1rem solid var(--borderColor);
     border-radius: 0.4rem;
     padding: 1.2rem;
-    margin: 2rem 0;
+    margin: 2rem -1.2rem;
     overflow: hidden;
     background-color: var(--background1);
     position: relative;
-    width: 100%;
   }
 
   div.reqgroup.dragging,
