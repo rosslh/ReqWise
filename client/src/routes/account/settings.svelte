@@ -38,21 +38,26 @@
   let theme = themeOptions.find(x => x.value === user.theme);
   $: currentImage = user.imageName;
 
-  const refetchSettings = () => {
+  const refetchSettings = async () => {
+    const { imageName } = await get(
+      `/users/${$session.user.id}`,
+      $session.user && $session.user.jwt
+    );
     files = [];
-    fetch("auth/changeTheme", {
+    fetch("auth/updateSettings", {
       method: "PUT",
       credentials: "include",
-      body: JSON.stringify({ theme: theme.value }),
+      body: JSON.stringify({ theme: theme.value, imageName }),
       headers: {
         "Content-Type": "application/json"
       }
     })
       .then(r => r.json())
-      .then(() => {
+      .then(({ imageName }) => {
         $session.user = {
           ...$session.user,
-          theme: theme.value
+          theme: theme.value,
+          imageName
         };
         goto("/account/settings", { replaceState: true });
       });

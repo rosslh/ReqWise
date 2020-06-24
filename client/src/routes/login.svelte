@@ -22,7 +22,8 @@
     $session.user = {
       jwt: data.token,
       id: data.userId,
-      theme: data.theme
+      theme: data.theme,
+      imageName: data.imageName
     };
 
     if ($page.query.redirect) {

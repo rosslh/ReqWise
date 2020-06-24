@@ -12,7 +12,7 @@
 <script>
   import MdArrowBack from "svelte-icons/md/MdArrowBack.svelte";
   import { stores } from "@sapper/app";
-  const { page } = stores();
+  const { page, session } = stores();
 
   export let user;
 </script>
@@ -86,9 +86,9 @@
   </div>
   <div class="userColumnLeft">
     <div class="profileImageWrapper">
-      {#if user.imageName}
+      {#if $session.user.imageName}
         <img
-          src={`https://storage.googleapis.com/user-file-storage/${user.imageName}`}
+          src={`https://storage.googleapis.com/user-file-storage/${$session.user.imageName}`}
           alt={user.name} />
       {:else}
         {@html user.placeholderImage}

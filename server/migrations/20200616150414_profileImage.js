@@ -7,7 +7,7 @@ exports.up = function (knex, Promise) {
 
 exports.down = function (knex, Promise) {
     return knex.schema.table('account', function (t) {
-        t.dropColumn('imageUrl');
+        t.dropColumn('imageName');
         t.dropColumn('placeholderImage');
     });
 };

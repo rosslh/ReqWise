@@ -30,7 +30,7 @@
     })
       .then(r => r.json())
       .then(r => {
-        $session.user = { jwt: r.token, id: r.userId };
+        $session.user = { jwt: r.token, id: r.userId, imageName: r.imageName };
         goto("/account");
       })
       .catch(() => alert("Incorrect email or password"));

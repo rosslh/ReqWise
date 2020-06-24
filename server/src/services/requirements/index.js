@@ -279,7 +279,9 @@ module.exports = async function (fastify, opts) {
       const { ts: slackMessageTs } = await fastify.slack.chat.postMessage({
         text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement version:\n*Description*:\n>${description}\n*Priority*:\n>${priority}\n*Rationale*:\n>${rationale || "_No rationale_"}\nReply to this thread to give feedback.`,
         token,
-        channel
+        channel,
+        username: request.user.name,
+        icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
       });
 
       const newVersion = {

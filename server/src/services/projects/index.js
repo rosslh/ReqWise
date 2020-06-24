@@ -283,7 +283,9 @@ module.exports = async function (fastify, opts) {
       await fastify.slack.chat.postMessage({
         text: `${request.user.name} made a new requirement group. <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|View it here>.`,
         token,
-        channel
+        channel,
+        username: request.user.name,
+        icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
       });
 
       await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });

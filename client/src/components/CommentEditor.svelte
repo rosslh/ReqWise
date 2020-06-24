@@ -13,7 +13,7 @@
         quill = new Quill(container, {
           modules: {
             toolbar: [
-              ["bold", "italic", "underline", "strike"],
+              ["bold", "italic", "strike"],
               ["link", "code-block", "blockquote"],
               [{ list: "ordered" }, { list: "bullet" }]
             ]

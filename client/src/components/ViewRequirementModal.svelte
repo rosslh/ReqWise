@@ -74,20 +74,20 @@
     loaded = true;
   };
 
-  const scrollToBottom = async () => {
-    await tick();
+  // const scrollToBottom = async () => {
+  //   await tick();
 
-    document
-      .getElementById("commentsBottom")
-      .scrollIntoView({ behavior: "smooth" });
-  };
+  //   document
+  //     .getElementById("commentsBottom")
+  //     .scrollIntoView({ behavior: "smooth" });
+  // };
 
   $: getComments = async () => {
     comments = await get(
       `/reqversions/${reqversionId}/comments`,
       $session.user && $session.user.jwt
     );
-    scrollToBottom();
+    // scrollToBottom();
   };
 
   $: postComment = async () => {
@@ -129,7 +129,7 @@
         event => {
           const data = JSON.parse(event);
           comments = getUnique([...comments, ...data]);
-          scrollToBottom();
+          // scrollToBottom();
         }
       );
     }

@@ -9,11 +9,11 @@ module.exports = fp(async function (fastify, opts) {
     const jwtContent = await request.jwtVerify();
     const account = await fastify.knex
       .from("account")
-      .select("id")
+      .select("id", "imageName")
       .where("email", jwtContent.email)
       .first();
     if (jwtContent.id === account.id) {
-      request.user = jwtContent;
+      request.user = { ...jwtContent, imageName: account.imageName };
     } else {
       reply.code(403);
       reply.send("Email and ID do not match");

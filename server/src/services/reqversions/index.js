@@ -143,7 +143,9 @@ module.exports = async function (fastify, opts) {
         ...JSON.parse(mrkdwn),
         token,
         channel,
-        thread_ts: slackMessageTs
+        thread_ts: slackMessageTs,
+        username: request.user.name,
+        icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
       });
 
       await fastify.knex("comment").insert({

@@ -1,6 +1,6 @@
 export function put(req, res) {
-    const { theme } = req.body;
-    req.session.user = { ...req.session.user, theme };
+    const { theme, imageName } = req.body;
+    req.session.user = { ...req.session.user, theme, imageName };
     req.session.save((err) => {
         if (err) {
             console.error(err);
@@ -8,5 +8,5 @@ export function put(req, res) {
     });
     res.setHeader("Content-Type", "application/json");
 
-    res.end('"success"');
+    res.end(JSON.stringify({ imageName }));
 }
