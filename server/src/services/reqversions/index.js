@@ -135,18 +135,18 @@ module.exports = async function (fastify, opts) {
           .first()
       );
 
-      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
-
-      await fastify.slack.conversations.join({ channel, token });
-
-      await fastify.slack.chat.postMessage({
-        ...JSON.parse(mrkdwn),
-        token,
-        channel,
-        thread_ts: slackMessageTs,
-        username: request.user.name,
-        icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
-      });
+      if (token) {
+        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+        await fastify.slack.conversations.join({ channel, token });
+        await fastify.slack.chat.postMessage({
+          ...JSON.parse(mrkdwn),
+          token,
+          channel,
+          thread_ts: slackMessageTs,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+      }
 
       await fastify.knex("comment").insert({
         reqversion_id: request.params.reqversionId,

@@ -276,17 +276,17 @@ module.exports = async function (fastify, opts) {
         .where("project.id", request.params.projectId)
         .first();
 
-      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
-
-      await fastify.slack.conversations.join({ channel, token });
-
-      await fastify.slack.chat.postMessage({
-        text: `${request.user.name} made a new requirement group. <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|View it here>.`,
-        token,
-        channel,
-        username: request.user.name,
-        icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
-      });
+      if (token) {
+        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+        await fastify.slack.conversations.join({ channel, token });
+        await fastify.slack.chat.postMessage({
+          text: `${request.user.name} made a new requirement group. <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|View it here>.`,
+          token,
+          channel,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+      }
 
       await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
 
