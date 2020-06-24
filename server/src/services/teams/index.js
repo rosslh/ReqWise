@@ -1,3 +1,5 @@
+const rp = require('request-promise');
+
 module.exports = async function (fastify, opts) {
   const postTeamSchema = {
     body: {
@@ -712,4 +714,76 @@ module.exports = async function (fastify, opts) {
       return [project_id];
     }
   );
+
+  const putTeamSlackSchema = {
+    body: {
+      type: "object",
+      required: ["code"],
+      properties: {
+        code: { type: "string" }
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          slackTeamId: { type: "string" }
+        },
+      },
+    },
+  };
+
+  fastify.put(
+    "/teams/:teamId/slack",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: putTeamSlackSchema,
+    },
+    async function (request, reply) {
+      const { code, redirect_uri } = request.body;
+
+      var options = {
+        method: 'POST',
+        uri: "https://slack.com/api/oauth.v2.access",
+        form: {
+          code,
+          redirect_uri,
+          "client_id": process.env.REQWISE_SLACK_CLIENT_ID,
+          "client_secret": process.env.REQWISE_SLACK_CLIENT_SECRET
+        },
+        headers: {
+          /* 'content-type': 'application/x-www-form-urlencoded' */ // Is set automatically
+        }
+      };
+
+      const res = JSON.parse(await rp(options));
+
+      const { name: slackTeamName, id: slackTeamId } = res.team;
+      const { access_token: slackAccessToken, bot_user_id: slackBotUserId } = res;
+
+      return (
+        await fastify
+          .knex("team")
+          .update({ slackTeamName, slackTeamId, slackAccessToken, slackBotUserId })
+          .where("id", request.params.teamId)
+          .returning(["slackTeamId"])
+      )[0];
+    }
+  );
+
 };

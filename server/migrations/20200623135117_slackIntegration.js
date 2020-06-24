@@ -4,7 +4,6 @@ exports.up = function (knex, Promise) {
         t.text('slackAccessToken');
         t.text('slackTeamId');
         t.text('slackBotUserId');
-        t.text('slackBotAccessToken');
     });
 };
 
@@ -14,6 +13,5 @@ exports.down = function (knex, Promise) {
         t.dropColumn('slackAccessToken');
         t.dropColumn('slackTeamId');
         t.dropColumn('slackBotUserId');
-        t.dropColumn('slackBotAccessToken');
     });
 };

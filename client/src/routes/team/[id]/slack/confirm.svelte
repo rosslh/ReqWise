@@ -7,7 +7,7 @@
 </script>
 
 <script>
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   import { onMount } from "svelte";
   import { put } from "../../../../api";
   import SubmitButton from "../../../../components/SubmitButton.svelte";
@@ -19,8 +19,8 @@
 
   onMount(async () => {
     await put(
-      `/teams/${id}/integrations/slack`,
-      { code },
+      `/teams/${id}/slack`,
+      { code, redirect_uri: `https://reqwise.com/team/${id}/slack/confirm` },
       $session.user && $session.user.jwt
     );
     goto(`/team/${id}`);
