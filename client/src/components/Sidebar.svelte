@@ -94,10 +94,6 @@
     padding: 0.5rem 2rem;
     text-decoration: none !important;
   }
-
-  a.newSection {
-    border-top: 0.1rem solid var(--borderColor);
-  }
   a span {
     line-height: 2rem;
   }

@@ -72,7 +72,7 @@
     max-height: 30rem;
     width: 100%;
     background-color: var(--background2);
-    border-bottom: 0.1rem solid var(--borderColor);
+    /* border-bottom: 0.1rem solid var(--borderColor); */
     padding: 2rem;
     display: flex;
     justify-content: center;

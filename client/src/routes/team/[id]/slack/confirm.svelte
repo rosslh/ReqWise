@@ -10,7 +10,6 @@
   import { stores, goto } from "@sapper/app";
   import { onMount } from "svelte";
   import { put } from "../../../../api";
-  import SubmitButton from "../../../../components/SubmitButton.svelte";
 
   export let code;
   export let id;

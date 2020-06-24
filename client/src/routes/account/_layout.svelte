@@ -1,6 +1,6 @@
 <script context="module">
   import { get } from "../../api.js";
-  export async function preload({ params, path }, session) {
+  export async function preload({ path }, session) {
     if (!session.user) {
       return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
     }

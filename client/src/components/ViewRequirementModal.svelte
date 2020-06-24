@@ -2,7 +2,7 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
 
-  import { onMount, onDestroy, tick } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
   import MdFolder from "svelte-icons/md/MdFolder.svelte";
   import MdSubdirectoryArrowLeft from "svelte-icons/md/MdSubdirectoryArrowLeft.svelte";

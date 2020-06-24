@@ -15,7 +15,7 @@
     background-color: var(--background1);
     margin: -1.2rem -1.2rem 0 -1.2rem;
     padding: 1.8rem 1.2rem;
-    border-bottom: 0.1rem solid var(--borderColor);
+    /* border-bottom: 0.1rem solid var(--borderColor); */
     min-height: 5rem;
     display: flex;
     align-items: center;

@@ -38,7 +38,7 @@
 
   div.selectTools {
     background-color: var(--background1);
-    border-bottom: 0.1rem solid var(--borderColor);
+    /* border-bottom: 0.1rem solid var(--borderColor); */
     margin: 0 -1.5rem;
     padding: 0 1.5rem;
     opacity: 1;

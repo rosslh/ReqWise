@@ -1,5 +1,5 @@
 <script context="module">
-  export async function preload({ params, path }, { user }) {
+  export async function preload({ params }, { user }) {
     const reqgroups = await get(
       `/projects/${params.id}/reqgroups?type=quality`,
       user && user.jwt
