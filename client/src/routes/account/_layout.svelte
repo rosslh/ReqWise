@@ -24,10 +24,10 @@
     left: 0;
     bottom: 0;
     width: var(--sidebarWidth);
-    border-right: 0.1rem solid var(--borderColor);
     transition: transform 0.2s ease;
+    box-shadow: 0.2rem 0 0.6rem 0 rgba(0, 0, 0, 0.1);
     border-top: 0.1rem solid var(--borderColor);
-    padding: 1.5rem;
+    padding: 1.6rem;
     text-align: center;
     background-color: var(--background1);
   }
@@ -48,12 +48,12 @@
   }
 
   div.profileImageWrapper {
-    border-radius: 0.4rem;
     overflow: hidden;
     height: calc(var(--sidebarWidth) - 9rem);
     width: calc(var(--sidebarWidth) - 9rem);
     margin: 1rem auto 0;
-    border: 0.1rem solid var(--borderColor);
+    box-shadow: var(--boxShadow);
+    border-radius: 0.8rem;
   }
 
   div.userColumnLeft .button {

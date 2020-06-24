@@ -229,7 +229,7 @@
   .authorImageWrapper {
     height: 3.5rem;
     width: 3.5rem;
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     overflow: hidden;
     margin-right: 0.8rem;
   }
@@ -262,7 +262,7 @@
   }
   .revisionStatus {
     padding: 0.4rem;
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     color: #fff;
     font-size: 1.3rem;
     font-weight: 500;

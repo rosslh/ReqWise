@@ -48,8 +48,8 @@
   }
 
   .loginWrapper .loginContent {
-    border: 0.1rem solid var(--borderColor);
-    border-radius: 0.4rem;
+    box-shadow: var(--boxShadow);
+    border-radius: 0.8rem;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     background-color: var(--background1);

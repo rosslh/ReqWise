@@ -16,9 +16,9 @@
 <style>
   .outerWrapper {
     background-color: var(--background1);
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     overflow: hidden;
-    border: 0.1rem solid var(--borderColor);
+    box-shadow: var(--boxShadow);
     margin: 1rem 0;
   }
   .entryWrapper {
@@ -101,7 +101,7 @@
   .authorImageWrapper {
     height: 3.5rem;
     width: 3.5rem;
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     overflow: hidden;
     margin-right: 0.8rem;
   }

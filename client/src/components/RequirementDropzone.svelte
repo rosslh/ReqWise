@@ -23,7 +23,7 @@
     padding: 0;
     margin: -1rem 0 -1.25rem;
     transition: height 0.2s ease;
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     position: relative;
     box-sizing: content-box;
     background-clip: padding-box;

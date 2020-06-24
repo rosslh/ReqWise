@@ -161,8 +161,8 @@
     margin-top: 0;
   }
   div.reqgroup {
-    border: 0.1rem solid var(--borderColor);
-    border-radius: 0.4rem;
+    box-shadow: var(--boxShadow);
+    border-radius: 0.8rem;
     padding: 1.2rem;
     margin: 2rem -1.2rem;
     overflow: hidden;

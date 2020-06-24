@@ -109,7 +109,7 @@
     height: 9rem;
     width: 9rem;
     border: 0.1rem solid var(--borderColor);
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     overflow: hidden;
     margin: 1.5rem 0 0.5rem;
   }

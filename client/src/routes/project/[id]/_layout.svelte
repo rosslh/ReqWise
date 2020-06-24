@@ -84,7 +84,7 @@
     left: 0;
     bottom: 0;
     width: var(--sidebarWidth);
-    border-right: 0.1rem solid var(--borderColor);
+    /* border-right: 0.1rem solid var(--borderColor); */
     transition: transform 0.2s ease;
     border-top: 0.1rem solid var(--borderColor);
   }

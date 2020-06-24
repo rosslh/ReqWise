@@ -92,9 +92,6 @@
     font-weight: 600;
     border-bottom: 0.1rem solid var(--borderColor);
     margin: 0 -1.2rem; /* accounts for reqgroup padding */
-    /* border-top: none; */
-    border-bottom-left-radius: 0.4rem;
-    border-bottom-right-radius: 0.4rem;
   }
 
   .labelsWrapper .label {

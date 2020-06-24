@@ -11,7 +11,7 @@
   }
   div.commentWrapper {
     display: flex;
-    border: 0.1rem solid var(--borderColor);
+    box-shadow: var(--borderColor);
     background-color: var(--background1);
     margin: 0.5rem 0;
     padding: 0.5rem;
@@ -24,7 +24,7 @@
   div.imageWrapper {
     height: 3rem;
     width: 3rem;
-    border-radius: 0.4rem;
+    border-radius: 0.8rem;
     overflow: hidden;
   }
 
