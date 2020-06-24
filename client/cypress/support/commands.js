@@ -18,6 +18,7 @@ Cypress.Commands.add("goToProject", () => {
     cy.waitForSkeleton();
     cy.contains('a', "Test team (don't delete)").click();
     cy.url().should('include', 'team/');
+    cy.contains("h1", "Test team (don't delete)")
     cy.waitForSkeleton();
     cy.contains('a', "Test project (don't delete)").click();
     cy.url().should('include', 'project/');
