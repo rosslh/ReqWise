@@ -269,6 +269,23 @@ module.exports = async function (fastify, opts) {
             .first()
         ).max || 0;
 
+      const { slackAccessToken: token, id: projectId } = await fastify.knex
+        .from("project")
+        .select("team.*", "project.*")
+        .join("team", "team.id", "project.team_id")
+        .where("project.id", request.params.projectId)
+        .first();
+
+      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id;
+
+      await fastify.slack.conversations.join({ channel, token });
+
+      await fastify.slack.chat.postMessage({
+        text: `${request.user.name} made a new requirement group. <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|View it here>.`,
+        token,
+        channel
+      });
+
       await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
 
       const ppuid_id = (await fastify
