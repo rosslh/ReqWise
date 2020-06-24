@@ -260,14 +260,27 @@ module.exports = async function (fastify, opts) {
       const { description, priority, status, rationale } = request.body;
       const { requirementId: requirement_id } = request.params;
 
-      const latestVersion = await fastify
-        .knex("reqversion")
-        .select(["description", "priority", "status", "requirement_id"])
+      const { slackAccessToken: token, ...latestVersion } = await fastify
+        .knex.from("reqversion")
+        .join("requirement", "requirement.id", "reqversion.requirement_id")
+        .join("project", "project.id", "requirement.project_id")
+        .join("team", "team.id", "project.team_id")
+        .select("reqversion.description", "reqversion.priority", "reqversion.status", "reqversion.requirement_id", "slackAccessToken")
         .where({
           requirement_id: request.params.requirementId, // TODO: exclude status: proposed
         })
-        .orderBy("created_at", "desc")
+        .orderBy("reqversion.created_at", "desc")
         .first();
+
+      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+
+      await fastify.slack.conversations.join({ channel, token });
+
+      const { ts: slackMessageTs } = await fastify.slack.chat.postMessage({
+        text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement version:\n*Description*:\n>${description}\n*Priority*:\n>${priority}\n*Rationale*:\n>${rationale || "_No rationale_"}\nReply to this thread to give feedback.`,
+        token,
+        channel
+      });
 
       const newVersion = {
         ...latestVersion,
@@ -277,6 +290,7 @@ module.exports = async function (fastify, opts) {
         ...(status && { status }),
         rationale,
         requirement_id,
+        slackMessageTs
       };
 
       await fastify.knex("reqversion").insert(newVersion).returning("id");

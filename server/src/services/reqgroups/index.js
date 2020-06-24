@@ -294,15 +294,27 @@ module.exports = async function (fastify, opts) {
       const { description, priority, status, rationale, parent_requirement_id } = request.body;
       const { reqgroupId: reqgroup_id } = request.params;
 
-      const { project_id, isMaxOneRequirement } = (
+      const { project_id, isMaxOneRequirement, slackAccessToken: token } = (
         await fastify.knex
           .from("reqgroup")
-          .select("*")
+          .select("reqgroup.*", "team.slackAccessToken")
+          .join('project', 'project.id', 'reqgroup.project_id')
+          .join('team', 'team.id', 'project.team_id')
           .where({
-            id: reqgroup_id,
+            "reqgroup.id": reqgroup_id,
           })
           .first()
       );
+
+      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+
+      await fastify.slack.conversations.join({ channel, token });
+
+      const { ts: slackMessageTs } = await fastify.slack.chat.postMessage({
+        text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement:\n*Description*:\n>${description}\n*Priority*:\n>${priority}\n*Rationale*:\n>${rationale || "_No rationale_"}\nReply to this thread to give feedback.`,
+        token,
+        channel
+      });
 
       const numRequirements = isMaxOneRequirement && (
         await fastify.knex
@@ -351,6 +363,7 @@ module.exports = async function (fastify, opts) {
             rationale,
             priority,
             status,
+            slackMessageTs
           })
           .returning("id");
 

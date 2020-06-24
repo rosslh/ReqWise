@@ -276,7 +276,7 @@ module.exports = async function (fastify, opts) {
         .where("project.id", request.params.projectId)
         .first();
 
-      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id;
+      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
 
       await fastify.slack.conversations.join({ channel, token });
 

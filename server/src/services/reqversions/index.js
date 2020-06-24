@@ -122,6 +122,30 @@ module.exports = async function (fastify, opts) {
       const html = quillDeltaConverter.convert();
       const mrkdwn = JSON.stringify(htmlToMrkdwn(html));
 
+      const { slackAccessToken: token, slackMessageTs } = (
+        await fastify.knex
+          .from("reqversion")
+          .select("reqversion.slackMessageTs", "team.slackAccessToken")
+          .join('requirement', 'requirement.id', 'reqversion.requirement_id')
+          .join('project', 'project.id', 'requirement.project_id')
+          .join('team', 'team.id', 'project.team_id')
+          .where({
+            "reqversion.id": request.params.reqversionId,
+          })
+          .first()
+      );
+
+      const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+
+      await fastify.slack.conversations.join({ channel, token });
+
+      await fastify.slack.chat.postMessage({
+        ...JSON.parse(mrkdwn),
+        token,
+        channel,
+        thread_ts: slackMessageTs
+      });
+
       await fastify.knex("comment").insert({
         reqversion_id: request.params.reqversionId,
         account_id: request.user.id,
