@@ -1,3 +1,13 @@
+<script context="module">
+  export async function preload({ params, path }, { user }) {
+    const reqgroups = await get(
+      `/projects/${params.id}/reqgroups?type=business`,
+      user && user.jwt
+    );
+    return { reqgroups };
+  }
+</script>
+
 <script>
   import { onMount } from "svelte";
   import { projectShouldUpdate } from "../../../stores.js";
@@ -13,10 +23,7 @@
   const { page, session } = stores();
   const { id } = $page.params;
 
-  let reqgroups = get(
-    `/projects/${id}/reqgroups?type=business`,
-    $session.user && $session.user.jwt
-  );
+  export let reqgroups;
 
   const update = async () => {
     reqgroups = await get(
@@ -52,21 +59,13 @@
     Add requirement group
   </button>
 </section>
-{#await reqgroups}
-  <!-- loading -->
-{:then result}
-  <section class="contentWrapper">
-    <SearchSortFilter
-      bind:searchResults
-      list={result}
-      searchKeys={['name', 'description']}
-      sortKeys={['name', 'description', 'updated_at']} />
-    {#each searchResults.length ? searchResults : result as reqgroup (reqgroup.id)}
-      <Reqgroup {reqgroup} {update} />
-    {/each}
-  </section>
-{:catch error}
-  <section class="contentWrapper">
-    <p style="color: var(--red)">{error.message}</p>
-  </section>
-{/await}
+<section class="contentWrapper">
+  <SearchSortFilter
+    bind:searchResults
+    list={reqgroups}
+    searchKeys={['name', 'description']}
+    sortKeys={['name', 'description', 'updated_at']} />
+  {#each searchResults.length ? searchResults : reqgroups as reqgroup (reqgroup.id)}
+    <Reqgroup {reqgroup} {update} />
+  {/each}
+</section>

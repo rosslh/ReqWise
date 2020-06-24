@@ -4,9 +4,13 @@
       return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
     }
     const team = await get(`/teams/${params.id}`, user && user.jwt);
+    const projects = await get(
+      `/teams/${params.id}/projects`,
+      user && user.jwt
+    );
     const { name, description, isAdmin } = team;
     const title = name;
-    return { name, title, description, isAdmin, id: params.id, user };
+    return { name, title, description, isAdmin, id: params.id, user, projects };
   }
 </script>
 
@@ -30,7 +34,7 @@
   export let isAdmin = false;
   export let title = "";
 
-  let projects = get(`/teams/${id}/projects`, user && user.jwt);
+  export let projects;
   let members = get(`/teams/${id}/members`, user && user.jwt);
   let invites = get(`/teams/${id}/invites`, user && user.jwt);
 

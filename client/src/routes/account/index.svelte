@@ -6,6 +6,11 @@
         `/login?redirect=${encodeURIComponent(page.path)}`
       );
     }
+    const teams = await get(
+      `/users/${session.user.id}/teams`,
+      session.user && session.user.jwt
+    );
+    return { teams };
   }
 </script>
 
@@ -17,10 +22,8 @@
   import AddTeamModal from "../../components/AddTeamModal.svelte";
   import Skeleton from "../../components/Skeleton.svelte";
 
-  let teams = get(
-    `/users/${$session.user.id}/teams`,
-    $session.user && $session.user.jwt
-  );
+  export let teams;
+
   let invites = get(
     `/users/${$session.user.id}/invites`,
     $session.user && $session.user.jwt
@@ -69,50 +72,42 @@
 </style>
 
 <svelte:head>
-  <title>Teams - ReqWise</title>
+  <title>Account - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
   <h2>My Teams</h2>
   <div class="panel compact">
-    {#await teams}
-      <Skeleton rows={2} />
-    {:then result}
-      <table>
-        <thead>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {#each teams as team (team.id)}
           <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th />
+            <td>
+              <a class="teamLink" href={`/team/${team.id}`}>{team.name}</a>
+            </td>
+            <td>{team.description}</td>
+            <td class="membership">
+              {#if team.isOwner}
+                (You own this team)
+              {:else}
+                <button
+                  class="button-danger button-small button-outline"
+                  style="margin: 0;"
+                  on:click={() => leaveTeam(team.id)}>
+                  Leave team
+                </button>
+              {/if}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {#each result as team (team.id)}
-            <tr>
-              <td>
-                <a class="teamLink" href={`/team/${team.id}`}>{team.name}</a>
-              </td>
-              <td>{team.description}</td>
-              <td class="membership">
-                {#if team.isOwner}
-                  (You own this team)
-                {:else}
-                  <button
-                    class="button-danger button-small button-outline"
-                    style="margin: 0;"
-                    on:click={() => leaveTeam(team.id)}>
-                    Leave team
-                  </button>
-                {/if}
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    {:catch error}
-      <section class="contentWrapper">
-        <p style="color: var(--red)">{error.message}</p>
-      </section>
-    {/await}
+        {/each}
+      </tbody>
+    </table>
     <button
       class="button-create"
       id="createTeamButton"
