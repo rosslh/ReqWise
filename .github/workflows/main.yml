@@ -37,6 +37,8 @@ jobs:
         env:
           TESTING_API_URL: ${{secrets.TESTING_API_URL}}
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
+          REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
+          REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
   appengine-deploy:
     runs-on: ubuntu-latest
     defaults:
