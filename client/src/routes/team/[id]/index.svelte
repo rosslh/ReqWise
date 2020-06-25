@@ -262,7 +262,7 @@
   {#if isAdmin}
     <h2>Integrations</h2>
     <div class="panel compact">
-      {#if typeof process !== 'undefined' && process.env}
+      {#if typeof window !== 'undefined'}
         <a
           href={`https://slack.com/oauth/v2/authorize?redirect_uri=${encodeURIComponent(`https://reqwise.com/team/${id}/slack/confirm`)}&scope=${process.env.REQWISE_SLACK_SCOPES}&client_id=${process.env.REQWISE_SLACK_CLIENT_ID}`}>
           <img
