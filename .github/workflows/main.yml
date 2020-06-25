@@ -30,6 +30,7 @@ jobs:
           working-directory: ./client
         env:
           TESTING_API_URL: ${{secrets.TESTING_API_URL}}
+          CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
       - uses: w9jds/firebase-action@master
         with:
           args: deploy
