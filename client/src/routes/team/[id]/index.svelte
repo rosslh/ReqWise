@@ -114,30 +114,24 @@
   </div>
   <h2>Projects</h2>
   <div class="panel compact">
-    {#await projects}
-      <Skeleton rows={3} />
-    {:then result}
-      <table class="compact">
-        <thead>
+    <table class="compact">
+      <thead>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each projects as project (project.id)}
           <tr>
-            <th>Name</th>
+            <td>
+              <a class="projectLink" href={`/project/${project.id}/features`}>
+                {project.name}
+              </a>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {#each result as project (project.id)}
-            <tr>
-              <td>
-                <a class="projectLink" href={`/project/${project.id}/features`}>
-                  {project.name}
-                </a>
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    {:catch error}
-      <p style="color: var(--red)">{error.message}</p>
-    {/await}
+        {/each}
+      </tbody>
+    </table>
     {#if isAdmin}
       <div>
         <button
