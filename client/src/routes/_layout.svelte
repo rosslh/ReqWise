@@ -1,10 +1,27 @@
 <script>
+  import NProgress from "nprogress";
   import { stores } from "@sapper/app";
   import { modalContent, modalProps } from "../stores.js";
   import Modal from "../components/Modal.svelte";
   import Nav from "../components/Nav.svelte";
 
-  const { session } = stores();
+  const { session, preloading } = stores();
+  NProgress.configure({
+    minimum: 0.3,
+    showSpinner: false
+  });
+
+  $: {
+    if ($preloading) {
+      setTimeout(() => {
+        if ($preloading) {
+          NProgress.start();
+        }
+      }, 1000);
+    } else {
+      NProgress.done();
+    }
+  }
 </script>
 
 <style>

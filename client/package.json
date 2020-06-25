@@ -58,6 +58,7 @@
     "firebase-functions-test": "^0.2.0",
     "fuse.js": "^6.0.4",
     "npm-run-all": "^4.1.5",
+    "nprogress": "^0.2.0",
     "path": "^0.12.7",
     "postcss": "^7.0.27",
     "postcss-import": "^12.0.1",
