@@ -43,7 +43,7 @@ module.exports = async (fastify, opts) => {
                             "account.id as account_id",
                             "slackUser.id as slackUser_id",
                         )
-                        .join("account", "slackUser.id", "account.slackUser_id")
+                        .leftJoin("account", "slackUser.id", "account.slackUser_id")
                         .where({
                             "slackId": event.user,
                         }).first();

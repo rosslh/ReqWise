@@ -60,6 +60,9 @@ jobs:
           DB_PORT: ${{secrets.DB_PORT}}
           JWT_KEY: ${{secrets.JWT_KEY}}
           HASHID_KEY: ${{secrets.HASHID_KEY}}
+          REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
+          REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
+          REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
       - name: Initialize Google Cloud SDK
         uses: zxyle/publish-gae-action@master
         with:
