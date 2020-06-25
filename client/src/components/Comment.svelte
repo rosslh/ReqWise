@@ -11,11 +11,11 @@
   }
   div.commentWrapper {
     display: flex;
-    box-shadow: var(--borderColor);
+    border: 0.1rem solid var(--borderColor);
     background-color: var(--background1);
-    margin: 0.5rem 0;
+    margin: 0.7rem 0;
     padding: 0.5rem;
-    border-radius: 0.3rem;
+    border-radius: 0.8rem;
   }
   div.commentTextWrapper {
     flex-grow: 1;

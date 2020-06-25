@@ -98,7 +98,7 @@
     <div class="emailAddress">{user.email}</div>
     {#if !$page.path.includes('/account/settings')}
       <a href="/account/settings" class="button button-success button-outline">
-        Edit profile
+        Settings
       </a>
     {:else}
       <a href="/account" class="button button-success button-outline">

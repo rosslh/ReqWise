@@ -2,6 +2,8 @@
   import { stores } from "@sapper/app";
 
   import MdMenu from "svelte-icons/md/MdMenu.svelte";
+  import MdNotifications from "svelte-icons/md/MdNotifications.svelte";
+  import TiHome from "svelte-icons/ti/TiHome.svelte";
 
   import { sidebarHidden } from "../stores.js";
   const { session, page } = stores();
@@ -31,6 +33,7 @@
     align-items: center;
     height: 5rem;
     max-width: unset;
+    position: relative;
   }
   a.logoWrapper {
     display: inline-block;
@@ -40,6 +43,12 @@
   a.logoWrapper img {
     max-height: 100%;
     max-width: 100%;
+  }
+
+  div.middle {
+    flex-grow: 1;
+    padding: 0 3rem;
+    max-width: 70rem;
   }
 
   div.right {
@@ -53,36 +62,52 @@
     margin: 0 0.75rem;
   }
 
-  button#toggleMenu {
+  .iconButton {
     background-color: var(--background1);
     border: none;
     color: var(--secondaryText);
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 2.2rem;
+    width: 2.2rem;
     padding: 0;
     outline: none;
     margin: 0;
     margin-right: 1.5rem;
   }
 
+  .iconButton:hover {
+    background-color: var(--background2);
+  }
+
   .logoMenuWrapper {
     display: flex;
     align-items: center;
+  }
+
+  .menuButton {
+    position: absolute;
+    left: 1rem;
+  }
+
+  #navSearchBar {
+    margin-bottom: 0;
+    width: 100%;
+    height: 3.2rem;
+    border-radius: 0.4rem;
   }
 </style>
 
 <nav>
   <div class="contentWrapper">
+    {#if $page.path.includes('/project/')}
+      <button
+        class="iconButton menuButton"
+        on:click={() => {
+          $sidebarHidden = !$sidebarHidden;
+        }}>
+        <MdMenu />
+      </button>
+    {/if}
     <div class="logoMenuWrapper">
-      {#if $page.path.includes('/project/')}
-        <button
-          id="toggleMenu"
-          on:click={() => {
-            $sidebarHidden = !$sidebarHidden;
-          }}>
-          <MdMenu />
-        </button>
-      {/if}
       <a rel="prefetch" class="logoWrapper" href=".">
         {#if $session.user && $session.user.theme === 'dark'}
           <img src="logo-white.png" alt="ReqWise" />
@@ -98,14 +123,23 @@
         {/if}
       </a>
     </div>
+    {#if $page.path.includes('/project/')}
+      <div class="middle">
+        <input id="navSearchBar" type="text" placeholder="Search project" />
+      </div>
+    {/if}
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
         <a rel="prefetch" id="signupLink" href="/sign-up/invite">Sign Up</a>
 
         <a rel="prefetch" id="loginLink" href="/login">Login</a>
       {:else}
-        <a rel="prefetch" href="/account">My Account</a>
-        <a rel="prefetch" href="/account/settings">Settings</a>
+        <button class="iconButton">
+          <MdNotifications />
+        </button>
+        <a class="button iconButton" rel="prefetch" href="/account">
+          <TiHome />
+        </a>
         <button class="button button-small button-outline" on:click={logout}>
           Log out
         </button>

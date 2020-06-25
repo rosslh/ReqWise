@@ -638,9 +638,9 @@ img {
 }
 
 :root {
-  --backdrop: #E8EDF4;
+  --backdrop: #EDF2F7;
   --background1:#ffffff;
-  --background2: #F3F7FA;
+  --background2: #F7FAFC;
 
   --normalText: #2D3748;
   --secondaryText: #4A5568;
