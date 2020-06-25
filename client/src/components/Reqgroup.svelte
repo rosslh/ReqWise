@@ -164,7 +164,7 @@
     box-shadow: var(--boxShadow);
     border-radius: 0.8rem;
     padding: 1.2rem;
-    margin: 2rem -1.2rem;
+    margin: 2rem 0;
     overflow: hidden;
     background-color: var(--background1);
     position: relative;

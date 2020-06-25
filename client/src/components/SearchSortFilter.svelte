@@ -62,7 +62,7 @@
   }
 </style>
 
-<div class="ssfWrapper">
+<div class="ssfWrapper panel">
   <div class="searchField">
     <label for="searchString">Search</label>
     <input id="searchString" type="text" on:input={handleInput} />
