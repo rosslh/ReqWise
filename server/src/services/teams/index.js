@@ -776,6 +776,35 @@ module.exports = async function (fastify, opts) {
       const { name: slackTeamName, id: slackTeamId } = res.team;
       const { access_token: slackAccessToken, bot_user_id: slackBotUserId } = res;
 
+      const slackUsers = (await fastify.slack.users.list({ token: slackAccessToken })).members;
+
+      slackUsers.forEach(async user => {
+        try {
+          const [id] = await fastify
+            .knex("slackUser")
+            .insert({
+              name: user.profile.real_name,
+              slackId: user.id,
+              slackTeamId: user.team_id,
+              email: user.profile.email,
+              team_id: request.params.teamId
+            })
+            .returning("id");
+
+          if (user.profile.email) {
+            await fastify.knex("account")
+              .where("account.email", user.profile.email)
+              .update({
+                slackUser_id: id
+              })
+              .returning("id");
+          }
+        }
+        catch (e) {
+          console.error(e);
+        }
+      });
+
       return (
         await fastify
           .knex("team")
