@@ -138,6 +138,7 @@
     position: relative;
     overflow-y: auto;
     font-size: 1.5rem;
+    box-shadow: 0.2rem 0 0.6rem 0 rgba(0, 0, 0, 0.1);
   }
 
   span.icon.extraPadding {
