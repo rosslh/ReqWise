@@ -9,8 +9,7 @@ import * as sapper from "@sapper/server";
 
 import "./assets/normalize.css";
 import "./assets/milligram.css";
-import "./assets/global.css";
-import "./assets/nprogress.css";
+import "./assets/main.css";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
