@@ -7,7 +7,8 @@
 
   const { session, preloading } = stores();
   NProgress.configure({
-    minimum: 0.3,
+    minimum: 0.25,
+    trickleSpeed: 120,
     showSpinner: false
   });
 
