@@ -13,7 +13,11 @@
 
   $: {
     if ($preloading) {
-      NProgress.start();
+      setTimeout(() => {
+        if ($preloading) {
+          NProgress.start();
+        }
+      }, 1000);
     } else {
       NProgress.done();
     }
