@@ -7,7 +7,6 @@
   import ReqgroupHeader from "../components/ReqgroupHeader.svelte";
   import ReqgroupStatusBar from "../components/ReqgroupStatusBar.svelte";
   import ReqgroupFooter from "../components/ReqgroupFooter.svelte";
-  import Skeleton from "../components/Skeleton.svelte";
 
   import { get, patch } from "../api.js";
   import { reqgroupsToUpdate } from "../stores.js";
@@ -15,7 +14,8 @@
   export let reqgroup;
   export let update;
 
-  let requirements = null;
+  $: requirements = reqgroup.requirements;
+
   const updateReqs = () => {
     if (reqgroup && reqgroup.id) {
       get(
@@ -58,6 +58,7 @@
     // req
     illegalParents.push(req);
 
+    console.log(requirements);
     // req's descendents
     requirements
       .filter(x => {
@@ -69,6 +70,7 @@
           ) {
             return true;
           }
+          console.log(currentReq.id, currentReq.parent_requirement_id);
           currentReq = requirements.find(
             y => y.id === currentReq.parent_requirement_id
           );
@@ -107,7 +109,7 @@
 
   onMount(() => {
     if (typeof window !== "undefined") {
-      updateReqs();
+      // updateReqs();
       import("@shopify/draggable").then(({ default: d }) => {
         const container = document.getElementById(`reqgroup-${reqgroup.id}`);
         draggable = new d.Draggable(container, {
@@ -207,9 +209,6 @@
       {/each}
     {/if}
   </ul>
-  {#if !requirements}
-    <Skeleton rows={2} noPadding />
-  {/if}
   <ReqgroupFooter
     {reqgroup}
     {updateReqs}

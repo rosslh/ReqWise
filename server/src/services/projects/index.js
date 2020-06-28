@@ -115,7 +115,27 @@ module.exports = async function (fastify, opts) {
             type: { type: "string" },
             isDeletable: { type: "boolean" },
             isMaxOneRequirement: { type: "boolean" },
-            isPrioritized: { type: "boolean" }
+            isPrioritized: { type: "boolean" },
+            requirements: {
+              type: "array", items: {
+                type: "object",
+                properties: {
+                  id: { type: ["number", "string"] },
+                  parent_requirement_id: { type: ["number", "string", "null"] },
+                  reqgroup_id: { type: ["number", "string"] },
+                  project_id: { type: ["number", "string"] },
+                  is_archived: { type: "boolean" },
+                  account_id: { type: ["number", "string"] },
+                  priority: { type: "string" },
+                  status: { type: "string" },
+                  description: { type: "string" },
+                  created_at: { type: "string" },
+                  ppuid: { type: "number" },
+                  author: { type: "string" },
+                  depth: { type: "number" }
+                }
+              }
+            },
           },
         },
       },
@@ -129,14 +149,61 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { type } = request.query;
-      return await fastify.knex
+
+      const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+          "reqversion.created_at",
+          "=",
+          fastify.knex.raw(
+            "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+          )
+        );
+      };
+
+      const selectColumns = [
+        "requirement.id",
+        "requirement.parent_requirement_id",
+        "requirement.reqgroup_id",
+        "requirement.project_id",
+        "requirement.is_archived",
+        "reqversion.account_id",
+        "reqversion.priority",
+        "reqversion.status",
+        "reqversion.description",
+        "reqversion.created_at",
+        "per_project_unique_id.readable_id as ppuid",
+        "account.name as author"
+      ];
+
+      const reqgroups = await fastify.knex
         .from("reqgroup")
         .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
         .where({ "reqgroup.project_id": request.params.projectId, type })
         .orderBy("ppuid", "asc");
-    }
-  );
+
+      return await Promise.all(reqgroups.map(async (g) => {
+        const requirements = await fastify.knex.withRecursive('ancestors', (qb) => {
+          qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
+            .where('requirement.parent_requirement_id', null)
+            .andWhere("reqgroup_id", g.id)
+            .andWhere("is_archived", false)
+            .join("reqversion", getReqversion)
+            .join("account", "account.id", "reqversion.account_id")
+            .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+            .union((qb) => {
+              qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', LPAD(per_project_unique_id.readable_id::text, 5, '0')) as hierarchical_id")).from('requirement')
+                .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+                .join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
+                .join("account", "account.id", "reqversion.account_id")
+            })
+        }).select('*').from('ancestors').orderBy('hierarchical_id');
+        return ({
+          ...g,
+          requirements
+        });
+      }));
+    });
 
   const getProjectFilesSchema = {
     body: {},

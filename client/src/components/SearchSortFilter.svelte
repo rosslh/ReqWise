@@ -1,9 +1,7 @@
 <script>
-  import Select from "svelte-select";
   import Fuse from "fuse.js";
   export let list;
   export let searchKeys = [];
-  export let sortKeys = [];
   export let searchResults = [];
 
   const options = {
@@ -28,13 +26,6 @@
 
   const prettify = str =>
     (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, " ");
-
-  const sortOptions = sortKeys.map(attr => ({
-    value: attr,
-    label: prettify(attr)
-  }));
-
-  let selectedSort = undefined;
 </script>
 
 <style>
@@ -45,7 +36,7 @@
   }
 
   .ssfWrapper > * {
-    margin-right: 0.5rem;
+    margin-right: 1.6rem;
     min-width: 30rem;
   }
 
@@ -60,6 +51,10 @@
   .sortField {
     min-width: 30rem;
   }
+
+  #sort button {
+    margin-top: 0;
+  }
 </style>
 
 <div class="ssfWrapper panel">
@@ -69,9 +64,19 @@
   </div>
   <div class="sortField">
     <label for="sort">Sort</label>
-    <Select
-      inputAttributes={{ id: 'sort' }}
-      items={sortOptions}
-      bind:selectedValue={selectedSort} />
+    <fieldset id="sort" class="sortButtonWrapper">
+      <button
+        class="button sortButton button-small button-outline button-secondary">
+        Default
+      </button>
+      <button
+        class="button sortButton button-small button-outline button-secondary">
+        Recent
+      </button>
+      <button
+        class="button sortButton button-small button-outline button-secondary">
+        Alphabetical
+      </button>
+    </fieldset>
   </div>
 </div>

@@ -47,8 +47,7 @@
     <SearchSortFilter
       bind:searchResults
       list={result}
-      searchKeys={['name', 'description', 'persona']}
-      sortKeys={['name', 'description', 'updated_at']} />
+      searchKeys={['name', 'description', 'persona']} />
     {#each searchResults.length ? searchResults : result as userclass (userclass.id)}
       <Userclass {userclass} {update} projectId={id} />
     {/each}

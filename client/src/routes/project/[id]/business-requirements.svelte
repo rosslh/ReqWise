@@ -63,8 +63,7 @@
   <SearchSortFilter
     bind:searchResults
     list={reqgroups}
-    searchKeys={['name', 'description']}
-    sortKeys={['name', 'description', 'updated_at']} />
+    searchKeys={['name', 'description', 'requirements.description']} />
   {#each searchResults.length ? searchResults : reqgroups as reqgroup (reqgroup.id)}
     <Reqgroup {reqgroup} {update} />
   {/each}

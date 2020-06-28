@@ -1,0 +1,85 @@
+{
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "You have a new requirement:\n*<fakeLink.toEmployeeProfile.com|Fred Enriquez - New device request>*"
+			}
+		},
+		{
+			"type": "section",
+			"fields": [
+				{
+					"type": "mrkdwn",
+					"text": "*Description:*\nComputer (laptop)"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "*Priority:*\nSubmitted Aut 10"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "*Status:*\nMar 10, 2015 (3 years, 5 months)"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "*Rationale:*\nAll vowel keys aren't working."
+				},
+				{
+					"type": "mrkdwn",
+					"text": "*Author:*\n\"Cheetah Pro 15\" - Fast, really fast\""
+				}
+			]
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "section",
+			"fields": [
+				{
+					"type": "mrkdwn",
+					"text": "*Parent requirement*"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "*Requirement Group*"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "Requirement #2"
+				},
+				{
+					"type": "mrkdwn",
+					"text": "Feature #4"
+				}
+			]
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"emoji": true,
+						"text": "Approve"
+					},
+					"style": "primary",
+					"value": "click_me_123"
+				},
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"emoji": true,
+						"text": "Reject"
+					},
+					"style": "danger",
+					"value": "click_me_123"
+				}
+			]
+		}
+	]
+}

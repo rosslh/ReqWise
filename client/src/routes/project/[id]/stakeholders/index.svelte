@@ -46,8 +46,7 @@
     <SearchSortFilter
       bind:searchResults
       list={result}
-      searchKeys={['name', 'description']}
-      sortKeys={['name', 'description', 'updated_at']} />
+      searchKeys={['name', 'description']} />
     {#each searchResults.length ? searchResults : result as stakeholderGroup (stakeholderGroup.id)}
       <StakeholderGroup group={stakeholderGroup} {update} />
     {/each}
