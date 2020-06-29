@@ -27,5 +27,6 @@
 {#await searchResults}
   <!-- loading -->
 {:then result}
-  {#each result as r}{r.id}{/each}
+  <!-- {#each result as r}{r.id}{/each} -->
+  <pre>{JSON.stringify(result, null, 2)}</pre>
 {/await}
