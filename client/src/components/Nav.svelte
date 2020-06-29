@@ -1,11 +1,12 @@
 <script>
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
 
   import MdMenu from "svelte-icons/md/MdMenu.svelte";
   import MdNotifications from "svelte-icons/md/MdNotifications.svelte";
   import TiHome from "svelte-icons/ti/TiHome.svelte";
+  import GoSearch from "svelte-icons/go/GoSearch.svelte";
 
-  import { sidebarHidden } from "../stores.js";
+  import { sidebarHidden, currentProjectId } from "../stores.js";
   const { session, page } = stores();
 
   const logout = async () => {
@@ -14,7 +15,16 @@
       credentials: "include"
     });
     $session.user = null;
-    // goto("/login");
+  };
+
+  let searchQuery = "";
+
+  $: search = () => {
+    goto(
+      `/project/${$currentProjectId}/search?q=${encodeURIComponent(
+        searchQuery
+      )}`
+    );
   };
 </script>
 
@@ -45,10 +55,37 @@
     max-width: 100%;
   }
 
-  div.middle {
+  form.middle {
     flex-grow: 1;
     padding: 0 3rem;
     max-width: 70rem;
+    position: relative;
+  }
+
+  #navSearchBar {
+    margin-bottom: 0;
+    width: 100%;
+    height: 3.2rem;
+    border-radius: 0.4rem;
+    flex-grow: 1;
+    padding-left: 3.2rem;
+  }
+
+  .searchIconWrapper {
+    display: inline-block;
+    width: 1.6rem;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 3.6rem;
+    display: flex;
+    align-items: center;
+    color: var(--secondaryText);
+  }
+
+  :global(.searchIconWrapper svg) {
+    max-height: 1.6rem;
+    max-width: 1.6rem;
   }
 
   div.right {
@@ -87,13 +124,6 @@
     position: absolute;
     left: 1rem;
   }
-
-  #navSearchBar {
-    margin-bottom: 0;
-    width: 100%;
-    height: 3.2rem;
-    border-radius: 0.4rem;
-  }
 </style>
 
 <nav>
@@ -124,9 +154,16 @@
       </a>
     </div>
     {#if $page.path.includes('/project/')}
-      <div class="middle">
-        <input id="navSearchBar" type="text" placeholder="Search project" />
-      </div>
+      <form on:submit|preventDefault={search} class="middle">
+        <div class="searchIconWrapper">
+          <GoSearch />
+        </div>
+        <input
+          bind:value={searchQuery}
+          id="navSearchBar"
+          type="text"
+          placeholder="Search project" />
+      </form>
     {/if}
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
