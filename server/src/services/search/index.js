@@ -30,23 +30,34 @@ module.exports = async function (fastify, opts) {
             const { projectId } = request.params;
 
             const reqgroups = await fastify.knex.from("reqgroup")
-                .select(fastify.knex.raw("*, 'reqgroup' as resultType"))
+                .select(fastify.knex.raw("*, 'requirement group' as result_type, per_project_unique_id.readable_id as ppuid, reqgroup.id as id"))
+                .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
                 .where(`reqgroup.project_id`, projectId)
                 .whereRaw(`to_tsvector('english', name || ' ' || coalesce(description, '')) @@ to_tsquery('english', '${query}')`);
 
             const files = await fastify.knex.from("file")
-                .select(fastify.knex.raw("*, 'file' as resultType"))
+                .select(fastify.knex.raw("*, 'file' as result_type, per_project_unique_id.readable_id as ppuid, file.id as id"))
+                .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
                 .where(`file.project_id`, projectId)
                 .whereRaw(`to_tsvector('english', name || ' ' || coalesce(description, '')) @@ to_tsquery('english', '${query}')`);
 
             const userClasses = await fastify.knex.from("userclass")
-                .select(fastify.knex.raw("*, 'userclass' as resultType"))
+                .select(fastify.knex.raw("*, 'user class' as result_type, per_project_unique_id.readable_id as ppuid, userclass.id as id"))
+                .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
                 .where(`userclass.project_id`, projectId)
                 .whereRaw(`to_tsvector('english', name || ' ' || coalesce(description, '') || ' ' || coalesce(persona, '')) @@ to_tsquery('english', '${query}')`);
 
+            const stakeholderGroups = await fastify.knex.from("stakeholderGroup")
+                .select(fastify.knex.raw("*, 'stakeholder group' as result_type, per_project_unique_id.readable_id as ppuid, \"stakeholderGroup\".id as id"))
+                .join("per_project_unique_id", "per_project_unique_id.id", "stakeholderGroup.ppuid_id")
+                .where(`stakeholderGroup.project_id`, projectId)
+                .whereRaw(`to_tsvector('english', name || ' ' || coalesce(description, '')) @@ to_tsquery('english', '${query}')`);
+
+
             const reqversions = await fastify.knex.from("reqversion")
-                .select(fastify.knex.raw("reqversion.*, 'reqversion' as resultType"))
+                .select(fastify.knex.raw("reqversion.*, 'requirement' as result_type, per_project_unique_id.readable_id as ppuid"))
                 .join("requirement", "reqversion.requirement_id", "requirement.id")
+                .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
                 .where(`requirement.project_id`, projectId)
                 .where(
                     "reqversion.created_at",
@@ -56,7 +67,7 @@ module.exports = async function (fastify, opts) {
                     ))
                 .whereRaw(`to_tsvector('english', description || ' ' || coalesce(rationale, '')) @@ to_tsquery('english', '${query}')`);
 
-            const fuse = new Fuse([...files, ...userClasses, ...reqversions, ...reqgroups], {
+            const fuse = new Fuse([...files, ...userClasses, ...stakeholderGroups, ...reqversions, ...reqgroups], {
                 // isCaseSensitive: false,
                 // includeScore: false,
                 // shouldSort: true,
