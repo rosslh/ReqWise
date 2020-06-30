@@ -112,13 +112,24 @@
     font-weight: 300;
     margin-left: 0.5rem;
   }
+
+  h3 a {
+    text-decoration: none;
+    color: var(--normalText);
+  }
+
+  h3 a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <div class="stakeholderGroupWrapper">
   <div class="headerWrapper">
     <div class="groupHeader">
       <h3>
-        {group.name}
+        <a href={`/project/${projectId}/stakeholders/${group.id}`}>
+          {group.name}
+        </a>
         <span class="groupPpuid">#{group.ppuid}</span>
       </h3>
     </div>

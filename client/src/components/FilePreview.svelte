@@ -146,6 +146,15 @@
     max-height: inherit;
     max-width: inherit;
   }
+
+  h3 a {
+    text-decoration: none;
+    color: var(--normalText);
+  }
+
+  h3 a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <div class="filePreview">
@@ -203,7 +212,7 @@
   </div>
   <div class="textContent">
     <h3>
-      {file.name}
+      <a href={`/project/${projectId}/files/${file.id}`}>{file.name}</a>
       <span class="filePpuid">#{file.ppuid}</span>
     </h3>
     <p>{file.description}</p>

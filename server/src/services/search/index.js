@@ -26,7 +26,7 @@ module.exports = async function (fastify, opts) {
             schema: getSearchResultsSchema,
         },
         async function (request, reply) {
-            const query = request.query.q;
+            const query = request.query.q.trim().replace(/ /g, " & "); // https://www.postgresql.org/docs/9.2/textsearch-intro.html
             const { projectId } = request.params;
 
             const reqgroups = await fastify.knex.from("reqgroup")

@@ -1,4 +1,38 @@
 module.exports = async function (fastify, opts) {
+    const getUserclassSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                userclassId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/userclasses/:userclassId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getUserclassSchema,
+        },
+        async function (request, reply) {
+            return await fastify.knex
+                .from("userclass")
+                .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
+                .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
+                .where("userclass.id", request.params.userclassId)
+                .first();
+        }
+    );
+
     const getUserclassChampions = {
         body: {},
         queryString: {},
