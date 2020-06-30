@@ -1,5 +1,5 @@
 <script>
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   const { session } = stores();
 
   import { onMount, onDestroy } from "svelte";
@@ -9,7 +9,7 @@
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
 
-  import { get, post, stream } from "../api.js";
+  import { get, post, del, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
@@ -18,7 +18,7 @@
 
   export let isPrioritized; // TODO: fetch this, don't pass as prop
   export let id;
-  export let close = () => {};
+  export let close = false;
   export let update = () => {};
 
   let oldStatus;
@@ -159,7 +159,12 @@
       $session.user && $session.user.jwt
     );
     await update();
-    close();
+    if (close) {
+      close();
+    } else {
+      await getRequirement();
+      await getComments();
+    }
   };
 
   const rejectProposal = async () => {
@@ -175,7 +180,27 @@
       $session.user && $session.user.jwt
     );
     await update();
-    close();
+    if (close) {
+      close();
+    } else {
+      await getRequirement();
+      await getComments();
+    }
+  };
+
+  const deleteRequirement = async () => {
+    if (
+      confirm(
+        "Are you sure you want to delete this requirement? This action cannot be undone."
+      )
+    ) {
+      await del(`/requirements/${id}`, $session.user && $session.user.jwt);
+      if (close) {
+        close();
+      } else {
+        goto(`/project/${project_id}`);
+      }
+    }
   };
 
   const getStatusColor = status => {
@@ -419,7 +444,9 @@
         Accept
       </button>
       <button
-        on:click={rejectProposal}
+        on:click={() => {
+          oldStatus ? rejectProposal() : deleteRequirement();
+        }}
         class="actionButton button-danger button-small button-outline">
         Reject
       </button>
@@ -430,6 +457,11 @@
         class="button actionButton button-caution button-small button-outline">
         Edit requirement
       </a>
+      <button
+        on:click={deleteRequirement}
+        class="actionButton button-danger button-small button-outline">
+        Delete
+      </button>
     {/if}
   </div>
   <div class="column comments">

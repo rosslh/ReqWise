@@ -1,5 +1,5 @@
 <script>
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   const { session, page } = stores();
   import Select from "svelte-select";
   import { get, post } from "../../../../../api.js";
@@ -7,15 +7,13 @@
   import Skeleton from "../../../../../components/Skeleton.svelte";
   import SubmitButton from "../../../../../components/SubmitButton.svelte";
 
-  export let update;
-  export let close;
   export let isPrioritized;
 
   const id = $page.params.reqId;
 
   let description;
   let priority;
-  let rationale;
+  let rationale = "";
 
   const priorityOptions = [
     { value: "high", label: "High" },
@@ -48,8 +46,7 @@
       data,
       $session.user && $session.user.jwt
     );
-    await update();
-    close();
+    goto(`/project/${$page.params.id}/requirement/${$page.params.reqId}`);
   };
 </script>
 

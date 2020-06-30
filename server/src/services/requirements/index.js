@@ -272,6 +272,11 @@ module.exports = async function (fastify, opts) {
         .orderBy("reqversion.created_at", "desc")
         .first();
 
+      if (latestVersion.status !== "accepted" && status !== "accepted") {
+        reply.code(409);
+        return ["Modification proposal already exists."];
+      }
+
       let slackMessageTs;
       if (token) {
         const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
