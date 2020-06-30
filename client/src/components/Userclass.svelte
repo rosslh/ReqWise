@@ -154,13 +154,24 @@
     height: 4rem;
     margin-bottom: 2rem;
   }
+
+  h3 a {
+    text-decoration: none;
+    color: var(--normalText);
+  }
+
+  h3 a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <div class="userclassWrapper">
   <div class="userclassHeader">
     <div class="left">
       <h3>
-        {userclass.name}
+        <a href={`/project/${projectId}/user-classes/${userclass.id}`}>
+          {userclass.name}
+        </a>
         <span class="userclassPpuid">#{userclass.ppuid}</span>
       </h3>
     </div>

@@ -16,7 +16,8 @@
   import {
     sidebarHidden,
     reqgroupsToUpdate,
-    projectShouldUpdate
+    projectShouldUpdate,
+    currentProjectId
   } from "../../../stores.js";
   import { stream } from "../../../api.js";
 
@@ -68,6 +69,10 @@
       closeStream();
     }
   });
+
+  $: {
+    $currentProjectId = id;
+  }
 
   $: refreshStream =
     typeof window !== "undefined" &&

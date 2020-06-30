@@ -19,18 +19,7 @@ module.exports = async function (fastify, opts) {
             },
             required: ["Authorization"],
         },
-        response: {
-            200: {
-                type: "object",
-                properties: {
-                    id: { type: "number" },
-                    name: { type: "string" },
-                    description: { type: "string" },
-                    svg: { type: "string" },
-                    project_id: { type: "number" }
-                },
-            },
-        },
+        response: {},
     };
     fastify.get(
         "/files/:fileId",
@@ -41,14 +30,14 @@ module.exports = async function (fastify, opts) {
         async function (request, reply) {
             return await fastify.knex
                 .from("file")
-                .select("*")
+                .select("file.*", "per_project_unique_id.readable_id as ppuid")
+                .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
                 .where({
-                    id: request.params.fileId,
+                    "file.id": request.params.fileId,
                 })
                 .first();
         }
     );
-
 
     const putFileSchema = {
         body: {

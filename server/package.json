@@ -29,6 +29,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-jwt": "^1.2.1",
     "fastify-plugin": "^1.6.0",
+    "fuse.js": "^6.4.0",
     "generate-avatar": "^1.4.1",
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",

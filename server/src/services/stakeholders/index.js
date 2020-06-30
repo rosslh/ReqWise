@@ -1,4 +1,40 @@
 module.exports = async function (fastify, opts) {
+    const getStakeholderGroupSchema = {
+        body: {},
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                stakeholderGroupId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/stakeholders/:stakeholderGroupId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getStakeholderGroupSchema,
+        },
+        async function (request, reply) {
+            return await fastify.knex
+                .from("stakeholderGroup")
+                .select("stakeholderGroup.*", "per_project_unique_id.readable_id as ppuid")
+                .join("per_project_unique_id", "per_project_unique_id.id", "stakeholderGroup.ppuid_id")
+                .where({
+                    "stakeholderGroup.id": request.params.stakeholderGroupId,
+                })
+                .first();
+        }
+    );
+
     const getStakeholderGroupUsers = {
         body: {},
         queryString: {},
