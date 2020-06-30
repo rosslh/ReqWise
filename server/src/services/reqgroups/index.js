@@ -360,10 +360,11 @@ module.exports = async function (fastify, opts) {
       const { description, priority, status, rationale, parent_requirement_id } = request.body;
       const { reqgroupId: reqgroup_id } = request.params;
 
-      const { project_id, isMaxOneRequirement, slackAccessToken: token } = (
+      const { project_id, isMaxOneRequirement, slackAccessToken: token, name: reqgroup_name, ppuid: reqgroup_ppuid } = (
         await fastify.knex
           .from("reqgroup")
-          .select("reqgroup.*", "team.slackAccessToken")
+          .select("reqgroup.*", "team.slackAccessToken", "per_project_unique_id.readable_id as ppuid")
+          .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
           .join('project', 'project.id', 'reqgroup.project_id')
           .join('team', 'team.id', 'project.team_id')
           .where({
@@ -371,19 +372,6 @@ module.exports = async function (fastify, opts) {
           })
           .first()
       );
-      let slackMessageTs;
-      if (token) {
-        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
-        await fastify.slack.conversations.join({ channel, token });
-        slackMessageTs = (await fastify.slack.chat.postMessage({
-          text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement:\n*Description*:\n>${description}\n*Priority*:\n>${priority}\n*Rationale*:\n>${rationale || "_No rationale_"}\nReply to this thread to give feedback.`,
-          token,
-          channel,
-          username: request.user.name,
-          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
-        })).ts;
-
-      }
 
       const numRequirements = isMaxOneRequirement && (
         await fastify.knex
@@ -423,6 +411,66 @@ module.exports = async function (fastify, opts) {
             })
             .returning("id")
         )[0];
+
+        let slackMessageTs;
+        if (token) {
+          const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+          await fastify.slack.conversations.join({ channel, token });
+          slackMessageTs = (await fastify.slack.chat.postMessage({
+            text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement.`,
+            blocks: [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": `You have a new requirement: *<reqwise.com/project/${project_id}/requirement/${fastify.obfuscateId(requirement_id)}|#${ppuid_id} - ${description}>*. Give feedback by replying to this message.`
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": `*Description:*\n${description}`
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": `*Priority:*\n${priority}`
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": `*Status:*\n${status}`
+                  },
+                  ...(reqgroup_id ? [{
+                    "type": "mrkdwn",
+                    "text": `*Part of requirement group:*\n<reqwise.com/project/${project_id}/reqgroup/${fastify.obfuscateId(reqgroup_id)}|#${reqgroup_ppuid} - ${reqgroup_name}>`
+                  }] : [])
+                ]
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": `*Author:*\n${request.user.name}`
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": `*Rationale:*\n${rationale || "_No rationale_"}`
+                  }
+                ]
+              }
+            ],
+            token,
+            channel,
+            username: request.user.name,
+            icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+          })).ts;
+        }
+
         await fastify
           .knex("reqversion")
           .insert({
