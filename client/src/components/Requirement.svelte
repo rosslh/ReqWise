@@ -211,6 +211,7 @@
 <li
   class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
   on:click={() => toggleReq(requirement.id)}
+  data-reqdesc={requirement.description}
   data-reqid={requirement.id}>
   <div class="reqHandle">
     <div class="gripWrapper">

@@ -42,5 +42,10 @@
       Requirements are prioritizable
     </label>
   </fieldset>
-  <SubmitButton className="button-caution" handler={update}>Save</SubmitButton>
+  <SubmitButton
+    id="updateReqgroupButton"
+    className="button-caution"
+    handler={update}>
+    Save
+  </SubmitButton>
 </form>

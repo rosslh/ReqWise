@@ -37,6 +37,7 @@
   {#if !reqgroup.isMaxOneRequirement || (requirements && !requirements.length)}
     <button
       class="addRequirementButton button-create"
+      data-reqgroup={reqgroup.name}
       on:click={() => {
         modalContent.set(AddRequirementModal);
         modalProps.set({
@@ -60,6 +61,8 @@
       Stakeholders
     </a>
     <button
+      id="editReqgroupButton"
+      data-reqgroup={reqgroup.name}
       on:click={editReqgroup}
       class="button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
@@ -70,6 +73,7 @@
     {#if reqgroup.isDeletable}
       <button
         on:click={deleteReqgroup}
+        data-reqgroup={reqgroup.name}
         class="deleteReqgroupButton button-outline button-small button-secondary
         button-clear">
         <div class="iconWrapper">

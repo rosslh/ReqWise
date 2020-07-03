@@ -195,7 +195,7 @@
     {selectedReqs}
     update={updateReqs}
     isPrioritized={reqgroup.isPrioritized} />
-  <ul class="reqWrapper">
+  <ul class="reqWrapper" data-reqgroup={reqgroup.name}>
     {#if requirements}
       {#each requirements as requirement, index}
         <Requirement
