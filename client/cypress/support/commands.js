@@ -39,7 +39,7 @@ Cypress.Commands.add("goToRequirement", () => {
     cy.url().should('include', 'reqgroup/');
     cy.contains('h2', "View requirement group")
     cy.get('button.commentIconWrapper').click();
-    cy.contains('h2', "Test requirement (don't delete)");
+    cy.contains('h2', "View requirement");
 });
 
 Cypress.Commands.add("waitForSpinner", () => cy.waitUntil(() => !Cypress.$('.loadingSpinner').length, { timeout: 30000, interval: 500 }));

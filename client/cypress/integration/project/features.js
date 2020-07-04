@@ -80,7 +80,7 @@ describe('Features page', () => {
         cy.get('li.requirement', { force: true }).eq(1).click();
         cy.get('#deleteRequirementButton').click();
         cy.get('#confirmReqDeleteButton').click();
-        cy.get('li.requirement div.desc').should('have.length', 1);
+        cy.get('li.requirement[data-reqdesc="Nested requirement"] div.desc').should('have.length', 1);
     });
 
     it('can delete feature', () => {
