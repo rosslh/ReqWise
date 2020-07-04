@@ -11,26 +11,31 @@ exports.up = function (knex) {
             table
                 .integer("entity_reqgroup_id")
                 .references("reqgroup.id")
+                .onDelete("SET NULL")
                 .unsigned();
 
             table
                 .integer("entity_requirement_id")
                 .references("requirement.id")
+                .onDelete("SET NULL")
                 .unsigned();
 
             table
                 .integer("entity_file_id")
                 .references("file.id")
+                .onDelete("SET NULL")
                 .unsigned();
 
             table
                 .integer("entity_stakeholderGroup_id")
                 .references("stakeholderGroup.id")
+                .onDelete("SET NULL")
                 .unsigned();
 
             table
                 .integer("entity_userclass_id")
                 .references("userclass.id")
+                .onDelete("SET NULL")
                 .unsigned();
 
             table
@@ -71,7 +76,8 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
     return Promise.all([
-        knex.schema.dropTable("alert"),
         knex.schema.dropTable("account_alert"),
+
+        knex.schema.dropTable("alert"),
     ]);
 };

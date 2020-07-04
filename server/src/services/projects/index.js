@@ -365,7 +365,7 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
-      return await fastify
+      const [id] = await fastify
         .knex("reqgroup")
         .insert({
           project_id,
@@ -377,6 +377,10 @@ module.exports = async function (fastify, opts) {
           isPrioritized
         })
         .returning("id");
+
+      await fastify.createAlert("create", "reqgroup", name, id, project_id, request.user.id);
+
+      return [id];
     }
   );
   const postFileSchema = {
