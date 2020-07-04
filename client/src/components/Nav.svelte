@@ -171,9 +171,9 @@
 
         <a rel="prefetch" id="loginLink" href="/login">Login</a>
       {:else}
-        <button class="iconButton">
+        <a class="button iconButton" rel="prefetch" href="/notifications">
           <MdNotifications />
-        </button>
+        </a>
         <a class="button iconButton" rel="prefetch" href="/account">
           <TiHome />
         </a>
