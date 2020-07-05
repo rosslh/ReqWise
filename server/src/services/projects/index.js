@@ -131,7 +131,7 @@ module.exports = async function (fastify, opts) {
                   description: { type: "string" },
                   created_at: { type: "string" },
                   ppuid: { type: "number" },
-                  author: { type: "string" },
+                  authorName: { type: "string" },
                   depth: { type: "number" }
                 }
               }
@@ -172,7 +172,7 @@ module.exports = async function (fastify, opts) {
         "reqversion.description",
         "reqversion.created_at",
         "per_project_unique_id.readable_id as ppuid",
-        "account.name as author"
+        "account.name as authorName"
       ];
 
       const reqgroups = await fastify.knex

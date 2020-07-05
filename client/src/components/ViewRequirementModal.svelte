@@ -11,6 +11,7 @@
 
   import { get, post, del, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
+  import Requirement from "./Requirement.svelte";
   import Comment from "./Comment.svelte";
   import CommentEditor from "./CommentEditor.svelte";
   import SimpleDiff from "./SimpleDiff.svelte";
@@ -36,6 +37,10 @@
   let quillDelta;
   let plaintextComment = "";
 
+  let requirement = get(
+    `/requirements/${id}`,
+    $session.user && $session.user.jwt
+  );
   let comments;
   let reqversionId;
   let ppuid;
@@ -47,7 +52,7 @@
   let loaded = false;
 
   const getRequirement = async () => {
-    const requirement = await get(
+    requirement = await get(
       `/requirements/${id}`,
       $session.user && $session.user.jwt
     );
@@ -223,18 +228,6 @@
     margin-left: 0.3rem;
   }
 
-  .requirementContainer {
-    display: flex;
-    justify-content: space-between;
-    /* min-height: 85vh; */
-  }
-
-  .requirementContainer > .column {
-    max-width: calc(50% - 1rem);
-    flex-grow: 1;
-    padding: 0 1rem;
-  }
-
   .requirementContainer > .column.comments {
     display: flex;
     flex-direction: column;
@@ -314,6 +307,14 @@
     display: inline-block;
     transform: rotate(90deg) translateX(-0.4rem);
   }
+
+  ul.panel {
+    width: 100%;
+    overflow-x: auto;
+    list-style-type: none;
+    padding: 1rem 0 1.25rem; /* account for child placeholder negative margin */
+    position: relative;
+  }
 </style>
 
 <div class="requirementContainer">
@@ -324,6 +325,16 @@
         <span class="reqModalPpuid">#{ppuid}</span>
       {/if}
     </h2>
+    {#await requirement}
+      <!-- loading -->
+    {:then result}
+      <ul class="panel">
+        <Requirement
+          {close}
+          isContextModal={true}
+          requirement={{ ...result.latestVersion, ...result }} />
+      </ul>
+    {/await}
     {#if loaded}
       <div class="attachmentButtons">
         <a

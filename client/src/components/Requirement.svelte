@@ -1,24 +1,24 @@
 <script>
-  import FaRegComment from "svelte-icons/fa/FaRegComment.svelte";
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import FaGripVertical from "svelte-icons/fa/FaGripVertical.svelte";
 
   import { modalContent, modalProps } from "../stores.js";
-  import ViewRequirementModal from "./ViewRequirementModal.svelte";
   import ViewRequirementHistoryModal from "./ViewRequirementHistoryModal.svelte";
   import RequirementDropzone from "./RequirementDropzone.svelte";
 
   import { formatDistanceToNow } from "date-fns";
 
   export let requirement;
-  export let toggleReq;
-  export let selected;
+  export let toggleReq = () => {};
+  export let selected = false;
   export let update;
-  export let isPrioritized;
-  export let hiddenPlaceholders;
-  export let index;
+  export let isPrioritized = true;
+  export let hiddenPlaceholders = [];
+  export let index = 0;
+  export let isContextModal = false;
+  export let close = () => {};
 
   const formatDatetime = dt => `${formatDistanceToNow(new Date(dt))} ago`;
 
@@ -46,16 +46,6 @@
     }
   };
 
-  const viewRequirement = (event, id) => {
-    modalContent.set(ViewRequirementModal);
-    modalProps.set({
-      id,
-      update,
-      url: `/project/${requirement.project_id}/requirement/${id}`,
-      isPrioritized
-    });
-  };
-
   const showHistoryModal = id => {
     modalContent.set(ViewRequirementHistoryModal);
     modalProps.set({
@@ -68,28 +58,6 @@
 </script>
 
 <style lang="scss">
-  li.requirement > div.iconCell {
-    border: none;
-
-    button.commentIconWrapper {
-      background-color: var(--background1);
-      border: 0.1rem solid var(--borderColor);
-      border-radius: 50%;
-      height: 3.3rem;
-      width: 3.3rem;
-      padding: 0.8rem !important;
-      color: var(--normalText);
-      box-sizing: border-box;
-      margin: 0;
-
-      &:hover {
-        color: var(--themeColor);
-        background-color: var(--background1);
-        opacity: 1 !important;
-      }
-    }
-  }
-
   li.requirement {
     border-bottom: 0.1rem solid var(--borderColor);
     font-size: 1.5rem;
@@ -142,7 +110,8 @@
     }
   }
 
-  li.requirement > div.history button {
+  li.requirement > div.history button,
+  li.requirement > div.history a.button {
     color: var(--secondaryText);
     text-decoration: underline !important;
     text-decoration-style: dashed !important;
@@ -180,6 +149,10 @@
     align-items: center;
   }
 
+  li.requirement.noninteractive {
+    cursor: default !important;
+  }
+
   @for $i from 0 through 10 {
     li.requirement.depth-#{$i} {
       transform: translateX(3rem * $i);
@@ -203,21 +176,28 @@
     height: 1.5rem;
     margin-top: 0.8rem;
   }
+
+  button,
+  .button {
+    margin-top: 0;
+  }
 </style>
 
 {#if index === 0}
   <RequirementDropzone {hiddenPlaceholders} parentId={-1} depth={0} />
 {/if}
 <li
-  class={`${selected ? 'selected' : ''} requirement draggable depth-${requirement.depth}`}
+  class={`${selected ? 'selected' : ''} ${isContextModal ? 'noninteractive' : ''} requirement draggable depth-${requirement.depth}`}
   on:click={() => toggleReq(requirement.id)}
   data-reqdesc={requirement.description}
   data-reqid={requirement.id}>
-  <div class="reqHandle">
-    <div class="gripWrapper">
-      <FaGripVertical />
+  {#if !isContextModal}
+    <div class="reqHandle">
+      <div class="gripWrapper">
+        <FaGripVertical />
+      </div>
     </div>
-  </div>
+  {/if}
   <div class="desc">{requirement.description}</div>
   <div class="ppuid">#{requirement.ppuid}</div>
   <div class="status">
@@ -259,17 +239,20 @@
     </div>
   {/if}
   <div class="history">
-    <button on:click|stopPropagation={() => showHistoryModal(requirement.id)}>
-      {requirement.author} {formatDatetime(requirement.created_at)}
-    </button>
+    {#if !isContextModal}
+      <button on:click|stopPropagation={() => showHistoryModal(requirement.id)}>
+        {requirement.authorName} {formatDatetime(requirement.created_at)}
+      </button>
+    {:else}
+      <a
+        on:click={close}
+        href={`/project/${requirement.project_id}/requirement/${requirement.id}/history`}
+        class="button">
+        {requirement.authorName} {formatDatetime(requirement.created_at)}
+      </a>
+    {/if}
   </div>
-  <div class="iconCell">
-    <button
-      on:click|stopPropagation={e => viewRequirement(e, requirement.id)}
-      class="commentIconWrapper">
-      <FaRegComment />
-    </button>
-  </div>
+  <slot />
 </li>
 <RequirementDropzone
   {hiddenPlaceholders}
