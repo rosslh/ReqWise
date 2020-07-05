@@ -56,7 +56,7 @@
     max-width: 100%;
   }
 
-  .top {
+  .bottom {
     display: flex;
     align-items: center;
   }
@@ -73,10 +73,27 @@
   .entityLink {
     font-weight: bold;
   }
+
+  .top {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .top,
+  .top a {
+    color: var(--secondaryText);
+  }
 </style>
 
 <div class="panel">
   <div class="top">
+    <a href={`/team/${notification.team_id}`}>{notification.teamName}</a>
+    /
+    <a href={`/project/${notification.project_id}`}>
+      {notification.projectName}
+    </a>
+  </div>
+  <div class="bottom">
     <div class="imageWrapper">
       {#if notification.authorImageName}
         <img

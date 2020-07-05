@@ -103,9 +103,10 @@
     background-color: var(--background1);
     border: none;
     color: var(--secondaryText);
-    height: 2.2rem;
-    width: 2.2rem;
-    padding: 0;
+    height: 3.2rem;
+    width: 3.2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
     outline: none;
     margin: 0;
     margin-right: 1.5rem;
@@ -123,6 +124,21 @@
   .menuButton {
     position: absolute;
     left: 1rem;
+  }
+
+  #notificationButton {
+    position: relative;
+  }
+
+  #notificationButton .alertIndicator {
+    background-color: var(--themeColor);
+    border-radius: 50%;
+    height: 1.2rem;
+    width: 1.2rem;
+    position: absolute;
+    top: 0.2rem;
+    right: 0.4rem;
+    border: 0.1rem solid var(--borderColor);
   }
 </style>
 
@@ -171,7 +187,12 @@
 
         <a rel="prefetch" id="loginLink" href="/login">Login</a>
       {:else}
-        <a class="button iconButton" rel="prefetch" href="/notifications">
+        <a
+          id="notificationButton"
+          class="button iconButton"
+          rel="prefetch"
+          href="/notifications">
+          <div class="alertIndicator" />
           <MdNotifications />
         </a>
         <a class="button iconButton" rel="prefetch" href="/account">
