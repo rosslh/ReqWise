@@ -39,6 +39,16 @@
       return `/project/${notification.project_id}/files/${notification.entity_file_id}`;
     }
   };
+
+  const hasEntityId = () => {
+    return (
+      notification.entity_reqgroup_id ||
+      notification.entity_stakeholderGroup_id ||
+      notification.entity_userclass_id ||
+      notification.entity_requirement_id ||
+      notification.entity_file_id
+    );
+  };
 </script>
 
 <style>
@@ -109,9 +119,9 @@
         {getActionString(notification.actionType)}
         {getEntityString(notification.entityType)}
       </span>
-      {#if notification.description && notification.actionType !== 'delete'}
+      {#if hasEntityId() && notification.description && notification.actionType !== 'delete'}
         <a class="entityLink" href={getHref()}>{notification.description}</a>
-      {:else if notification.actionType === 'delete'}
+      {:else if !hasEntityId() || notification.actionType === 'delete'}
         <strong>{notification.description}</strong>
       {/if}
       <time class="date secondary" datetime={notification.created_at}>

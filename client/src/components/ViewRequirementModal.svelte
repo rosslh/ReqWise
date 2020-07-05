@@ -315,6 +315,11 @@
     padding: 1rem 0 1.25rem; /* account for child placeholder negative margin */
     position: relative;
   }
+
+  .latestRevisionPanel {
+    padding-top: 0;
+    padding-bottom: 1.6rem;
+  }
 </style>
 
 <div class="requirementContainer">
@@ -400,80 +405,82 @@
         </div>
       {/if}
     </h4>
-    <h5>Description</h5>
-    {#if !loaded}
-      <Skeleton noPadding />
-    {:else}
-      <DescDiff {oldDescription} {newDescription} />
-    {/if}
-    {#if isPrioritized}
-      <h5>Priority</h5>
-      {#if loaded}
+    <div class="panel latestRevisionPanel">
+      <h5>Description</h5>
+      {#if !loaded}
+        <Skeleton noPadding />
+      {:else}
+        <DescDiff {oldDescription} {newDescription} />
+      {/if}
+      {#if isPrioritized}
+        <h5>Priority</h5>
+        {#if loaded}
+          <div class="reqversionContent">
+            <SimpleDiff oldText={oldPriority} newText={newPriority} />
+          </div>
+        {:else}
+          <Skeleton noPadding />
+        {/if}
+      {/if}
+      <h5>Reason for change</h5>
+      {#if !loaded}
+        <Skeleton noPadding />
+      {:else}
         <div class="reqversionContent">
-          <SimpleDiff oldText={oldPriority} newText={newPriority} />
+          {#if rationale}
+            {rationale}
+          {:else}
+            <span class="noRationale">No rationale</span>
+          {/if}
+        </div>
+        <!-- zero-width-space to preserve height if rationale is empty-->
+      {/if}
+      <h5>Proposer</h5>
+      {#if loaded}
+        <div class="authorInfo">
+          <div class="authorImageWrapper">
+            {#if authorImageName}
+              <img
+                src={`https://storage.googleapis.com/user-file-storage/${authorImageName}`}
+                alt={authorName} />
+            {:else if authorPlaceholderImage}
+              {@html authorPlaceholderImage}
+            {/if}
+          </div>
+          <span class="authorName">{authorName}</span>
+          <span class="authorEmail">&lt;{authorEmail}&gt;</span>
         </div>
       {:else}
         <Skeleton noPadding />
       {/if}
-    {/if}
-    <h5>Reason for change</h5>
-    {#if !loaded}
-      <Skeleton noPadding />
-    {:else}
-      <div class="reqversionContent">
-        {#if rationale}
-          {rationale}
-        {:else}
-          <span class="noRationale">No rationale</span>
-        {/if}
-      </div>
-      <!-- zero-width-space to preserve height if rationale is empty-->
-    {/if}
-    <h5>Proposer</h5>
-    {#if loaded}
-      <div class="authorInfo">
-        <div class="authorImageWrapper">
-          {#if authorImageName}
-            <img
-              src={`https://storage.googleapis.com/user-file-storage/${authorImageName}`}
-              alt={authorName} />
-          {:else if authorPlaceholderImage}
-            {@html authorPlaceholderImage}
-          {/if}
-        </div>
-        <span class="authorName">{authorName}</span>
-        <span class="authorEmail">&lt;{authorEmail}&gt;</span>
-      </div>
-    {:else}
-      <Skeleton noPadding />
-    {/if}
-    <h5>Actions</h5>
-    {#if newStatus !== 'accepted'}
-      <button
-        on:click={acceptProposal}
-        class="actionButton button-success button-small button-outline">
-        Accept
-      </button>
-      <button
-        on:click={() => {
-          oldStatus ? rejectProposal() : deleteRequirement();
-        }}
-        class="actionButton button-danger button-small button-outline">
-        Reject
-      </button>
-    {:else}
-      <a
-        on:click={close}
-        href={`/project/${project_id}/requirement/${id}/edit`}
-        class="button actionButton button-caution button-small button-outline">
-        Edit requirement
-      </a>
-      <button
-        on:click={deleteRequirement}
-        class="actionButton button-danger button-small button-outline">
-        Delete
-      </button>
-    {/if}
+      <h5>Actions</h5>
+      {#if newStatus !== 'accepted'}
+        <button
+          on:click={acceptProposal}
+          class="actionButton button-success button-small button-outline">
+          Accept
+        </button>
+        <button
+          on:click={() => {
+            oldStatus ? rejectProposal() : deleteRequirement();
+          }}
+          class="actionButton button-danger button-small button-outline">
+          Reject
+        </button>
+      {:else}
+        <a
+          on:click={close}
+          href={`/project/${project_id}/requirement/${id}/edit`}
+          class="button actionButton button-caution button-small button-outline">
+          Edit requirement
+        </a>
+        <button
+          on:click={deleteRequirement}
+          class="actionButton button-danger button-small button-outline">
+          Delete
+        </button>
+      {/if}
+    </div>
   </div>
   <div class="column comments">
     <h5>Comments</h5>
