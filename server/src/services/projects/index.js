@@ -446,6 +446,8 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
+      let id;
+
       if (fileName) {
         const uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
         const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
@@ -453,7 +455,7 @@ module.exports = async function (fastify, opts) {
         await gcloudFile.save(data);
         await gcloudFile.makePublic();
 
-        return await fastify
+        [id] = await fastify
           .knex("file")
           .insert({
             project_id,
@@ -468,7 +470,7 @@ module.exports = async function (fastify, opts) {
           .returning("id");
       }
       else if (url) {
-        return await fastify
+        [id] = await fastify
           .knex("file")
           .insert({
             project_id,
@@ -483,7 +485,7 @@ module.exports = async function (fastify, opts) {
           .returning("id");
       }
       else {
-        return await fastify
+        [id] = await fastify
           .knex("file")
           .insert({
             project_id,
@@ -497,6 +499,8 @@ module.exports = async function (fastify, opts) {
           })
           .returning("id");
       }
+      await fastify.createAlert("create", "file", name, id, project_id, request.user.id);
+      return [id];
     }
   );
 
@@ -591,7 +595,7 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
-      return await fastify
+      const [id] = await fastify
         .knex("stakeholderGroup")
         .insert({
           project_id,
@@ -602,6 +606,9 @@ module.exports = async function (fastify, opts) {
           updated_by: request.user.id,
         })
         .returning("id");
+
+      await fastify.createAlert("create", "stakeholderGroup", name, id, project_id, request.user.id);
+      return [id];
     }
   );
 
@@ -697,7 +704,7 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id"))[0];
 
-      return await fastify
+      const [id] = await fastify
         .knex("userclass")
         .insert({
           project_id,
@@ -710,6 +717,9 @@ module.exports = async function (fastify, opts) {
           updated_by: request.user.id,
         })
         .returning("id");
+
+      await fastify.createAlert("create", "userclass", name, id, project_id, request.user.id);
+      return [id];
     }
   );
 };

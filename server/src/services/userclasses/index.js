@@ -149,10 +149,16 @@ module.exports = async function (fastify, opts) {
             schema: deleteUserclassSchema,
         },
         async function (request, reply) {
+            const userclass = await fastify.knex
+                .from("userclass")
+                .select("userclass.*")
+                .where("userclass.id", request.params.userclassId)
+                .first();
             await fastify
                 .knex("userclass")
                 .where("id", request.params.userclassId)
                 .del();
+            await fastify.createAlert("delete", "userclass", userclass.name, userclass.id, userclass.project_id, request.user.id);
             return ["success"];
         }
     );
@@ -198,7 +204,7 @@ module.exports = async function (fastify, opts) {
         },
         async function (request, reply) {
             const { name, description, persona, importance } = request.body;
-            return await fastify
+            const [{ id, name: userclassName, project_id }] = await fastify
                 .knex("userclass")
                 .where("id", request.params.userclassId)
                 .update({
@@ -209,7 +215,9 @@ module.exports = async function (fastify, opts) {
                     updated_at: new Date(Date.now()),
                     updated_by: request.user.id,
                 })
-                .returning("id");
+                .returning(["id", "name"]);
+            await fastify.createAlert("update", "requirement", userclassName, id, project_id, request.user.id);
+            return [id];
         }
     );
 

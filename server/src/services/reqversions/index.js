@@ -122,10 +122,10 @@ module.exports = async function (fastify, opts) {
       const html = quillDeltaConverter.convert();
       const mrkdwn = JSON.stringify(htmlToMrkdwn(html));
 
-      const { slackAccessToken: token, slackMessageTs } = (
+      const { slackAccessToken: token, slackMessageTs, project_id, requirement_id, description } = (
         await fastify.knex
           .from("reqversion")
-          .select("reqversion.slackMessageTs", "team.slackAccessToken")
+          .select("reqversion.slackMessageTs", "team.slackAccessToken", "requirement.project_id", "reqversion.requirement_id", "reqversion.description")
           .join('requirement', 'requirement.id', 'reqversion.requirement_id')
           .join('project', 'project.id', 'requirement.project_id')
           .join('team', 'team.id', 'project.team_id')
@@ -159,6 +159,7 @@ module.exports = async function (fastify, opts) {
         requestedDescription,
         requestedPriority,
       });
+      await fastify.createAlert("comment", "requirement", description, requirement_id, project_id, request.user.id);
       return ["success"];
     }
   );

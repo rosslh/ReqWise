@@ -148,10 +148,30 @@ module.exports = async function (fastify, opts) {
       schema: deleteRequirementSchema,
     },
     async function (request, reply) {
+      const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+          "reqversion.created_at",
+          "=",
+          fastify.knex.raw(
+            "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+          )
+        );
+      };
+      const requirement = await fastify.knex
+        .from("requirement")
+        .join("reqversion", getReqversion)
+        .select("*", "requirement.id as id")
+        .where({
+          "requirement.id": request.params.requirementId,
+        })
+        .first();
+
       await fastify
         .knex("requirement")
         .where("id", request.params.requirementId)
         .del();
+
+      await fastify.createAlert("delete", "requirement", requirement.description, null, requirement.project_id, request.user.id);
       return ["success"];
     }
   );
@@ -260,19 +280,19 @@ module.exports = async function (fastify, opts) {
       const { description, priority, status, rationale } = request.body;
       const { requirementId: requirement_id } = request.params;
 
-      const { slackAccessToken: token, ...latestVersion } = await fastify
+      const { slackAccessToken: token, project_id, ...latestVersion } = await fastify
         .knex.from("reqversion")
         .join("requirement", "requirement.id", "reqversion.requirement_id")
         .join("project", "project.id", "requirement.project_id")
         .join("team", "team.id", "project.team_id")
-        .select("reqversion.description", "reqversion.priority", "reqversion.status", "reqversion.requirement_id", "slackAccessToken")
+        .select("requirement.project_id", "reqversion.description", "reqversion.priority", "reqversion.status", "reqversion.requirement_id", "slackAccessToken")
         .where({
           requirement_id: request.params.requirementId, // TODO: exclude status: proposed
         })
         .orderBy("reqversion.created_at", "desc")
         .first();
 
-      if (latestVersion.status !== "accepted" && status !== "accepted") {
+      if (latestVersion.status !== "accepted" && status !== "accepted") { // TODO: fix this logic
         reply.code(409);
         return ["Modification proposal already exists."];
       }
@@ -302,7 +322,7 @@ module.exports = async function (fastify, opts) {
       };
 
       await fastify.knex("reqversion").insert(newVersion).returning("id");
-
+      await fastify.createAlert("update", "requirement", newVersion.description, requirement_id, project_id, request.user.id);
       return requirement_id;
     }
   );

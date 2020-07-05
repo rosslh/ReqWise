@@ -24,7 +24,7 @@ module.exports = async function (fastify, opts) {
         async function (request, reply) {
             return await fastify.knex
                 .from("account_alert")
-                .select("alert.*", "account_alert.*", "account.name", "alert.id as id")
+                .select("alert.*", "account_alert.*", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
                 .join("alert", "account_alert.alert_id", "alert.id")
                 .join("account", "alert.created_by", "account.id")
                 .where("account_alert.account_id", request.user.id);

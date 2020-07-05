@@ -155,7 +155,7 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { name, isPrioritized } = request.body;
-      return await fastify
+      const [{ id, project_id }] = await fastify
         .knex("reqgroup")
         .where("id", request.params.reqgroupId)
         .update({
@@ -164,7 +164,10 @@ module.exports = async function (fastify, opts) {
           updated_at: new Date(Date.now()),
           updated_by: request.user.id,
         })
-        .returning("id");
+        .returning(["id", "project_id"]);
+
+      await fastify.createAlert("update", "reqgroup", name, id, project_id, request.user.id);
+      return [id];
     }
   );
 
@@ -199,7 +202,7 @@ module.exports = async function (fastify, opts) {
       schema: deleteReqgroupSchema,
     },
     async function (request, reply) {
-      const { isDeletable, project_id } = await fastify.knex
+      const { isDeletable, project_id, name } = await fastify.knex
         .from("reqgroup")
         .select("*")
         .where({
@@ -217,6 +220,7 @@ module.exports = async function (fastify, opts) {
           .knex("reqgroup")
           .where("id", request.params.reqgroupId)
           .del();
+        await fastify.createAlert("delete", "reqgroup", name, null, project_id, request.user.id);
         return ["success"];
       }
       else {
@@ -483,6 +487,8 @@ module.exports = async function (fastify, opts) {
             slackMessageTs
           })
           .returning("id");
+
+        await fastify.createAlert("create", "requirement", description, requirement_id, project_id, request.user.id);
 
         return requirement_id;
       }
