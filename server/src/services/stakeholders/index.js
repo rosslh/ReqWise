@@ -144,10 +144,18 @@ module.exports = async function (fastify, opts) {
             schema: deleteStakeholderGroupSchema,
         },
         async function (request, reply) {
+            const group = await fastify.knex
+                .from("stakeholderGroup")
+                .select("stakeholderGroup.*")
+                .where({
+                    "stakeholderGroup.id": request.params.stakeholderGroupId,
+                })
+                .first();
             await fastify
                 .knex("stakeholderGroup")
                 .where("id", request.params.stakeholderGroupId)
                 .del();
+            await fastify.createAlert("delete", "stakeholderGroup", group.name, null, group.project_id, request.user.id);
             return ["success"];
         }
     );
@@ -191,7 +199,7 @@ module.exports = async function (fastify, opts) {
         },
         async function (request, reply) {
             const { name, description } = request.body;
-            return await fastify
+            const [{ id, name: groupName, project_id }] = await fastify
                 .knex("stakeholderGroup")
                 .where("id", request.params.stakeholderGroupId)
                 .update({
@@ -200,7 +208,10 @@ module.exports = async function (fastify, opts) {
                     updated_at: new Date(Date.now()),
                     updated_by: request.user.id,
                 })
-                .returning("id");
+                .returning(["id", "name", "project_id"]);
+
+            await fastify.createAlert("update", "stakeholderGroup", groupName, id, project_id, request.user.id);
+            return [id];
         }
     );
 

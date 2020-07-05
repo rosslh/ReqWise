@@ -39,6 +39,7 @@ Cypress.Commands.add("goToRequirement", () => {
     cy.url().should('include', 'reqgroup/');
     cy.contains('h2', "View requirement group")
     cy.get('button.commentIconWrapper').click();
+    cy.url().should('include', 'requirement/');
     cy.contains('h2', "View requirement");
 });
 
