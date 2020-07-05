@@ -1,5 +1,5 @@
 "use strict"
-const slackdown = require('slackdown');
+const slackdown = require('../../slackdown');
 const htmlToText = require('html-to-text');
 
 module.exports = async (fastify, opts) => {
