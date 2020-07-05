@@ -19,7 +19,7 @@
   ];
 
   let priority = priorityOptions[1];
-  let acceptNoDiscuss = false;
+  let repropose = true;
   let rationale = "";
 
   const updateRequirements = async () => {
@@ -30,7 +30,7 @@
           {
             priority: priority.value,
             rationale,
-            status: acceptNoDiscuss ? "modified" : undefined
+            status: repropose ? "modified" : undefined
           },
           $session.user && $session.user.jwt
         )
@@ -43,8 +43,8 @@
 </script>
 
 <style>
-  .accepted {
-    color: var(--indigo);
+  .modified {
+    color: var(--orange);
     font-weight: 600;
   }
 </style>
@@ -72,10 +72,10 @@
       bind:value={rationale} />
   </fieldset>
   <fieldset>
-    <input id="repropose" type="checkbox" bind:checked={acceptNoDiscuss} />
-    <label class="label-inline" for="acceptNoDiscuss">
-      <span class="accepted">Accept</span>
-      change without discussion
+    <input id="repropose" type="checkbox" bind:checked={repropose} />
+    <label class="label-inline" for="repropose">
+      Change status to
+      <span class="modified">Modified</span>
     </label>
   </fieldset>
   <SubmitButton

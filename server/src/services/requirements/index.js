@@ -293,7 +293,7 @@ module.exports = async function (fastify, opts) {
         .orderBy("reqversion.created_at", "desc")
         .first();
 
-      if (latestVersion.status !== "accepted" && status !== "accepted") { // TODO: fix this logic
+      if (["proposed", "modified"].includes(latestVersion.status) && ["proposed", "modified"].includes(status)) {
         reply.code(409);
         return ["Modification proposal already exists."];
       }

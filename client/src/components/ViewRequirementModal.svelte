@@ -450,7 +450,7 @@
         <Skeleton noPadding />
       {/if}
       <h5>Actions</h5>
-      {#if newStatus !== 'accepted'}
+      {#if newStatus === 'proposed' || newStatus === 'modified'}
         <button
           on:click={acceptProposal}
           class="actionButton button-success button-small button-outline">

@@ -39,7 +39,7 @@
     const data = {
       description,
       priority: priority.value,
-      status: repropose ? "proposed" : undefined,
+      status: repropose ? "modified" : undefined,
       rationale
     };
     await post(
@@ -52,8 +52,8 @@
 </script>
 
 <style>
-  .proposed {
-    color: var(--red);
+  .modified {
+    color: var(--orange);
     font-weight: 600;
   }
 </style>
@@ -104,7 +104,7 @@
       <input id="repropose" type="checkbox" bind:checked={repropose} />
       <label class="label-inline" for="repropose">
         Change status to
-        <span class="proposed">Proposed</span>
+        <span class="modified">Modified</span>
       </label>
     </fieldset>
     <SubmitButton className="button-caution" handler={updateRequirement}>
