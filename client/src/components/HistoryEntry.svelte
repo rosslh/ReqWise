@@ -164,12 +164,6 @@
           oldText={reqversion.previous_priority}
           newText={reqversion.priority} />
       </div>
-      <div>
-        <h4>Status</h4>
-        <SimpleDiff
-          oldText={reqversion.previous_status}
-          newText={reqversion.status} />
-      </div>
     </div>
   {/if}
 </div>

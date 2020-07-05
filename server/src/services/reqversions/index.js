@@ -2,6 +2,115 @@ const QuillDeltaToHtmlConverter = require("quill-delta-to-html")
   .QuillDeltaToHtmlConverter;
 const htmlToMrkdwn = require("html-to-mrkdwn");
 module.exports = async function (fastify, opts) {
+
+  const putReqversionSchema = {
+    body: {
+      type: "object",
+      properties: {
+        status: { type: "string" }
+      },
+      required: ["status"],
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reqversionId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.put(
+    "/reqversions/:reqversionId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: putReqversionSchema,
+    },
+    async function (request, reply) {
+      const { status } = request.body;
+
+      const { project_id } = await fastify.knex
+        .from("reqversion")
+        .select("requirement.project_id as project_id")
+        .where("reqversion.id", request.params.reqversionId)
+        .join("requirement", "requirement.id", "reqversion.requirement_id")
+        .first();
+
+      const [{ requirement_id, description }] = await fastify
+        .knex("reqversion")
+        .where("id", request.params.reqversionId)
+        .update({
+          status
+        })
+        .returning(["requirement_id", "description"]);
+
+      await fastify.createAlert("update", "requirement", description, requirement_id, project_id, request.user.id);
+      return [status];
+    }
+  );
+
+  const deleteReqversionSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reqversionId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.delete(
+    "/reqversions/:reqversionId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: deleteReqversionSchema,
+    },
+    async function (request, reply) {
+      const requirement = await fastify.knex
+        .from("reqversion")
+        .select("*", "reqversion.id as id", "requirement.id as requirement_id")
+        .where("reqversion.id", request.params.reqversionId)
+        .join("requirement", "requirement.id", "reqversion.requirement_id")
+        .first();
+
+      await fastify
+        .knex("reqversion")
+        .where("id", request.params.reqversionId)
+        .del();
+
+      await fastify.createAlert("update", "requirement", requirement.description, null, requirement.project_id, request.user.id);
+      return ["success"];
+    }
+  );
+
+
   const getCommentsSchema = {
     body: {},
     queryString: {},

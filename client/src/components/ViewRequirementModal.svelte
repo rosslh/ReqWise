@@ -9,7 +9,7 @@
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
 
-  import { get, post, del, stream } from "../api.js";
+  import { get, post, del, put, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
   import Requirement from "./Requirement.svelte";
   import Comment from "./Comment.svelte";
@@ -52,6 +52,7 @@
   let loaded = false;
 
   const getRequirement = async () => {
+    loaded = false;
     requirement = await get(
       `/requirements/${id}`,
       $session.user && $session.user.jwt
@@ -146,20 +147,22 @@
     }
   });
 
-  $: refreshStream =
-    typeof window !== "undefined" &&
-    !closeStream &&
-    $session.user &&
-    $session.user.jwt &&
-    startStream();
-
+  $: {
+    if (
+      typeof window !== "undefined" &&
+      !closeStream &&
+      $session.user &&
+      $session.user.jwt
+    ) {
+      startStream();
+    }
+  }
   const acceptProposal = async () => {
     const data = {
-      status: "accepted",
-      rationale: "Proposed change accepted"
+      status: "accepted"
     };
-    await post(
-      `/requirements/${id}/versions`,
+    await put(
+      `/reqversions/${reqversionId}`,
       data,
       $session.user && $session.user.jwt
     );
@@ -173,15 +176,8 @@
   };
 
   const rejectProposal = async () => {
-    const data = {
-      status: oldStatus,
-      priority: oldPriority,
-      description: oldDescription,
-      rationale: "Proposed change rejected"
-    };
-    await post(
-      `/requirements/${id}/versions`,
-      data,
+    await del(
+      `/reqversions/${reqversionId}`,
       $session.user && $session.user.jwt
     );
     await update();
@@ -393,7 +389,7 @@
         </a>
       </div>
     {:else}
-      <Skeleton rows={2} />
+      <Skeleton />
     {/if}
     <h4 class="latestRevisionHeading">
       <div>Latest revision</div>

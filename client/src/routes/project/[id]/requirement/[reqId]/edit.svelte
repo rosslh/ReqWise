@@ -7,7 +7,7 @@
   import Skeleton from "../../../../../components/Skeleton.svelte";
   import SubmitButton from "../../../../../components/SubmitButton.svelte";
 
-  export let isPrioritized;
+  let isPrioritized;
 
   const id = $page.params.reqId;
 
@@ -28,6 +28,7 @@
       `/requirements/${id}`,
       $session.user && $session.user.jwt
     );
+    ({ isPrioritized } = res);
     description = res.latestVersion.description;
     priority = priorityOptions.find(
       option => option.value === res.latestVersion.priority
