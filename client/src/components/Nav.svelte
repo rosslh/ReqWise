@@ -103,7 +103,7 @@
 
   div.right > * {
     display: inline-block;
-    margin-right: 0 0.5rem;
+    margin-right: 0.5rem;
   }
 
   div.right > .logout {
@@ -167,8 +167,8 @@
         <MdMenu />
       </button>
     {/if}
-    {#if !$media.small}
-      <div class="logoWrapper">
+    <div class="logoWrapper">
+      {#if !$media.small}
         <a rel="prefetch" class="logoWrapper" href=".">
           {#if $session.user && $session.user.theme === 'dark'}
             <img src="logo-white.png" alt="ReqWise" />
@@ -183,8 +183,8 @@
             <img src="logo.png" alt="ReqWise" />
           {/if}
         </a>
-      </div>
-    {/if}
+      {/if}
+    </div>
     {#if $page.path.includes('/project/')}
       <form on:submit|preventDefault={search} class="middle">
         <div class="searchIconWrapper">
