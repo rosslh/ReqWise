@@ -6,7 +6,8 @@
   import TiHome from "svelte-icons/ti/TiHome.svelte";
   import GoSearch from "svelte-icons/go/GoSearch.svelte";
 
-  import { sidebarHidden, currentProjectId } from "../stores.js";
+  import { sidebarHidden, currentProjectId, unreadAlerts } from "../stores.js";
+
   const { session, page } = stores();
 
   const logout = async () => {
@@ -192,7 +193,9 @@
           class="button iconButton"
           rel="prefetch"
           href="/notifications">
-          <div class="alertIndicator" />
+          {#if $unreadAlerts}
+            <div class="alertIndicator" />
+          {/if}
           <MdNotifications />
         </a>
         <a class="button iconButton" rel="prefetch" href="/account">

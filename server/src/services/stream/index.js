@@ -90,6 +90,24 @@ module.exports = async function (fastify, opts) {
             }
         });
 
+        socket.on('getUserAlertStatus', async ({ jwt, data }) => {
+            const user = fastify.jwt.verify(jwt);
+            const interval = 8000;
+
+            while (true) { // eslint-disable-line no-constant-condition
+                await sleep(interval);
+
+                const unreadAlerts = !!(await fastify.knex
+                    .from("account_alert")
+                    .select("*")
+                    .where({ "account_alert.account_id": user.id, "is_read": false })).length;
+
+                socket.emit('message', JSON.stringify({
+                    unreadAlerts
+                }));
+            }
+        });
+
         socket.on('getCommentNotifications', async ({ jwt, data }) => {
             let timestamp = Date.now();
             const user = fastify.jwt.verify(jwt);

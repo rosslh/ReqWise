@@ -1,6 +1,13 @@
 <script>
   export let notification;
+  export let update;
+
   import { format } from "date-fns";
+  import { put } from "../api.js";
+  import { unreadAlerts } from "../stores.js";
+  import { stores } from "@sapper/app";
+
+  const { session } = stores();
 
   const getActionString = actionType => {
     if (actionType === "create") {
@@ -49,6 +56,20 @@
       notification.entity_file_id
     );
   };
+
+  const toggleRead = async () => {
+    const is_read = !notification.is_read;
+    if (!is_read) {
+      $unreadAlerts = true;
+    }
+    const data = { is_read };
+    await put(
+      `/alerts/${notification.id}`,
+      data,
+      $session.user && $session.user.jwt
+    );
+    await update();
+  };
 </script>
 
 <style>
@@ -72,21 +93,42 @@
   }
 
   .secondary {
-    font-weight: 300;
+    color: var(--secondaryText);
   }
 
   .date {
     font-size: 1.4rem;
-    margin-left: 1.6rem;
+  }
+
+  .top {
+    padding: 1.2rem 1.6rem;
+    background-color: var(--background2);
+    margin: -1.2rem -1.6rem 0; /* see .panel in main.css */
+  }
+
+  .top .sep {
+    margin: 0 0.4rem;
   }
 
   .entityLink {
-    font-weight: bold;
+    font-weight: 600;
   }
 
   .top {
     font-size: 1.4rem;
     margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .top button {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .top > .left {
+    flex-grow: 1;
   }
 
   .top,
@@ -97,11 +139,24 @@
 
 <div class="panel">
   <div class="top">
-    <a href={`/team/${notification.team_id}`}>{notification.teamName}</a>
-    /
-    <a href={`/project/${notification.project_id}`}>
-      {notification.projectName}
-    </a>
+    <div class="left">
+      <a href={`/team/${notification.team_id}`}>{notification.teamName}</a>
+      /
+      <a href={`/project/${notification.project_id}`}>
+        {notification.projectName}
+      </a>
+      <span class="sep">&bull;</span>
+      <time class="date secondary" datetime={notification.created_at}>
+        {format(new Date(notification.created_at), 'h:mm a, MMMM d, yyyy')}
+      </time>
+    </div>
+    <div class="right">
+      <button
+        on:click={toggleRead}
+        class="button button-small button-outline button-clear button-secondary">
+        {#if notification.is_read}Mark as unread{:else}Mark as read{/if}
+      </button>
+    </div>
   </div>
   <div class="bottom">
     <div class="imageWrapper">
@@ -124,9 +179,6 @@
       {:else if !hasEntityId() || notification.actionType === 'delete'}
         <strong>{notification.description}</strong>
       {/if}
-      <time class="date secondary" datetime={notification.created_at}>
-        {format(new Date(notification.created_at), 'h:mm a, MMMM d, yyyy')}
-      </time>
     </div>
   </div>
 </div>

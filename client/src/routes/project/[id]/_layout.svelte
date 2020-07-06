@@ -74,12 +74,16 @@
     $currentProjectId = id;
   }
 
-  $: refreshStream =
-    typeof window !== "undefined" &&
-    !closeStream &&
-    $session.user &&
-    $session.user.jwt &&
-    startStream();
+  $: {
+    if (
+      typeof window !== "undefined" &&
+      !closeStream &&
+      $session.user &&
+      $session.user.jwt
+    ) {
+      startStream();
+    }
+  }
 </script>
 
 <style>

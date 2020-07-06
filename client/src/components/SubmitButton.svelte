@@ -3,9 +3,14 @@
   export let className;
   export let id;
 
+  let btn;
+
   import FaSpinner from "svelte-icons/fa/FaSpinner.svelte";
   let spinning = false;
   const handleClick = async () => {
+    const { height, width } = btn.getBoundingClientRect();
+    btn.style.width = `${width}px`;
+    btn.style.height = `${height}px`;
     spinning = true;
     await handler();
     spinning = false;
@@ -36,6 +41,7 @@
 <button
   {id}
   class={`${className} submitButton`}
+  bind:this={btn}
   on:click|preventDefault={handleClick}>
   {#if spinning}
     <div class="iconWrapper loadingSpinner">

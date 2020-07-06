@@ -688,7 +688,7 @@ body {
 
 .panel {
   background-color: var(--background1);
-  padding: 1.2rem 1.6rem; /* upon change, update negative margins e.g. in search.svelte */
+  padding: 1.2rem 1.6rem; /* upon change, update negative margins e.g. in search.svelte or notication.svelte */
   margin: 0 0 1.6rem;
   box-shadow: var(--boxShadow);
   border-radius: 0.8rem;
