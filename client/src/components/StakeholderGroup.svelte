@@ -127,7 +127,9 @@
   <div class="headerWrapper">
     <div class="groupHeader">
       <h3>
-        <a href={`/project/${projectId}/stakeholders/${group.id}`}>
+        <a
+          rel="prefetch"
+          href={`/project/${projectId}/stakeholders/${group.id}`}>
           {group.name}
         </a>
         <span class="groupPpuid">#{group.ppuid}</span>
@@ -172,6 +174,7 @@
         </button>
       {:else}
         <a
+          rel="prefetch"
           href={`/project/${projectId}/stakeholders/${group.id}/reqgroups`}
           class="button button-outline button-small button-secondary
           button-clear">

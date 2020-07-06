@@ -97,7 +97,10 @@
     <h1>{user.name}</h1>
     <div class="emailAddress">{user.email}</div>
     {#if !$page.path.includes('/account/settings')}
-      <a href="/account/settings" class="button button-success button-outline">
+      <a
+        rel="prefetch"
+        href="/account/settings"
+        class="button button-success button-outline">
         Settings
       </a>
     {:else}

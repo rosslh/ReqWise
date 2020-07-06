@@ -53,6 +53,7 @@
   {/if}
   <div>
     <a
+      rel="prefetch"
       href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}/stakeholders`}
       class="button button-outline button-small button-secondary button-clear">
       <div class="iconWrapper iconWrapper-padded">

@@ -19,6 +19,7 @@
   <div class="contentWrapper">
     <div class="backLink">
       <a
+        rel="prefetch"
         href={`/project/${requirement.project_id}/requirement/${requirement.id}`}>
         &larr;&nbsp;Go to requirement
       </a>

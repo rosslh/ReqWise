@@ -339,6 +339,7 @@
     {#if loaded}
       <div class="attachmentButtons">
         <a
+          rel="prefetch"
           class="button button-secondary button-small button-outline"
           on:click={close}
           href={`/project/${project_id}/reqgroup/${reqgroup_id}`}>
@@ -349,6 +350,7 @@
         </a>
         {#if parent_requirement_id}
           <a
+            rel="prefetch"
             class="button button-secondary button-small button-outline"
             on:click={close}
             href={`/project/${project_id}/requirement/${parent_requirement_id}`}>
@@ -361,6 +363,7 @@
           </a>
         {/if}
         <a
+          rel="prefetch"
           on:click={close}
           class="button button-secondary button-small button-outline"
           href={`/project/${project_id}/requirement/${id}/files`}>
@@ -370,6 +373,7 @@
           Files
         </a>
         <a
+          rel="prefetch"
           on:click={close}
           class="button button-secondary button-small button-outline"
           href={`/project/${project_id}/requirement/${id}/user-classes`}>
@@ -379,6 +383,7 @@
           User classes
         </a>
         <a
+          rel="prefetch"
           on:click={close}
           class="button button-secondary button-small button-outline"
           href={`/project/${project_id}/requirement/${id}/history`}>
@@ -465,6 +470,7 @@
         </button>
       {:else}
         <a
+          rel="prefetch"
           on:click={close}
           href={`/project/${project_id}/requirement/${id}/edit`}
           class="button actionButton button-caution button-small button-outline">

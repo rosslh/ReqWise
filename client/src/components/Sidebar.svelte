@@ -154,6 +154,7 @@
         <div class="separator" />
       {/if}
       <a
+        rel="prefetch"
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>
         <span>{item.label}</span>

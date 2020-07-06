@@ -249,6 +249,7 @@
     {:else}
       <a
         on:click={close}
+        rel="prefetch"
         href={`/project/${requirement.project_id}/requirement/${requirement.id}/history`}
         class="button">
         {requirement.authorName} {formatDatetime(requirement.created_at)}

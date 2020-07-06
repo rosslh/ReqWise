@@ -169,7 +169,9 @@
   <div class="userclassHeader">
     <div class="left">
       <h3>
-        <a href={`/project/${projectId}/user-classes/${userclass.id}`}>
+        <a
+          rel="prefetch"
+          href={`/project/${projectId}/user-classes/${userclass.id}`}>
           {userclass.name}
         </a>
         <span class="userclassPpuid">#{userclass.ppuid}</span>
@@ -249,6 +251,7 @@
         </button>
       {:else}
         <a
+          rel="prefetch"
           href={`/project/${projectId}/user-classes/${userclass.id}/requirements`}
           class="button button-outline button-small button-secondary
           button-clear">

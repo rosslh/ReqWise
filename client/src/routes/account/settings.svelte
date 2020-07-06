@@ -169,6 +169,6 @@
     <SubmitButton handler={submit}>Submit</SubmitButton>
   </form>
   <div class="panel changePassword">
-    <a href="/reset/request">Change password</a>
+    <a rel="prefetch" href="/reset/request">Change password</a>
   </div>
 </div>

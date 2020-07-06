@@ -15,7 +15,7 @@
 {#if $page.path.split('/').length > 5}
   <div class="contentWrapper">
     <div class="backLink">
-      <a href={`/project/${file.project_id}/files/${file.id}`}>
+      <a rel="prefetch" href={`/project/${file.project_id}/files/${file.id}`}>
         &larr;&nbsp;Go to file
       </a>
     </div>

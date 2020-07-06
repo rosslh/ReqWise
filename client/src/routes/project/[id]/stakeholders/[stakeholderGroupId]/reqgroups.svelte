@@ -28,7 +28,9 @@
       <ul>
         {#each result as reqgroup (reqgroup.id)}
           <li>
-            <a href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
+            <a
+              rel="prefetch"
+              href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
               #{reqgroup.ppuid} {reqgroup.name}
             </a>
           </li>

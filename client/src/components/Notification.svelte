@@ -141,9 +141,11 @@
 <div class="panel">
   <div class="top">
     <div class="left">
-      <a href={`/team/${notification.team_id}`}>{notification.teamName}</a>
+      <a rel="prefetch" href={`/team/${notification.team_id}`}>
+        {notification.teamName}
+      </a>
       /
-      <a href={`/project/${notification.project_id}`}>
+      <a rel="prefetch" href={`/project/${notification.project_id}`}>
         {notification.projectName}
       </a>
       <span class="sep">&bull;</span>
@@ -179,7 +181,9 @@
         {getEntityString(notification.entityType)}
       </span>
       {#if hasEntityId() && notification.description && notification.actionType !== 'delete'}
-        <a class="entityLink" href={getHref()}>{notification.description}</a>
+        <a rel="prefetch" class="entityLink" href={getHref()}>
+          {notification.description}
+        </a>
       {:else if !hasEntityId() || notification.actionType === 'delete'}
         <strong>{notification.description}</strong>
       {/if}

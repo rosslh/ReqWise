@@ -38,7 +38,8 @@
   <h1>Notifications</h1>
   <SubmitButton handler={markAllRead}>Mark as read</SubmitButton>
   <a
-    href={`/notifications/read`}
+    rel="prefetch"
+    href="/notifications/read"
     class="button button-secondary button-outline">
     View read
   </a>

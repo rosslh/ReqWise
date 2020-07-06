@@ -19,6 +19,7 @@
   <div class="contentWrapper">
     <div class="backLink">
       <a
+        rel="prefetch"
         href={`/project/${stakeholderGroup.project_id}/stakeholders/${stakeholderGroup.id}`}>
         &larr;&nbsp;Go to stakeholder group
       </a>

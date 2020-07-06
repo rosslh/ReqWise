@@ -124,7 +124,10 @@
         {#each projects as project (project.id)}
           <tr>
             <td>
-              <a class="projectLink" href={`/project/${project.id}/features`}>
+              <a
+                rel="prefetch"
+                class="projectLink"
+                href={`/project/${project.id}/features`}>
                 {project.name}
               </a>
             </td>

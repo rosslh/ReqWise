@@ -91,7 +91,7 @@
     <fieldset>
       <div class="pwdLabelWrapper">
         <label for="pwd">Password</label>
-        <a href="/reset/request">Forgot password?</a>
+        <a rel="prefetch" href="/reset/request">Forgot password?</a>
       </div>
       <input
         autocomplete="password"
@@ -105,6 +105,6 @@
 <div class="contentWrapper loginWrapper">
   <div class="createAccountContent">
     New to ReqWise?
-    <a href="/sign-up/invite">Create an account.</a>
+    <a rel="prefetch" href="/sign-up/invite">Create an account.</a>
   </div>
 </div>

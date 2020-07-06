@@ -18,7 +18,9 @@
 {#if $page.path.split('/').length > 5}
   <div class="contentWrapper">
     <div class="backLink">
-      <a href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
+      <a
+        rel="prefetch"
+        href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
         &larr;&nbsp;Go to requirement group
       </a>
     </div>

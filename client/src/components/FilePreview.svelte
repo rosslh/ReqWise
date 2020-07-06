@@ -162,6 +162,7 @@
     {#if file.type === 'diagram'}
       <div class="fileButtonWrapper">
         <a
+          rel="prefetch"
           title="Edit"
           href={`/project/${projectId}/files/${file.id}/edit`}
           class="button fileButton">
@@ -212,7 +213,9 @@
   </div>
   <div class="textContent">
     <h3>
-      <a href={`/project/${projectId}/files/${file.id}`}>{file.name}</a>
+      <a rel="prefetch" href={`/project/${projectId}/files/${file.id}`}>
+        {file.name}
+      </a>
       <span class="filePpuid">#{file.ppuid}</span>
     </h3>
     <p>{file.description}</p>
@@ -229,6 +232,7 @@
       </button>
     {:else}
       <a
+        rel="prefetch"
         href={`/project/${projectId}/files/${file.id}/requirements`}
         class="button button-outline button-small button-secondary button-clear">
         <div class="iconWrapper iconWrapper-padded">

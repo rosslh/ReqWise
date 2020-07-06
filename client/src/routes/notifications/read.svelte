@@ -26,7 +26,10 @@
 
 <section class="contentWrapper">
   <h1>Notifications</h1>
-  <a href={`/notifications`} class="button button-secondary button-outline">
+  <a
+    rel="prefetch"
+    href="/notifications"
+    class="button button-secondary button-outline">
     View unread
   </a>
 </section>

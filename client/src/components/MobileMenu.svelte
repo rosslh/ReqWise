@@ -159,6 +159,7 @@
   <div class="items">
     {#each tabs as item (item.slug)}
       <a
+        rel="prefetch"
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>
         <span

@@ -57,7 +57,9 @@
 
 <div class="reqgroupHeader">
   <h3>
-    <a href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
+    <a
+      rel="prefetch"
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
       {reqgroup.name}
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>

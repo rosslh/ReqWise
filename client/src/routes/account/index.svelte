@@ -89,7 +89,9 @@
         {#each teams as team (team.id)}
           <tr>
             <td>
-              <a class="teamLink" href={`/team/${team.id}`}>{team.name}</a>
+              <a rel="prefetch" class="teamLink" href={`/team/${team.id}`}>
+                {team.name}
+              </a>
             </td>
             <td>{team.description}</td>
             <td class="membership">

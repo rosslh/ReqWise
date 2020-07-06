@@ -92,23 +92,25 @@
         </div>
         <div class="linkWrapper">
           {#if r.result_type === 'requirement group'}
-            <a href={`/project/${id}/reqgroup/${r.id}`}>
+            <a rel="prefetch" href={`/project/${id}/reqgroup/${r.id}`}>
               #{r.ppuid} - {r.name || r.description}
             </a>
           {:else if r.result_type === 'requirement'}
-            <a href={`/project/${id}/requirement/${r.requirement_id}`}>
+            <a
+              rel="prefetch"
+              href={`/project/${id}/requirement/${r.requirement_id}`}>
               #{r.ppuid} - {r.name || r.description}
             </a>
           {:else if r.result_type === 'stakeholder group'}
-            <a href={`/project/${id}/stakeholders/${r.id}`}>
+            <a rel="prefetch" href={`/project/${id}/stakeholders/${r.id}`}>
               #{r.ppuid} - {r.name || r.description}
             </a>
           {:else if r.result_type === 'file'}
-            <a href={`/project/${id}/files/${r.id}`}>
+            <a rel="prefetch" href={`/project/${id}/files/${r.id}`}>
               #{r.ppuid} - {r.name || r.description}
             </a>
           {:else if r.result_type === 'user class'}
-            <a href={`/project/${id}/user-classes/${r.id}`}>
+            <a rel="prefetch" href={`/project/${id}/user-classes/${r.id}`}>
               #{r.ppuid} - {r.name || r.description}
             </a>
           {/if}

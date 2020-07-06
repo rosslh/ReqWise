@@ -40,6 +40,7 @@
     can provide.
   </p>
   <a
+    rel="prefetch"
     href={`/project/${id}/files/create`}
     class="button"
     id="create-file-button">

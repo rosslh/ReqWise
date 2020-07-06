@@ -63,6 +63,6 @@
 <div class="contentWrapper signupWrapper">
   <div class="signinContent">
     Already have an account?
-    <a href="/login">Sign in.</a>
+    <a rel="prefetch" href="/login">Sign in.</a>
   </div>
 </div>
