@@ -36,7 +36,7 @@
   }
 
   .ssfWrapper > * {
-    margin-right: 1.6rem;
+    margin-right: 1.5rem;
     min-width: 30rem;
   }
 

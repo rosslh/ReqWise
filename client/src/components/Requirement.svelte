@@ -64,7 +64,7 @@
   }
 
   li.requirement > div {
-    padding: 0.6rem 1.6rem;
+    padding: 0.5rem 1.5rem;
     margin: 0;
     min-height: 4.5rem;
     display: flex;
@@ -143,7 +143,7 @@
   }
 
   li.requirement {
-    margin: 0.2rem 0;
+    margin: 0.25rem 0;
     cursor: pointer;
     display: flex;
     align-items: center;

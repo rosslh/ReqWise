@@ -102,13 +102,13 @@
   }
 
   .top {
-    padding: 1.2rem 1.6rem;
+    padding: 1.25rem 1.5rem;
     background-color: var(--background2);
-    margin: -1.2rem -1.6rem 0; /* see .panel in main.css */
+    margin: -1.25rem -1.5rem 0; /* see .panel in main.css */
   }
 
   .top .sep {
-    margin: 0 0.4rem;
+    margin: 0 0.5rem;
   }
 
   .entityLink {
@@ -117,7 +117,7 @@
 
   .top {
     font-size: 1.4rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
   }

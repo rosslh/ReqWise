@@ -58,7 +58,7 @@
 
   .authorEmail {
     color: var(--secondaryText);
-    margin-left: 0.3rem;
+    margin-left: 0.25rem;
   }
 
   .date {
@@ -93,8 +93,8 @@
   }
 
   .diffSection h4 {
-    margin-top: 1.2rem;
-    margin-bottom: 0.8rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
     font-size: 1.6rem;
   }
 
@@ -103,7 +103,7 @@
     width: 3.5rem;
     border-radius: 0.8rem;
     overflow: hidden;
-    margin-right: 0.8rem;
+    margin-right: 0.75rem;
   }
 
   .authorImageWrapper img,

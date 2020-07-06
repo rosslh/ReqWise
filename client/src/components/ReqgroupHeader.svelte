@@ -13,8 +13,8 @@
 <style>
   div.reqgroupHeader {
     background-color: var(--background1);
-    margin: -1.2rem -1.2rem 0 -1.2rem;
-    padding: 1.8rem 1.2rem;
+    margin: -1.25rem -1.25rem 0 -1.25rem;
+    padding: 1.75rem 1.25rem;
     /* border-bottom: 0.1rem solid var(--borderColor); */
     min-height: 5rem;
     display: flex;

@@ -7,13 +7,13 @@
 
 <style>
   :global(div.commentTextWrapper *) {
-    margin: 0.3rem 0 !important;
+    margin: 0.25rem 0 !important;
   }
   div.commentWrapper {
     display: flex;
     border: 0.1rem solid var(--borderColor);
     background-color: var(--background1);
-    margin: 0.7rem 0;
+    margin: 0.75rem 0;
     padding: 0.5rem;
     border-radius: 0.8rem;
   }

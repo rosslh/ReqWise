@@ -27,7 +27,7 @@
     transition: transform 0.2s ease;
     box-shadow: 0.2rem 0 0.6rem 0 rgba(0, 0, 0, 0.1);
     border-top: 0.1rem solid var(--borderColor);
-    padding: 1.6rem;
+    padding: 1.5rem;
     text-align: center;
     background-color: var(--background1);
   }

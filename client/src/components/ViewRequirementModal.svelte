@@ -275,7 +275,7 @@
     color: var(--secondaryText);
   }
   .revisionStatus {
-    padding: 0.4rem;
+    padding: 0.5rem;
     border-radius: 0.8rem;
     color: #fff;
     font-size: 1.3rem;

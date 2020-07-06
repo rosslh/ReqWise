@@ -59,11 +59,10 @@
   }
 
   .barsWrapper {
-    width: calc(100% + 2.4rem); /* accounts for reqgroup padding */
     max-height: 0.3rem;
     overflow: hidden;
     padding: 0;
-    margin: 0 -1.2rem;
+    margin: 0 -1.25rem;
     display: flex;
     justify-content: space-between;
   }
@@ -88,10 +87,10 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 0.8rem 0;
+    padding: 0.75rem 0;
     font-weight: 600;
     /* border-bottom: 0.1rem solid var(--borderColor); */
-    margin: 0 -1.2rem; /* accounts for reqgroup padding */
+    margin: 0 -1.25rem; /* accounts for reqgroup padding */
   }
 
   .labelsWrapper .label {
@@ -100,7 +99,7 @@
   }
 
   .labelsWrapper .label .labelText {
-    margin: 0 0.7rem;
+    margin: 0 0.75rem;
   }
 
   .labelsWrapper .label .labelPercent {

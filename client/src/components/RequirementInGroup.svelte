@@ -29,7 +29,7 @@
       border-radius: 50%;
       height: 3.3rem;
       width: 3.3rem;
-      padding: 0.8rem !important;
+      padding: 0.75rem !important;
       color: var(--normalText);
       box-sizing: border-box;
       margin: 0;

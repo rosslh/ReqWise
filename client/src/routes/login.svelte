@@ -52,8 +52,8 @@
   .loginWrapper .createAccountContent {
     box-shadow: var(--boxShadow);
     border-radius: 0.8rem;
-    padding: 1.8rem;
-    margin-bottom: 1.8rem;
+    padding: 1.75rem;
+    margin-bottom: 1.75rem;
     background-color: var(--background1);
   }
 

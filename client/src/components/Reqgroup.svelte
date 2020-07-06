@@ -162,7 +162,7 @@
   div.reqgroup {
     box-shadow: var(--boxShadow);
     border-radius: 0.8rem;
-    padding: 1.2rem;
+    padding: 1.25rem;
     margin: 2rem 0;
     overflow: hidden;
     background-color: var(--background1);
@@ -179,6 +179,7 @@
     overflow-x: auto;
     list-style-type: none;
     padding: 1rem 0 1.25rem; /* account for child placeholder negative margin */
+    margin-bottom: 0;
     position: relative;
   }
 </style>

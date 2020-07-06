@@ -24,8 +24,8 @@
     color: var(--secondaryText);
     display: flex;
     align-items: center;
-    margin: -1.2rem -1.6rem 0;
-    padding: 1.2rem 1.6rem;
+    margin: -1.25rem -1.5rem 0;
+    padding: 1.25rem 1.5rem;
     background-color: var(--background2);
     text-transform: capitalize;
   }

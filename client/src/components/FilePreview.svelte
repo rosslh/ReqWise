@@ -127,7 +127,7 @@
     margin: 0;
     background-color: var(--background1);
     color: var(--secondaryText);
-    margin-left: 0.3rem;
+    margin-left: 0.25rem;
   }
 
   .fileButton .fileIconWrapper {

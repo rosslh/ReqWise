@@ -120,7 +120,7 @@
   }
 
   div.userclassHeader span.importanceLabel {
-    padding: 0.4rem;
+    padding: 0.5rem;
     border-radius: 0.4rem;
     color: #fff;
     font-size: 1.3rem;

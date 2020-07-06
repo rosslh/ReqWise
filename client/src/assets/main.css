@@ -49,8 +49,8 @@ body {
 
 .panel {
   background-color: var(--background1);
-  padding: 1.2rem 1.6rem; /* upon change, update negative margins e.g. in search.svelte or notication.svelte */
-  margin: 0 0 1.6rem;
+  padding: 1.25rem 1.5rem; /* upon change, update negative margins e.g. in search.svelte or notication.svelte */
+  margin: 0 0 1.5rem;
   box-shadow: var(--boxShadow);
   border-radius: 0.8rem;
   overflow: hidden;
@@ -128,7 +128,7 @@ body {
 .button-small .iconWrapper {
   height: 1.35rem;
   width: 1.35rem;
-  margin-right: 0.4rem;
+  margin-right: 0.5rem;
 }
 
 .iconWrapper {
