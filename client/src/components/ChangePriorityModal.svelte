@@ -24,7 +24,7 @@
 
   const updateRequirements = async () => {
     await Promise.all(
-      selectedReqs.map(id =>
+      selectedReqs.map(({ id }) =>
         post(
           `/requirements/${id}/versions`,
           {

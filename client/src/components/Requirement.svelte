@@ -188,7 +188,10 @@
 {/if}
 <li
   class={`${selected ? 'selected' : ''} ${isContextModal ? 'noninteractive' : ''} requirement draggable depth-${requirement.depth}`}
-  on:click={() => toggleReq(requirement.id)}
+  on:click={() => toggleReq({
+      id: requirement.id,
+      reqversion_id: requirement.reqversion_id
+    })}
   data-reqdesc={requirement.description}
   data-reqid={requirement.id}>
   {#if !isContextModal}

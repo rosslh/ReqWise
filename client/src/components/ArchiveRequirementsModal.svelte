@@ -10,7 +10,7 @@
 
   const archiveRequirements = async () => {
     await Promise.all(
-      selectedReqs.map(id =>
+      selectedReqs.map(({ id }) =>
         patch(
           `/requirements/${id}`,
           {

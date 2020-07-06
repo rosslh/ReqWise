@@ -37,11 +37,11 @@
 
   let selectedReqs = [];
 
-  const toggleReq = id => {
-    if (selectedReqs.includes(id)) {
-      selectedReqs = selectedReqs.filter(x => x !== id);
+  const toggleReq = ({ id, reqversion_id }) => {
+    if (selectedReqs.map(x => x.id).includes(id)) {
+      selectedReqs = selectedReqs.filter(x => x.id !== id);
     } else {
-      selectedReqs = [...selectedReqs, id]; // push doesn't update state
+      selectedReqs = [...selectedReqs, { id, reqversion_id }]; // push doesn't update state
     }
   };
 
@@ -197,7 +197,7 @@
       {#each requirements as requirement, index}
         <RequirementInGroup
           isPrioritized={reqgroup.isPrioritized}
-          selected={selectedReqs.includes(requirement.id)}
+          selected={selectedReqs.map(x => x.id).includes(requirement.id)}
           {toggleReq}
           update={updateReqs}
           {hiddenPlaceholders}

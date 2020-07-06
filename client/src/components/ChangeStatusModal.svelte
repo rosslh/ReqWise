@@ -9,7 +9,7 @@
   import Select from "svelte-select";
   import SubmitButton from "../components/SubmitButton.svelte";
 
-  import { post } from "../api.js";
+  import { put } from "../api.js";
 
   const statusOptions = [
     { value: "proposed", label: "Proposed" },
@@ -23,12 +23,11 @@
 
   const updateRequirements = async () => {
     await Promise.all(
-      selectedReqs.map(id =>
-        post(
-          `/requirements/${id}/versions`,
+      selectedReqs.map(({ id, reqversion_id }) =>
+        put(
+          `/reqversions/${reqversion_id}`,
           {
-            status: status.value,
-            rationale
+            status: status.value
           },
           $session.user && $session.user.jwt
         )

@@ -10,7 +10,7 @@
 
   const deleteRequirements = async () => {
     await Promise.all(
-      selectedReqs.map(id =>
+      selectedReqs.map(({ id }) =>
         del(`/requirements/${id}`, $session.user && $session.user.jwt)
       )
     );
