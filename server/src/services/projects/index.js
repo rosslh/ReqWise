@@ -648,6 +648,42 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getProjectActivitySchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/projects/:projectId/activity",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectActivitySchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("alert")
+        .select("alert.*", "team.name as teamName", "project.name as projectName", "project.team_id as team_id", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
+        .join("account", "alert.created_by", "account.id")
+        .join("project", "project.id", "alert.project_id")
+        .join("team", "team.id", "project.team_id")
+        .where({ "alert.project_id": request.params.projectId })
+        .orderBy("created_at", "desc");
+    }
+  );
+
   const postUserclassSchema = {
     body: {
       type: "object",

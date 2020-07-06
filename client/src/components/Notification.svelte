@@ -1,6 +1,7 @@
 <script>
   export let notification;
   export let update;
+  export let context = null;
 
   import { format } from "date-fns";
   import { put } from "../api.js";
@@ -150,13 +151,16 @@
         {format(new Date(notification.created_at), 'h:mm a, MMMM d, yyyy')}
       </time>
     </div>
-    <div class="right">
-      <button
-        on:click={toggleRead}
-        class="button button-small button-outline button-clear button-secondary">
-        {#if notification.is_read}Mark as unread{:else}Mark as read{/if}
-      </button>
-    </div>
+    {#if context !== 'activity'}
+      <div class="right">
+        <button
+          on:click={toggleRead}
+          class="button button-small button-outline button-clear
+          button-secondary">
+          {#if notification.is_read}Mark as unread{:else}Mark as read{/if}
+        </button>
+      </div>
+    {/if}
   </div>
   <div class="bottom">
     <div class="imageWrapper">

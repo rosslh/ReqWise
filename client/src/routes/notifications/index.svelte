@@ -12,20 +12,19 @@
   import { stores } from "@sapper/app";
   import Notification from "../../components/Notification.svelte";
   import SubmitButton from "../../components/SubmitButton.svelte";
+  import { slide } from "svelte/transition";
 
   const { session } = stores();
 
-  let notifications = get(`/alerts`, $session.user && $session.user.jwt);
-
-  $: {
-    if (Array.isArray(notifications)) {
-      // promise fulfilled
-      $unreadAlerts = !!notifications.length;
-    }
-  }
+  let notifications = (async () => {
+    const res = await get(`/alerts`, $session.user && $session.user.jwt);
+    $unreadAlerts = !!res.length;
+    return res;
+  })();
 
   const update = async () => {
     notifications = await get(`/alerts`, $session.user && $session.user.jwt);
+    $unreadAlerts = !!notifications.length;
   };
 
   const markAllRead = async () => {
@@ -48,8 +47,10 @@
   {#await notifications}
     <!-- loading -->
   {:then result}
-    {#each result as notification}
-      <Notification {notification} {update} />
+    {#each result as notification (notification.id)}
+      <div out:slide|local>
+        <Notification {notification} {update} />
+      </div>
     {/each}
   {/await}
 </section>

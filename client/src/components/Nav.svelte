@@ -1,5 +1,6 @@
 <script>
   import { stores, goto } from "@sapper/app";
+  import { fade } from "svelte/transition";
 
   import MdMenu from "svelte-icons/md/MdMenu.svelte";
   import MdNotifications from "svelte-icons/md/MdNotifications.svelte";
@@ -194,7 +195,9 @@
           rel="prefetch"
           href="/notifications">
           {#if $unreadAlerts}
-            <div class="alertIndicator" />
+            <div
+              transition:fade|local={{ duration: 200 }}
+              class="alertIndicator" />
           {/if}
           <MdNotifications />
         </a>

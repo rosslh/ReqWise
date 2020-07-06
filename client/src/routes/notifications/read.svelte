@@ -8,6 +8,7 @@
 
 <script>
   import { get } from "../../api.js";
+  import { slide } from "svelte/transition";
   import { stores } from "@sapper/app";
   import Notification from "../../components/Notification.svelte";
 
@@ -33,8 +34,10 @@
   {#await notifications}
     <!-- loading -->
   {:then result}
-    {#each result as notification}
-      <Notification {notification} {update} />
+    {#each result as notification (notification.id)}
+      <div out:slide|local>
+        <Notification {notification} {update} />
+      </div>
     {/each}
   {/await}
 </section>
