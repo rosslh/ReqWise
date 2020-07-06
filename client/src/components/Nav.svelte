@@ -7,7 +7,12 @@
   import TiHome from "svelte-icons/ti/TiHome.svelte";
   import GoSearch from "svelte-icons/go/GoSearch.svelte";
 
-  import { sidebarHidden, currentProjectId, unreadAlerts } from "../stores.js";
+  import {
+    menuHidden,
+    currentProjectId,
+    unreadAlerts,
+    media
+  } from "../stores.js";
 
   const { session, page } = stores();
 
@@ -59,7 +64,7 @@
 
   form.middle {
     flex-grow: 1;
-    padding: 0 3rem;
+    padding: 0 0.5rem;
     max-width: 70rem;
     position: relative;
   }
@@ -79,7 +84,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 3.6rem;
+    left: 0.6rem;
     display: flex;
     align-items: center;
     color: var(--secondaryText);
@@ -98,7 +103,12 @@
 
   div.right > * {
     display: inline-block;
-    margin: 0 0.75rem;
+    margin-right: 0 0.5rem;
+  }
+
+  div.right > .logout {
+    margin-right: 0;
+    margin-top: 0;
   }
 
   .iconButton {
@@ -111,16 +121,18 @@
     border-radius: 50%;
     outline: none;
     margin: 0;
-    margin-right: 1.5rem;
+    margin-right: 1.25rem;
   }
 
   .iconButton:hover {
     background-color: var(--background2);
   }
 
-  .logoMenuWrapper {
+  .logoWrapper {
     display: flex;
     align-items: center;
+    padding: 0 0.5rem;
+    margin-right: 0.5rem;
   }
 
   .menuButton {
@@ -150,27 +162,29 @@
       <button
         class="iconButton menuButton"
         on:click={() => {
-          $sidebarHidden = !$sidebarHidden;
+          $menuHidden = !$menuHidden;
         }}>
         <MdMenu />
       </button>
     {/if}
-    <div class="logoMenuWrapper">
-      <a rel="prefetch" class="logoWrapper" href=".">
-        {#if $session.user && $session.user.theme === 'dark'}
-          <img src="logo-white.png" alt="ReqWise" />
-        {:else if $session.user && $session.user.theme === 'system'}
-          <picture>
-            <source
-              srcset="logo-white.png"
-              media="(prefers-color-scheme: dark)" />
+    {#if !$media.small}
+      <div class="logoWrapper">
+        <a rel="prefetch" class="logoWrapper" href=".">
+          {#if $session.user && $session.user.theme === 'dark'}
+            <img src="logo-white.png" alt="ReqWise" />
+          {:else if $session.user && $session.user.theme === 'system'}
+            <picture>
+              <source
+                srcset="logo-white.png"
+                media="(prefers-color-scheme: dark)" />
+              <img src="logo.png" alt="ReqWise" />
+            </picture>
+          {:else}
             <img src="logo.png" alt="ReqWise" />
-          </picture>
-        {:else}
-          <img src="logo.png" alt="ReqWise" />
-        {/if}
-      </a>
-    </div>
+          {/if}
+        </a>
+      </div>
+    {/if}
     {#if $page.path.includes('/project/')}
       <form on:submit|preventDefault={search} class="middle">
         <div class="searchIconWrapper">
@@ -204,7 +218,9 @@
         <a class="button iconButton" rel="prefetch" href="/account">
           <TiHome />
         </a>
-        <button class="button button-small button-outline" on:click={logout}>
+        <button
+          class="logout button button-small button-outline"
+          on:click={logout}>
           Log out
         </button>
       {/if}

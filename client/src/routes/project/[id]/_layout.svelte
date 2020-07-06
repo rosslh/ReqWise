@@ -11,13 +11,15 @@
 
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
+  import MobileMenu from "../../../components/MobileMenu.svelte";
   import { onMount, onDestroy } from "svelte";
   import { stores } from "@sapper/app";
   import {
-    sidebarHidden,
+    menuHidden,
     reqgroupsToUpdate,
     projectShouldUpdate,
-    currentProjectId
+    currentProjectId,
+    media
   } from "../../../stores.js";
   import { stream } from "../../../api.js";
 
@@ -84,24 +86,18 @@
       startStream();
     }
   }
+
+  $: {
+    if ($media.small) {
+      $menuHidden = true;
+    } else {
+      $menuHidden = false;
+    }
+  }
 </script>
 
 <style>
-  div.projectColumnLeft {
-    position: fixed;
-    top: 5rem; /* nav height */
-    left: 0;
-    bottom: 0;
-    width: var(--sidebarWidth);
-    /* border-right: 0.1rem solid var(--borderColor); */
-    transition: transform 0.2s ease;
-    border-top: 0.1rem solid var(--borderColor);
-  }
-  div.projectColumnRight {
-    position: fixed;
-    top: 5rem; /* nav height */
-    right: 0;
-    bottom: 0;
+  div.pageContent {
     overflow-y: scroll;
     background-color: var(--backdrop);
     border-top: 0.1rem solid var(--borderColor);
@@ -110,25 +106,37 @@
   }
 
   @media (min-width: 750px) {
-    div.projectColumnRight {
+    div.pageContent {
       width: calc(100% - var(--sidebarWidth));
+      position: fixed;
+      top: 5rem; /* nav height */
+      right: 0;
+      bottom: 0;
     }
-    div.sidebarHidden div.projectColumnRight {
+    div.menuHidden div.pageContent {
       width: 100%;
+    }
+
+    div.menuContent {
+      position: fixed;
+      top: 5rem; /* nav height */
+      left: 0;
+      bottom: 0;
+      width: var(--sidebarWidth);
+      /* border-right: 0.1rem solid var(--borderColor); */
+      transition: transform 0.2s ease;
+      border-top: 0.1rem solid var(--borderColor);
     }
   }
 
   @media (max-width: 749px) {
-    div.projectColumnRight {
-      width: 100%;
-    }
   }
 
-  div.sidebarHidden div.projectColumnLeft {
+  div.menuHidden div.menuContent {
     transform: translateX(calc(-1 * var(--sidebarWidth)));
   }
 
-  :global(.projectColumnRight p.infoBlurb) {
+  :global(.pageContent p.infoBlurb) {
     color: var(--secondaryText);
     margin: 1.5rem 0 1.5rem;
     max-width: 70rem;
@@ -138,11 +146,15 @@
 <svelte:head>
   <title>{project.name} - ReqWise</title>
 </svelte:head>
-<div class={$sidebarHidden ? 'sidebarHidden' : 'sidebarVisible'}>
-  <div class="projectColumnRight">
+<div class={$menuHidden ? 'menuHidden' : 'sidebarVisible'}>
+  <div class="pageContent">
     <slot />
   </div>
-  <div class="projectColumnLeft">
-    <Sidebar {tab} {id} name={project.name} />
+  <div class="menuContent">
+    {#if !$media.small}
+      <Sidebar {tab} {id} name={project.name} />
+    {:else}
+      <MobileMenu {tab} {id} name={project.name} />
+    {/if}
   </div>
 </div>
