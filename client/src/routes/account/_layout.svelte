@@ -18,35 +18,38 @@
 </script>
 
 <style>
+  @media (min-width: 750px) {
+    div.userColumnLeft {
+      position: fixed;
+      top: 5rem; /* nav height */
+      left: 0;
+      bottom: 0;
+      width: var(--sidebarWidth);
+      box-shadow: 0.2rem 0 0.6rem 0 rgba(0, 0, 0, 0.1);
+    }
+    div.userColumnRight {
+      position: fixed;
+      top: 5rem; /* nav height */
+      right: 0;
+      bottom: 0;
+      width: calc(100% - var(--sidebarWidth));
+      border-top: 0.1rem solid var(--borderColor);
+    }
+  }
+
   div.userColumnLeft {
-    position: fixed;
-    top: 5rem; /* nav height */
-    left: 0;
-    bottom: 0;
-    width: var(--sidebarWidth);
     transition: transform 0.2s ease;
-    box-shadow: 0.2rem 0 0.6rem 0 rgba(0, 0, 0, 0.1);
     border-top: 0.1rem solid var(--borderColor);
     padding: 1.5rem;
     text-align: center;
     background-color: var(--background1);
   }
   div.userColumnRight {
-    position: fixed;
-    top: 5rem; /* nav height */
-    right: 0;
-    bottom: 0;
     overflow-y: scroll;
     background-color: var(--backdrop);
-    border-top: 0.1rem solid var(--borderColor);
     transition: width 0.2s ease;
     padding-top: 1.5rem;
   }
-
-  div.userColumnRight {
-    width: calc(100% - var(--sidebarWidth));
-  }
-
   div.profileImageWrapper {
     overflow: hidden;
     height: calc(var(--sidebarWidth) - 9rem);
@@ -81,9 +84,6 @@
   <title>{user.name} - ReqWise</title>
 </svelte:head>
 <div>
-  <div class="userColumnRight">
-    <slot />
-  </div>
   <div class="userColumnLeft">
     <div class="profileImageWrapper">
       {#if $session.user.imageName}
@@ -108,5 +108,8 @@
         Back to profile
       </a>
     {/if}
+  </div>
+  <div class="userColumnRight">
+    <slot />
   </div>
 </div>
