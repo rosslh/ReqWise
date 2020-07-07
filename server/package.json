@@ -30,7 +30,7 @@
     "fastify-jwt": "^1.4.0",
     "fastify-plugin": "^1.6.0",
     "fuse.js": "^6.4.0",
-    "generate-avatar": "^1.4.1",
+    "generate-avatar": "^1.4.4",
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",
     "html-to-text": "^5.1.1",
