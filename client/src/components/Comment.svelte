@@ -62,7 +62,6 @@
   }
 </style>
 
-{JSON.stringify(comment, null, 2)}
 <div class="commentWrapper">
   <div class="imageWrapper">
     {#if comment.authorImageName}
