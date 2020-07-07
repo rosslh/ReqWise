@@ -12,5 +12,13 @@ module.exports = fp(function (fastify, opts, done) {
     return hashids.encode(num);
   });
 
+  fastify.decorate("obfuscateIdsInJson", function (payload) {
+    return payload && typeof payload === "string" // this does not handle escaped quotes
+      ? payload.replace(/"([^"]*_|)id":(\d+)/g, (_, $1, $2) => {
+        return `"${$1}id":"${fastify.obfuscateId($2)}"`;
+      })
+      : payload;
+  })
+
   done();
 });

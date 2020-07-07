@@ -490,7 +490,7 @@
       {#if comments}
         <div id="commentsTop" />
         {#each comments as comment (comment.id)}
-          <Comment {comment} />
+          <Comment {comment} update={getComments} />
         {/each}
         <div id="commentsBottom" />
       {:else}

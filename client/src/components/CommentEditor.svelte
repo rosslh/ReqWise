@@ -67,7 +67,10 @@
 
 <div class="editorWrapper">
   <div id="editor" />
-  <button on:click={postCommentAndClear} class="button-success">
+  <button
+    id="postCommentButton"
+    on:click={postCommentAndClear}
+    class="button-success">
     Post comment
   </button>
 </div>

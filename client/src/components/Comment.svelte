@@ -1,8 +1,21 @@
 <script>
   export let comment;
+  export let update;
   import { formatDistanceToNow } from "date-fns";
+  import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import { stores } from "@sapper/app";
+  import { del } from "../api.js";
+
+  const { session } = stores();
 
   const formatDatetime = dt => `${formatDistanceToNow(new Date(dt))} ago`;
+
+  const deleteComment = async () => {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      await del(`/comments/${comment.id}`, $session.user && $session.user.jwt);
+      await update();
+    }
+  };
 </script>
 
 <style>
@@ -38,8 +51,18 @@
     font-size: 1.4rem;
     margin-left: 1rem;
   }
+
+  .deleteWrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .deleteWrapper button {
+    margin-top: 0;
+  }
 </style>
 
+{JSON.stringify(comment, null, 2)}
 <div class="commentWrapper">
   <div class="imageWrapper">
     {#if comment.authorImageName}
@@ -57,8 +80,19 @@
         {formatDatetime(comment.created_at)}
       </time>
     </div>
-    <div>
+    <div class="commentContent">
       {@html comment.html}
     </div>
+  </div>
+  <div class="deleteWrapper">
+    {#if comment.account_id === $session.user.id}
+      <button
+        on:click={deleteComment}
+        class="button button-small button-outline button-clear button-secondary">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+      </button>
+    {/if}
   </div>
 </div>

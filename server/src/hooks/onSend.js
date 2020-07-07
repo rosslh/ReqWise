@@ -10,11 +10,7 @@ module.exports = fp(async (fastify, opts) => {
     // of handlers.
 
     // TODO: evaluate performance impact of moving this to preSerialization
-    const newPayload = payload && typeof payload === "string" // this does not handle escaped quotes
-      ? payload.replace(/"([^"]*_|)id":(\d+)/g, (_, $1, $2) => {
-        return `"${$1}id":"${fastify.obfuscateId($2)}"`;
-      })
-      : payload;
+    const newPayload = fastify.obfuscateIdsInJson(payload)
     done(null, newPayload);
   });
 });

@@ -81,10 +81,10 @@ module.exports = async function (fastify, opts) {
 
                 updatedReqgroups = Array.from(new Set(updatedReqgroups.concat(newReqversionReqgroups)));
                 if (projectUpdated || updatedReqgroups.length) {
-                    socket.emit('message', JSON.stringify({
+                    socket.emit('message', fastify.obfuscateIdsInJson(JSON.stringify({
                         projectUpdated,
                         updatedReqgroups
-                    }));
+                    })));
                 }
                 timestamp = Date.now();
             }
@@ -102,9 +102,9 @@ module.exports = async function (fastify, opts) {
                     .select("*")
                     .where({ "account_alert.account_id": user.id, "is_read": false })).length;
 
-                socket.emit('message', JSON.stringify({
+                socket.emit('message', fastify.obfuscateIdsInJson(JSON.stringify({
                     unreadAlerts
-                }));
+                })));
             }
         });
 
@@ -137,9 +137,9 @@ module.exports = async function (fastify, opts) {
                 ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
 
                 if (newComments.length) {
-                    socket.emit('message', JSON.stringify(
+                    socket.emit('message', fastify.obfuscateIdsInJson(JSON.stringify(
                         newComments
-                    ));
+                    )));
                 }
                 timestamp = Date.now();
             }

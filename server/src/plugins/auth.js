@@ -168,6 +168,33 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isTeamMemberByCommentId = async (
+    request,
+    reply,
+    isAdmin = false
+  ) => {
+    const membership = (
+      await fastify.knex
+        .from("comment")
+        .join("reqversion", "reqversion.id", "comment.reqversion_id")
+        .join("requirement", "requirement.id", "reqversion.requirement_id")
+        .join("reqgroup", "reqgroup.id", "requirement.reqgroup_id")
+        .join("project", "project.id", "reqgroup.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "comment.id": request.params.commentId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
   fastify.decorate("isCorrectUser", async (request, reply) => {
     if (!request.user) {
       reply.code(401);
@@ -175,6 +202,23 @@ module.exports = fp(async function (fastify, opts) {
     }
 
     if (!request.user.id === request.params.userId) {
+      reply.code(403);
+      reply.send("Not correct user");
+    }
+  });
+
+  fastify.decorate("isCommenter", async (request, reply) => {
+    if (!request.user) {
+      reply.code(401);
+      reply.send("Not authenticated");
+    }
+
+    const comment = await fastify.knex
+      .from("comment")
+      .select('*')
+      .where("comment.id", request.params.commentId);
+
+    if (!request.user.id === comment.account_id) {
       reply.code(403);
       reply.send("Not correct user");
     }
@@ -202,6 +246,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByRequirementId(request, reply);
     } else if (request.params.reqversionId) {
       return isTeamMemberByReqversionId(request, reply);
+    } else if (request.params.commentId) {
+      return isTeamMemberByCommentId(request, reply);
     }
   });
 
@@ -227,6 +273,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByRequirementId(request, reply, true);
     } else if (request.params.reqversionId) {
       return isTeamMemberByReqversionId(request, reply, true);
+    } else if (request.params.commentId) {
+      return isTeamMemberByCommentId(request, reply, true);
     }
   });
 });
