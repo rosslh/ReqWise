@@ -127,13 +127,16 @@
       transition: transform 0.2s ease;
       border-top: 0.1rem solid var(--borderColor);
     }
+
+    div.menuHidden div.menuContent {
+      transform: translateX(calc(-1 * var(--sidebarWidth)));
+    }
   }
 
   @media (max-width: 749px) {
-  }
-
-  div.menuHidden div.menuContent {
-    transform: translateX(calc(-1 * var(--sidebarWidth)));
+    div.menuHidden div.menuContent {
+      display: none;
+    }
   }
 
   :global(.pageContent p.infoBlurb) {

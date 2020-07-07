@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "A beautiful fastify app",
   "main": "server.js",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "test": "tap test/**/*.test.js",
     "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152",
     "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152",
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise=tcp:1111",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.js",
+    "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.7.0\""
   },
   "engines": {
     "node": "12.x"
@@ -50,6 +53,7 @@
   },
   "devDependencies": {
     "eslint": "^7.1.0",
+    "license-checker": "^25.0.1",
     "pre-commit": "^1.2.2",
     "standard": "^14.0.0",
     "tap": "^14.8.2"
