@@ -1,51 +1,11 @@
-name: CI
+name: Deploy
 
 on:
   push:
     branches:
       - master
-      - release/*
 
 jobs:
-  check-licenses:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: "10"
-      - name: Check client dependency licenses
-        working-directory: ./client
-        run: |
-          npm install
-          npm run licenseChecker
-      - name: Check server dependency licenses
-        working-directory: ./server
-        run: |
-          npm install
-          npm run licenseChecker
-  test-client:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: "10"
-      - name: Install dependencies
-        working-directory: ./client
-        run: |
-          npm install
-      - uses: cypress-io/github-action@v2
-        with:
-          start: npm run dev
-          wait-on: "http://localhost:3000/"
-          wait-on-timeout: 120
-          working-directory: ./client
-        env:
-          TESTING_API_URL: ${{secrets.TESTING_API_URL}}
-          CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
-          REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
-          REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
   firebase-deploy:
     runs-on: ubuntu-latest
     steps:
