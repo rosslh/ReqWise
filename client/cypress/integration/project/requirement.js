@@ -8,6 +8,7 @@ describe('Requirement page', () => {
     });
 
     it('can add comment', () => {
+        cy.waitForSkeleton();
         cy.get('#editor .ql-editor').click().type("Test comment");
         cy.get("#postCommentButton").click();
         cy.wait(2500);

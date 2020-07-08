@@ -8,6 +8,7 @@ Cypress.Commands.add("login", () => {
     cy.get("#pwd").click().type('1234');
     cy.get(".submitButton").click();
     cy.waitForSpinner();
+    cy.waitForPreload();
     cy.url().should('not.include', 'login');
 });
 
@@ -46,3 +47,5 @@ Cypress.Commands.add("goToRequirement", () => {
 Cypress.Commands.add("waitForSpinner", () => cy.waitUntil(() => !Cypress.$('.loadingSpinner').length, { timeout: 30000, interval: 500 }));
 
 Cypress.Commands.add("waitForSkeleton", () => cy.waitUntil(() => !Cypress.$('.skeletonWrapper').length, { timeout: 30000, interval: 500 }));
+
+Cypress.Commands.add("waitForPreload", () => cy.waitUntil(() => !Cypress.$('main#preloading').length, { timeout: 30000, interval: 500 }));

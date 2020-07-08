@@ -83,6 +83,6 @@
   </Modal>
 {/if}
 <Nav />
-<main>
+<main id={$preloading ? 'preloading' : ''}>
   <slot />
 </main>
