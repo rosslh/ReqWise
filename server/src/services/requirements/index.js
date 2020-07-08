@@ -294,17 +294,17 @@ module.exports = async function (fastify, opts) {
         .join("requirement", "requirement.id", "reqversion.requirement_id")
         .join("project", "project.id", "requirement.project_id")
         .join("team", "team.id", "project.team_id")
-        .select("requirement.project_id", "reqversion.description", "reqversion.priority", "reqversion.status", "reqversion.requirement_id", "slackAccessToken")
+        .select("requirement.project_id", "requirement.reqgroup_id", "reqversion.description", "reqversion.priority", "reqversion.status", "reqversion.requirement_id", "slackAccessToken")
         .where({
           requirement_id: request.params.requirementId, // TODO: exclude status: proposed
         })
         .orderBy("reqversion.created_at", "desc")
         .first();
 
-      if (["proposed", "modified"].includes(latestVersion.status) && ["proposed", "modified"].includes(status)) {
-        reply.code(409);
-        return ["Modification proposal already exists."];
-      }
+      // if (["proposed", "modified"].includes(latestVersion.status) && ["proposed", "modified"].includes(status)) {
+      //   reply.code(409);
+      //   return ["Modification proposal already exists."];
+      // }
 
       let slackMessageTs;
       if (token) {
