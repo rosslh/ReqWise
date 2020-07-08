@@ -7,7 +7,7 @@
 </script>
 
 <script>
-  import { get, put } from "../../api.js";
+  import { get } from "../../api.js";
   import { stores, goto } from "@sapper/app";
   import Notification from "../../components/Notification.svelte";
   import { slide } from "svelte/transition";

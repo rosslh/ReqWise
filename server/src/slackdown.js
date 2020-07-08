@@ -1,7 +1,7 @@
 /*! https://github.com/blockmar/slackdown by @blockmar | MIT license */
-; (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define([], factory);
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) { // eslint-disable-line no-undef
+        define([], factory); // eslint-disable-line no-undef
     } else if (typeof exports === 'object') {
         module.exports = factory();
     } else {
@@ -35,7 +35,7 @@
 
         var html = "<".concat(tag);
         for (var attribute in attributes) {
-            if (attributes.hasOwnProperty(attribute)) {
+            if (attributes.hasOwnProperty(attribute)) { // eslint-disable-line no-prototype-builtins
                 html = html.concat(' ', attribute, '="', attributes[attribute], '"');
             }
         }

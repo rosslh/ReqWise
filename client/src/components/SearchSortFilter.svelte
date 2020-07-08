@@ -35,9 +35,6 @@
       searchResults = searchResults.sort((a, b) => b.name < a.name);
     }
   }
-
-  const prettify = str =>
-    (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, " ");
 </script>
 
 <style>

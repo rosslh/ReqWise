@@ -23,7 +23,7 @@
 
   const updateRequirements = async () => {
     await Promise.all(
-      selectedReqs.map(({ id, reqversion_id }) =>
+      selectedReqs.map(({ reqversion_id }) =>
         put(
           `/reqversions/${reqversion_id}`,
           {
