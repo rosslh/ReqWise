@@ -89,6 +89,7 @@ module.exports = async function (fastify, opts) {
           requirement_id: request.params.requirementId,
         })
         .join("account", "account.id", "=", "reqversion.account_id")
+        .join("account as updater", "updater.id", "=", "reqversion.updated_by")
         .orderBy("created_at", "desc")
         .limit(2);
 
@@ -387,6 +388,7 @@ module.exports = async function (fastify, opts) {
           requirement_id: request.params.requirementId,
         })
         .join("account", "account.id", "=", "reqversion.account_id")
+        .join("account as updater", "updater.id", "=", "reqversion.updated_by")
         .orderBy("created_at", "desc");
     });
 

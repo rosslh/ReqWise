@@ -43,8 +43,10 @@ module.exports = async function (fastify, opts) {
                 status: { type: "string" },
                 description: { type: "string" },
                 created_at: { type: "string" },
+                updated_at: { type: "string" },
                 ppuid: { type: "number" },
                 authorName: { type: "string" },
+                updaterName: { type: "string" },
                 depth: { type: "number" }
               }
             }
@@ -304,6 +306,7 @@ module.exports = async function (fastify, opts) {
         "reqversion.status",
         "reqversion.description",
         "reqversion.created_at",
+        "reqversion.updated_at",
         "per_project_unique_id.readable_id as ppuid",
         "account.name as authorName",
         "updater.name as updaterName"
@@ -316,12 +319,14 @@ module.exports = async function (fastify, opts) {
           .andWhere("is_archived", false)
           .join("reqversion", getReqversion)
           .join("account", "account.id", "reqversion.account_id")
+          .join("account as updater", "updater.id", "reqversion.updated_by")
           .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
           .union((qb) => {
             qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', LPAD(per_project_unique_id.readable_id::text, 5, '0')) as hierarchical_id")).from('requirement')
               .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
               .join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
               .join("account", "account.id", "reqversion.account_id")
+              .join("account as updater", "updater.id", "reqversion.updated_by")
           })
       }).select('*').from('ancestors').orderBy('hierarchical_id');
 

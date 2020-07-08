@@ -132,8 +132,10 @@ module.exports = async function (fastify, opts) {
                   status: { type: "string" },
                   description: { type: "string" },
                   created_at: { type: "string" },
+                  updated_at: { type: "string" },
                   ppuid: { type: "number" },
                   authorName: { type: "string" },
+                  updaterName: { type: "string" },
                   depth: { type: "number" }
                 }
               }
@@ -174,6 +176,7 @@ module.exports = async function (fastify, opts) {
         "reqversion.status",
         "reqversion.description",
         "reqversion.created_at",
+        "reqversion.updated_at",
         "per_project_unique_id.readable_id as ppuid",
         "account.name as authorName",
         "updater.name as updaterName",
