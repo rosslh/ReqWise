@@ -2,7 +2,7 @@
   import Fuse from "fuse.js";
   export let list;
   export let searchKeys = [];
-  export let searchResults = list;
+  export let searchResults = [...list];
 
   let selectedSort = "default";
   let searchQuery = "";
@@ -26,15 +26,13 @@
   $: {
     searchResults = searchQuery
       ? fuse.search(searchQuery).map(x => x.item)
-      : list;
+      : [...list];
     if (selectedSort === "recent") {
       searchResults = searchResults.sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
       );
     } else if (selectedSort === "alpha") {
       searchResults = searchResults.sort((a, b) => b.name < a.name);
-    } else {
-      searchResults = searchResults.sort((a, b) => a.ppuid - b.ppuid);
     }
   }
 
