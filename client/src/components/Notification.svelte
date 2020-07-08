@@ -17,6 +17,8 @@
       return "deleted a";
     } else if (actionType === "comment") {
       return "commented on";
+    } else if (actionType === "changeStatus") {
+      return "changed the status of";
     } else {
       return "updated a";
     }
