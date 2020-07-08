@@ -13,15 +13,17 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: "10"
-      - name: Check client dependency licenses
+      - name: Lint client and check licenses
         working-directory: ./client
         run: |
           npm install
+          npm run lint
           npm run licenseChecker
-      - name: Check server dependency licenses
+      - name: Lint server and check licenses
         working-directory: ./server
         run: |
           npm install
+          npm run lint
           npm run licenseChecker
   test-client:
     runs-on: ubuntu-latest
