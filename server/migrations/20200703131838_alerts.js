@@ -3,7 +3,7 @@ exports.up = function (knex) {
     return Promise.all([
         knex.schema.createTable("alert", (table) => {
             table.increments("id").primary();
-            table.enu("actionType", ["create", "update", "delete", "comment"]).notNullable();
+            table.enu("actionType", ["create", "update", "delete", "comment", "changeStatus"]).notNullable();
             table.enu("entityType", ["reqgroup", "requirement", "file", "stakeholderGroup", "userclass"]).notNullable();
 
             table.text("description");

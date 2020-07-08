@@ -80,6 +80,7 @@ module.exports = async function (fastify, opts) {
         .select(
           "reqversion.*",
           "account.name as authorName",
+          "updater.name as updaterName",
           "account.email as authorEmail",
           "account.imageName as authorImageName",
           "account.placeholderImage as authorPlaceholderImage"
@@ -88,6 +89,7 @@ module.exports = async function (fastify, opts) {
           requirement_id: request.params.requirementId,
         })
         .join("account", "account.id", "=", "reqversion.account_id")
+        .join("account as updater", "updater.id", "=", "reqversion.updated_by")
         .orderBy("created_at", "desc")
         .limit(2);
 
@@ -322,6 +324,7 @@ module.exports = async function (fastify, opts) {
       const newVersion = {
         ...latestVersion,
         account_id: request.user.id,
+        updated_by: request.user.id,
         ...(priority && { priority }), // Only update priority if defined
         ...(description && { description }),
         ...(status && { status }),
@@ -373,6 +376,7 @@ module.exports = async function (fastify, opts) {
         .select(
           "reqversion.*",
           "account.name as authorName",
+          "updater.name as updaterName",
           "account.email as authorEmail",
           "account.imageName as authorImageName",
           "account.placeholderImage as authorPlaceholderImage"
@@ -384,6 +388,7 @@ module.exports = async function (fastify, opts) {
           requirement_id: request.params.requirementId,
         })
         .join("account", "account.id", "=", "reqversion.account_id")
+        .join("account as updater", "updater.id", "=", "reqversion.updated_by")
         .orderBy("created_at", "desc");
     });
 

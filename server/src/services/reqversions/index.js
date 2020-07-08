@@ -49,11 +49,13 @@ module.exports = async function (fastify, opts) {
         .join("requirement", "requirement.id", "reqversion.requirement_id")
         .first();
 
-      const [{ requirement_id, description }] = await fastify
+      const [{ requirement_id, description: desc }] = await fastify
         .knex("reqversion")
         .where("id", request.params.reqversionId)
         .update({
-          status
+          status,
+          updated_at: new Date(Date.now()),
+          updated_by: request.user.id
         })
         .returning(["requirement_id", "description"]);
 
@@ -65,7 +67,7 @@ module.exports = async function (fastify, opts) {
           updated_by: request.user.id,
         });
 
-      await fastify.createAlert("update", "requirement", description, requirement_id, project_id, request.user.id);
+      await fastify.createAlert("changeStatus", "requirement", desc, requirement_id, project_id, request.user.id);
       return [status];
     }
   );

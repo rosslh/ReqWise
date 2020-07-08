@@ -49,11 +49,11 @@ body {
 
 .panel {
   background-color: var(--background1);
-  padding: 1.25rem 1.5rem; /* upon change, update negative margins e.g. in search.svelte or notication.svelte */
+  padding: 1.25rem 1.5rem; /* upon change, update negative margins e.g. in search.svelte or notification.svelte */
   margin: 0 0 1.5rem;
   box-shadow: var(--boxShadow);
   border-radius: 0.8rem;
-  overflow: hidden;
+  /* overflow: hidden; */
   /* display: inline-block; */
 }
 

@@ -244,7 +244,7 @@
   <div class="history">
     {#if !isContextModal}
       <button on:click|stopPropagation={() => showHistoryModal(requirement.id)}>
-        {requirement.authorName} {formatDatetime(requirement.created_at)}
+        {requirement.updaterName} {formatDatetime(requirement.updated_at)}
       </button>
     {:else}
       <a
@@ -252,7 +252,7 @@
         rel="prefetch"
         href={`/project/${requirement.project_id}/requirement/${requirement.id}/history`}
         class="button">
-        {requirement.authorName} {formatDatetime(requirement.created_at)}
+        {requirement.updaterName} {formatDatetime(requirement.updated_at)}
       </a>
     {/if}
   </div>
