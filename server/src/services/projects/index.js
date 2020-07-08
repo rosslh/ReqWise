@@ -651,8 +651,12 @@ module.exports = async function (fastify, opts) {
 
   const getProjectActivitySchema = {
     body: {},
-    queryString: {},
-    params: {
+    queryString: {
+      type: "object",
+      properties: {
+        page: { type: "number" }
+      }
+    }, params: {
       type: "object",
       properties: {
         projectId: { type: "number" },
@@ -674,8 +678,12 @@ module.exports = async function (fastify, opts) {
       schema: getProjectActivitySchema,
     },
     async function (request, reply) {
+      const limit = 15;
+      const offset = limit * (request.query.page || 0);
       return await fastify.knex
         .from("alert")
+        .limit(limit)
+        .offset(offset)
         .select("alert.*", "team.name as teamName", "project.name as projectName", "project.team_id as team_id", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
         .join("account", "alert.created_by", "account.id")
         .join("project", "project.id", "alert.project_id")

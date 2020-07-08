@@ -1,20 +1,30 @@
 <script>
   import { get } from "../../../api.js";
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   import Notification from "../../../components/Notification.svelte";
 
   const { session, page } = stores();
 
-  let notifications = get(
-    `/projects/${$page.params.id}/activity`,
+  $: pageNumber = Number($page.query.page || 0);
+
+  $: notifications = get(
+    `/projects/${$page.params.id}/activity?page=${pageNumber}`,
     $session.user && $session.user.jwt
   );
 
-  const update = async () => {
+  $: update = async () => {
     notifications = await get(
-      `/projects/${$page.params.id}/activity`,
+      `/projects/${$page.params.id}/activity?page=${pageNumber}`,
       $session.user && $session.user.jwt
     );
+  };
+
+  $: nextPage = async () => {
+    goto(`${$page.path}?page=${pageNumber + 1}`);
+  };
+
+  $: previousPage = async () => {
+    goto(`${$page.path}?page=${pageNumber - 1}`);
   };
 </script>
 
@@ -26,5 +36,22 @@
     {#each result as notification}
       <Notification {notification} {update} context="activity" />
     {/each}
+    {#if !result.length}
+      <div class="secondary">No more results</div>
+    {/if}
+    {#if pageNumber && pageNumber > 0}
+      <button
+        on:click={previousPage}
+        class="button button-secondary button-outline">
+        Previous page
+      </button>
+    {/if}
+    {#if result.length}
+      <button
+        on:click={nextPage}
+        class="button button-secondary button-outline">
+        Next page
+      </button>
+    {/if}
   {/await}
 </section>
