@@ -1,7 +1,12 @@
 module.exports = async function (fastify, opts) {
     const getUnreadAlertsSchema = {
         body: {},
-        queryString: {},
+        queryString: {
+            type: "object",
+            properties: {
+                page: { type: "number" }
+            }
+        },
         params: {
             type: "object",
             properties: {},
@@ -22,8 +27,12 @@ module.exports = async function (fastify, opts) {
             schema: getUnreadAlertsSchema,
         },
         async function (request, reply) {
+            const limit = 15;
+            const offset = limit * (request.query.page || 0);
             return await fastify.knex
                 .from("account_alert")
+                .limit(limit)
+                .offset(offset)
                 .select("alert.*", "account_alert.*", "team.name as teamName", "project.name as projectName", "project.team_id as team_id", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
                 .join("alert", "account_alert.alert_id", "alert.id")
                 .join("account", "alert.created_by", "account.id")
@@ -36,7 +45,12 @@ module.exports = async function (fastify, opts) {
 
     const getReadAlertsSchema = {
         body: {},
-        queryString: {},
+        queryString: {
+            type: "object",
+            properties: {
+                page: { type: "number" }
+            }
+        },
         params: {
             type: "object",
             properties: {},
@@ -57,8 +71,12 @@ module.exports = async function (fastify, opts) {
             schema: getReadAlertsSchema,
         },
         async function (request, reply) {
+            const limit = 15;
+            const offset = limit * (request.query.page || 0);
             return await fastify.knex
                 .from("account_alert")
+                .limit(limit)
+                .offset(offset)
                 .select("alert.*", "account_alert.*", "team.name as teamName", "project.name as projectName", "project.team_id as team_id", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
                 .join("alert", "account_alert.alert_id", "alert.id")
                 .join("account", "alert.created_by", "account.id")

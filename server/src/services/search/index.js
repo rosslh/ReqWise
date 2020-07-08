@@ -3,7 +3,12 @@ const Fuse = require('fuse.js');
 module.exports = async function (fastify, opts) {
     const getSearchResultsSchema = {
         body: {},
-        queryString: {},
+        queryString: {
+            type: "object",
+            properties: {
+                q: { type: "string" }
+            }
+        },
         params: {
             type: "object",
             properties: {

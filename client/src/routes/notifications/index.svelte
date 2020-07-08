@@ -9,21 +9,29 @@
 <script>
   import { get, put } from "../../api.js";
   import { unreadAlerts } from "../../stores.js";
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   import Notification from "../../components/Notification.svelte";
   import SubmitButton from "../../components/SubmitButton.svelte";
   import { slide } from "svelte/transition";
 
-  const { session } = stores();
+  const { session, page } = stores();
 
-  let notifications = (async () => {
-    const res = await get(`/alerts`, $session.user && $session.user.jwt);
+  $: pageNumber = Number($page.query.page || 0);
+
+  $: notifications = (async () => {
+    const res = await get(
+      `/alerts?page=${pageNumber}`,
+      $session.user && $session.user.jwt
+    );
     $unreadAlerts = !!res.length;
     return res;
   })();
 
-  const update = async () => {
-    notifications = await get(`/alerts`, $session.user && $session.user.jwt);
+  $: update = async () => {
+    notifications = await get(
+      `/alerts?page=${pageNumber}`,
+      $session.user && $session.user.jwt
+    );
     $unreadAlerts = !!notifications.length;
   };
 
@@ -32,7 +40,22 @@
     $unreadAlerts = false;
     await update();
   };
+
+  $: nextPage = async () => {
+    goto(`/notifications?page=${pageNumber + 1}`);
+  };
+
+  $: previousPage = async () => {
+    goto(`/notifications?page=${pageNumber - 1}`);
+  };
 </script>
+
+<style>
+  .secondary {
+    color: var(--secondaryText);
+    text-align: center;
+  }
+</style>
 
 <section class="contentWrapper">
   <h1>Notifications</h1>
@@ -53,5 +76,22 @@
         <Notification {notification} {update} />
       </div>
     {/each}
+    {#if !result.length}
+      <div class="secondary">No more results</div>
+    {/if}
+    {#if pageNumber && pageNumber > 0}
+      <button
+        on:click={previousPage}
+        class="button button-secondary button-outline">
+        Previous page
+      </button>
+    {/if}
+    {#if result.length}
+      <button
+        on:click={nextPage}
+        class="button button-secondary button-outline">
+        Next page
+      </button>
+    {/if}
   {/await}
 </section>
