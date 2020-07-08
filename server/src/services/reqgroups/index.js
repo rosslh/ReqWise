@@ -491,6 +491,14 @@ module.exports = async function (fastify, opts) {
           })
           .returning("id");
 
+        await fastify
+          .knex("reqgroup")
+          .where("id", reqgroup_id)
+          .update({
+            updated_at: new Date(Date.now()),
+            updated_by: request.user.id
+          });
+
         await fastify.createAlert("create", "requirement", description, requirement_id, project_id, request.user.id);
 
         return requirement_id;

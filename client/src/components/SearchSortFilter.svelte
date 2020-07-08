@@ -2,7 +2,10 @@
   import Fuse from "fuse.js";
   export let list;
   export let searchKeys = [];
-  export let searchResults = [];
+  export let searchResults = list;
+
+  let selectedSort = "default";
+  let searchQuery = "";
 
   const options = {
     // isCaseSensitive: false,
@@ -20,9 +23,20 @@
 
   $: fuse = new Fuse(list, options);
 
-  $: handleInput = e => {
-    searchResults = fuse.search(e.target.value).map(x => x.item);
-  };
+  $: {
+    searchResults = searchQuery
+      ? fuse.search(searchQuery).map(x => x.item)
+      : list;
+    if (selectedSort === "recent") {
+      searchResults = searchResults.sort(
+        (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+      );
+    } else if (selectedSort === "alpha") {
+      searchResults = searchResults.sort((a, b) => b.name < a.name);
+    } else {
+      searchResults = searchResults.sort((a, b) => a.ppuid - b.ppuid);
+    }
+  }
 
   const prettify = str =>
     (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, " ");
@@ -60,21 +74,35 @@
 <div class="ssfWrapper panel">
   <div class="searchField">
     <label for="searchString">Search</label>
-    <input id="searchString" type="text" on:input={handleInput} />
+    <input
+      id="searchString"
+      type="text"
+      on:input={e => {
+        searchQuery = e.target.value;
+      }} />
   </div>
   <div class="sortField">
     <label for="sort">Sort</label>
     <fieldset id="sort" class="sortButtonWrapper">
       <button
-        class="button sortButton button-small button-outline button-secondary">
+        on:click={() => {
+          selectedSort = 'default';
+        }}
+        class={`button sortButton button-small button-outline button-${selectedSort === 'default' ? 'primary' : 'secondary'}`}>
         Default
       </button>
       <button
-        class="button sortButton button-small button-outline button-secondary">
+        on:click={() => {
+          selectedSort = 'recent';
+        }}
+        class={`button sortButton button-small button-outline button-${selectedSort === 'recent' ? 'primary' : 'secondary'}`}>
         Recent
       </button>
       <button
-        class="button sortButton button-small button-outline button-secondary">
+        on:click={() => {
+          selectedSort = 'alpha';
+        }}
+        class={`button sortButton button-small button-outline button-${selectedSort === 'alpha' ? 'primary' : 'secondary'}`}>
         Alphabetical
       </button>
     </fieldset>

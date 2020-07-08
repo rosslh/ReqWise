@@ -172,6 +172,14 @@ module.exports = async function (fastify, opts) {
         .where("id", request.params.requirementId)
         .del();
 
+      await fastify
+        .knex("reqgroup")
+        .where("id", requirement.reqgroup_id)
+        .update({
+          updated_at: new Date(Date.now()),
+          updated_by: request.user.id
+        });
+
       await fastify.createAlert("delete", "requirement", requirement.description, null, requirement.project_id, request.user.id);
       return ["success"];
     }
@@ -281,7 +289,7 @@ module.exports = async function (fastify, opts) {
       const { description, priority, status, rationale } = request.body;
       const { requirementId: requirement_id } = request.params;
 
-      const { slackAccessToken: token, project_id, ...latestVersion } = await fastify
+      const { slackAccessToken: token, project_id, reqgroup_id, ...latestVersion } = await fastify
         .knex.from("reqversion")
         .join("requirement", "requirement.id", "reqversion.requirement_id")
         .join("project", "project.id", "requirement.project_id")
@@ -323,6 +331,13 @@ module.exports = async function (fastify, opts) {
       };
 
       await fastify.knex("reqversion").insert(newVersion).returning("id");
+      await fastify
+        .knex("reqgroup")
+        .where("id", reqgroup_id)
+        .update({
+          updated_at: new Date(Date.now()),
+          updated_by: request.user.id,
+        });
       await fastify.createAlert("update", "requirement", newVersion.description, requirement_id, project_id, request.user.id);
       return requirement_id;
     }

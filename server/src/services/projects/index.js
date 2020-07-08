@@ -116,6 +116,7 @@ module.exports = async function (fastify, opts) {
             isDeletable: { type: "boolean" },
             isMaxOneRequirement: { type: "boolean" },
             isPrioritized: { type: "boolean" },
+            updated_at: { type: "string" },
             requirements: {
               type: "array", items: {
                 type: "object",

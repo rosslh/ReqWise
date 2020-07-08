@@ -42,9 +42,9 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { status } = request.body;
 
-      const { project_id } = await fastify.knex
+      const { project_id, reqgroup_id } = await fastify.knex
         .from("reqversion")
-        .select("requirement.project_id as project_id")
+        .select("requirement.project_id as project_id", "requirement.reqgroup_id as reqgroup_id")
         .where("reqversion.id", request.params.reqversionId)
         .join("requirement", "requirement.id", "reqversion.requirement_id")
         .first();
@@ -56,6 +56,14 @@ module.exports = async function (fastify, opts) {
           status
         })
         .returning(["requirement_id", "description"]);
+
+      await fastify
+        .knex("reqgroup")
+        .where("id", reqgroup_id)
+        .update({
+          updated_at: new Date(Date.now()),
+          updated_by: request.user.id,
+        });
 
       await fastify.createAlert("update", "requirement", description, requirement_id, project_id, request.user.id);
       return [status];
