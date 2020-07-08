@@ -22,6 +22,7 @@
       credentials: "include"
     });
     $session.user = null;
+    location.reload();
   };
 
   let searchQuery = "";
