@@ -46,7 +46,7 @@
   };
 
   const isImageFile = fileName =>
-    /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/.test(fileName);
+    /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(fileName);
 
   const unlinkFile = async () => {
     await del(
