@@ -21,10 +21,6 @@
     modalContent.set(ChangePriorityModal);
     modalProps.set({ selectedReqs, update });
   };
-  // const archiveSelected = async () => {
-  //   modalContent.set(ArchiveRequirementsModal);
-  //   modalProps.set({ selectedReqs, update });
-  // };
   const deleteSelected = async () => {
     modalContent.set(DeleteRequirementsModal);
     modalProps.set({ selectedReqs, update });
@@ -104,14 +100,6 @@
           Change priority
         </button>
       {/if}
-      <!-- <button
-        on:click={archiveSelected}
-        class="button-small button-outline button-clear button-secondary">
-        <div class="iconWrapper">
-          <FaArchive />
-        </div>
-        Archive
-      </button> -->
       <button
         id="deleteRequirementButton"
         on:click={deleteSelected}

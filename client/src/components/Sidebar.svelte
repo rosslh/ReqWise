@@ -57,13 +57,6 @@
       icon: FaCheckDouble,
       extraPadding: true
     },
-    // {
-    //   label: "Archived",
-    //   slug: "archived",
-    //   icon: FaArchive,
-    //   newSection: true,
-    //   extraPadding: true
-    // },
     {
       label: "Stakeholders",
       slug: "stakeholders",

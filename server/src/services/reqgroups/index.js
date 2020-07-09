@@ -37,7 +37,6 @@ module.exports = async function (fastify, opts) {
                 reqgroup_id: { type: ["number", "string"] },
                 reqversion_id: { type: ["number", "string"] },
                 project_id: { type: ["number", "string"] },
-                is_archived: { type: "boolean" },
                 account_id: { type: ["number", "string"] },
                 priority: { type: "string" },
                 status: { type: "string" },
@@ -86,7 +85,6 @@ module.exports = async function (fastify, opts) {
         "requirement.parent_requirement_id",
         "requirement.reqgroup_id",
         "requirement.project_id",
-        "requirement.is_archived",
         "reqversion.id as reqversion_id",
         "reqversion.account_id",
         "reqversion.priority",
@@ -103,7 +101,6 @@ module.exports = async function (fastify, opts) {
         qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
           .where('requirement.parent_requirement_id', null)
           .andWhere("reqgroup_id", request.params.reqgroupId)
-          .andWhere("is_archived", false)
           .join("reqversion", getReqversion)
           .join("account", "account.id", "reqversion.account_id")
           .join("account as updater", "updater.id", "reqversion.updated_by")
@@ -221,10 +218,6 @@ module.exports = async function (fastify, opts) {
       if (isDeletable) {
         await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
         await fastify
-          .knex("requirement")
-          .where("reqgroup_id", request.params.reqgroupId)
-          .update({ is_archived: true });
-        await fastify
           .knex("reqgroup")
           .where("id", request.params.reqgroupId)
           .del();
@@ -263,7 +256,6 @@ module.exports = async function (fastify, opts) {
       //       reqgroup_id: { type: "number" },
       //       project_id: { type: "number" },
       //       ppuid: { type: "number" },
-      //       is_archived: { type: "boolean" },
       //       account_id: { type: "number" },
       //       priority: { type: "string" },
       //       status: { type: "string" },
@@ -299,7 +291,6 @@ module.exports = async function (fastify, opts) {
         "requirement.parent_requirement_id",
         "requirement.reqgroup_id",
         "requirement.project_id",
-        "requirement.is_archived",
         "reqversion.id as reqversion_id",
         "reqversion.account_id",
         "reqversion.priority",
@@ -316,7 +307,6 @@ module.exports = async function (fastify, opts) {
         qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
           .where('requirement.parent_requirement_id', null)
           .andWhere("reqgroup_id", request.params.reqgroupId)
-          .andWhere("is_archived", false)
           .join("reqversion", getReqversion)
           .join("account", "account.id", "reqversion.account_id")
           .join("account as updater", "updater.id", "reqversion.updated_by")

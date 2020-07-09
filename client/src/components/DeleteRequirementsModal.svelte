@@ -21,10 +21,7 @@
 </script>
 
 <h3>Delete Requirements</h3>
-<p>
-  This action will permanently delete the selected requirements. If you are
-  unsure you want to do that, you may want to archive the requirements instead.
-</p>
+<p>This action will permanently delete the selected requirements.</p>
 <button
   id="confirmReqDeleteButton"
   class="button-danger"

@@ -27,7 +27,6 @@ module.exports = async function (fastify, opts) {
           isPrioritized: { type: "boolean" },
           reqgroup_id: { type: "number" },
           project_id: { type: "number" },
-          is_archived: { type: "boolean" },
           ppuid: { type: "number" },
           comments: {
             type: "array",
@@ -193,7 +192,6 @@ module.exports = async function (fastify, opts) {
     body: {
       type: "object",
       properties: {
-        is_archived: { type: "boolean" },
         reqgroup_id: { type: "number" },
         project_id: { type: "number" },
         parent_requirement_id: { type: ["string", "null"] }
@@ -229,14 +227,13 @@ module.exports = async function (fastify, opts) {
       schema: patchRequirementSchema,
     },
     async function (request, reply) {
-      const { project_id, reqgroup_id, is_archived, parent_requirement_id } = request.body;
+      const { project_id, reqgroup_id, parent_requirement_id } = request.body;
       const requirement_reqgroup_id = (await fastify
         .knex("requirement")
         .where("id", request.params.requirementId)
         .update({
           project_id,
           reqgroup_id,
-          is_archived,
           parent_requirement_id: parent_requirement_id && fastify.deobfuscateId(parent_requirement_id)
         })
         .returning("reqgroup_id"))[0];

@@ -173,7 +173,7 @@ exports.up = function (knex) {
         .integer("reqgroup_id")
         .references("reqgroup.id")
         .onUpdate("CASCADE")
-        .onDelete("SET NULL") // Requirements from deleted features are just archived
+        .onDelete("CASCADE")
         .unsigned();
       table
         .integer("project_id")

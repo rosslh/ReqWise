@@ -126,7 +126,6 @@ module.exports = async function (fastify, opts) {
                   reqgroup_id: { type: ["number", "string"] },
                   reqversion_id: { type: ["number", "string"] },
                   project_id: { type: ["number", "string"] },
-                  is_archived: { type: "boolean" },
                   account_id: { type: ["number", "string"] },
                   priority: { type: "string" },
                   status: { type: "string" },
@@ -169,7 +168,6 @@ module.exports = async function (fastify, opts) {
         "requirement.parent_requirement_id",
         "requirement.reqgroup_id",
         "requirement.project_id",
-        "requirement.is_archived",
         "reqversion.id as reqversion_id",
         "reqversion.account_id",
         "reqversion.priority",
@@ -194,7 +192,6 @@ module.exports = async function (fastify, opts) {
           qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
             .where('requirement.parent_requirement_id', null)
             .andWhere("reqgroup_id", g.id)
-            .andWhere("is_archived", false)
             .join("reqversion", getReqversion)
             .join("account", "account.id", "reqversion.account_id")
             .join("account as updater", "updater.id", "reqversion.updated_by")
@@ -245,52 +242,6 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
         .where({ "file.project_id": request.params.projectId })
         .orderBy("ppuid", "asc");
-    }
-  );
-
-  const getArchivedSchema = {
-    body: {},
-    queryString: {},
-    params: {
-      type: "object",
-      properties: {
-        projectId: { type: "number" },
-      },
-    },
-    headers: {
-      type: "object",
-      properties: {
-        Authorization: { type: "string" },
-      },
-      required: ["Authorization"],
-    },
-    response: {
-      200: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            reqgroup_id: { type: "number" },
-            project_id: { type: "number" },
-            ppuid: { type: "number" },
-            is_archived: { type: "boolean" },
-          },
-        },
-      },
-    },
-  };
-  fastify.get(
-    "/projects/:projectId/archived",
-    {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getArchivedSchema,
-    },
-    async function (request, reply) {
-      return await fastify.knex
-        .from("requirement")
-        .select("*")
-        .where({ is_archived: true, project_id: request.params.projectId });
     }
   );
 

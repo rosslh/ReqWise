@@ -18,8 +18,8 @@
 
 </style>
 
-<h3>Delete Feature</h3>
-<p>The reqgroup's requirements will be archived.</p>
+<h3>Delete Requirement Group</h3>
+<p>Its requirements will also be deleted.</p>
 <button
   id="confirmReqgroupDelete"
   class="button-danger"
