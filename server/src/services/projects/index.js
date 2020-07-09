@@ -296,6 +296,16 @@ module.exports = async function (fastify, opts) {
 
   const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
 
+  const getReqgroupType = type => {
+    if (type === "quality") {
+      return "quality attribute group";
+    } else if (type === "business") {
+      return "business requirement group";
+    } else {
+      return type;
+    }
+  }
+
   const postReqgroupSchema = {
     body: {
       type: "object",
@@ -352,18 +362,6 @@ module.exports = async function (fastify, opts) {
         .where("project.id", request.params.projectId)
         .first();
 
-      if (token) {
-        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
-        await fastify.slack.conversations.join({ channel, token });
-        await fastify.slack.chat.postMessage({
-          text: `${request.user.name} made a new requirement group. <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|View it here>.`,
-          token,
-          channel,
-          username: request.user.name,
-          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
-        });
-      }
-
       await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
 
       const ppuid_id = (await fastify
@@ -386,6 +384,18 @@ module.exports = async function (fastify, opts) {
           isPrioritized
         })
         .returning("id");
+
+      if (token) {
+        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
+        await fastify.slack.conversations.join({ channel, token });
+        await fastify.slack.chat.postMessage({
+          text: `${request.user.name} made a new ${getReqgroupType(type)}: <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|#${maxPpuid + 1} - ${name}>.`,
+          token,
+          channel,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+      }
 
       await fastify.createAlert("create", "reqgroup", name, id, project_id, request.user.id);
 
