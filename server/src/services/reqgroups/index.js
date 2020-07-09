@@ -440,7 +440,7 @@ module.exports = async function (fastify, opts) {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": `You have a new requirement: *<reqwise.com/project/${project_id}/requirement/${fastify.obfuscateId(requirement_id)}|#${ppuid_id} - ${description}>*. Give feedback by replying to this message.`
+                  "text": `You have a new requirement: *<https://reqwise.com/project/${project_id}/requirement/${fastify.obfuscateId(requirement_id)}|#${ppuid_id} - ${description}>*. Give feedback by replying to this message.`
                 }
               },
               {
@@ -460,7 +460,7 @@ module.exports = async function (fastify, opts) {
                   },
                   ...(reqgroup_id ? [{
                     "type": "mrkdwn",
-                    "text": `*Part of requirement group:*\n<reqwise.com/project/${project_id}/reqgroup/${fastify.obfuscateId(reqgroup_id)}|#${reqgroup_ppuid} - ${reqgroup_name}>`
+                    "text": `*Part of requirement group:*\n<https://reqwise.com/project/${project_id}/reqgroup/${fastify.obfuscateId(reqgroup_id)}|#${reqgroup_ppuid} - ${reqgroup_name}>`
                   }] : [])
                 ]
               },
