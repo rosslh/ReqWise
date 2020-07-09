@@ -25,6 +25,7 @@ module.exports = async function (fastify, opts) {
         properties: {
           name: { type: "string" },
           team_id: { type: "number" },
+          slackChannelName: { type: "string" }
         },
       },
     },
@@ -38,9 +39,62 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("project")
-        .select("name", "team_id")
+        .select("name", "team_id", "slackChannelName")
         .where("id", request.params.projectId)
         .first();
+    }
+  );
+
+  const putProjectSchema = {
+    body: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        slackChannelName: { type: "string" },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          description: { type: "string" },
+        },
+      },
+    },
+  };
+
+  fastify.put(
+    "/project/:projectId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: putProjectSchema,
+    },
+    async function (request, reply) {
+      let { name, slackChannelName } = request.body;
+      slackChannelName = slackChannelName && slackChannelName.toLowerCase().replace(/[^a-z0-9_-]+/g, "").slice(0, 79);
+      return (
+        await fastify
+          .knex("project")
+          .update({ name, slackChannelName })
+          .where("id", request.params.projectId)
+          .returning(["name", "slackChannelName"])
+      )[0];
     }
   );
 
@@ -249,7 +303,7 @@ module.exports = async function (fastify, opts) {
 
   const getReqgroupType = type => {
     if (type === "quality") {
-      return "quality attribute group";
+      return "quality attribute";
     } else if (type === "business") {
       return "business requirement group";
     } else {
@@ -337,8 +391,7 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       if (token) {
-        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
-        await fastify.slack.conversations.join({ channel, token });
+        const channel = await fastify.slackGetChannelId(projectId);
         await fastify.slack.chat.postMessage({
           text: `${request.user.name} made a new ${getReqgroupType(type)}: <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|#${maxPpuid + 1} - ${name}>.`,
           token,
