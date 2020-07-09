@@ -55,16 +55,13 @@
     }
   };
 
-  const hasEntityId = () => {
-    return (
-      notification.entity_reqgroup_id ||
-      notification.entity_stakeholderGroup_id ||
-      notification.entity_userclass_id ||
-      notification.entity_requirement_id ||
-      (notification.entity_reqversion_id && notification.requirement_id) ||
-      notification.entity_file_id
-    );
-  };
+  const hasEntityId = () =>
+    notification.entity_reqgroup_id ||
+    notification.entity_stakeholderGroup_id ||
+    notification.entity_userclass_id ||
+    notification.entity_requirement_id ||
+    (notification.entity_reqversion_id && notification.requirement_id) ||
+    notification.entity_file_id;
 
   const toggleRead = async () => {
     const is_read = !notification.is_read;

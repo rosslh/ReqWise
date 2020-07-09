@@ -62,7 +62,7 @@
   {:then result}
     {#each result as notification (notification.id)}
       <div out:slide|local>
-        <Notification {notification} {update} />
+        <Notification {notification} {update} context="notifications" />
       </div>
     {/each}
     {#if !result.length}

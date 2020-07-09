@@ -1,10 +1,12 @@
 <script context="module">
   export async function preload({ params }, { user }) {
-    const reqgroups = await get(
-      `/projects/${params.id}/reqgroups?type=business`,
-      user && user.jwt
-    );
-    return { reqgroups };
+    if (user && user.jwt) {
+      const reqgroups = await get(
+        `/projects/${params.id}/reqgroups?type=business`,
+        user && user.jwt
+      );
+      return { reqgroups };
+    }
   }
 </script>
 

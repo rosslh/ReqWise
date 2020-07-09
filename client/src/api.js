@@ -9,8 +9,8 @@ const commonOptions = (token) => ({
   },
 });
 
-const throwError = (httpMethod) => {
-  throw new Error(`Failed ${httpMethod} request`);
+const throwError = (httpMethod, endpoint) => {
+  throw new Error(`Failed ${httpMethod} request to ${endpoint}`);
 };
 
 const fetcher = (endpoint, options, token) => {
@@ -30,12 +30,12 @@ const fetcher = (endpoint, options, token) => {
       if (r.ok) {
         return r.json();
       } else {
-        throwError(options.method || "GET");
+        throwError(options.method || "GET", endpoint);
       }
     })
     .catch((e) => {
       console.error(e);
-      throwError(options.method || "GET");
+      throwError(options.method || "GET", endpoint);
     });
 };
 

@@ -4,7 +4,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import session from "express-session";
 import { Firestore } from "@google-cloud/firestore";
-const FileStore = require('session-file-store')(session);
+var LokiStore = require('connect-loki')(session);
 import * as sapper from "@sapper/server";
 
 import "./assets/normalize.css";
@@ -29,7 +29,7 @@ const expressServer = express()
         maxAge: 31536000,
       },
       store: dev
-        ? new FileStore({})
+        ? new LokiStore({})
         : new FirestoreStore({
           dataset: new Firestore({
             kind: "express-sessions",
