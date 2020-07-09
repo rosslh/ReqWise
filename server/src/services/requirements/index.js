@@ -309,8 +309,7 @@ module.exports = async function (fastify, opts) {
 
       let slackMessageTs;
       if (token) {
-        const channel = (await fastify.slack.conversations.list({ token })).channels.find(x => x.name === "random").id; // TODO: take channel name for each project
-        await fastify.slack.conversations.join({ channel, token });
+        const channel = await fastify.slackGetChannelId(project_id);
         slackMessageTs = (await fastify.slack.chat.postMessage({
           text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement version:\n*Description*:\n>${description}\n*Priority*:\n>${priority}\n*Rationale*:\n>${rationale || "_No rationale_"}\nReply to this thread to give feedback.`,
           token,
