@@ -80,7 +80,6 @@
     "sass": "^1.24.0",
     "svelte": "^3.23.2",
     "svelte-icons": "^1.1.0",
-    "svelte-loading-skeleton": "^1.0.1",
     "svelte-media": "0.0.3",
     "svelte-preprocess": "^3.7.1",
     "svelte-preprocess-postcss": "^1.1.1",

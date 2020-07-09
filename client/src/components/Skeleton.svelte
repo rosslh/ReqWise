@@ -1,5 +1,5 @@
 <script>
-  import { Skeleton } from "svelte-loading-skeleton";
+  import Skeleton from "./SkeletonBase.svelte";
   export let inline;
   export let rows = 1;
   export let noPadding;
