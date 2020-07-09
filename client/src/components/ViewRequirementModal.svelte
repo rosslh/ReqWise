@@ -16,6 +16,7 @@
   import CommentEditor from "./CommentEditor.svelte";
   import SimpleDiff from "./SimpleDiff.svelte";
   import DescDiff from "./DescDiff.svelte";
+  import ReqversionStatusHistory from "./ReqversionStatusHistory.svelte";
 
   export let isPrioritized; // TODO: fetch this, don't pass as prop
   export let id;
@@ -483,6 +484,12 @@
         </button>
       {/if}
     </div>
+    <h5>Activity</h5>
+    {#if reqversionId}
+      <ReqversionStatusHistory id={reqversionId} />
+    {:else}
+      <Skeleton />
+    {/if}
   </div>
   <div class="column comments">
     <h5>Comments</h5>

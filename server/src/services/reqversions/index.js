@@ -49,7 +49,7 @@ module.exports = async function (fastify, opts) {
         .join("requirement", "requirement.id", "reqversion.requirement_id")
         .first();
 
-      const [{ requirement_id, description: desc }] = await fastify
+      const [{ description: desc }] = await fastify
         .knex("reqversion")
         .where("id", request.params.reqversionId)
         .update({
@@ -67,7 +67,7 @@ module.exports = async function (fastify, opts) {
           updated_by: request.user.id,
         });
 
-      await fastify.createAlert("changeStatus", "requirement", desc, requirement_id, project_id, request.user.id);
+      await fastify.createAlert("changeStatus", "reqversion", desc, request.params.reqversionId, project_id, request.user.id, status);
       return [status];
     }
   );
@@ -117,6 +117,40 @@ module.exports = async function (fastify, opts) {
 
       await fastify.createAlert("update", "requirement", requirement.description, null, requirement.project_id, request.user.id);
       return ["success"];
+    }
+  );
+
+  const getStatusHistorySchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reqversionId: { type: "string" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/reqversions/:reqversionId/history",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getStatusHistorySchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("alert")
+        .select("alert.*", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
+        .join("account", "alert.created_by", "account.id")
+        .where({ "alert.entity_reqversion_id": request.params.reqversionId })
+        .orderBy("created_at", "desc");
     }
   );
 

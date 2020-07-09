@@ -2,6 +2,7 @@
   export let notification;
   export let update;
   export let context = null;
+  export let compact = false;
 
   import { format } from "date-fns";
   import { put } from "../api.js";
@@ -14,13 +15,13 @@
     if (actionType === "create") {
       return "created a new";
     } else if (actionType === "delete") {
-      return "deleted a";
+      return "deleted";
     } else if (actionType === "comment") {
       return "commented on";
     } else if (actionType === "changeStatus") {
       return "changed the status of";
     } else {
-      return "updated a";
+      return "updated";
     }
   };
 
@@ -31,6 +32,8 @@
       return "stakeholder group";
     } else if (entityType === "userclass") {
       return "user class";
+    } else if (entityType === "reqversion") {
+      return "requirement";
     } else {
       return entityType;
     }
@@ -45,6 +48,8 @@
       return `/project/${notification.project_id}/user-classes/${notification.entity_userclass_id}`;
     } else if (notification.entityType === "requirement") {
       return `/project/${notification.project_id}/requirement/${notification.entity_requirement_id}`;
+    } else if (notification.entityType === "reqversion") {
+      return `/project/${notification.project_id}/requirement/${notification.requirement_id}`;
     } else {
       return `/project/${notification.project_id}/files/${notification.entity_file_id}`;
     }
@@ -56,6 +61,7 @@
       notification.entity_stakeholderGroup_id ||
       notification.entity_userclass_id ||
       notification.entity_requirement_id ||
+      (notification.entity_reqversion_id && notification.requirement_id) ||
       notification.entity_file_id
     );
   };
@@ -91,6 +97,12 @@
   }
 
   .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .bottomLeft {
     display: flex;
     align-items: center;
   }
@@ -141,53 +153,68 @@
 </style>
 
 <div class="panel">
-  <div class="top">
-    <div class="left">
-      <a rel="prefetch" href={`/team/${notification.team_id}`}>
-        {notification.teamName}
-      </a>
-      /
-      <a rel="prefetch" href={`/project/${notification.project_id}`}>
-        {notification.projectName}
-      </a>
-      <span class="sep">&bull;</span>
-      <time class="date secondary" datetime={notification.created_at}>
-        {format(new Date(notification.created_at), 'h:mm a, MMMM d, yyyy')}
-      </time>
-    </div>
-    {#if context !== 'activity'}
-      <div class="right">
-        <button
-          on:click={toggleRead}
-          class="button button-small button-outline button-clear
-          button-secondary">
-          {#if notification.is_read}Mark as unread{:else}Mark as read{/if}
-        </button>
+  {#if !compact}
+    <div class="top">
+      <div class="left">
+        <a rel="prefetch" href={`/team/${notification.team_id}`}>
+          {notification.teamName}
+        </a>
+        /
+        <a rel="prefetch" href={`/project/${notification.project_id}`}>
+          {notification.projectName}
+        </a>
+        <span class="sep">&bull;</span>
+        <time class="date secondary" datetime={notification.created_at}>
+          {format(new Date(notification.created_at), 'h:mm a, MMMM d, yyyy')}
+        </time>
       </div>
-    {/if}
-  </div>
-  <div class="bottom">
-    <div class="imageWrapper">
-      {#if notification.authorImageName}
-        <img
-          src={`https://storage.googleapis.com/user-file-storage/${notification.authorImageName}`}
-          alt={notification.authorName} />
-      {:else if notification.authorPlaceholderImage}
-        {@html notification.authorPlaceholderImage}
+      {#if context === 'notifications'}
+        <div class="right">
+          <button
+            on:click={toggleRead}
+            class="button button-small button-outline button-clear
+            button-secondary">
+            {#if notification.is_read}Mark as unread{:else}Mark as read{/if}
+          </button>
+        </div>
       {/if}
     </div>
-    <div>
-      <strong>{notification.authorName}</strong>
-      <span class="secondary">
-        {getActionString(notification.actionType)}
-        {getEntityString(notification.entityType)}
-      </span>
-      {#if hasEntityId() && notification.description && notification.actionType !== 'delete'}
-        <a rel="prefetch" class="entityLink" href={getHref()}>
-          {notification.description}
-        </a>
-      {:else if !hasEntityId() || notification.actionType === 'delete'}
-        <strong>{notification.description}</strong>
+  {/if}
+  <div class="bottom">
+    <div class="bottomLeft">
+      <div class="imageWrapper">
+        {#if notification.authorImageName}
+          <img
+            src={`https://storage.googleapis.com/user-file-storage/${notification.authorImageName}`}
+            alt={notification.authorName} />
+        {:else if notification.authorPlaceholderImage}
+          {@html notification.authorPlaceholderImage}
+        {/if}
+      </div>
+      <div>
+        <strong>{notification.authorName}</strong>
+        <span class="secondary">
+          {getActionString(notification.actionType)}
+          {getEntityString(notification.entityType)}
+        </span>
+        {#if hasEntityId() && notification.description && notification.actionType !== 'delete'}
+          <a rel="prefetch" class="entityLink" href={getHref()}>
+            {notification.description}
+          </a>
+        {:else if !hasEntityId() || notification.actionType === 'delete'}
+          <strong>{notification.description}</strong>
+        {/if}
+        {#if notification.newValue}
+          to
+          <strong>{notification.newValue}</strong>
+        {/if}
+      </div>
+    </div>
+    <div class="bottomRight">
+      {#if compact}
+        <time class="date compact secondary" datetime={notification.created_at}>
+          {format(new Date(notification.created_at), 'h:mm a, MMMM d, yyyy')}
+        </time>
       {/if}
     </div>
   </div>
