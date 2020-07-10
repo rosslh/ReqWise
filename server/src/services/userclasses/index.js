@@ -1,6 +1,5 @@
 module.exports = async function (fastify, opts) {
     const getUserclassSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -18,7 +17,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/userclasses/:userclassId",
+        "/:userclassId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getUserclassSchema,
@@ -34,7 +33,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const getUserclassChampions = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -52,7 +50,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/userclasses/:userclassId/champions",
+        "/:userclassId/champions",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getUserclassChampions,
@@ -98,7 +96,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.post(
-        "/userclasses/:userclassId/champions",
+        "/:userclassId/champions",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: postChampionSchema,
@@ -119,7 +117,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteUserclassSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -143,7 +140,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/userclasses/:userclassId",
+        "/:userclassId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteUserclassSchema,
@@ -197,7 +194,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/userclasses/:userclassId",
+        "/:userclassId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: putUserclassSchema,
@@ -253,7 +250,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/userclasses/:userclassId/champions/:accountId",
+        "/:userclassId/champions/:accountId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: putChampionSchema,
@@ -274,7 +271,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteChampionSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -298,7 +294,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/userclasses/:userclassId/champions/:accountId",
+        "/:userclassId/champions/:accountId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteChampionSchema,
@@ -324,7 +320,6 @@ module.exports = async function (fastify, opts) {
         );
     };
     const getUserclassRequirementsSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -342,7 +337,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/userclasses/:userclassId/requirements",
+        "/:userclassId/requirements",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getUserclassRequirementsSchema,
@@ -360,7 +355,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteUserclassRequirementSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -385,7 +379,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/userclasses/:userclassId/requirements/:requirementId",
+        "/:userclassId/requirements/:requirementId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteUserclassRequirementSchema,

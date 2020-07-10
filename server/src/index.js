@@ -46,5 +46,7 @@ module.exports = function (fastify, opts, next) {
 
   fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), development);
 
+  // fastify.register(require('fastify-formbody'));
+
   next();
 };

@@ -48,7 +48,7 @@ module.exports = async (fastify, opts) => {
       },
     },
   };
-  fastify.post("/users", { schema: postUserSchema }, async (request, reply) => {
+  fastify.post("/", { schema: postUserSchema }, async (request, reply) => {
     const { email } = request.body;
     const verification_token = generateUuid();
     const placeholderImage = generateFromString(email);
@@ -120,7 +120,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.put(
-    "/users/:email",
+    "/:email",
     {
       schema: putUserSchema,
     },
@@ -192,7 +192,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.put(
-    "/users/:userId/settings",
+    "/:userId/settings",
     {
       schema: putUserSettingsSchema,
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
@@ -251,7 +251,6 @@ module.exports = async (fastify, opts) => {
 
 
   const getUserSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -283,7 +282,7 @@ module.exports = async (fastify, opts) => {
   };
   // Get one user
   fastify.get(
-    "/users/:userId",
+    "/:userId",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: getUserSchema,
@@ -326,7 +325,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.post(
-    "/users/:email/resets",
+    "/:email/resets",
     { schema: resetPasswordSchema },
     async function (request, reply) {
       // Set new verification token
@@ -394,7 +393,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.put(
-    "/users/:email/password",
+    "/:email/password",
     { schema: updatePasswordSchema },
     async function (request, reply) {
       const { token, password } = request.body;
@@ -422,7 +421,6 @@ module.exports = async (fastify, opts) => {
   );
 
   const getTeamsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -462,7 +460,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.get(
-    "/users/:userId/teams",
+    "/:userId/teams",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: getTeamsSchema,
@@ -483,7 +481,6 @@ module.exports = async (fastify, opts) => {
   );
 
   const getInvitesSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -515,7 +512,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.get(
-    "/users/:userId/invites",
+    "/:userId/invites",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: getInvitesSchema,
@@ -566,7 +563,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.post(
-    "/users/:userId/teams",
+    "/:userId/teams",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: acceptInviteSchema,
@@ -614,7 +611,6 @@ module.exports = async (fastify, opts) => {
   );
 
   const deleteInviteSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -640,7 +636,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.delete(
-    "/users/:userId/invites/:inviteId",
+    "/:userId/invites/:inviteId",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: deleteInviteSchema,
@@ -672,7 +668,6 @@ module.exports = async (fastify, opts) => {
   );
 
   const leaveTeamSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -698,7 +693,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.delete(
-    "/users/:userId/teams/:teamId",
+    "/:userId/teams/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
       schema: leaveTeamSchema,

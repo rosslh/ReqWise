@@ -34,7 +34,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.put(
-    "/reqversions/:reqversionId",
+    "/:reqversionId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: putReqversionSchema,
@@ -73,7 +73,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteReqversionSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -97,7 +96,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.delete(
-    "/reqversions/:reqversionId",
+    "/:reqversionId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: deleteReqversionSchema,
@@ -121,7 +120,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getStatusHistorySchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -139,7 +137,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/reqversions/:reqversionId/history",
+    "/:reqversionId/history",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getStatusHistorySchema,
@@ -156,7 +154,6 @@ module.exports = async function (fastify, opts) {
 
 
   const getCommentsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -197,7 +194,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/reqversions/:reqversionId/comments",
+    "/:reqversionId/comments",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getCommentsSchema,
@@ -254,7 +251,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/reqversions/:reqversionId/comments",
+    "/:reqversionId/comments",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postCommentSchema,

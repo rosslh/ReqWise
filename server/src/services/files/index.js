@@ -4,7 +4,6 @@ module.exports = async function (fastify, opts) {
     const storage = new Storage();
 
     const getFileSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -22,7 +21,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/files/:fileId",
+        "/:fileId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getFileSchema,
@@ -73,7 +72,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/files/:fileId",
+        "/:fileId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: putFileSchema,
@@ -129,7 +128,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteFileSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -153,7 +151,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/files/:fileId",
+        "/:fileId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteFileSchema,
@@ -194,7 +192,6 @@ module.exports = async function (fastify, opts) {
         );
     };
     const getFileRequirementsSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -212,7 +209,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/files/:fileId/requirements",
+        "/:fileId/requirements",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getFileRequirementsSchema,
@@ -230,7 +227,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteFileRequirementSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -255,7 +251,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/files/:fileId/requirements/:requirementId",
+        "/:fileId/requirements/:requirementId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteFileRequirementSchema,

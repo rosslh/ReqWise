@@ -4,7 +4,6 @@ const htmlToText = require('html-to-text');
 
 module.exports = async (fastify, opts) => {
     const postEventSchema = {
-        body: {},
         queryString: {},
         params: {},
         headers: {
@@ -17,7 +16,7 @@ module.exports = async (fastify, opts) => {
         response: {},
     };
     fastify.post(
-        "/slack/events",
+        "/events",
         { schema: postEventSchema },
         async (request, reply) => {
             if (request.body.challenge) {
@@ -65,6 +64,30 @@ module.exports = async (fastify, opts) => {
                 }
             }
             return ["success"];
+        }
+    );
+
+
+    const postSlashCommandSchema = {
+        queryString: {},
+        params: {},
+        headers: {
+            type: "object",
+            properties: {
+                "Content-Type": { type: "string" },
+            },
+            required: ["Content-Type"],
+        },
+        response: {},
+    };
+    fastify.post(
+        "/slash-command",
+        { schema: postSlashCommandSchema },
+        async (request, reply) => {
+            if (request.body.challenge) {
+                return request.body.challenge;
+            }
+            console.log(request.body);
         }
     );
 };

@@ -38,7 +38,7 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.post(
-    "/auth/token",
+    "/token",
     { schema: postTokenSchema },
     async (request, reply) => {
       const { email, password } = request.body;

@@ -1,6 +1,5 @@
 module.exports = async function (fastify, opts) {
   const getRequirementSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -70,7 +69,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/requirements/:requirementId",
+    "/:requirementId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementSchema,
@@ -122,7 +121,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteRequirementSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -146,7 +144,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.delete(
-    "/requirements/:requirementId",
+    "/:requirementId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: deleteRequirementSchema,
@@ -221,7 +219,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.patch(
-    "/requirements/:requirementId",
+    "/:requirementId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: patchRequirementSchema,
@@ -281,7 +279,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/requirements/:requirementId/versions",
+    "/:requirementId/versions",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postReqVersionSchema,
@@ -345,7 +343,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getRequirementVersionsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -363,7 +360,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/requirements/:requirementId/versions",
+    "/:requirementId/versions",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementVersionsSchema,
@@ -391,7 +388,6 @@ module.exports = async function (fastify, opts) {
     });
 
   const getRequirementFilesSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -409,7 +405,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/requirements/:requirementId/files",
+    "/:requirementId/files",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementFilesSchema,
@@ -449,7 +445,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.post(
-    "/requirements/:requirementId/files",
+    "/:requirementId/files",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postRequirementFileSchema,
@@ -469,7 +465,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getRequirementUserclassesSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -487,7 +482,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/requirements/:requirementId/userclasses",
+    "/:requirementId/userclasses",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementUserclassesSchema,
@@ -527,7 +522,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.post(
-    "/requirements/:requirementId/userclasses",
+    "/:requirementId/userclasses",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postRequirementUserclassSchema,

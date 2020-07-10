@@ -1,6 +1,5 @@
 module.exports = async function (fastify, opts) {
     const getStakeholderGroupSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -18,7 +17,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/stakeholders/:stakeholderGroupId",
+        "/:stakeholderGroupId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getStakeholderGroupSchema,
@@ -36,7 +35,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const getStakeholderGroupUsers = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -54,7 +52,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/stakeholders/:stakeholderGroupId/users",
+        "/:stakeholderGroupId/users",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getStakeholderGroupUsers,
@@ -93,7 +91,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.post(
-        "/stakeholders/:stakeholderGroupId/users",
+        "/:stakeholderGroupId/users",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: postStakeholderSchema,
@@ -114,7 +112,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteStakeholderGroupSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -138,7 +135,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/stakeholders/:stakeholderGroupId",
+        "/:stakeholderGroupId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteStakeholderGroupSchema,
@@ -192,7 +189,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/stakeholders/:stakeholderGroupId",
+        "/:stakeholderGroupId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: putStakeholderGroupSchema,
@@ -247,7 +244,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/stakeholders/:stakeholderGroupId/users/:accountId",
+        "/:stakeholderGroupId/users/:accountId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: putStakeholderSchema,
@@ -268,7 +265,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteStakeholderSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -292,7 +288,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/stakeholders/:stakeholderGroupId/users/:accountId",
+        "/:stakeholderGroupId/users/:accountId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteStakeholderSchema,
@@ -309,7 +305,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const getStakeholderGroupReqgroupsSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -327,7 +322,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/stakeholders/:stakeholderGroupId/reqgroups",
+        "/:stakeholderGroupId/reqgroups",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getStakeholderGroupReqgroupsSchema,
@@ -344,7 +339,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const deleteStakeholderGroupReqgroupSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -369,7 +363,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/stakeholders/:stakeholderGroupId/reqgroups/:reqgroupId",
+        "/:stakeholderGroupId/reqgroups/:reqgroupId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deleteStakeholderGroupReqgroupSchema,

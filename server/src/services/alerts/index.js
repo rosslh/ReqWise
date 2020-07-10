@@ -1,6 +1,5 @@
 module.exports = async function (fastify, opts) {
     const getUnreadAlertsSchema = {
-        body: {},
         queryString: {
             type: "object",
             properties: {
@@ -21,7 +20,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/alerts",
+        "/",
         {
             preValidation: [fastify.authenticate],
             schema: getUnreadAlertsSchema,
@@ -46,7 +45,6 @@ module.exports = async function (fastify, opts) {
     );
 
     const getReadAlertsSchema = {
-        body: {},
         queryString: {
             type: "object",
             properties: {
@@ -67,7 +65,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/alerts/read",
+        "/read",
         {
             preValidation: [fastify.authenticate],
             schema: getReadAlertsSchema,
@@ -122,7 +120,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/alerts",
+        "/",
         {
             preValidation: [fastify.authenticate],
             schema: putAlertBulkSchema,
@@ -172,7 +170,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.put(
-        "/alerts/:alertId",
+        "/:alertId",
         {
             preValidation: [fastify.authenticate],
             schema: putAlertSchema,

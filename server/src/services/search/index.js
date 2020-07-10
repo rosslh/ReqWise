@@ -2,7 +2,6 @@ const Fuse = require('fuse.js');
 
 module.exports = async function (fastify, opts) {
     const getSearchResultsSchema = {
-        body: {},
         queryString: {
             type: "object",
             properties: {
@@ -25,7 +24,7 @@ module.exports = async function (fastify, opts) {
         response: {},
     };
     fastify.get(
-        "/projects/:projectId/search",
+        "/:projectId",
         {
             preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: getSearchResultsSchema,

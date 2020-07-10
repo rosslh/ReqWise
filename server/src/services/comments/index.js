@@ -1,6 +1,5 @@
 module.exports = async function (fastify, opts) {
     const deleteCommentSchema = {
-        body: {},
         queryString: {},
         params: {
             type: "object",
@@ -24,7 +23,7 @@ module.exports = async function (fastify, opts) {
         },
     };
     fastify.delete(
-        "/comments/:commentId",
+        "/:commentId",
         {
             preValidation: [fastify.authenticate, fastify.isCommenter, fastify.isTeamMember],
             schema: deleteCommentSchema,

@@ -13,7 +13,7 @@
   $: id = $page.params.id;
 
   $: searchResults = get(
-    `/projects/${id}/search?q=${encodeURIComponent(q)}`,
+    `/search/${id}?q=${encodeURIComponent(q)}`,
     $session.user && $session.user.jwt
   );
 </script>

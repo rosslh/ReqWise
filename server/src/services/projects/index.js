@@ -4,7 +4,6 @@ module.exports = async function (fastify, opts) {
   const storage = new Storage();
 
   const getProjectSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -31,7 +30,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/projects/:projectId",
+    "/:projectId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getProjectSchema,
@@ -99,7 +98,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteProjectSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -123,7 +121,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.delete(
-    "/projects/:projectId",
+    "/:projectId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: { deleteProjectSchema },
@@ -135,7 +133,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getProjectReqgroupsSchema = {
-    body: {},
     queryString: {
       type: "object",
       properties: {
@@ -199,7 +196,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/projects/:projectId/reqgroups",
+    "/:projectId/reqgroups",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getProjectReqgroupsSchema,
@@ -266,7 +263,6 @@ module.exports = async function (fastify, opts) {
     });
 
   const getProjectFilesSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -284,7 +280,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/projects/:projectId/files",
+    "/:projectId/files",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getProjectFilesSchema,
@@ -343,7 +339,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/projects/:projectId/reqgroups",
+    "/:projectId/reqgroups",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postReqgroupSchema,
@@ -442,7 +438,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/projects/:projectId/files",
+    "/:projectId/files",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postFileSchema,
@@ -528,7 +524,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getProjectStakeholderGroupsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -546,7 +541,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/projects/:projectId/stakeholders",
+    "/:projectId/stakeholders",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getProjectStakeholderGroupsSchema,
@@ -594,7 +589,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/projects/:projectId/stakeholders",
+    "/:projectId/stakeholders",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postStakeholderGroupSchema,
@@ -636,7 +631,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getProjectUserclassesSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -654,7 +648,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/projects/:projectId/userclasses",
+    "/:projectId/userclasses",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getProjectUserclassesSchema,
@@ -670,7 +664,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getProjectActivitySchema = {
-    body: {},
     queryString: {
       type: "object",
       properties: {
@@ -692,7 +685,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/projects/:projectId/activity",
+    "/:projectId/activity",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getProjectActivitySchema,
@@ -747,7 +740,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/projects/:projectId/userclasses",
+    "/:projectId/userclasses",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postUserclassSchema,

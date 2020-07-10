@@ -35,7 +35,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/teams",
+    "/",
     {
       preValidation: [fastify.authenticate],
       schema: postTeamSchema,
@@ -63,7 +63,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getTeamSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -92,7 +91,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/teams/:teamId",
+    "/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getTeamSchema,
@@ -151,7 +150,7 @@ module.exports = async function (fastify, opts) {
   };
 
   fastify.put(
-    "/teams/:teamId",
+    "/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: putTeamSchema,
@@ -173,7 +172,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteTeamSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -198,7 +196,7 @@ module.exports = async function (fastify, opts) {
   };
 
   fastify.delete(
-    "/teams/:teamId",
+    "/:teamId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: deleteTeamSchema,
@@ -211,7 +209,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getTeamMembersSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -244,7 +241,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/teams/:teamId/members",
+    "/:teamId/members",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getTeamMembersSchema,
@@ -288,7 +285,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.post(
-    "/teams/:teamId/admins",
+    "/:teamId/admins",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: postTeamAdminSchema,
@@ -305,7 +302,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteTeamAdminSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -324,7 +320,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.delete(
-    "/teams/:teamId/admins/:adminId",
+    "/:teamId/admins/:adminId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: deleteTeamAdminSchema,
@@ -353,7 +349,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getTeamInvitesSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -384,7 +379,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/teams/:teamId/invites",
+    "/:teamId/invites",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getTeamInvitesSchema,
@@ -435,7 +430,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/teams/:teamId/invites",
+    "/:teamId/invites",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: postTeamInviteSchema,
@@ -486,7 +481,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteInviteSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -512,7 +506,7 @@ module.exports = async function (fastify, opts) {
   };
 
   fastify.delete(
-    "/teams/:teamId/invites/:inviteId",
+    "/:teamId/invites/:inviteId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: deleteInviteSchema,
@@ -527,7 +521,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteMemberSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -553,7 +546,7 @@ module.exports = async function (fastify, opts) {
   };
 
   fastify.delete(
-    "/teams/:teamId/members/:memberId",
+    "/:teamId/members/:memberId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: deleteMemberSchema,
@@ -586,7 +579,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getTeamProjectsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -616,7 +608,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/teams/:teamId/projects",
+    "/:teamId/projects",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getTeamProjectsSchema,
@@ -670,7 +662,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/teams/:teamId/projects",
+    "/:teamId/projects",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postProjectSchema,
@@ -749,7 +741,7 @@ module.exports = async function (fastify, opts) {
   };
 
   fastify.put(
-    "/teams/:teamId/slack",
+    "/:teamId/slack",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: putTeamSlackSchema,

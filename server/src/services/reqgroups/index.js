@@ -1,6 +1,5 @@
 module.exports = async function (fastify, opts) {
   const getReqgroupSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -55,7 +54,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/reqgroups/:reqgroupId",
+    "/:reqgroupId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getReqgroupSchema,
@@ -153,7 +152,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.put(
-    "/reqgroups/:reqgroupId",
+    "/:reqgroupId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: putReqgroupSchema,
@@ -177,7 +176,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const deleteReqgroupSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -201,7 +199,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.delete(
-    "/reqgroups/:reqgroupId",
+    "/:reqgroupId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: deleteReqgroupSchema,
@@ -231,7 +229,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getRequirementsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -270,7 +267,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.get(
-    "/reqgroups/:reqgroupId/requirements",
+    "/:reqgroupId/requirements",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getRequirementsSchema,
@@ -358,7 +355,7 @@ module.exports = async function (fastify, opts) {
     },
   };
   fastify.post(
-    "/reqgroups/:reqgroupId/requirements",
+    "/:reqgroupId/requirements",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postRequirementSchema,
@@ -510,7 +507,6 @@ module.exports = async function (fastify, opts) {
   );
 
   const getReqgroupStakeholderGroupsSchema = {
-    body: {},
     queryString: {},
     params: {
       type: "object",
@@ -528,7 +524,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/reqgroups/:reqgroupId/stakeholders",
+    "/:reqgroupId/stakeholders",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getReqgroupStakeholderGroupsSchema,
@@ -568,7 +564,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.post(
-    "/reqgroups/:reqgroupId/stakeholders",
+    "/:reqgroupId/stakeholders",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postRequirementUserclassSchema,
