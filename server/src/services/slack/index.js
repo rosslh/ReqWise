@@ -69,6 +69,16 @@ module.exports = async (fastify, opts) => {
 
 
     const postSlashCommandSchema = {
+        body: {
+            type: "object",
+            properties: {
+                user_id: { type: "string" },
+                user_name: { type: "string" },
+                command: { type: "string" },
+                text: { type: "string" }
+            },
+            required: ["user_id", "user_name", "command", "text"]
+        },
         queryString: {},
         params: {},
         headers: {
@@ -84,10 +94,45 @@ module.exports = async (fastify, opts) => {
         "/slash-command",
         { schema: postSlashCommandSchema },
         async (request, reply) => {
-            if (request.body.challenge) {
-                return request.body.challenge;
+            if (request.body.text === "help") {
+                return ({
+                    "blocks": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Create a feature: `/reqwise create feature`"
+                            }
+                        },
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Create a quality attribute: `/reqwise create qa`"
+                            }
+                        },
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Create a business requirement group: `/reqwise create br`"
+                            }
+                        },
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Create a requirement: `/reqwise create requirement`"
+                            }
+                        },
+                    ]
+                });
             }
-            console.log(request.body);
+            else if (request.body.text === "create") {
+                return "TODO: implement this"; // TODO
+            }
+            // console.log(request.body);
+            return ["success"];
         }
     );
 };

@@ -18,6 +18,8 @@ function fastifyKnexJS(fastify, opts, next) {
 }
 
 module.exports = function (fastify, opts, next) {
+  fastify.register(require('fastify-formbody'));
+
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
   // through your application
@@ -45,8 +47,6 @@ module.exports = function (fastify, opts, next) {
   });
 
   fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), development);
-
-  // fastify.register(require('fastify-formbody'));
 
   next();
 };
