@@ -419,7 +419,7 @@ module.exports = async function (fastify, opts) {
         let slackMessageTs;
         if (token) {
           const channel = await fastify.slackGetChannelId(project_id);
-          slackMessageTs = (await fastify.slack.chat.postMessage(fastify.slackPayloads.newRequirementMessage({ request, status, description, priority, project_id, requirement_id, ppuid_id, fastify, reqgroup_id, reqgroup_ppuid, reqgroup_name, rationale, token, channel }))).ts;
+          slackMessageTs = (await fastify.slack.chat.postMessage(fastify.slackPayloads.newRequirementMessage({ request, authorName: request.user.name, author_imageName: request.user.imageName, status, description, priority, project_id, requirement_id, ppuid_id, fastify, reqgroup_id, reqgroup_ppuid, reqgroup_name, rationale, token, channel }))).ts;
         }
 
         await fastify

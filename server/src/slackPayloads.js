@@ -231,9 +231,9 @@ module.exports = {
             })
         };
     },
-    newRequirementMessage: ({ request, status, description, priority, project_id, requirement_id, ppuid_id, fastify, reqgroup_id, reqgroup_ppuid, reqgroup_name, rationale, token, channel }) => {
+    newRequirementMessage: ({ status, description, priority, project_id, requirement_id, ppuid_id, fastify, reqgroup_id, reqgroup_ppuid, reqgroup_name, rationale, token, channel, author_name, author_imageName }) => {
         return {
-            text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement.`,
+            text: `${author_name} ${status === "proposed" ? "proposed" : "made"} a new requirement.`,
             blocks: [
                 {
                     "type": "section",
@@ -271,7 +271,7 @@ module.exports = {
                     "fields": [
                         {
                             "type": "mrkdwn",
-                            "text": `*Author:*\n${request.user.name}`
+                            "text": `*Author:*\n${author_name}`
                         },
                         {
                             "type": "mrkdwn",
@@ -282,8 +282,8 @@ module.exports = {
             ],
             token,
             channel,
-            username: request.user.name,
-            icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+            username: author_name,
+            icon_url: author_imageName && `https://storage.googleapis.com/user-file-storage/${author_imageName}`
         };
     }
 }
