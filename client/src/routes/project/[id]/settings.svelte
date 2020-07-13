@@ -38,7 +38,7 @@
 
   const changeProjectName = async () => {
     await put(
-      `/project/${id}`,
+      `/projects/${id}`,
       {
         name: projectName
       },
@@ -51,7 +51,7 @@
   const changeSlackChannel = async () => {
     if (/^[a-z0-9][a-z0-9_-]{1,79}$/.test(slackChannel)) {
       await put(
-        `/project/${id}`,
+        `/projects/${id}`,
         {
           slackChannelName: slackChannel
         },

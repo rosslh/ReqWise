@@ -79,7 +79,7 @@ module.exports = async function (fastify, opts) {
   };
 
   fastify.put(
-    "/project/:projectId",
+    "/:projectId",
     {
       preValidation: [fastify.authenticate, fastify.isTeamAdmin],
       schema: putProjectSchema,
