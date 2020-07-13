@@ -33,7 +33,7 @@ module.exports = {
             ]
         };
     },
-    newFeatureModal: context => {
+    newReqgroupModal: context => {
         return {
             ...context.body,
             token: context.slackAccessToken,
@@ -41,9 +41,9 @@ module.exports = {
                 type: 'modal',
                 title: {
                     type: 'plain_text',
-                    text: 'Submit a new feature'
+                    text: 'New requirement group'
                 },
-                callback_id: 'new_feature',
+                callback_id: 'new_reqgroup',
                 submit: {
                     type: 'plain_text',
                     text: 'Submit'
@@ -54,12 +54,44 @@ module.exports = {
                         type: 'input',
                         label: {
                             type: 'plain_text',
-                            text: 'Feature name'
+                            text: 'Name'
                         },
                         element: {
                             action_id: 'name',
                             type: 'plain_text_input',
                         },
+                    },
+                    {
+                        block_id: 'type_block',
+                        type: 'input',
+                        label: {
+                            type: 'plain_text',
+                            text: 'Type'
+                        },
+                        element: {
+                            action_id: 'type',
+                            type: 'static_select',
+                            options: [{
+                                text: {
+                                    type: "plain_text",
+                                    text: "Feature"
+                                },
+                                value: "feature"
+                            }, {
+                                text: {
+                                    type: "plain_text",
+                                    text: "Business requirement group"
+                                },
+                                value: "business"
+                            }, {
+                                text: {
+                                    type: "plain_text",
+                                    text: "Quality attribute"
+                                },
+                                value: "quality"
+                            },]
+                        },
+                        optional: false
                     },
                     {
                         block_id: 'project_block',

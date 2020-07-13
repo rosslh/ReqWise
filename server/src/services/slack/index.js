@@ -94,7 +94,7 @@ module.exports = async (fastify, opts) => {
         async (request, reply) => {
             if (request.body.text === "help") {
                 return fastify.slackPayloads.help();
-            } else if (request.body.text.startsWith("new feature")) {
+            } else if (request.body.text.startsWith("new feature") || request.body.text.startsWith("new reqgroup")) {
                 const { slackAccessToken } = await fastify.knex
                     .from("team")
                     .select("*")
@@ -105,7 +105,7 @@ module.exports = async (fastify, opts) => {
                     .select("*", "project.name as name", "project.id as id")
                     .where({ slackTeamId: request.body.team_id })
                     .join("project", "project.team_id", "team.id");
-                const modal = fastify.slackPayloads.newFeatureModal({
+                const modal = fastify.slackPayloads.newReqgroupModal({
                     projects,
                     slackAccessToken,
                     body: request.body,
@@ -177,12 +177,13 @@ module.exports = async (fastify, opts) => {
         { schema: postInteractionSchema },
         async (request, reply) => {
             const data = JSON.parse(request.body.payload);
-            if (data.view.callback_id === "new_feature") {
+            if (data.view.callback_id === "new_reqgroup") {
                 const name = data.view.state.values.name_block.name.value;
                 const project_id = Number(
                     data.view.state.values.project_block.project.selected_option.value
                 );
-                const type = "feature";
+                const type = data.view.state.values.type_block.type.selected_option.value;
+
                 const isPrioritized = !!data.view.state.values.prioritizable_block
                     .is_prioritizable.selected_options;
 
@@ -413,8 +414,8 @@ module.exports = async (fastify, opts) => {
                         account_id
                     );
                 }
-                return "";
             }
+            return "";
         }
     );
 };
