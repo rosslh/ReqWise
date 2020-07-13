@@ -419,59 +419,7 @@ module.exports = async function (fastify, opts) {
         let slackMessageTs;
         if (token) {
           const channel = await fastify.slackGetChannelId(project_id);
-          slackMessageTs = (await fastify.slack.chat.postMessage({
-            text: `${request.user.name} ${status === "proposed" ? "proposed" : "made"} a new requirement.`,
-            blocks: [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": `You have a new requirement: *<https://reqwise.com/project/${fastify.obfuscateId(project_id)}/requirement/${fastify.obfuscateId(requirement_id)}|#${ppuid_id} - ${description}>*. Give feedback by replying to this message.`
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": `*Description:*\n${description}`
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": `*Priority:*\n${priority}`
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": `*Status:*\n${status}`
-                  },
-                  ...(reqgroup_id ? [{
-                    "type": "mrkdwn",
-                    "text": `*Part of requirement group:*\n<https://reqwise.com/project/${fastify.obfuscateId(project_id)}/reqgroup/${fastify.obfuscateId(reqgroup_id)}|#${reqgroup_ppuid} - ${reqgroup_name}>`
-                  }] : [])
-                ]
-              },
-              {
-                "type": "divider"
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": `*Author:*\n${request.user.name}`
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": `*Rationale:*\n${rationale || "_No rationale_"}`
-                  }
-                ]
-              }
-            ],
-            token,
-            channel,
-            username: request.user.name,
-            icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
-          })).ts;
+          slackMessageTs = (await fastify.slack.chat.postMessage(fastify.slackPayloads.newRequirementMessage({ request, authorName: request.user.name, author_imageName: request.user.imageName, status, description, priority, project_id, requirement_id, ppuid_id, fastify, reqgroup_id, reqgroup_ppuid, reqgroup_name, rationale, token, channel }))).ts;
         }
 
         await fastify

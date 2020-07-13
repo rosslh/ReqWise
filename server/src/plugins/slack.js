@@ -1,10 +1,12 @@
 const fp = require("fastify-plugin");
 const { WebClient } = require('@slack/web-api');
+const payloads = require("../slackPayloads");
 
 module.exports = fp(function (fastify, opts, done) {
     const web = new WebClient();
 
     fastify.decorate("slack", web);
+
     fastify.decorate("slackGetChannelId", async (projectId) => {
         const { slackAccessToken: token, slackChannelName } = await fastify.knex
             .from("project")
@@ -28,6 +30,8 @@ module.exports = fp(function (fastify, opts, done) {
         }
         return channel;
     });
+
+    fastify.decorate("slackPayloads", payloads);
 
     done();
 });
