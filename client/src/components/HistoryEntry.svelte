@@ -101,8 +101,6 @@
   .authorImageWrapper {
     height: 3.5rem;
     width: 3.5rem;
-    border-radius: 0.8rem;
-    overflow: hidden;
     margin-right: 0.75rem;
   }
 
@@ -124,7 +122,7 @@
         {/if}
       </div>
       <div class="bottom">
-        <div class="authorImageWrapper">
+        <div class="authorImageWrapper squircle">
           {#if reqversion.authorImageName}
             <img
               src={`https://storage.googleapis.com/user-file-storage/${reqversion.authorImageName}`}

@@ -109,8 +109,6 @@
     height: 9rem;
     width: 9rem;
     border: 0.1rem solid var(--borderColor);
-    border-radius: 0.8rem;
-    overflow: hidden;
     margin: 1.5rem 0 0.5rem;
   }
 
@@ -139,7 +137,7 @@
     </fieldset>
     <fieldset>
       <label for="file">Profile image</label>
-      <div class="profileImageWrapper">
+      <div class="profileImageWrapper squircle">
         {#if currentImage}
           <img
             src={`https://storage.googleapis.com/user-file-storage/${currentImage}`}

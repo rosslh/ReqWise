@@ -82,8 +82,6 @@
   div.imageWrapper {
     height: 3rem;
     width: 3rem;
-    border-radius: 0.8rem;
-    overflow: hidden;
     margin-right: 1.6rem;
   }
 
@@ -179,7 +177,7 @@
   {/if}
   <div class="bottom">
     <div class="bottomLeft">
-      <div class="imageWrapper">
+      <div class="imageWrapper squircle">
         {#if notification.authorImageName}
           <img
             src={`https://storage.googleapis.com/user-file-storage/${notification.authorImageName}`}

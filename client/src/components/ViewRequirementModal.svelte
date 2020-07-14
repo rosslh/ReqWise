@@ -244,8 +244,6 @@
   .authorImageWrapper {
     height: 3.5rem;
     width: 3.5rem;
-    border-radius: 0.8rem;
-    overflow: hidden;
     margin-right: 0.8rem;
   }
 
@@ -440,7 +438,7 @@
       <h5>Proposer</h5>
       {#if loaded}
         <div class="authorInfo">
-          <div class="authorImageWrapper">
+          <div class="authorImageWrapper squircle">
             {#if authorImageName}
               <img
                 src={`https://storage.googleapis.com/user-file-storage/${authorImageName}`}

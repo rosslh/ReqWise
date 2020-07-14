@@ -52,15 +52,14 @@
   }
   div.profileImageWrapper {
     overflow: hidden;
-    height: calc(var(--sidebarWidth) - 9rem);
-    width: calc(var(--sidebarWidth) - 9rem);
+    height: calc(var(--sidebarWidth) - 7rem);
+    width: calc(var(--sidebarWidth) - 7rem);
     margin: 1rem auto 0;
     box-shadow: var(--boxShadow);
-    border-radius: 0.8rem;
   }
 
   div.userColumnLeft .button {
-    width: 100%;
+    width: calc(var(--sidebarWidth) - 7rem);
   }
 
   h1 {
@@ -85,7 +84,7 @@
 </svelte:head>
 <div>
   <div class="userColumnLeft">
-    <div class="profileImageWrapper">
+    <div class="profileImageWrapper squircle">
       {#if $session.user.imageName}
         <img
           src={`https://storage.googleapis.com/user-file-storage/${$session.user.imageName}`}

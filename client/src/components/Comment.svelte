@@ -37,8 +37,6 @@
   div.imageWrapper {
     height: 3rem;
     width: 3rem;
-    border-radius: 0.8rem;
-    overflow: hidden;
   }
 
   div.imageWrapper img,
@@ -63,7 +61,7 @@
 </style>
 
 <div class="commentWrapper">
-  <div class="imageWrapper">
+  <div class="imageWrapper squircle">
     {#if comment.authorImageName}
       <img
         src={`https://storage.googleapis.com/user-file-storage/${comment.authorImageName}`}
