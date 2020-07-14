@@ -1,9 +1,10 @@
 <script>
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   const { session } = stores();
 
-  export let update;
   export let close;
+  export let projectId;
+
   import { post } from "../api.js";
 
   import SubmitButton from "../components/SubmitButton.svelte";
@@ -11,12 +12,12 @@
   let title = "";
 
   const submitNewQuestionnaire = async () => {
-    await post(
+    const [result] = await post(
       `/projects/${projectId}/questionnaires`,
       { title },
       $session.user && $session.user.jwt
     );
-    await update();
+    goto(`/project/${projectId}/brainstorm/drafts/${result}`);
     close();
   };
 </script>

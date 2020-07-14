@@ -26,7 +26,7 @@ exports.up = function (knex) {
             table.increments("id").primary();
             table.text("prompt").notNullable();
             table
-                .integer("brainstormForm")
+                .integer("brainstormForm_id")
                 .references("brainstormForm.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
@@ -35,12 +35,13 @@ exports.up = function (knex) {
             table.enu("responseType", ["text", "paragraph", "radio", "checkbox", "dropdown", "numeric", "likert"]).notNullable();
             table.integer("numericFloor");
             table.integer("numericCeiling");
+            table.timestamp("created_at").defaultTo(knex.fn.now());
         }),
         knex.schema.createTable("brainstormResponseOption", (table) => { // only for radio, checkbox, and dropdown
             table.increments("id").primary();
             table.text("value").notNullable();
             table
-                .integer("brainstormPrompt")
+                .integer("brainstormPrompt_id")
                 .references("brainstormPrompt.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
@@ -51,7 +52,7 @@ exports.up = function (knex) {
             table.increments("id").primary();
             table.text("ipAddress").notNullable();
             table
-                .integer("brainstormResponseOption")
+                .integer("brainstormResponseOption_id")
                 .references("brainstormResponseOption.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
@@ -59,7 +60,7 @@ exports.up = function (knex) {
             table.text("textResponse"); // only for text and paragraph
             table.integer("numericResponse"); // only for numeric and likert
             table
-                .integer("account")
+                .integer("account_id")
                 .references("account.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
@@ -70,14 +71,14 @@ exports.up = function (knex) {
             table.text("ipAddress").notNullable();
             table.enu("reactionType", ["upvote", "downvote"]).defaultTo("upvote").notNullable();
             table
-                .integer("brainstormResponse")
+                .integer("brainstormResponse_id")
                 .references("brainstormResponse.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
                 .unsigned()
                 .notNullable();
             table
-                .integer("account")
+                .integer("account_id")
                 .references("account.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
@@ -86,14 +87,14 @@ exports.up = function (knex) {
         knex.schema.createTable("brainstormResponse_requirement", (table) => {
             table.increments("id").primary();
             table
-                .integer("brainstormResponse")
+                .integer("brainstormResponse_id")
                 .references("brainstormResponse.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
                 .unsigned()
                 .notNullable();
             table
-                .integer("requirement")
+                .integer("requirement_id")
                 .references("requirement.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
@@ -103,14 +104,14 @@ exports.up = function (knex) {
         knex.schema.createTable("brainstormResponse_reqgroup", (table) => {
             table.increments("id").primary();
             table
-                .integer("brainstormResponse")
+                .integer("brainstormResponse_id")
                 .references("brainstormResponse.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
                 .unsigned()
                 .notNullable();
             table
-                .integer("reqgroup")
+                .integer("reqgroup_id")
                 .references("reqgroup.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
