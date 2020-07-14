@@ -1,15 +1,10 @@
 <script>
   import { stores } from "@sapper/app";
-  import { modalContent, modalProps } from "../../../../../stores.js";
-  import NewQuestionnaireModal from "../../../../../components/NewQuestionnaireModal.svelte";
+  // import { modalContent, modalProps } from "../../../../../stores.js";
+  // import NewQuestionnaireModal from "../../../../../components/NewQuestionnaireModal.svelte";
   import { get } from "../../../../../api.js";
 
   const { page, session } = stores();
-
-  const newQuestionnaire = () => {
-    modalContent.set(NewQuestionnaireModal);
-    modalProps.set({});
-  };
 
   const questionnaires = get(
     `/projects/${$page.params.id}/questionnaires?draft=true`,

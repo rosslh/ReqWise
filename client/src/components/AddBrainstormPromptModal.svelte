@@ -1,5 +1,5 @@
 <script>
-  import { stores, goto } from "@sapper/app";
+  import { stores } from "@sapper/app";
   const { session } = stores();
   import Select from "svelte-select";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";

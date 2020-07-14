@@ -13,17 +13,18 @@
   import { stores } from "@sapper/app";
   import { modalContent, modalProps } from "../../../../../../stores.js";
   import AddBrainstormPromptModal from "../../../../../../components/AddBrainstormPromptModal.svelte";
+  import BrainstormPrompt from "../../../../../../components/BrainstormPrompt.svelte";
 
   export let questionnaire;
 
   let prompts = questionnaire.prompts;
 
-  const { page } = stores();
+  const { page, session } = stores();
 
   $: updatePrompts = async () => {
     ({ prompts } = await get(
       `/questionnaires/${$page.params.draftId}`,
-      session.user && session.user.jwt
+      $session.user && $session.user.jwt
     ));
   };
 
@@ -34,14 +35,13 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>
-    Draft questionnaire:
-    <em>{questionnaire.description}</em>
-  </h2>
+  <h2>[Draft] {questionnaire.description}</h2>
   <button on:click={addPrompt} class="button button-success">Add prompt</button>
   <button class="button button-secondary button-outline">Settings</button>
   <button class="button button-secondary button-outline">Publish</button>
 </section>
 <section class="contentWrapper">
-  {#each prompts as prompt (prompt.id)}{JSON.stringify(prompt)}{/each}
+  {#each prompts as prompt (prompt.id)}
+    <BrainstormPrompt {prompt} isDraft={true} />
+  {/each}
 </section>

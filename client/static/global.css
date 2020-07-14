@@ -344,17 +344,8 @@ button[disabled],
 input[type="button"][disabled],
 input[type="reset"][disabled],
 input[type="submit"][disabled] {
-  cursor: default;
-  opacity: 0.5;
-}
-
-.button[disabled]:hover,
-button[disabled]:hover,
-input[type="button"][disabled]:hover,
-input[type="reset"][disabled]:hover,
-input[type="submit"][disabled]:hover {
-  background-color: var(--themeColor);
-  border-color: var(--themeColor);
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
 }
 
 .button.button-outline,
@@ -372,15 +363,6 @@ input[type="button"].button-outline:hover,
 input[type="reset"].button-outline:hover,
 input[type="submit"].button-outline:hover {
   background-color: transparent;
-}
-
-.button.button-outline[disabled]:hover,
-button.button-outline[disabled]:hover,
-input[type="button"].button-outline[disabled]:hover,
-input[type="reset"].button-outline[disabled]:hover,
-input[type="submit"].button-outline[disabled]:hover {
-  border-color: inherit;
-  color: var(--themeColor);
 }
 
 code {
