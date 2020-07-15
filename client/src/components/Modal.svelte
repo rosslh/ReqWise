@@ -57,9 +57,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-height: 90vh;
+    height: 90vh;
     /* max-width: 90vw; */
-    box-sizing: content-box;
+    /* box-sizing: content-box; */
     overflow-y: scroll;
     padding: 0;
   }

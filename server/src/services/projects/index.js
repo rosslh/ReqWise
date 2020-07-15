@@ -630,6 +630,97 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const postQuestionnaireSchema = {
+    body: {
+      type: "object",
+      required: ["title"],
+      properties: {
+        title: { type: "string" }
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.post(
+    "/:projectId/questionnaires",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postQuestionnaireSchema,
+    },
+    async function (request, reply) {
+      const { title } = request.body;
+      const { projectId: project_id } = request.params;
+
+      const [id] = await fastify
+        .knex("brainstormForm")
+        .insert({
+          project_id,
+          description: title,
+          created_by: request.user.id
+        })
+        .returning("id");
+
+      await fastify.createAlert("create", "questionnaire", title, id, project_id, request.user.id);
+      return [fastify.obfuscateId(id)]; // used to redirect to questionnaire after creation
+    }
+  );
+
+  const getProjectQuestionnairesSchema = {
+    queryString: {
+      type: "object",
+      properties: {
+        draft: { type: "boolean" }
+      }
+    },
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:projectId/questionnaires",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectQuestionnairesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("brainstormForm")
+        .select("*", "brainstormForm.id as id")
+        .leftJoin("brainstormPrompt", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
+        .where({ "brainstormForm.project_id": request.params.projectId, "brainstormForm.is_draft": request.query.draft });
+    }
+  );
+
   const getProjectUserclassesSchema = {
     queryString: {},
     params: {
