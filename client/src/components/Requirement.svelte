@@ -73,7 +73,7 @@
 
   li.requirement > div.desc {
     flex-grow: 1;
-    min-width: 20rem;
+    min-width: 27rem;
   }
 
   li.requirement > div.ppuid {

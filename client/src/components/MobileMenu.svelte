@@ -132,6 +132,7 @@
     position: fixed;
     font-size: 1rem;
     box-shadow: var(--boxShadow);
+    border: 0.1rem solid var(--borderColor);
     top: 4rem;
     z-index: 300000;
     left: 0.5rem;

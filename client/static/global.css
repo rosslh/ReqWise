@@ -687,7 +687,6 @@ body {
 @supports ((-webkit-mask-size: cover) or (mask-size: cover)) or (-webkit-mask-size: cover) {
   .squircle {
     border-radius: 0;
-    border: none;
     -webkit-mask-image: url(/icon-mask.svg);
     -webkit-mask-size: cover;
     mask-image: url(/icon-mask.svg);

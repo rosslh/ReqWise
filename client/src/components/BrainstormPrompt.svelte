@@ -8,8 +8,8 @@
 
   import { modalContent, modalProps } from "../stores.js";
   import DeletePromptModal from "./DeletePromptModal.svelte";
-  import AddBrainstormResponseModal from "./AddBrainstormResponseModal.svelte";
-  //   import { get, del } from "../api.js";
+  import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
+  import { get } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import { stores } from "@sapper/app";
@@ -20,14 +20,6 @@
     modalProps.set({
       prompt,
       update
-    });
-  };
-
-  const addResponse = () => {
-    modalContent.set(AddBrainstormResponseModal);
-    modalProps.set({
-      prompt,
-      update: updateResponses
     });
   };
 
@@ -43,10 +35,16 @@
 
   const getType = () => {
     if (prompt.responseType === "likert") {
-      return "Likert scale (strongly disagree to strongly agree)";
+      return "Likert scale";
     } else {
       return capitalizeFirstLetter(prompt.responseType);
     }
+  };
+
+  let viewResponses = false;
+
+  const toggleView = () => {
+    viewResponses = !viewResponses;
   };
 </script>
 
@@ -94,18 +92,21 @@
     </div>
     <div class="right">{getType()}</div>
   </div>
-  <div class="responses">
-    {#each prompt.responses as response}
-      <pre>{JSON.stringify(response, null, 2)}</pre>
-    {/each}
-  </div>
+  {#if viewResponses}
+    <div class="responses">
+      {#each responses as response}
+        <pre>{JSON.stringify(response, null, 2)}</pre>
+      {/each}
+    </div>
+  {:else}
+    <AddBrainstormResponse {prompt} {isDraft} {isOpen} />
+  {/if}
   <div class="footer">
     <div class="left">
       <button
-        disabled={isDraft || !isOpen}
-        class="button button-success"
-        on:click={addResponse}>
-        Add response
+        class="button button-secondary button-small button-outline"
+        on:click={toggleView}>
+        {#if viewResponses}Add response{:else}View responses{/if}
       </button>
     </div>
     <div class="right">

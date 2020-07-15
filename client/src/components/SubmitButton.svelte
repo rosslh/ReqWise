@@ -2,6 +2,7 @@
   export let handler;
   export let className;
   export let id;
+  export let disabled;
 
   let btn;
 
@@ -41,6 +42,7 @@
 <button
   {id}
   class={`${className} submitButton`}
+  {disabled}
   bind:this={btn}
   on:click|preventDefault={handleClick}>
   {#if spinning}

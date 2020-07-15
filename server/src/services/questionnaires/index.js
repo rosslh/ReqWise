@@ -39,7 +39,10 @@ module.exports = async function (fastify, opts) {
                 const responses = await fastify.knex.from("brainstormResponse").select("*").where({
                     "brainstormPrompt_id": p.id
                 });
-                return { ...p, responses };
+                const options = await fastify.knex.from("brainstormResponseOption").select("*").where({
+                    "brainstormPrompt_id": p.id
+                });
+                return { ...p, responses, options };
             }));
 
             return { ...questionnaire, prompts };

@@ -52,7 +52,11 @@
     {#if questionnaire.is_draft}[Draft]{/if}
     {questionnaire.description}
   </h2>
-  <button on:click={addPrompt} class="button button-success">Add prompt</button>
+  {#if questionnaire.is_draft}
+    <button on:click={addPrompt} class="button button-success">
+      Add prompt
+    </button>
+  {/if}
   <button
     on:click={showSettingsModal}
     class="button button-secondary button-outline">
