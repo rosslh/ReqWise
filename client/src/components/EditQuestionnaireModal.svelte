@@ -36,7 +36,7 @@
 <h3>Questionnaire settings</h3>
 <form>
   <fieldset>
-    <label for="description">description</label>
+    <label for="description">Description</label>
     <input type="text" id="description" bind:value={description} />
   </fieldset>
   <fieldset>
