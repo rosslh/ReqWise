@@ -28,7 +28,7 @@
     <ul>
       {#each result as q}
         <li>
-          <a href={`/project/${$page.params.id}/brainstorm/drafts/${q.id}`}>
+          <a href={`/project/${$page.params.id}/brainstorm/forms/${q.id}`}>
             {q.description}
           </a>
         </li>

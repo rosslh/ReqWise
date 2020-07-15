@@ -1,24 +1,42 @@
 <script>
-  //   export let update;
+  export let update;
   export let prompt;
   export let isDraft = false;
+  export let isOpen = true;
 
-  //   import { modalContent, modalProps } from "../stores.js";
+  let responses = prompt.responses;
+
+  import { modalContent, modalProps } from "../stores.js";
+  import DeletePromptModal from "./DeletePromptModal.svelte";
+  import AddBrainstormResponseModal from "./AddBrainstormResponseModal.svelte";
   //   import { get, del } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  //   import { stores } from "@sapper/app";
-  //   const { session } = stores();
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   const deletePrompt = () => {
-    // modalContent.set(DeletePromptModal);
-    // modalProps.set({
-    //   prompt,
-    //   update
-    // });
+    modalContent.set(DeletePromptModal);
+    modalProps.set({
+      prompt,
+      update
+    });
   };
 
-  const addResponse = () => {};
+  const addResponse = () => {
+    modalContent.set(AddBrainstormResponseModal);
+    modalProps.set({
+      prompt,
+      update: updateResponses
+    });
+  };
+
+  const updateResponses = async () => {
+    responses = await get(
+      `/prompts/${prompt.id}/responses`,
+      $session.user && $session.user
+    );
+  };
 
   const capitalizeFirstLetter = str =>
     str.charAt(0).toUpperCase() + str.slice(1);
@@ -26,10 +44,6 @@
   const getType = () => {
     if (prompt.responseType === "likert") {
       return "Likert scale (strongly disagree to strongly agree)";
-    } else if (prompt.responseType === "radio") {
-      return "Multiple choice (choose one)";
-    } else if (prompt.responseType === "checkbox") {
-      return "Multiple choice (choose many)";
     } else {
       return capitalizeFirstLetter(prompt.responseType);
     }
@@ -80,10 +94,15 @@
     </div>
     <div class="right">{getType()}</div>
   </div>
+  <div class="responses">
+    {#each prompt.responses as response}
+      <pre>{JSON.stringify(response, null, 2)}</pre>
+    {/each}
+  </div>
   <div class="footer">
     <div class="left">
       <button
-        disabled={isDraft}
+        disabled={isDraft || !isOpen}
         class="button button-success"
         on:click={addResponse}>
         Add response
