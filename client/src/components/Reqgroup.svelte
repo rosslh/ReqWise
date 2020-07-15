@@ -58,7 +58,6 @@
     // req
     illegalParents.push(req);
 
-    console.log(requirements);
     // req's descendents
     requirements
       .filter(x => {
@@ -70,7 +69,6 @@
           ) {
             return true;
           }
-          console.log(currentReq.id, currentReq.parent_requirement_id);
           currentReq = requirements.find(
             y => y.id === currentReq.parent_requirement_id
           );
@@ -118,6 +116,11 @@
           mirror: {
             cursorOffsetX: 15,
             cursorOffsetY: 15
+          },
+          scrollable: {
+            speed: 10,
+            sensitivity: 30,
+            scrollableElements: document.querySelectorAll(`div.pageContent`)
           }
         });
         draggable.on("drag:start", e => {
