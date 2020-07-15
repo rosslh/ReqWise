@@ -37,7 +37,7 @@ exports.up = function (knex) {
             table.integer("numericCeiling");
             table.timestamp("created_at").defaultTo(knex.fn.now());
         }),
-        knex.schema.createTable("brainstormResponseOption", (table) => { // only for radio, checkbox, and dropdown
+        knex.schema.createTable("brainstormResponseOption", (table) => { // only for dropdown
             table.increments("id").primary();
             table.text("value").notNullable();
             table
@@ -56,7 +56,7 @@ exports.up = function (knex) {
                 .references("brainstormResponseOption.id")
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE")
-                .unsigned(); // only for radio, checkbox, and dropdown
+                .unsigned(); // only for dropdown
             table.text("textResponse"); // only for text and paragraph
             table.integer("numericResponse"); // only for numeric and likert
             table

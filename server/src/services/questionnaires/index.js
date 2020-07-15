@@ -31,9 +31,16 @@ module.exports = async function (fastify, opts) {
                 })
                 .first();
 
-            const prompts = await fastify.knex.from("brainstormPrompt").select("*").where({
+            let prompts = await fastify.knex.from("brainstormPrompt").select("*").where({
                 "brainstormForm_id": request.params.questionnaireId
             });
+
+            prompts = await Promise.all(prompts.map(async p => {
+                const responses = await fastify.knex.from("brainstormResponse").select("*").where({
+                    "brainstormPrompt_id": p.id
+                });
+                return { ...p, responses };
+            }));
 
             return { ...questionnaire, prompts };
         }

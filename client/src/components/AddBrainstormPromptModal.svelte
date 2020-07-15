@@ -16,10 +16,10 @@
 
   const submitNewQuestionnaire = async () => {
     const data = { prompt, type: selectedType.value };
-    if (selectedType.value === "numeric") {
+    if (selectedType.value === "number") {
       data.minVal = minVal;
       data.maxVal = maxVal;
-    } else if (["radio", "checkbox", "dropdown"].includes(selectedType.value)) {
+    } else if (selectedType.value === "dropdown") {
       data.options = responseOptions;
     }
 
@@ -35,31 +35,21 @@
   const capitalizeFirstLetter = str =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
-  const typeOptions = [
-    "text",
-    "paragraph",
-    "radio",
-    "checkbox",
-    "dropdown",
-    "numeric",
-    "likert"
-  ].map(t => {
-    let label;
+  const typeOptions = ["text", "paragraph", "dropdown", "number", "likert"].map(
+    t => {
+      let label;
 
-    if (t === "likert") {
-      label = "Likert scale (strongly disagree to strongly agree)";
-    } else if (t === "radio") {
-      label = "Multiple choice (choose one)";
-    } else if (t === "checkbox") {
-      label = "Multiple choice (choose many)";
-    } else {
-      label = capitalizeFirstLetter(t);
+      if (t === "likert") {
+        label = "Likert scale (strongly disagree to strongly agree)";
+      } else {
+        label = capitalizeFirstLetter(t);
+      }
+      return {
+        label,
+        value: t
+      };
     }
-    return {
-      label,
-      value: t
-    };
-  });
+  );
 
   let selectedType = typeOptions[0];
 
@@ -123,7 +113,7 @@
         items={typeOptions}
         bind:selectedValue={selectedType} />
     </fieldset>
-    {#if selectedType.value === 'numeric'}
+    {#if selectedType.value === 'number'}
       <div class="numericRangeColumns">
         <fieldset>
           <label for="rangeMin">Minimum value</label>
@@ -134,7 +124,7 @@
           <input type="number" id="rangeMax" bind:value={maxVal} />
         </fieldset>
       </div>
-    {:else if ['radio', 'checkbox', 'dropdown'].includes(selectedType.value)}
+    {:else if selectedType.value === 'dropdown'}
       <div class="panel optionsPanel">
         <h4>Response options</h4>
         <fieldset>
