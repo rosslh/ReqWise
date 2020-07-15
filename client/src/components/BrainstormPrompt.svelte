@@ -9,11 +9,11 @@
   import { modalContent, modalProps } from "../stores.js";
   import DeletePromptModal from "./DeletePromptModal.svelte";
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
-  import { get } from "../api.js";
+  // import { get } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  import { stores } from "@sapper/app";
-  const { session } = stores();
+  // import { stores } from "@sapper/app";
+  // const { session } = stores();
 
   const deletePrompt = () => {
     modalContent.set(DeletePromptModal);
