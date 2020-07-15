@@ -23,12 +23,12 @@
     });
   };
 
-  const updateResponses = async () => {
-    responses = await get(
-      `/prompts/${prompt.id}/responses`,
-      $session.user && $session.user
-    );
-  };
+  // const updateResponses = async () => {
+  //   responses = await get(
+  //     `/prompts/${prompt.id}/responses`,
+  //     $session.user && $session.user
+  //   );
+  // };
 
   const capitalizeFirstLetter = str =>
     str.charAt(0).toUpperCase() + str.slice(1);
