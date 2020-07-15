@@ -1,9 +1,11 @@
 <script>
-  //   export let update;
+  export let update;
   export let prompt;
   export let isDraft = false;
+  export let isOpen = true;
 
-  //   import { modalContent, modalProps } from "../stores.js";
+  import { modalContent, modalProps } from "../stores.js";
+  import DeletePromptModal from "./DeletePromptModal.svelte";
   //   import { get, del } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
@@ -11,11 +13,11 @@
   //   const { session } = stores();
 
   const deletePrompt = () => {
-    // modalContent.set(DeletePromptModal);
-    // modalProps.set({
-    //   prompt,
-    //   update
-    // });
+    modalContent.set(DeletePromptModal);
+    modalProps.set({
+      prompt,
+      update
+    });
   };
 
   const addResponse = () => {};
@@ -83,7 +85,7 @@
   <div class="footer">
     <div class="left">
       <button
-        disabled={isDraft}
+        disabled={isDraft || !isOpen}
         class="button button-success"
         on:click={addResponse}>
         Add response

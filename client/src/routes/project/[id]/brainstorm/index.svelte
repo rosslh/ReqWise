@@ -24,7 +24,7 @@
     Create questionnaire
   </button>
   <a
-    href={`/project/${$page.params.id}/brainstorm/drafts`}
+    href={`/project/${$page.params.id}/brainstorm/forms`}
     class="button button-outline button-secondary">
     View drafts
   </a>
@@ -36,7 +36,7 @@
     <ul>
       {#each result as q}
         <li>
-          <a href={`/project/${$page.params.id}/brainstorm/drafts/${q.id}`}>
+          <a href={`/project/${$page.params.id}/brainstorm/forms/${q.id}`}>
             {q.description}
           </a>
         </li>

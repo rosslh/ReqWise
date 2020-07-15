@@ -195,6 +195,55 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isTeamMemberByQuestionnaireId = async (
+    request,
+    reply,
+    isAdmin = false
+  ) => {
+    const membership = (
+      await fastify.knex
+        .from("brainstormForm")
+        .join("project", "project.id", "brainstormForm.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "brainstormForm.id": request.params.questionnaireId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
+  const isTeamMemberByPromptId = async (
+    request,
+    reply,
+    isAdmin = false
+  ) => {
+    const membership = (
+      await fastify.knex
+        .from("brainstormPrompt")
+        .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
+        .join("project", "project.id", "brainstormForm.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "brainstormPrompt.id": request.params.promptId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
   fastify.decorate("isCorrectUser", async (request, reply) => {
     if (!request.user) {
       reply.code(401);
@@ -248,7 +297,12 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByReqversionId(request, reply);
     } else if (request.params.commentId) {
       return isTeamMemberByCommentId(request, reply);
+    } else if (request.params.questionnaireId) {
+      return isTeamMemberByQuestionnaireId(request, reply);
+    } else if (request.params.promptId) {
+      return isTeamMemberByPromptId(request, reply);
     }
+    throw new Error("Could not authenticate using URL parameters");
   });
 
   fastify.decorate("isTeamAdmin", async function (request, reply) {
@@ -275,6 +329,11 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByReqversionId(request, reply, true);
     } else if (request.params.commentId) {
       return isTeamMemberByCommentId(request, reply, true);
+    } else if (request.params.questionnaireId) {
+      return isTeamMemberByQuestionnaireId(request, reply, true);
+    } else if (request.params.promptId) {
+      return isTeamMemberByPromptId(request, reply, true);
     }
+    throw new Error("Could not authenticate using URL parameters");
   });
 });

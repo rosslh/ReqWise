@@ -102,65 +102,71 @@
   .optionsPanel button {
     margin-top: 0;
   }
+
+  .promptModalWrapper {
+    min-height: 80vh;
+  }
 </style>
 
-<h3>Add prompt</h3>
-<form>
-  <fieldset>
-    <label for="prompt">Prompt / question</label>
-    <input type="text" id="prompt" bind:value={prompt} />
-  </fieldset>
-  <fieldset>
-    <label for="type">Response type</label>
-    <Select
-      inputAttributes={{ id: 'type' }}
-      isClearable={false}
-      items={typeOptions}
-      bind:selectedValue={selectedType} />
-  </fieldset>
-  {#if selectedType.value === 'numeric'}
-    <div class="numericRangeColumns">
-      <fieldset>
-        <label for="rangeMin">Minimum value</label>
-        <input type="number" id="rangeMin" bind:value={minVal} />
-      </fieldset>
-      <fieldset>
-        <label for="rangeMax">Maximum value</label>
-        <input type="number" id="rangeMax" bind:value={maxVal} />
-      </fieldset>
-    </div>
-  {:else if ['radio', 'checkbox', 'dropdown'].includes(selectedType.value)}
-    <div class="panel optionsPanel">
-      <h4>Response options</h4>
-      <fieldset>
-        <label for="newOption">New option</label>
-        <div class="addOptionWrapper">
-          <input type="text" id="newOption" bind:value={newOption} />
-          <button on:click|preventDefault={addOption}>Add</button>
-        </div>
-      </fieldset>
-      <table class="compact">
-        <tbody>
-          {#each responseOptions as option}
-            <tr>
-              <td>{option}</td>
-              <td>
-                <button
-                  class="button button-small button-danger button-outline
-                  button-secondary">
-                  <div class="iconWrapper">
-                    <FaRegTrashAlt />
-                  </div>
-                  Delete option
-                </button>
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
-  {/if}
-  <fieldset>
-    <SubmitButton handler={submitNewQuestionnaire}>Create</SubmitButton>
-  </fieldset>
-</form>
+<div class="promptModalWrapper">
+  <h3>Add prompt</h3>
+  <form>
+    <fieldset>
+      <label for="prompt">Prompt / question</label>
+      <input type="text" id="prompt" bind:value={prompt} />
+    </fieldset>
+    <fieldset>
+      <label for="type">Response type</label>
+      <Select
+        inputAttributes={{ id: 'type' }}
+        isClearable={false}
+        items={typeOptions}
+        bind:selectedValue={selectedType} />
+    </fieldset>
+    {#if selectedType.value === 'numeric'}
+      <div class="numericRangeColumns">
+        <fieldset>
+          <label for="rangeMin">Minimum value</label>
+          <input type="number" id="rangeMin" bind:value={minVal} />
+        </fieldset>
+        <fieldset>
+          <label for="rangeMax">Maximum value</label>
+          <input type="number" id="rangeMax" bind:value={maxVal} />
+        </fieldset>
+      </div>
+    {:else if ['radio', 'checkbox', 'dropdown'].includes(selectedType.value)}
+      <div class="panel optionsPanel">
+        <h4>Response options</h4>
+        <fieldset>
+          <label for="newOption">New option</label>
+          <div class="addOptionWrapper">
+            <input type="text" id="newOption" bind:value={newOption} />
+            <button on:click|preventDefault={addOption}>Add</button>
+          </div>
+        </fieldset>
+        <table class="compact">
+          <tbody>
+            {#each responseOptions as option}
+              <tr>
+                <td>{option}</td>
+                <td>
+                  <button
+                    class="button button-small button-danger button-outline
+                    button-secondary">
+                    <div class="iconWrapper">
+                      <FaRegTrashAlt />
+                    </div>
+                    Delete option
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+    <fieldset>
+      <SubmitButton handler={submitNewQuestionnaire}>Create</SubmitButton>
+    </fieldset>
+  </form>
+</div>

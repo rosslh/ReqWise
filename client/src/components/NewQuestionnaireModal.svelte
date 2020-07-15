@@ -17,7 +17,7 @@
       { title },
       $session.user && $session.user.jwt
     );
-    goto(`/project/${projectId}/brainstorm/drafts/${result}`);
+    goto(`/project/${projectId}/brainstorm/forms/${result}`);
     close();
   };
 </script>
