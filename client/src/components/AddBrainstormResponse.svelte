@@ -11,22 +11,25 @@
   import SubmitButton from "./SubmitButton.svelte";
   import { post } from "../api.js";
 
-  let numericResponse = Math.round(
-    (prompt.numericFloor + prompt.numericCeiling) / 2
-  );
-
-  let likertResponse = 3;
+  let numericResponse =
+    prompt.responseType === "number"
+      ? Math.round((prompt.numericFloor + prompt.numericCeiling) / 2)
+      : 3;
 
   let textResponse = "";
 
   const submit = async () => {
     const data = {};
-    if (prompt.responseType === "number") {
+    if (["number", "likert"].includes(prompt.responseType)) {
       data.numericResponse = numericResponse;
+    } else if (["text", "paragraph"].includes(prompt.responseType)) {
+      data.textResponse = textResponse;
+    } else if (prompt.responseType === "dropdown") {
+      data.optionId = selectedOption.value;
     }
     await post(
       `/prompts/${prompt.id}/responses`,
-      {},
+      data,
       $session.user && $session.user.jwt
     );
   };
@@ -36,7 +39,7 @@
 
   let options = prompt.options.map(option => ({
     label: capitalizeFirstLetter(option.value),
-    value: option.value
+    value: option.id
   }));
   let selectedOption = options[0];
 </script>
@@ -64,13 +67,14 @@
     align-items: center;
     justify-content: center;
     width: 9rem;
+    margin-bottom: 0;
   }
 
   ul.likertList li label {
     text-align: center;
     font-size: 1.4rem;
     font-weight: 400;
-    padding: 0.75rem;
+    padding: 0.75rem 0.75rem 0;
   }
 </style>
 
@@ -119,7 +123,7 @@
         <li>
           <label for="likertScale1">Strongly disagree</label>
           <input
-            bind:group={likertResponse}
+            bind:group={numericResponse}
             name="likertScale"
             type="radio"
             id="likertScale1"
@@ -128,7 +132,7 @@
         <li>
           <label for="likertScale2">Somewhat disagree</label>
           <input
-            bind:group={likertResponse}
+            bind:group={numericResponse}
             name="likertScale"
             type="radio"
             id="likertScale2"
@@ -137,7 +141,7 @@
         <li>
           <label for="likertScale3">Neutral / unsure</label>
           <input
-            bind:group={likertResponse}
+            bind:group={numericResponse}
             name="likertScale"
             type="radio"
             id="likertScale3"
@@ -146,7 +150,7 @@
         <li>
           <label for="likertScale4">Somewhat agree</label>
           <input
-            bind:group={likertResponse}
+            bind:group={numericResponse}
             name="likertScale"
             type="radio"
             id="likertScale4"
@@ -155,7 +159,7 @@
         <li>
           <label for="likertScale5">Strongly agree</label>
           <input
-            bind:group={likertResponse}
+            bind:group={numericResponse}
             name="likertScale"
             type="radio"
             id="likertScale5"

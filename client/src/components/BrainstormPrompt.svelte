@@ -9,6 +9,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import DeletePromptModal from "./DeletePromptModal.svelte";
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
+  import PromptResponses from "./PromptResponses.svelte";
   // import { get } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
@@ -41,7 +42,7 @@
     }
   };
 
-  let viewResponses = false;
+  let viewResponses = prompt.hasResponded;
 
   const toggleView = () => {
     viewResponses = !viewResponses;
@@ -93,11 +94,7 @@
     <div class="right">{getType()}</div>
   </div>
   {#if viewResponses}
-    <div class="responses">
-      {#each responses as response}
-        <pre>{JSON.stringify(response, null, 2)}</pre>
-      {/each}
-    </div>
+    <PromptResponses {responses} />
   {:else}
     <AddBrainstormResponse {prompt} {isDraft} {isOpen} />
   {/if}

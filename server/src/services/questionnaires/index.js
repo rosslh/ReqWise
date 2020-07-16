@@ -42,7 +42,12 @@ module.exports = async function (fastify, opts) {
                 const options = await fastify.knex.from("brainstormResponseOption").select("*").where({
                     "brainstormPrompt_id": p.id
                 });
-                return { ...p, responses, options };
+
+                const hasResponded = request.user && request.user.id
+                    ? responses.some(x => x.account_id === request.user.id)
+                    : responses.some(x => x.ipAddress === request.ip);
+
+                return { ...p, responses, options, hasResponded };
             }));
 
             return { ...questionnaire, prompts };

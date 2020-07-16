@@ -41,7 +41,9 @@ module.exports = async function (fastify, opts) {
         body: {
             type: "object",
             properties: {
-                account_id: { type: ["number", "string"] }
+                optionId: { type: ["number", "string"] },
+                textResponse: { type: "string" },
+                numericResponse: { type: "number" }
             }
         },
         queryString: {},
@@ -68,15 +70,25 @@ module.exports = async function (fastify, opts) {
             schema: postResponseSchema,
         },
         async function (request, reply) {
-            const { brainstormResponseOption_id, textResponse, numericResponse } = request.body;
+            let { optionId, textResponse, numericResponse } = request.body;
+
+            if (![optionId || textResponse || numericResponse].some(x => typeof x !== "undefined")) {
+                reply.code(400);
+                return "Missing response value";
+            }
+
+            if (optionId) {
+                optionId = fastify.deobfuscateId(optionId);
+            }
+
             const { promptId } = request.params;
 
             return await fastify
-                .knex("account_stakeholderGroup")
+                .knex("brainstormResponse")
                 .insert({
                     account_id: request.user.id, // TODO: optional auth
                     brainstormPrompt_id: promptId,
-                    brainstormResponseOption_id,
+                    brainstormResponseOption_id: optionId,
                     textResponse,
                     numericResponse,
                     ipAddress: request.ip // Trust-proxy must be true
