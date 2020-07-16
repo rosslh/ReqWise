@@ -11,15 +11,6 @@
   span.simpleDiff {
     color: var(--secondaryText);
   }
-  ins {
-    color: var(--green);
-    background-color: var(--lightGreen);
-  }
-
-  del {
-    color: var(--red);
-    background-color: var(--lightRed);
-  }
 
   .secondary {
     color: var(--secondaryText);

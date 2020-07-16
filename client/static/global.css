@@ -625,6 +625,9 @@ img {
   --background1:#ffffff;
   --background2: #F7FAFC;
 
+  --grey1: #eaebeb;
+  --grey2: #c2c4c5;
+
   --normalText: #2D3748;
   --secondaryText: #4A5568;
   --borderColor: #d7dfe8;
@@ -634,7 +637,7 @@ img {
 
   --orange: #ee9338;
 
-  --lightRed: #fef6f6;
+  --lightRed: #fdf1f1;
   --red: #f35c5c;
 
   --lightGreen: #e3feec;
@@ -896,6 +899,20 @@ table {
 button:hover,
 .button:hover {
   opacity: 0.8;
+}
+
+ins {
+  color: var(--green);
+  background-color: var(--lightGreen);
+  padding: 0.25rem;
+  border-radius: 0.2rem;
+}
+
+del {
+  color: var(--red);
+  background-color: var(--lightRed);
+  padding: 0.25rem;
+  border-radius: 0.2rem;
 }
 
 /* Loading bar styles */

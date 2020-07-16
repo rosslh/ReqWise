@@ -4,8 +4,6 @@
   export let isDraft = false;
   export let isOpen = true;
 
-  let responses = prompt.responses;
-
   import { modalContent, modalProps } from "../stores.js";
   import DeletePromptModal from "./DeletePromptModal.svelte";
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
@@ -89,22 +87,27 @@
 <div class="promptWrapper">
   <div class="promptHeader">
     <div class="left">
-      <h3>{prompt.prompt}</h3>
+      <h3>
+        {prompt.prompt}
+        {#if prompt.hasResponded}(responded){/if}
+      </h3>
     </div>
     <div class="right">{getType()}</div>
   </div>
   {#if viewResponses}
-    <PromptResponses {responses} />
+    <PromptResponses {prompt} />
   {:else}
     <AddBrainstormResponse {prompt} {isDraft} {isOpen} />
   {/if}
   <div class="footer">
     <div class="left">
-      <button
-        class="button button-secondary button-small button-outline"
-        on:click={toggleView}>
-        {#if viewResponses}Add response{:else}View responses{/if}
-      </button>
+      {#if !viewResponses || !prompt.hasResponded}
+        <button
+          class="button button-secondary button-small button-outline"
+          on:click={toggleView}>
+          {#if viewResponses}Add response{:else}View responses{/if}
+        </button>
+      {/if}
     </div>
     <div class="right">
       <button

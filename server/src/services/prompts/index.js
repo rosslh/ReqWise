@@ -83,14 +83,30 @@ module.exports = async function (fastify, opts) {
 
             const { promptId } = request.params;
 
+            const alreadyResponded = (
+                await fastify.knex
+                    .from("brainstormResponse")
+                    .select("id")
+                    .where({
+                        brainstormPrompt_id: promptId,
+                        ...(request.user && { account_id: request.user.id }),
+                        ...(!(request.user && request.user.id) && { ipAddress: request.ip })
+                    })
+            ).length;
+
+            if (alreadyResponded) {
+                reply.code(400);
+                return "Already responded";
+            }
+
             return await fastify
                 .knex("brainstormResponse")
                 .insert({
-                    account_id: request.user.id, // TODO: optional auth
                     brainstormPrompt_id: promptId,
                     brainstormResponseOption_id: optionId,
                     textResponse,
                     numericResponse,
+                    ...(request.user && { account_id: request.user.id }), // Can be anonymous
                     ipAddress: request.ip // Trust-proxy must be true
                 })
                 .returning("id");
