@@ -26,7 +26,7 @@ module.exports = async function (fastify, opts) {
     fastify.post(
         "/:responseId/reactions",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember], // TODO: optional auth
+            preValidation: [fastify.allowAnonIfPublic],
             schema: postReactionSchema,
         },
         async function (request, reply) {

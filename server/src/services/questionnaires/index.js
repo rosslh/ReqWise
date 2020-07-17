@@ -19,7 +19,7 @@ module.exports = async function (fastify, opts) {
     fastify.get(
         "/:questionnaireId",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember], // TODO: check if public
+            preValidation: [fastify.allowAnonIfPublic],
             schema: getQuestionnaireSchema,
         },
         async function (request, reply) {
@@ -102,7 +102,7 @@ module.exports = async function (fastify, opts) {
     fastify.post(
         "/:questionnaireId/prompts",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            preValidation: [fastify.allowAnonIfPublic],
             schema: postPromptSchema,
         },
         async function (request, reply) {
@@ -174,7 +174,7 @@ module.exports = async function (fastify, opts) {
     fastify.put(
         "/:questionnaireId",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            preValidation: [fastify.allowAnonIfPublic],
             schema: putQuestionnaireSchema,
         },
         async function (request, reply) {

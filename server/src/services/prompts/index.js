@@ -25,7 +25,7 @@ module.exports = async function (fastify, opts) {
     fastify.delete(
         "/:promptId",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            preValidation: [fastify.allowAnonIfPublic],
             schema: deletePromptSchema,
         },
         async function (request, reply) {
@@ -66,7 +66,7 @@ module.exports = async function (fastify, opts) {
     fastify.post(
         "/:promptId/responses",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember], // TODO: optional auth
+            preValidation: [fastify.allowAnonIfPublic],
             schema: postResponseSchema,
         },
         async function (request, reply) {
@@ -142,7 +142,7 @@ module.exports = async function (fastify, opts) {
     fastify.get(
         "/:promptId",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            preValidation: [fastify.allowAnonIfPublic],
             schema: getPromptSchema,
         },
         async function (request, reply) {
