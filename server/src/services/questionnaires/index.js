@@ -12,7 +12,7 @@ module.exports = async function (fastify, opts) {
             properties: {
                 Authorization: { type: "string" },
             },
-            required: ["Authorization"],
+            required: [],
         },
         response: {},
     };
@@ -95,7 +95,7 @@ module.exports = async function (fastify, opts) {
                 Authorization: { type: "string" },
                 "Content-Type": { type: "string" },
             },
-            required: ["Authorization", "Content-Type"],
+            required: ["Content-Type"],
         },
         response: {},
     };
@@ -159,7 +159,7 @@ module.exports = async function (fastify, opts) {
                 Authorization: { type: "string" },
                 "Content-Type": { type: "string" },
             },
-            required: ["Authorization", "Content-Type"],
+            required: ["Content-Type"],
         },
         response: {
             200: {

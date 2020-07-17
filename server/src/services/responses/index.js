@@ -19,7 +19,7 @@ module.exports = async function (fastify, opts) {
                 Authorization: { type: "string" },
                 "Content-Type": { type: "string" },
             },
-            required: ["Authorization", "Content-Type"],
+            required: ["Content-Type"],
         },
         response: {},
     };
@@ -55,7 +55,7 @@ module.exports = async function (fastify, opts) {
                     brainstormResponse_id: responseId,
                     reactionType,
                     ...(request.user && { account_id: request.user.id }), // Can be anonymous
-                    ipAddress: request.ip // Trust-proxy must be true
+                    ...(!(request.user && request.user.id) && { ipAddress: request.ip }) // Trust-proxy must be true
                 })
                 .returning("id");
         }

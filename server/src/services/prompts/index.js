@@ -25,7 +25,7 @@ module.exports = async function (fastify, opts) {
     fastify.delete(
         "/:promptId",
         {
-            preValidation: [fastify.allowAnonIfPublic],
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
             schema: deletePromptSchema,
         },
         async function (request, reply) {
@@ -107,7 +107,7 @@ module.exports = async function (fastify, opts) {
                     textResponse,
                     numericResponse,
                     ...(request.user && { account_id: request.user.id }), // Can be anonymous
-                    ipAddress: request.ip // Trust-proxy must be true
+                    ...(!(request.user && request.user.id) && { ipAddress: request.ip }) // Trust-proxy must be true
                 })
                 .returning("id");
 
@@ -115,7 +115,7 @@ module.exports = async function (fastify, opts) {
                 brainstormResponse_id: id,
                 reactionType: "upvote",
                 ...(request.user && { account_id: request.user.id }), // Can be anonymous
-                ipAddress: request.ip // Trust-proxy must be true
+                ...(!(request.user && request.user.id) && { ipAddress: request.ip }) // Trust-proxy must be true
             }); // users upvote their own answers by default
 
             return [id];

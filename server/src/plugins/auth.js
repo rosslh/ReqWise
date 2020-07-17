@@ -1,5 +1,4 @@
 const fp = require("fastify-plugin");
-const assert = require('assert');
 
 module.exports = fp(async function (fastify, opts) {
   fastify.register(require("fastify-jwt"), {
@@ -23,7 +22,7 @@ module.exports = fp(async function (fastify, opts) {
 
   const getFormId = async ({ questionnaireId, promptId, responseId, reactionId }) => {
     if (questionnaireId) {
-      return questionnaireId;
+      return { brainstormForm_id: questionnaireId };
     } else if (promptId) {
       return await fastify.knex.from("brainstormPrompt").select("brainstormForm_id").where({ id: promptId }).first();
     } else if (responseId) {
@@ -45,11 +44,9 @@ module.exports = fp(async function (fastify, opts) {
   };
 
   fastify.decorate("allowAnonIfPublic", async function (request, reply) {
-    const formId = await getFormId(request.params);
+    const { brainstormForm_id: formId } = await getFormId(request.params);
 
-    assert(typeof formId === "number");
-
-    const { is_public: isPublic } = await fastify.from("brainstormForm").select("is_public").where({ id: formId });
+    const { is_public: isPublic } = await fastify.knex.from("brainstormForm").select("is_public").where({ id: formId }).first();
 
     if (isPublic) {
       request.isAnonymous = true;
