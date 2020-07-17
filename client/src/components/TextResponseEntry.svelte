@@ -59,12 +59,12 @@
     max-width: 45rem;
     display: flex;
     align-items: center;
-    height: 4rem;
+    height: 4.75rem;
     border-radius: 0.8rem;
     border: 0.1rem solid var(--borderColor);
     margin: 1rem 0.5rem 0;
     position: relative;
-    background-color: var(--background1);
+    background-color: var(--background2);
     overflow: hidden;
   }
 
@@ -102,7 +102,7 @@
     align-items: center;
     padding: 0.25rem 0.5rem;
     margin: 0;
-    background-color: var(--backdrop);
+    background-color: var(--grey1);
     color: var(--secondaryText);
   }
 
@@ -133,8 +133,7 @@
   }
 
   .reactButton.selected {
-    color: white !important;
-    background: var(--themeColor) !important;
+    background: var(--grey2) !important;
   }
 </style>
 

@@ -15,7 +15,7 @@
     border: 0.1rem solid var(--borderColor);
     margin: 1rem 0.5rem 0;
     position: relative;
-    background-color: var(--background1);
+    background-color: var(--background2);
     overflow: hidden;
   }
 
