@@ -99,7 +99,7 @@ module.exports = async function (fastify, opts) {
                 return "Already responded";
             }
 
-            return await fastify
+            const [id] = await fastify
                 .knex("brainstormResponse")
                 .insert({
                     brainstormPrompt_id: promptId,
@@ -110,6 +110,73 @@ module.exports = async function (fastify, opts) {
                     ipAddress: request.ip // Trust-proxy must be true
                 })
                 .returning("id");
+
+            await fastify.knex("brainstormReaction").insert({
+                brainstormResponse_id: id,
+                reactionType: "upvote",
+                ...(request.user && { account_id: request.user.id }), // Can be anonymous
+                ipAddress: request.ip // Trust-proxy must be true
+            }); // users upvote their own answers by default
+
+            return [id];
         }
     );
+
+    const getPromptSchema = {
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                promptId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/:promptId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getPromptSchema,
+        },
+        async function (request, reply) {
+            let prompt = await fastify.knex.from("brainstormPrompt").select("*").where({
+                "id": request.params.promptId
+            }).first();
+
+            let responses = await fastify.knex.from("brainstormResponse").select("*").where({
+                "brainstormPrompt_id": request.params.promptId
+            });
+
+            responses = await Promise.all(responses.map(async r => {
+                const reactions = await fastify.knex.from("brainstormReaction").select("*").where({
+                    brainstormResponse_id: r.id
+                });
+
+                const yourReaction = request.user && request.user.id
+                    ? reactions.find(x => x.account_id === request.user.id)
+                    : reactions.find(x => x.ipAddress === request.ip);
+
+                const upvotes = reactions.filter(x => x.reactionType === "upvote").length;
+                const downvotes = reactions.filter(x => x.reactionType === "downvote").length;
+
+                return { ...r, reactions, upvotes, downvotes, yourReaction };
+            }));
+
+            const options = await fastify.knex.from("brainstormResponseOption").select("*").where({
+                "brainstormPrompt_id": request.params.promptId
+            });
+
+            const yourResponse = request.user && request.user.id
+                ? responses.find(x => x.account_id === request.user.id)
+                : responses.find(x => x.ipAddress === request.ip);
+
+            return { ...prompt, responses, options, yourResponse };
+        });
 };

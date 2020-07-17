@@ -1,5 +1,7 @@
 <script>
   export let prompt;
+  export let responses;
+  export let update;
 
   import PromptDropdownResponses from "./PromptDropdownResponses.svelte";
   import PromptNumericResponses from "./PromptNumericResponses.svelte";
@@ -14,10 +16,10 @@
 
 <div class="responsesWrapper">
   {#if prompt.responseType === 'dropdown'}
-    <PromptDropdownResponses {prompt} />
+    <PromptDropdownResponses {prompt} {responses} />
   {:else if ['number', 'likert'].includes(prompt.responseType)}
-    <PromptNumericResponses {prompt} />
+    <PromptNumericResponses {prompt} {responses} />
   {:else if ['text', 'paragraph'].includes(prompt.responseType)}
-    <PromptTextResponses {prompt} />
+    <PromptTextResponses {prompt} {responses} {update} />
   {/if}
 </div>

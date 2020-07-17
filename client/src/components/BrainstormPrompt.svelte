@@ -8,11 +8,11 @@
   import DeletePromptModal from "./DeletePromptModal.svelte";
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
   import PromptResponses from "./PromptResponses.svelte";
-  // import { get } from "../api.js";
+  import { get } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  // import { stores } from "@sapper/app";
-  // const { session } = stores();
+  import { stores } from "@sapper/app";
+  const { session } = stores();
 
   const deletePrompt = () => {
     modalContent.set(DeletePromptModal);
@@ -22,12 +22,14 @@
     });
   };
 
-  // const updateResponses = async () => {
-  //   responses = await get(
-  //     `/prompts/${prompt.id}/responses`,
-  //     $session.user && $session.user
-  //   );
-  // };
+  const updateResponses = async () => {
+    prompt = await get(
+      `/prompts/${prompt.id}`,
+      $session.user && $session.user.jwt
+    );
+  };
+
+  $: responses = prompt.responses;
 
   const capitalizeFirstLetter = str =>
     str.charAt(0).toUpperCase() + str.slice(1);
@@ -40,7 +42,7 @@
     }
   };
 
-  let viewResponses = prompt.hasResponded;
+  let viewResponses = prompt.yourResponse;
 
   const toggleView = () => {
     viewResponses = !viewResponses;
@@ -82,26 +84,38 @@
   .footer .button {
     margin: 0;
   }
+
+  .secondary {
+    color: var(--secondaryText);
+    text-align: center;
+    padding: 2rem;
+  }
 </style>
 
 <div class="promptWrapper">
   <div class="promptHeader">
     <div class="left">
-      <h3>
-        {prompt.prompt}
-        {#if prompt.hasResponded}(responded){/if}
-      </h3>
+      <h3>{prompt.prompt}</h3>
     </div>
     <div class="right">{getType()}</div>
   </div>
   {#if viewResponses}
-    <PromptResponses {prompt} />
+    {#if responses.length}
+      <PromptResponses {prompt} {responses} update={updateResponses} />
+    {:else}
+      <div class="secondary">No responses yet</div>
+    {/if}
   {:else}
-    <AddBrainstormResponse {prompt} {isDraft} {isOpen} />
+    <AddBrainstormResponse
+      {prompt}
+      {isDraft}
+      {isOpen}
+      {toggleView}
+      update={updateResponses} />
   {/if}
   <div class="footer">
     <div class="left">
-      {#if !viewResponses || !prompt.hasResponded}
+      {#if !viewResponses || !prompt.yourResponse}
         <button
           class="button button-secondary button-small button-outline"
           on:click={toggleView}>

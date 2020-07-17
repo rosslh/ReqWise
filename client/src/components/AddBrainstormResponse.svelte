@@ -2,6 +2,8 @@
   export let prompt;
   export let isDraft;
   export let isOpen;
+  export let toggleView;
+  export let update;
 
   import { stores } from "@sapper/app";
   import Select from "svelte-select";
@@ -11,16 +13,22 @@
   import SubmitButton from "./SubmitButton.svelte";
   import { post } from "../api.js";
 
-  let numericResponse =
-    prompt.responseType === "number"
-      ? Math.round((prompt.numericFloor + prompt.numericCeiling) / 2)
-      : 3;
+  let numericResponse;
 
   let textResponse = "";
 
   const submit = async () => {
     const data = {};
     if (["number", "likert"].includes(prompt.responseType)) {
+      if (
+        prompt.responseType === "number" &&
+        (typeof numericResponse === "undefined" ||
+          numericResponse > prompt.numericCeiling ||
+          numericResponse < prompt.numericFloor)
+      ) {
+        alert("Invalid response");
+        return;
+      }
       data.numericResponse = numericResponse;
     } else if (["text", "paragraph"].includes(prompt.responseType)) {
       data.textResponse = textResponse;
@@ -32,6 +40,8 @@
       data,
       $session.user && $session.user.jwt
     );
+    await update();
+    toggleView();
   };
 
   const capitalizeFirstLetter = str =>
