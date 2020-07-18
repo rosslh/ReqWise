@@ -83,6 +83,17 @@ module.exports = async function (fastify, opts) {
 
             const { promptId } = request.params;
 
+            const { is_draft, is_open } = await fastify.knex
+                .from("brainstormPrompt")
+                .select("*")
+                .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
+                .where("brainstormPrompt.id", request.params.promptId).first();
+
+            if (is_draft || !is_open) {
+                reply.code(400);
+                return "Questionnaire is not open for responses";
+            }
+
             const alreadyResponded = (
                 await fastify.knex
                     .from("brainstormResponse")

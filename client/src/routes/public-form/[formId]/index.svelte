@@ -1,6 +1,9 @@
 <script context="module">
-  export async function preload(page) {
-    const questionnaire = await get(`/questionnaires/${page.params.formId}`);
+  export async function preload(page, session) {
+    const questionnaire = await get(
+      `/questionnaires/${page.params.formId}`,
+      session.user && session.user.jwt
+    );
     return { questionnaire };
   }
 </script>
@@ -12,28 +15,37 @@
 
   export let questionnaire;
 
-  const { page } = stores();
+  const { page, session } = stores();
 
   const update = async () => {
-    questionnaire = await get(`/questionnaires/${$page.params.formId}`);
+    questionnaire = await get(
+      `/questionnaires/${$page.params.formId}`,
+      $session.user && $session.user.jwt
+    );
   };
 
   let prompts = questionnaire.prompts;
 
   $: updatePrompts = async () => {
-    ({ prompts } = await get(`/questionnaires/${$page.params.formId}`));
+    ({ prompts } = await get(
+      `/questionnaires/${$page.params.formId}`,
+      $session.user && $session.user.jwt
+    ));
   };
 </script>
 
 <section class="contentWrapper">
-  <h2>{questionnaire.description}</h2>
+  <h1>
+    {#if questionnaire.is_draft}[Draft]{/if}
+    {questionnaire.description}
+  </h1>
 </section>
 <section class="contentWrapper">
   {#each prompts as prompt (prompt.id)}
     <BrainstormPrompt
       {prompt}
       update={updatePrompts}
-      isDraft={false}
+      isDraft={questionnaire.is_draft}
       isOpen={questionnaire.is_open} />
   {/each}
 </section>

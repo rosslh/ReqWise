@@ -42,7 +42,7 @@
     }
   };
 
-  let viewResponses = prompt.yourResponse;
+  let viewResponses = !prompt.is_open || prompt.yourResponse;
 
   const toggleView = () => {
     viewResponses = !viewResponses;
@@ -124,14 +124,16 @@
       {/if}
     </div>
     <div class="right">
-      <button
-        on:click={deletePrompt}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegTrashAlt />
-        </div>
-        Delete
-      </button>
+      {#if isDraft && $session.user && $session.user.jwt}
+        <button
+          on:click={deletePrompt}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegTrashAlt />
+          </div>
+          Delete
+        </button>
+      {/if}
     </div>
   </div>
 </div>

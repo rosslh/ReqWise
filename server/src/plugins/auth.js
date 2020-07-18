@@ -45,14 +45,9 @@ module.exports = fp(async function (fastify, opts) {
 
   fastify.decorate("allowAnonIfPublic", async function (request, reply) {
     const { brainstormForm_id: formId } = await getFormId(request.params);
-
     const { is_public: isPublic } = await fastify.knex.from("brainstormForm").select("is_public").where({ id: formId }).first();
 
-    if (isPublic) {
-      request.isAnonymous = true;
-    }
-
-    else {
+    const verify = async () => {
       const jwtContent = await request.jwtVerify();
       const account = await fastify.knex
         .from("account")
@@ -65,6 +60,16 @@ module.exports = fp(async function (fastify, opts) {
         reply.code(403);
         reply.send("Email and ID do not match");
       }
+    };
+
+    if (isPublic) {
+      try {
+        await verify();
+      } catch (e) {
+        request.isAnonymous = true;
+      }
+    } else {
+      await verify();
     }
   });
 

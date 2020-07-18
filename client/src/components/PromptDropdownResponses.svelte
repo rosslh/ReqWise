@@ -12,7 +12,7 @@
         ...option,
         count,
         selectedByYou:
-          prompt.yourResponse.brainstormResponseOption_id === option.id
+          prompt.yourResponse && prompt.yourResponse.brainstormResponseOption_id === option.id
       };
     })
     .sort((a, b) => b.count - a.count);
