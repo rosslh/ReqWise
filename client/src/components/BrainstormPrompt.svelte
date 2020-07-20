@@ -143,36 +143,38 @@
       {/if}
     </div>
     <div class="right">
-      {#if unlinkRequirement || unlinkReqgroup}
-        <button
-          on:click={unlinkPrompt}
-          class="button-outline button-small button-secondary button-clear">
-          <div class="iconWrapper iconWrapper-padded">
-            <FaUnlink />
-          </div>
-          Unlink prompt
-        </button>
-      {:else}
-        <a
-          rel="prefetch"
-          href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/requirements`}
-          class="button button-outline button-small button-secondary
-          button-clear">
-          <div class="iconWrapper iconWrapper-padded">
-            <FaLink />
-          </div>
-          Requirements
-        </a>
-      {/if}
-      {#if isDraft && $session.user && $session.user.jwt}
-        <button
-          on:click={deletePrompt}
-          class="button-outline button-small button-secondary button-clear">
-          <div class="iconWrapper">
-            <FaRegTrashAlt />
-          </div>
-          Delete
-        </button>
+      {#if $session.user && $session.user.jwt}
+        {#if unlinkRequirement || unlinkReqgroup}
+          <button
+            on:click={unlinkPrompt}
+            class="button-outline button-small button-secondary button-clear">
+            <div class="iconWrapper iconWrapper-padded">
+              <FaUnlink />
+            </div>
+            Unlink prompt
+          </button>
+        {:else}
+          <a
+            rel="prefetch"
+            href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/requirements`}
+            class="button button-outline button-small button-secondary
+            button-clear">
+            <div class="iconWrapper iconWrapper-padded">
+              <FaLink />
+            </div>
+            Requirements
+          </a>
+        {/if}
+        {#if isDraft}
+          <button
+            on:click={deletePrompt}
+            class="button-outline button-small button-secondary button-clear">
+            <div class="iconWrapper">
+              <FaRegTrashAlt />
+            </div>
+            Delete
+          </button>
+        {/if}
       {/if}
     </div>
   </div>

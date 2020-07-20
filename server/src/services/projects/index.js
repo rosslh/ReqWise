@@ -713,11 +713,16 @@ module.exports = async function (fastify, opts) {
       schema: getProjectQuestionnairesSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+      let questionnaires = await fastify.knex
         .from("brainstormForm")
         .select("*", "brainstormForm.id as id")
-        .leftJoin("brainstormPrompt", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
         .where({ "brainstormForm.project_id": request.params.projectId, "brainstormForm.is_draft": request.query.draft });
+      return await Promise.all(questionnaires.map(async q => {
+        const numPrompts = (await fastify.knex.from("brainstormPrompt").select("*").where("brainstormForm_id", q.id)).length;
+        const numResponses = (await fastify.knex.from("brainstormResponse").select("*").join("brainstormPrompt", "brainstormPrompt.id", "brainstormResponse.brainstormPrompt_id").where("brainstormForm_id", q.id)).length;
+
+        return { ...q, numPrompts, numResponses };
+      }));
     }
   );
 

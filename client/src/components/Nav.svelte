@@ -85,7 +85,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 0.6rem;
+    left: 1.1rem;
     display: flex;
     align-items: center;
     color: var(--secondaryText);

@@ -1,8 +1,7 @@
 <script>
   import { stores } from "@sapper/app";
-  // import { modalContent, modalProps } from "../../../../../stores.js";
-  // import NewQuestionnaireModal from "../../../../../components/NewQuestionnaireModal.svelte";
   import { get } from "../../../../../api.js";
+  import QuestionnairePreview from "../../../../../components/QuestionnairePreview.svelte";
 
   const { page, session } = stores();
 
@@ -11,6 +10,12 @@
     $session.user && $session.user.jwt
   );
 </script>
+
+<style>
+  ul {
+    list-style-type: none;
+  }
+</style>
 
 <section class="contentWrapper">
   <h2>Brainstorm</h2>
@@ -23,16 +28,13 @@
 </section>
 <section class="contentWrapper">
   {#await questionnaires}
-    Loading
+    <!-- Loading -->
   {:then result}
     <ul>
-      {#each result as q}
-        <li>
-          <a href={`/project/${$page.params.id}/brainstorm/forms/${q.id}`}>
-            {q.description}
-          </a>
-        </li>
+      {#each result as questionnaire (questionnaire.id)}
+        <QuestionnairePreview {questionnaire} projectId={$page.params.id} />
       {/each}
+      {#if !result.length}No drafts{/if}
     </ul>
   {/await}
 </section>

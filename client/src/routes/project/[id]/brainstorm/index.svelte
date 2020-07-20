@@ -2,6 +2,7 @@
   import { stores } from "@sapper/app";
   import { modalContent, modalProps } from "../../../../stores.js";
   import NewQuestionnaireModal from "../../../../components/NewQuestionnaireModal.svelte";
+  import QuestionnairePreview from "../../../../components/QuestionnairePreview.svelte";
   import { get } from "../../../../api.js";
 
   const { page, session } = stores();
@@ -17,6 +18,12 @@
   );
 </script>
 
+<style>
+  ul {
+    list-style-type: none;
+  }
+</style>
+
 <section class="contentWrapper">
   <h2>Brainstorm</h2>
   <p class="infoBlurb">...</p>
@@ -24,23 +31,20 @@
     Create questionnaire
   </button>
   <a
-    href={`/project/${$page.params.id}/brainstorm/forms`}
+    href={`/project/${$page.params.id}/brainstorm/drafts`}
     class="button button-outline button-secondary">
     View drafts
   </a>
 </section>
 <section class="contentWrapper">
   {#await questionnaires}
-    Loading
+    <!-- Loading -->
   {:then result}
     <ul>
-      {#each result as q}
-        <li>
-          <a href={`/project/${$page.params.id}/brainstorm/forms/${q.id}`}>
-            {q.description}
-          </a>
-        </li>
+      {#each result as questionnaire (questionnaire.id)}
+        <QuestionnairePreview {questionnaire} projectId={$page.params.id} />
       {/each}
+      {#if !result.length}No published questionnaires{/if}
     </ul>
   {/await}
 </section>

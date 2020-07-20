@@ -50,6 +50,8 @@
       return `/project/${notification.project_id}/requirement/${notification.entity_requirement_id}`;
     } else if (notification.entityType === "reqversion") {
       return `/project/${notification.project_id}/requirement/${notification.requirement_id}`;
+    } else if (notification.entityType === "questionnaire") {
+      return `/project/${notification.project_id}/brainstorm/forms/${notification.entity_brainstormForm_id}`;
     } else {
       return `/project/${notification.project_id}/files/${notification.entity_file_id}`;
     }
@@ -61,7 +63,8 @@
     notification.entity_userclass_id ||
     notification.entity_requirement_id ||
     (notification.entity_reqversion_id && notification.requirement_id) ||
-    notification.entity_file_id;
+    notification.entity_file_id ||
+    notification.entity_brainstormForm_id;
 
   const toggleRead = async () => {
     const is_read = !notification.is_read;
@@ -110,12 +113,6 @@
     font-size: 1.4rem;
   }
 
-  .top {
-    padding: 1.25rem 1.5rem;
-    background-color: var(--background2);
-    margin: -1.25rem -1.5rem 0; /* see .panel in main.css */
-  }
-
   .top .sep {
     margin: 0 0.5rem;
   }
@@ -149,7 +146,7 @@
 
 <div class="panel">
   {#if !compact}
-    <div class="top">
+    <div class="top panelHeader">
       <div class="left">
         <a rel="prefetch" href={`/team/${notification.team_id}`}>
           {notification.teamName}

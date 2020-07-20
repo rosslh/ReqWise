@@ -34,6 +34,9 @@
   };
 </script>
 
+<svelte:head>
+  <title>{questionnaire.description} - ReqWise</title>
+</svelte:head>
 <section class="contentWrapper">
   <h1>
     {#if questionnaire.is_draft}[Draft]{/if}

@@ -62,6 +62,14 @@
     class="button button-secondary button-outline">
     Settings
   </button>
+  {#if questionnaire.is_public}
+    <a
+      rel="prefetch"
+      href={`/public-form/${$page.params.formId}`}
+      class="button button-secondary button-outline">
+      View public questionnaire
+    </a>
+  {/if}
 </section>
 <section class="contentWrapper">
   {#each prompts as prompt (prompt.id)}

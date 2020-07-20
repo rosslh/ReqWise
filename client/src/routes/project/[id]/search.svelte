@@ -24,9 +24,6 @@
     color: var(--secondaryText);
     display: flex;
     align-items: center;
-    margin: -1.25rem -1.5rem 0;
-    padding: 1.25rem 1.5rem;
-    background-color: var(--background2);
     text-transform: capitalize;
   }
 
@@ -66,7 +63,7 @@
   {:then result}
     {#each result as r}
       <div class="panel">
-        <div class="resultType">
+        <div class="resultType panelHeader">
           {#if r.result_type === 'requirement group'}
             <div class="resultIconWrapper resultIconWrapper-padded">
               <MdFolder />

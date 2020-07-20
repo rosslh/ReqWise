@@ -57,6 +57,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>Unread notifications - ReqWise</title>
+</svelte:head>
 <section class="contentWrapper">
   <h1>Notifications</h1>
   <SubmitButton handler={markAllRead}>Mark as read</SubmitButton>

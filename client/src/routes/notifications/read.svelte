@@ -47,6 +47,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>Read notifications - ReqWise</title>
+</svelte:head>
 <section class="contentWrapper">
   <h1>Read notifications</h1>
   <a
