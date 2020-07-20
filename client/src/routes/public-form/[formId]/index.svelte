@@ -17,12 +17,12 @@
 
   const { page, session } = stores();
 
-  const update = async () => {
-    questionnaire = await get(
-      `/questionnaires/${$page.params.formId}`,
-      $session.user && $session.user.jwt
-    );
-  };
+  // const update = async () => {
+  //   questionnaire = await get(
+  //     `/questionnaires/${$page.params.formId}`,
+  //     $session.user && $session.user.jwt
+  //   );
+  // };
 
   let prompts = questionnaire.prompts;
 
