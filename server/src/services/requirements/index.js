@@ -540,4 +540,82 @@ module.exports = async function (fastify, opts) {
         .returning("id");
     }
   );
+
+  const getRequirementPromptsSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:requirementId/prompts",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getRequirementPromptsSchema,
+    },
+    async function (request, reply) {
+      const prompts = await fastify.knex
+        .from("brainstormPrompt")
+        .select("brainstormPrompt.*", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "brainstormPrompt.ppuid_id")
+        .join("brainstormPrompt_requirement", "brainstormPrompt.id", "brainstormPrompt_requirement.brainstormPrompt_id")
+        .where({ "brainstormPrompt_requirement.requirement_id": request.params.requirementId })
+        .orderBy("ppuid", "asc");
+      return await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
+    });
+
+  const postRequirementPromptSchema = {
+    body: {
+      type: "object",
+      properties: {
+        prompt_id: { type: ["number", "string"] }
+      }
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        requirementId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/:requirementId/prompts",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postRequirementPromptSchema,
+    },
+    async function (request, reply) {
+      const { prompt_id } = request.body;
+      const { requirementId } = request.params;
+
+      return await fastify
+        .knex("brainstormPrompt_requirement")
+        .insert({
+          brainstormPrompt_id: fastify.deobfuscateId(prompt_id),
+          requirement_id: requirementId
+        })
+        .returning("id");
+    }
+  );
 };

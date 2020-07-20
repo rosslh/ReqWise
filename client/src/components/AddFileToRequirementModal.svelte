@@ -61,7 +61,7 @@
   };
 </script>
 
-<h2>Attach files to requirement</h2>
+<h2>Link files to requirement</h2>
 <form>
   <fieldset>
     <Select

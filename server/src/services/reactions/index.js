@@ -25,7 +25,7 @@ module.exports = async function (fastify, opts) {
     fastify.delete(
         "/:reactionId",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember], // TODO: check if same user as reaction
+            preValidation: [fastify.allowAnonIfPublic], // TODO: check if same user as reaction
             schema: deletePromptSchema,
         },
         async function (request, reply) {

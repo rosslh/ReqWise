@@ -29,7 +29,8 @@
     .map(x => ({
       ...x,
       count: responses.filter(y => y.numericResponse === x.value).length,
-      selectedByYou: prompt.yourResponse.numericResponse === x.value
+      selectedByYou:
+        prompt.yourResponse && prompt.yourResponse.numericResponse === x.value
     }))
     .filter(z => z.count || numericRange.length <= 15);
 </script>

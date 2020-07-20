@@ -66,7 +66,7 @@ module.exports = async function (fastify, opts) {
     fastify.post(
         "/:promptId/responses",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember], // TODO: optional auth
+            preValidation: [fastify.allowAnonIfPublic],
             schema: postResponseSchema,
         },
         async function (request, reply) {
@@ -82,6 +82,17 @@ module.exports = async function (fastify, opts) {
             }
 
             const { promptId } = request.params;
+
+            const { is_draft, is_open } = await fastify.knex
+                .from("brainstormPrompt")
+                .select("*")
+                .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
+                .where("brainstormPrompt.id", request.params.promptId).first();
+
+            if (is_draft || !is_open) {
+                reply.code(400);
+                return "Questionnaire is not open for responses";
+            }
 
             const alreadyResponded = (
                 await fastify.knex
@@ -107,7 +118,7 @@ module.exports = async function (fastify, opts) {
                     textResponse,
                     numericResponse,
                     ...(request.user && { account_id: request.user.id }), // Can be anonymous
-                    ipAddress: request.ip // Trust-proxy must be true
+                    ...(!(request.user && request.user.id) && { ipAddress: request.ip }) // Trust-proxy must be true
                 })
                 .returning("id");
 
@@ -115,7 +126,7 @@ module.exports = async function (fastify, opts) {
                 brainstormResponse_id: id,
                 reactionType: "upvote",
                 ...(request.user && { account_id: request.user.id }), // Can be anonymous
-                ipAddress: request.ip // Trust-proxy must be true
+                ...(!(request.user && request.user.id) && { ipAddress: request.ip }) // Trust-proxy must be true
             }); // users upvote their own answers by default
 
             return [id];
@@ -142,7 +153,7 @@ module.exports = async function (fastify, opts) {
     fastify.get(
         "/:promptId",
         {
-            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            preValidation: [fastify.allowAnonIfPublic],
             schema: getPromptSchema,
         },
         async function (request, reply) {
@@ -150,33 +161,144 @@ module.exports = async function (fastify, opts) {
                 "id": request.params.promptId
             }).first();
 
-            let responses = await fastify.knex.from("brainstormResponse").select("*").where({
-                "brainstormPrompt_id": request.params.promptId
-            });
-
-            responses = await Promise.all(responses.map(async r => {
-                const reactions = await fastify.knex.from("brainstormReaction").select("*").where({
-                    brainstormResponse_id: r.id
-                });
-
-                const yourReaction = request.user && request.user.id
-                    ? reactions.find(x => x.account_id === request.user.id)
-                    : reactions.find(x => x.ipAddress === request.ip);
-
-                const upvotes = reactions.filter(x => x.reactionType === "upvote").length;
-                const downvotes = reactions.filter(x => x.reactionType === "downvote").length;
-
-                return { ...r, reactions, upvotes, downvotes, yourReaction };
-            }));
-
-            const options = await fastify.knex.from("brainstormResponseOption").select("*").where({
-                "brainstormPrompt_id": request.params.promptId
-            });
-
-            const yourResponse = request.user && request.user.id
-                ? responses.find(x => x.account_id === request.user.id)
-                : responses.find(x => x.ipAddress === request.ip);
-
-            return { ...prompt, responses, options, yourResponse };
+            return fastify.getPromptDetails(prompt, request);
         });
+
+    const getReqversion = function () {
+        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
+            "reqversion.created_at",
+            "=",
+            fastify.knex.raw(
+                "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
+            )
+        );
+    };
+    const getPromptRequirementsSchema = {
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                promptId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {},
+    };
+    fastify.get(
+        "/:promptId/requirements",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: getPromptRequirementsSchema,
+        },
+        async function (request, reply) {
+            const requirements = await fastify.knex
+                .from("requirement")
+                .select("requirement.*", "reqversion.*", "per_project_unique_id.readable_id as ppuid", "requirement.id as id") // id overwrite must be at end
+                .select(fastify.knex.raw("'requirement' as \"entityType\""))
+                .join("reqversion", getReqversion)
+                .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
+                .join("brainstormPrompt_requirement", "requirement.id", "brainstormPrompt_requirement.requirement_id")
+                .where({ "brainstormPrompt_requirement.brainstormPrompt_id": request.params.promptId })
+                .orderBy("ppuid", "asc");
+
+            const reqgroups = await fastify.knex
+                .from("reqgroup")
+                .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id") // id overwrite must be at end
+                .select(fastify.knex.raw("'reqgroup' as \"entityType\""))
+                .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
+                .join("brainstormPrompt_reqgroup", "reqgroup.id", "brainstormPrompt_reqgroup.reqgroup_id")
+                .where({ "brainstormPrompt_reqgroup.brainstormPrompt_id": request.params.promptId })
+                .orderBy("ppuid", "asc");
+
+            return [...requirements, ...reqgroups].sort((a, b) => Number(a.ppuid) - Number(b.ppuid));
+        }
+    );
+
+    const deletePromptRequirementSchema = {
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                promptId: { type: "number" },
+                requirementId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/:promptId/requirements/:requirementId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deletePromptRequirementSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("brainstormPrompt_requirement")
+                .where({
+                    "brainstormPrompt_id": request.params.promptId,
+                    "requirement_id": request.params.requirementId,
+                }).del();
+            return ["success"];
+        }
+    );
+
+    const deletePromptReqgroupSchema = {
+        queryString: {},
+        params: {
+            type: "object",
+            properties: {
+                promptId: { type: "number" },
+                requirementId: { type: "number" },
+            },
+        },
+        headers: {
+            type: "object",
+            properties: {
+                Authorization: { type: "string" },
+            },
+            required: ["Authorization"],
+        },
+        response: {
+            200: {
+                type: "array",
+                maxItems: 1,
+                items: { type: "string" },
+            },
+        },
+    };
+    fastify.delete(
+        "/:promptId/reqgroups/:reqgroupId",
+        {
+            preValidation: [fastify.authenticate, fastify.isTeamMember],
+            schema: deletePromptReqgroupSchema,
+        },
+        async function (request, reply) {
+            await fastify
+                .knex("brainstormPrompt_reqgroup")
+                .where({
+                    "brainstormPrompt_id": request.params.promptId,
+                    "reqgroup_id": request.params.reqgroupId,
+                }).del();
+            return ["success"];
+        }
+    );
 };

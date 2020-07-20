@@ -8,6 +8,7 @@
   import MdSubdirectoryArrowLeft from "svelte-icons/md/MdSubdirectoryArrowLeft.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
+  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
 
   import { get, post, del, put, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
@@ -380,6 +381,16 @@
             <IoMdPeople />
           </span>
           User classes
+        </a>
+        <a
+          rel="prefetch"
+          on:click={close}
+          class="button button-secondary button-small button-outline"
+          href={`/project/${project_id}/requirement/${id}/brainstorm`}>
+          <span class="iconWrapper">
+            <MdLightbulbOutline />
+          </span>
+          Brainstorming
         </a>
         <a
           rel="prefetch"

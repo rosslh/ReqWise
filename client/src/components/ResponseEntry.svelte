@@ -15,14 +15,18 @@
     border: 0.1rem solid var(--borderColor);
     margin: 1rem 0.5rem 0;
     position: relative;
-    background-color: var(--background2);
+    background-color: var(--background1);
     overflow: hidden;
   }
 
   .optionBar {
-    background-color: var(--grey2);
+    background-color: var(--grey1);
     height: 100%;
     position: absolute;
+  }
+
+  .optionBar.selected {
+    background-color: var(--grey2);
   }
 
   .optionCount {
@@ -56,7 +60,7 @@
 
 <div class="barWrapper">
   <div
-    class="optionBar"
+    class={`optionBar ${option.selectedByYou ? 'selected' : ''}`}
     style={`width: ${(option.count / totalCount) * 100}%`} />
   <div class="optionCount">{option.count}</div>
   <div class="optionValue">{option.label || option.value}</div>

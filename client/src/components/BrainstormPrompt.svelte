@@ -3,16 +3,20 @@
   export let prompt;
   export let isDraft = false;
   export let isOpen = true;
+  export let unlinkRequirement;
+  export let unlinkReqgroup;
 
   import { modalContent, modalProps } from "../stores.js";
   import DeletePromptModal from "./DeletePromptModal.svelte";
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
   import PromptResponses from "./PromptResponses.svelte";
-  import { get } from "../api.js";
+  import { get, del } from "../api.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
+  import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
   import { stores } from "@sapper/app";
-  const { session } = stores();
+  const { session, page } = stores();
 
   const deletePrompt = () => {
     modalContent.set(DeletePromptModal);
@@ -42,10 +46,25 @@
     }
   };
 
-  let viewResponses = prompt.yourResponse;
+  let viewResponses = !prompt.is_open || prompt.yourResponse;
 
   const toggleView = () => {
     viewResponses = !viewResponses;
+  };
+
+  const unlinkPrompt = async () => {
+    if (unlinkRequirement) {
+      await del(
+        `/prompts/${prompt.id}/requirements/${unlinkRequirement}`,
+        $session.user && $session.user.jwt
+      );
+    } else {
+      await del(
+        `/prompts/${prompt.id}/reqgroups/${unlinkReqgroup}`,
+        $session.user && $session.user.jwt
+      );
+    }
+    await update();
   };
 </script>
 
@@ -124,14 +143,37 @@
       {/if}
     </div>
     <div class="right">
-      <button
-        on:click={deletePrompt}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegTrashAlt />
-        </div>
-        Delete
-      </button>
+      {#if unlinkRequirement || unlinkReqgroup}
+        <button
+          on:click={unlinkPrompt}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaUnlink />
+          </div>
+          Unlink prompt
+        </button>
+      {:else}
+        <a
+          rel="prefetch"
+          href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/requirements`}
+          class="button button-outline button-small button-secondary
+          button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaLink />
+          </div>
+          Requirements
+        </a>
+      {/if}
+      {#if isDraft && $session.user && $session.user.jwt}
+        <button
+          on:click={deletePrompt}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegTrashAlt />
+          </div>
+          Delete
+        </button>
+      {/if}
     </div>
   </div>
 </div>

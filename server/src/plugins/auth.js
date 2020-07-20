@@ -20,6 +20,59 @@ module.exports = fp(async function (fastify, opts) {
     }
   });
 
+  const getFormId = async ({ questionnaireId, promptId, responseId, reactionId }) => {
+    if (questionnaireId) {
+      return { brainstormForm_id: questionnaireId };
+    } else if (promptId) {
+      return await fastify.knex.from("brainstormPrompt").select("brainstormForm_id").where({ id: promptId }).first();
+    } else if (responseId) {
+      return await fastify.knex
+        .from("brainstormResponse")
+        .select("brainstormPrompt.brainstormForm_id")
+        .join("brainstormPrompt", "brainstormResponse.brainstormPrompt_id", "brainstormPrompt.id")
+        .where("brainstormResponse.id", responseId).first();
+    } else if (reactionId) {
+      return await fastify.knex
+        .from("brainstormReaction")
+        .select("brainstormPrompt.brainstormForm_id")
+        .join("brainstormResponse", "brainstormReaction.brainstormResponse_id", "brainstormResponse.id")
+        .join("brainstormPrompt", "brainstormResponse.brainstormPrompt_id", "brainstormPrompt.id")
+        .where("brainstormReaction.id", reactionId).first();
+    } else {
+      throw new Error("Could not authenticate using URL parameters");
+    }
+  };
+
+  fastify.decorate("allowAnonIfPublic", async function (request, reply) {
+    const { brainstormForm_id: formId } = await getFormId(request.params);
+    const { is_public: isPublic } = await fastify.knex.from("brainstormForm").select("is_public").where({ id: formId }).first();
+
+    const verify = async () => {
+      const jwtContent = await request.jwtVerify();
+      const account = await fastify.knex
+        .from("account")
+        .select("id", "imageName")
+        .where("email", jwtContent.email)
+        .first();
+      if (jwtContent.id === account.id) {
+        request.user = { ...jwtContent, imageName: account.imageName };
+      } else {
+        reply.code(403);
+        reply.send("Email and ID do not match");
+      }
+    };
+
+    if (isPublic) {
+      try {
+        await verify();
+      } catch (e) {
+        request.isAnonymous = true;
+      }
+    } else {
+      await verify();
+    }
+  });
+
   const isTeamMemberByTeamId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -66,6 +119,26 @@ module.exports = fp(async function (fastify, opts) {
         .select("account_team.id")
         .where({
           "stakeholderGroup.id": request.params.stakeholderGroupId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
+  const isTeamMemberByUserclassId = async (request, reply, isAdmin = false) => {
+    const membership = (
+      await fastify.knex
+        .from("userclass")
+        .join("project", "project.id", "userclass.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "userclass.id": request.params.userclassId,
           "account_team.account_id": request.user.id,
           ...(isAdmin && { isAdmin }),
         })
@@ -358,6 +431,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByResponseId(request, reply);
     } else if (request.params.reactionId) {
       return isTeamMemberByReactionId(request, reply);
+    } else if (request.params.userclassId) {
+      return isTeamMemberByUserclassId(request, reply);
     }
     throw new Error("Could not authenticate using URL parameters");
   });
@@ -394,6 +469,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByResponseId(request, reply, true);
     } else if (request.params.reactionId) {
       return isTeamMemberByReactionId(request, reply, true);
+    } else if (request.params.userclassId) {
+      return isTeamMemberByUserclassId(request, reply, true);
     }
     throw new Error("Could not authenticate using URL parameters");
   });
