@@ -130,6 +130,26 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isTeamMemberByUserclassId = async (request, reply, isAdmin = false) => {
+    const membership = (
+      await fastify.knex
+        .from("userclass")
+        .join("project", "project.id", "userclass.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "userclass.id": request.params.userclassId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
   const isTeamMemberByFileId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -411,6 +431,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByResponseId(request, reply);
     } else if (request.params.reactionId) {
       return isTeamMemberByReactionId(request, reply);
+    } else if (request.params.userclassId) {
+      return isTeamMemberByUserclassId(request, reply);
     }
     throw new Error("Could not authenticate using URL parameters");
   });
@@ -447,6 +469,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByResponseId(request, reply, true);
     } else if (request.params.reactionId) {
       return isTeamMemberByReactionId(request, reply, true);
+    } else if (request.params.userclassId) {
+      return isTeamMemberByUserclassId(request, reply, true);
     }
     throw new Error("Could not authenticate using URL parameters");
   });

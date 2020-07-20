@@ -61,7 +61,7 @@
   };
 </script>
 
-<h2>Attach stakeholder groups to requirement</h2>
+<h2>Link stakeholder groups to requirement group</h2>
 <form>
   <fieldset>
     <Select

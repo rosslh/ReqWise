@@ -1,6 +1,7 @@
 <script>
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
+  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { modalContent, modalProps } from "../stores.js";
   import AddRequirementModal from "./AddRequirementModal.svelte";
@@ -31,6 +32,11 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  div.reqgroupFooter > div.right {
+    display: flex;
+    align-items: center;
+  }
 </style>
 
 <div class="reqgroupFooter">
@@ -51,7 +57,7 @@
   {:else}
     <div />
   {/if}
-  <div>
+  <div class="right">
     <a
       rel="prefetch"
       href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}/stakeholders`}
@@ -60,6 +66,15 @@
         <FaUserTie />
       </div>
       Stakeholders
+    </a>
+    <a
+      rel="prefetch"
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}/brainstorm`}
+      class="button button-outline button-small button-secondary button-clear">
+      <div class="iconWrapper">
+        <MdLightbulbOutline />
+      </div>
+      Brainstorming
     </a>
     <button
       id="editReqgroupButton"

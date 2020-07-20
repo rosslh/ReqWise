@@ -35,36 +35,7 @@ module.exports = async function (fastify, opts) {
                 "brainstormForm_id": request.params.questionnaireId
             });
 
-            prompts = await Promise.all(prompts.map(async p => {
-                let responses = await fastify.knex.from("brainstormResponse").select("*").where({
-                    "brainstormPrompt_id": p.id
-                });
-
-                responses = await Promise.all(responses.map(async r => {
-                    const reactions = await fastify.knex.from("brainstormReaction").select("*").where({
-                        brainstormResponse_id: r.id
-                    });
-
-                    const yourReaction = request.user && request.user.id
-                        ? reactions.find(x => x.account_id === request.user.id)
-                        : reactions.find(x => x.ipAddress === request.ip);
-
-                    const upvotes = reactions.filter(x => x.reactionType === "upvote").length;
-                    const downvotes = reactions.filter(x => x.reactionType === "downvote").length;
-
-                    return { ...r, reactions, upvotes, downvotes, yourReaction };
-                }));
-
-                const options = await fastify.knex.from("brainstormResponseOption").select("*").where({
-                    "brainstormPrompt_id": p.id
-                });
-
-                const yourResponse = request.user && request.user.id
-                    ? responses.find(x => x.account_id === request.user.id)
-                    : responses.find(x => x.ipAddress === request.ip);
-
-                return { ...p, responses, options, yourResponse };
-            }));
+            prompts = await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
 
             return { ...questionnaire, prompts };
         }
@@ -109,6 +80,29 @@ module.exports = async function (fastify, opts) {
             const { prompt, options, minVal, maxVal, type } = request.body;
             const { questionnaireId } = request.params;
 
+            const { project_id } = await fastify.knex
+                .from("brainstormForm")
+                .select("*")
+                .where("id", request.params.questionnaireId)
+                .first();
+
+            const maxPpuid =
+                (
+                    await fastify
+                        .knex("per_project_unique_id")
+                        .where({ project_id })
+                        .max("readable_id")
+                        .first()
+                ).max || 0;
+
+            const ppuid_id = (await fastify
+                .knex("per_project_unique_id")
+                .insert({
+                    project_id,
+                    readable_id: maxPpuid + 1
+                })
+                .returning("id"))[0];
+
             const [id] = await fastify
                 .knex("brainstormPrompt")
                 .insert({
@@ -116,7 +110,8 @@ module.exports = async function (fastify, opts) {
                     numericFloor: minVal,
                     numericCeiling: maxVal,
                     responseType: type,
-                    brainstormForm_id: questionnaireId
+                    brainstormForm_id: questionnaireId,
+                    ppuid_id
                 })
                 .returning("id");
 

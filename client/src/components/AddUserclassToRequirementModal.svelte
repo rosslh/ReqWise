@@ -61,7 +61,7 @@
   };
 </script>
 
-<h2>Attach userclasses to requirement</h2>
+<h2>Link user classes to requirement</h2>
 <form>
   <fieldset>
     <Select

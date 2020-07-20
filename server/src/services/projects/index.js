@@ -721,6 +721,43 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getProjectPromptsSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:projectId/prompts",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectPromptsSchema,
+    },
+    async function (request, reply) {
+      const prompts = await fastify.knex
+        .from("brainstormPrompt")
+        .select("*", "brainstormPrompt.id as id", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "brainstormPrompt.ppuid_id")
+        .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
+        .where({
+          "brainstormForm.project_id": request.params.projectId
+        })
+        .orderBy("ppuid", "asc");
+      return await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
+    }
+  );
+
   const getProjectUserclassesSchema = {
     queryString: {},
     params: {
