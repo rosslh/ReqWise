@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const { v4: generateUuid } = require("uuid");
 const { generateFromString } = require('generate-avatar');
+const sharp = require("sharp");
 const { Storage } = require('@google-cloud/storage');
 const { v4: uuidv4 } = require('uuid');
 const storage = new Storage();
@@ -211,13 +212,23 @@ module.exports = async (fastify, opts) => {
         .first();
 
       if (file) {
-        const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
+        let imageBuffer = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
+        const croppedImage = await sharp(imageBuffer)
+          .resize({
+            width: 300,
+            height: 300,
+            fit: sharp.fit.cover,
+            position: sharp.strategy.entropy
+          })
+          .toBuffer();
+        const data = Buffer.from(croppedImage.toString('base64').replace(/^data:.*\/.*;base64,/, ''), 'base64');
         uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
         const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
         await gcloudFile.save(data);
         await gcloudFile.makePublic();
         if (currentImageName) {
           try {
+            console.log(`deleting ${currentImageName}`);
             await storage.bucket('user-file-storage').file(currentImageName).delete();
           }
           catch (e) {
