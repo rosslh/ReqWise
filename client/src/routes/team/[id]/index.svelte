@@ -18,14 +18,13 @@
   import { stores, goto } from "@sapper/app";
 
   import { modalContent, modalProps } from "../../../stores.js";
-  import { get, put, del, post } from "../../../api.js";
+  import { get, del, post } from "../../../api.js";
   const { session } = stores();
 
   import AddProjectModal from "../../../components/AddProjectModal.svelte";
   import EditTeamModal from "../../../components/EditTeamModal.svelte";
   import InviteTeamMemberModal from "../../../components/InviteTeamMemberModal.svelte";
   import Skeleton from "../../../components/Skeleton.svelte";
-  import SubmitButton from "../../../components/SubmitButton.svelte";
 
   export let id;
   export let user;
