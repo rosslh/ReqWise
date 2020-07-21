@@ -22,7 +22,7 @@
   ],
   "author": "Ross Hill <ross@rosshill.ca>",
   "dependencies": {
-    "@google-cloud/storage": "^5.1.0",
+    "@google-cloud/storage": "^5.1.2",
     "@slack/web-api": "^5.10.0",
     "bcrypt": "^3.0.7",
     "dotenv": "^8.2.0",
