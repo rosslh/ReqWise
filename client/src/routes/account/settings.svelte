@@ -108,7 +108,6 @@
   .profileImageWrapper {
     height: 9rem;
     width: 9rem;
-    border: 0.1rem solid var(--borderColor);
     margin: 1.5rem 0 0.5rem;
   }
 

@@ -41,23 +41,38 @@ describe('Team page', () => {
     });
 
     it('can update name and description', () => {
+        cy.get("#settingsButton").scrollIntoView().click();
         cy.get("#name").click().clear().type("new name");
         cy.get("#description").click().clear().type("new description");
         cy.get(".submitButton").click();
+
         cy.waitForSpinner();
         cy.reload(); // ensure new data is persisted
+        cy.wait(1000); // wait for input interactive
+        cy.waitForSkeleton();
+
+        cy.get("#settingsButton").scrollIntoView().click();
         cy.get("#name").should('have.value', "new name");
         cy.get("#description").should('have.value', "new description");
 
-        cy.wait(3000); // wait for input interactive
+        cy.reload(); // ensure new data is persisted
+        cy.wait(1000); // wait for input interactive
+        cy.waitForSkeleton();
 
+        cy.get("#settingsButton").scrollIntoView().click();
         cy.get("#name").click().clear().type("test name");
         cy.get("#description").click().clear().type("test description");
         cy.get(".submitButton").click();
+
         cy.waitForSpinner();
         cy.reload(); // ensure new data is persisted
+        cy.wait(1000); // wait for input interactive
+        cy.waitForSkeleton();
+
+        cy.get("#settingsButton").scrollIntoView().click();
         cy.get("#name").should('have.value', "test name");
         cy.get("#description").should('have.value', "test description");
+        cy.reload(); // close modal
     });
 
     it('can invite member', () => {

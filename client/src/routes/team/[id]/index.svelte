@@ -96,7 +96,10 @@
 </svelte:head>
 <div class="contentWrapper">
   <h1>{title}</h1>
-  <button on:click={editTeam} class="button button-secondary button-outline">
+  <button
+    id="settingsButton"
+    on:click={editTeam}
+    class="button button-secondary button-outline">
     Settings
   </button>
   <h2>Projects</h2>
