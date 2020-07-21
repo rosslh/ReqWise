@@ -308,12 +308,12 @@
     width: 100%;
     overflow-x: auto;
     list-style-type: none;
-    padding: 0;
+    min-height: 3rem;
     position: relative;
   }
 
   .latestRevisionPanel {
-    padding-top: 0;
+    padding-top: 0.5rem;
     padding-bottom: 1.6rem;
   }
 </style>

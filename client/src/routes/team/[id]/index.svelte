@@ -22,6 +22,7 @@
   const { session } = stores();
 
   import AddProjectModal from "../../../components/AddProjectModal.svelte";
+  import EditTeamModal from "../../../components/EditTeamModal.svelte";
   import InviteTeamMemberModal from "../../../components/InviteTeamMemberModal.svelte";
   import Skeleton from "../../../components/Skeleton.svelte";
   import SubmitButton from "../../../components/SubmitButton.svelte";
@@ -54,14 +55,6 @@
     });
   };
 
-  const updateTeam = async () => {
-    await put(`/teams/${id}`, { name, description }, user && user.jwt)
-      .then(() => {
-        update();
-      })
-      .catch(() => alert("Failure"));
-  };
-
   const deleteTeam = async () => {
     await del(`/teams/${id}`, user && user.jwt);
     goto("/account");
@@ -86,6 +79,11 @@
     await del(`/teams/${id}/admins/${memberId}`, user && user.jwt);
     update();
   };
+
+  const editTeam = async () => {
+    modalContent.set(EditTeamModal);
+    modalProps.set({ name, description, update, teamId: id });
+  };
 </script>
 
 <style>
@@ -99,19 +97,9 @@
 </svelte:head>
 <div class="contentWrapper">
   <h1>{title}</h1>
-  <div class="panel compact">
-    <form>
-      <fieldset>
-        <label for="name">Team name</label>
-        <input id="name" type="text" bind:value={name} />
-      </fieldset>
-      <fieldset>
-        <label for="description">Description</label>
-        <input id="description" type="text" bind:value={description} />
-      </fieldset>
-      <SubmitButton handler={updateTeam}>Update</SubmitButton>
-    </form>
-  </div>
+  <button on:click={editTeam} class="button button-secondary button-outline">
+    Settings
+  </button>
   <h2>Projects</h2>
   <div class="panel compact">
     <table class="compact">

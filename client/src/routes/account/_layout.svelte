@@ -60,6 +60,7 @@
 
   div.userColumnLeft .button {
     width: calc(var(--sidebarWidth) - 7rem);
+    padding: 0;
   }
 
   h1 {
@@ -104,9 +105,9 @@
       </a>
     {:else}
       <a href="/account" class="button button-success button-outline">
-        <span class="iconWrapper">
+        <div class="iconWrapper">
           <MdArrowBack />
-        </span>
+        </div>
         Back to profile
       </a>
     {/if}

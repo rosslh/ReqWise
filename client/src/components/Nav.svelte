@@ -155,6 +155,10 @@
     right: 0.4rem;
     border: 0.1rem solid var(--borderColor);
   }
+
+  #signupLink {
+    margin-right: 1rem;
+  }
 </style>
 
 <nav>

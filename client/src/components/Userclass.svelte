@@ -188,11 +188,23 @@
   <div class="twoCol">
     <div class="description">
       <h4>Description</h4>
-      <blockquote>{userclass.description}</blockquote>
+      <blockquote>
+        {#if userclass.description}
+          {userclass.description}
+        {:else}
+          <em>No description</em>
+        {/if}
+      </blockquote>
     </div>
     <div class="persona">
       <h4>User Persona</h4>
-      <blockquote>{userclass.persona}</blockquote>
+      <blockquote>
+        {#if userclass.persona}
+          {userclass.persona}
+        {:else}
+          <em>No persona</em>
+        {/if}
+      </blockquote>
     </div>
   </div>
   <div class="champions">

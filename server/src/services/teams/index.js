@@ -157,10 +157,6 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { name, description } = request.body;
-      if (!name || !description) {
-        reply.code(400).send("Missing name or description");
-        return;
-      }
       return (
         await fastify
           .knex("team")

@@ -56,8 +56,8 @@
     stakeholders.
   </p>
   <p class="infoBlurb">
-    Types of quality attributes include usability, maintainability, efficiency,
-    and reliability.
+    Examples of quality attributes include usability, maintainability,
+    efficiency, and reliability.
   </p>
   <button on:click={showAddQaModal}>Add quality attribute</button>
 </section>

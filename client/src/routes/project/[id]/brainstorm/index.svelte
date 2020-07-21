@@ -26,7 +26,11 @@
 
 <section class="contentWrapper">
   <h2>Brainstorm</h2>
-  <p class="infoBlurb">...</p>
+  <p class="infoBlurb">
+    Questionnaires let you aggregate and follow through on feedback from
+    customers and team members. Individual questionnaire prompts can be linked
+    to requirements.
+  </p>
   <button on:click={newQuestionnaire} class="button button-success">
     Create questionnaire
   </button>

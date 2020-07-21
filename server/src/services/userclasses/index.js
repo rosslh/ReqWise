@@ -155,7 +155,7 @@ module.exports = async function (fastify, opts) {
                 .knex("userclass")
                 .where("id", request.params.userclassId)
                 .del();
-            await fastify.createAlert("delete", "userclass", userclass.name, userclass.id, userclass.project_id, request.user.id);
+            await fastify.createAlert("delete", "userclass", userclass.name, null, userclass.project_id, request.user.id);
             return ["success"];
         }
     );
