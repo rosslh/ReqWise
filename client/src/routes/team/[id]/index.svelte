@@ -16,12 +16,15 @@
 
 <script>
   import { stores, goto } from "@sapper/app";
+  import { format } from "date-fns";
+  import FileSaver from "file-saver";
 
   import { modalContent, modalProps } from "../../../stores.js";
   import { get, del, post } from "../../../api.js";
   const { session } = stores();
 
   import AddProjectModal from "../../../components/AddProjectModal.svelte";
+  import AddProjectTemplateModal from "../../../components/AddProjectTemplateModal.svelte";
   import EditTeamModal from "../../../components/EditTeamModal.svelte";
   import InviteTeamMemberModal from "../../../components/InviteTeamMemberModal.svelte";
   import Skeleton from "../../../components/Skeleton.svelte";
@@ -35,6 +38,12 @@
   export let title = "";
 
   export let projects;
+
+  let projectTemplates = get(
+    `/teams/${id}/project-templates`,
+    user && user.jwt
+  );
+
   let members = get(`/teams/${id}/members`, user && user.jwt);
   let invites = get(`/teams/${id}/invites`, user && user.jwt);
 
@@ -83,6 +92,17 @@
     modalContent.set(EditTeamModal);
     modalProps.set({ name, description, update, teamId: id });
   };
+
+  const downloadData = template => {
+    var blob = new Blob([template.data], {
+      type: "application/json;charset=utf-8"
+    });
+    FileSaver.saveAs(blob, `reqwise-export-${template.name}.rqw`);
+  };
+
+  const newProjectFromTemplate = async template => {};
+
+  const deleteTemplate = async template => {};
 </script>
 
 <style>
@@ -137,6 +157,69 @@
         </button>
       </div>
     {/if}
+  </div>
+  <h2>Project templates</h2>
+  <div class="panel compact">
+    {#await projectTemplates}
+      <Skeleton rows={3} />
+    {:then result}
+      <table class="compact">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Created at</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {#each result as template (template.id)}
+            <tr>
+              <td>{template.name}</td>
+              <td>
+                <time datetime={template.created_at} class="date">
+                  {format(new Date(template.created_at), 'h:mm a, MMMM d, yyyy')}
+                </time>
+              </td>
+              <td>
+                <button
+                  on:click={() => {
+                    newProjectFromTemplate(template);
+                  }}
+                  class="button button-small button-primary">
+                  New project
+                </button>
+                <button
+                  on:click={() => {
+                    downloadData(template);
+                  }}
+                  class="button button-small button-secondary button-outline">
+                  Download
+                </button>
+                <button
+                  on:click={() => {
+                    deleteTemplate(template);
+                  }}
+                  class="button button-small button-outline button-danger">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+      {#if isAdmin}
+        <div>
+          <button
+            class="button-create"
+            on:click={() => {
+              modalContent.set(AddProjectTemplateModal);
+              modalProps.set({ id, update, projects });
+            }}>
+            Create template
+          </button>
+        </div>
+      {/if}
+    {/await}
   </div>
   <h2>Members</h2>
   <div class="panel compact">

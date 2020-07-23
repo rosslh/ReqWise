@@ -803,4 +803,103 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getProjectTemplatesSchema = {
+    queryString: {
+      type: "object",
+      properties: {
+        page: { type: "number" }
+      }
+    }, params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/:teamId/project-templates",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getProjectTemplatesSchema,
+    },
+    async function (request, reply) {
+      const { projectId } = request.body;
+      const templateSourceId = fastify.deobfuscateId(projectId);
+      const project = await fastify.knex.from("project").select("*").where({ id: templateSourceId }).first();
+      const reqgroups = await fastify.knex.from("reqgroup").select("*").where({ project_id: templateSourceId });
+      const requirements = await fastify.knex.from("requirement").select("*").where({ project_id: templateSourceId });
+      const userclasses = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
+      const stakeholderGroups = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
+      const files = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
+      const questionnaires = await fastify.knex.from("brainstormForm").select("*").where({ project_id: templateSourceId });
+      const prompts = await fastify.knex.from("brainstormPrompt").select("brainstormPrompt.*")
+        .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
+        .where({ project_id: templateSourceId });
+
+      const data = { project, reqgroups, requirements, userclasses, stakeholderGroups, files, questionnaires, prompts };
+
+      const [template_id] = await fastify
+        .knex("projectTemplate")
+        .insert({
+          name: project.name,
+          team_id: request.params.teamId,
+          created_by: request.user.id,
+          data: fastify.obfuscateIdsInJson(JSON.stringify(data))
+        })
+        .returning("id");
+      return [template_id];
+    });
+
+  const getTeamProjectTemplatesSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            name: { type: "string" },
+            data: { type: "string" },
+            created_at: { type: "string" }
+          },
+        },
+      },
+    },
+  };
+  fastify.get(
+    "/:teamId/project-templates",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getTeamProjectTemplatesSchema,
+    },
+    async function (request, reply) {
+      const templates = await fastify.knex
+        .from("projectTemplate")
+        .select("id", "name", "data", "created_at")
+        .where("team_id", request.params.teamId);
+      return templates.map(t => ({ ...t, data: JSON.stringify(t.data, null, 2) }));
+    }
+  );
 };
