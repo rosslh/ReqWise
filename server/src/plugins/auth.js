@@ -110,6 +110,25 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isTeamMemberByTemplateId = async (request, reply, isAdmin = false) => {
+    const membership = (
+      await fastify.knex
+        .from("projectTemplate")
+        .join("account_team", "account_team.team_id", "projectTemplate.team_id")
+        .select("account_team.id")
+        .where({
+          "projectTemplate.id": request.params.templateId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      reply.code(403);
+      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
   const isTeamMemberByStakeholderGroupId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -408,6 +427,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByTeamId(request, reply);
     } else if (request.params.projectId) {
       return isTeamMemberByProjectId(request, reply);
+    } else if (request.params.templateId) {
+      return isTeamMemberByTemplateId(request, reply);
     }
     else if (request.params.stakeholderGroupId) {
       return isTeamMemberByStakeholderGroupId(request, reply);
@@ -446,6 +467,8 @@ module.exports = fp(async function (fastify, opts) {
       return isTeamMemberByTeamId(request, reply, true);
     } else if (request.params.projectId) {
       return isTeamMemberByProjectId(request, reply, true);
+    } else if (request.params.templateId) {
+      return isTeamMemberByTemplateId(request, reply, true);
     }
     else if (request.params.stakeholderGroupId) {
       return isTeamMemberByStakeholderGroupId(request, reply, true);

@@ -25,7 +25,9 @@
 
   import AddProjectModal from "../../../components/AddProjectModal.svelte";
   import AddProjectTemplateModal from "../../../components/AddProjectTemplateModal.svelte";
+  import UploadProjectTemplateModal from "../../../components/UploadProjectTemplateModal.svelte";
   import EditTeamModal from "../../../components/EditTeamModal.svelte";
+  import DeleteTemplateModal from "../../../components/DeleteTemplateModal.svelte";
   import InviteTeamMemberModal from "../../../components/InviteTeamMemberModal.svelte";
   import Skeleton from "../../../components/Skeleton.svelte";
 
@@ -48,18 +50,21 @@
   let invites = get(`/teams/${id}/invites`, user && user.jwt);
 
   const update = async () => {
-    get(`/teams/${id}`, user && user.jwt).then(r => {
+    get(`/teams/${id}`, user && user.jwt).then((r) => {
       ({ name, description, isAdmin } = r);
       title = name;
     });
-    get(`/teams/${id}/projects`, user && user.jwt).then(r => {
+    get(`/teams/${id}/projects`, user && user.jwt).then((r) => {
       projects = r;
     });
-    get(`/teams/${id}/members`, user && user.jwt).then(r => {
+    get(`/teams/${id}/members`, user && user.jwt).then((r) => {
       members = r;
     });
-    get(`/teams/${id}/invites`, user && user.jwt).then(r => {
+    get(`/teams/${id}/invites`, user && user.jwt).then((r) => {
       invites = r;
+    });
+    get(`/teams/${id}/project-templates`, user && user.jwt).then((r) => {
+      projectTemplates = r;
     });
   };
 
@@ -68,22 +73,22 @@
     goto("/account");
   };
 
-  const deleteInvite = async inviteId => {
+  const deleteInvite = async (inviteId) => {
     await del(`/teams/${id}/invites/${inviteId}`, user && user.jwt);
     update();
   };
 
-  const deleteMember = async memberId => {
+  const deleteMember = async (memberId) => {
     await del(`/teams/${id}/members/${memberId}`, user && user.jwt);
     update();
   };
 
-  const makeAdmin = async accountId => {
+  const makeAdmin = async (accountId) => {
     await post(`/teams/${id}/admins`, { accountId }, user && user.jwt);
     update();
   };
 
-  const removeAdmin = async memberId => {
+  const removeAdmin = async (memberId) => {
     await del(`/teams/${id}/admins/${memberId}`, user && user.jwt);
     update();
   };
@@ -93,16 +98,19 @@
     modalProps.set({ name, description, update, teamId: id });
   };
 
-  const downloadData = template => {
+  const downloadData = (template) => {
     var blob = new Blob([template.data], {
-      type: "application/json;charset=utf-8"
+      type: "application/json;charset=utf-8",
     });
-    FileSaver.saveAs(blob, `reqwise-export-${template.name}.rqw`);
+    FileSaver.saveAs(blob, `${encodeURIComponent(template.name)}.rqw`);
   };
 
-  const newProjectFromTemplate = async template => {};
+  const newProjectFromTemplate = async () => {};
 
-  const deleteTemplate = async template => {};
+  const deleteTemplate = async (template) => {
+    modalContent.set(DeleteTemplateModal);
+    modalProps.set({ update, template });
+  };
 </script>
 
 <style>
@@ -216,6 +224,14 @@
               modalProps.set({ id, update, projects });
             }}>
             Create template
+          </button>
+          <button
+            class="button-secondary button-outline"
+            on:click={() => {
+              modalContent.set(UploadProjectTemplateModal);
+              modalProps.set({ id, update, projects });
+            }}>
+            Upload template
           </button>
         </div>
       {/if}
