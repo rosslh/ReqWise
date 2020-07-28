@@ -205,29 +205,12 @@ module.exports = async (fastify, opts) => {
           .where("slackUser.slackId", data.user.id)
           .first();
 
-        const maxPpuid =
-                    (
-                      await fastify
-                        .knex("per_project_unique_id")
-                        .where({ project_id })
-                        .max("readable_id")
-                        .first()
-                    ).max || 0;
-
         await fastify
           .knex("project")
           .where({ id: project_id })
           .update({ reqgroups_updated_at: new Date(Date.now()) });
 
-        const ppuid_id = (
-          await fastify
-            .knex("per_project_unique_id")
-            .insert({
-              project_id,
-              readable_id: maxPpuid + 1,
-            })
-            .returning("id")
-        )[0];
+        const { id: ppuid_id, readable_id } = await fastify.getNewPpuid(project_id);
 
         const [id] = await fastify
           .knex("reqgroup")
@@ -245,19 +228,14 @@ module.exports = async (fastify, opts) => {
         if (token) {
           const channel = await fastify.slackGetChannelId(project_id);
           await fastify.slack.chat.postMessage({
-            text: `${
-              author_name || data.user.name
-            } made a new ${getReqgroupType(
-              type
-            )}: <https://reqwise.com/project/${fastify.obfuscateId(
-              project_id
-            )}|#${maxPpuid + 1} - ${name}>.`,
+            text: `${author_name || data.user.name} made a new ${getReqgroupType(type)}:
+            <https://reqwise.com/project/${fastify.obfuscateId(project_id)}|#${readable_id} - ${name}>.`,
             token,
             channel,
             username: author_name || data.user.name,
             icon_url:
-                            author_imageName &&
-                            `https://storage.googleapis.com/user-file-storage/${author_imageName}`,
+              author_imageName &&
+              `https://storage.googleapis.com/user-file-storage/${author_imageName}`,
           });
         }
 
@@ -271,11 +249,11 @@ module.exports = async (fastify, opts) => {
         );
       } else if (data.view.callback_id === "new_requirement") {
         const description =
-                    data.view.state.values.description_block.description.value;
+          data.view.state.values.description_block.description.value;
         const priority =
-                    data.view.state.values.priority_block.priority.selected_option.value;
+          data.view.state.values.priority_block.priority.selected_option.value;
         const status =
-                    data.view.state.values.status_block.status.selected_option.value;
+          data.view.state.values.status_block.status.selected_option.value;
         const rationale = "";
         const reqgroup_id = Number(
           data.view.state.values.reqgroup_block.reqgroup.selected_option.value
@@ -318,32 +296,15 @@ module.exports = async (fastify, opts) => {
           .first();
 
         const numRequirements =
-                    isMaxOneRequirement &&
-                    (
-                      await fastify.knex.from("requirement").select("id").where({
-                        reqgroup_id,
-                      })
-                    ).length;
+          isMaxOneRequirement &&
+          (
+            await fastify.knex.from("requirement").select("id").where({
+              reqgroup_id,
+            })
+          ).length;
 
         if (!isMaxOneRequirement || numRequirements === 0) {
-          const maxPpuid =
-                        (
-                          await fastify
-                            .knex("per_project_unique_id")
-                            .where({ project_id })
-                            .max("readable_id")
-                            .first()
-                        ).max || 0;
-
-          const ppuid_id = (
-            await fastify
-              .knex("per_project_unique_id")
-              .insert({
-                project_id,
-                readable_id: maxPpuid + 1,
-              })
-              .returning("id")
-          )[0];
+          const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
 
           const requirement_id = (
             await fastify

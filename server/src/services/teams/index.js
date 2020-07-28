@@ -704,24 +704,6 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const getPpuid = async (project_id) => {
-    const maxPpuid =
-      (
-        await fastify
-          .knex("per_project_unique_id")
-          .where({ project_id })
-          .max("readable_id")
-          .first()
-      ).max || 0;
-    return (await fastify
-      .knex("per_project_unique_id")
-      .insert({
-        project_id,
-        readable_id: maxPpuid + 1
-      })
-      .returning("id"))[0];
-  };
-
   const postProjectFromTemplateSchema = {
     body: {
       type: "object",
@@ -778,16 +760,18 @@ module.exports = async function (fastify, opts) {
         created_by: request.user.id
       };
 
-      const [project_id] = await fastify
-        .knex("project")
-        .insert(project)
-        .returning("id");
+      console.log(project);
+
+      // const [project_id] = await fastify
+      //   .knex("project")
+      //   .insert(project)
+      //   .returning("id");
 
       // let reqgroupIdMapping = new Map();
       // let requirementIdMapping = new Map();
 
       // await Promise.all(data.reqgroups.map(async reqgroup => {
-      //   const ppuid_id = await getPpuid(project_id);
+      // const {id: ppuid_id} = await fastify.getNewPpuid(project_id);
       //   const [reqgroup_id] = await fastify
       //     .knex("reqgroup")
       //     .insert({
@@ -805,7 +789,7 @@ module.exports = async function (fastify, opts) {
       // }));
 
       // await Promise.all(data.requirements.map(async requirement => {
-      //   const ppuid_id = await getPpuid(project_id);
+      // const {id: ppuid_id} = await fastify.getNewPpuid(project_id);
       //   const [requirement_id] = await fastify
       //     .knex("requirement")
       //     .insert({

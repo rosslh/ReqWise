@@ -387,22 +387,7 @@ module.exports = async function (fastify, opts) {
       ).length;
 
       if (!isMaxOneRequirement || numRequirements === 0) {
-        const maxPpuid =
-          (
-            await fastify
-              .knex("per_project_unique_id")
-              .where({ project_id })
-              .max("readable_id")
-              .first()
-          ).max || 0;
-
-        const ppuid_id = (await fastify
-          .knex("per_project_unique_id")
-          .insert({
-            project_id,
-            readable_id: maxPpuid + 1
-          })
-          .returning("id"))[0];
+        const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
 
         const requirement_id = (
           await fastify

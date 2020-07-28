@@ -347,14 +347,6 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name, type, isPrioritized } = request.body;
       const { projectId: project_id } = request.params;
-      const maxPpuid =
-        (
-          await fastify
-            .knex("per_project_unique_id")
-            .where({ project_id })
-            .max("readable_id")
-            .first()
-        ).max || 0;
 
       const { slackAccessToken: token, id: projectId } = await fastify.knex
         .from("project")
@@ -365,13 +357,7 @@ module.exports = async function (fastify, opts) {
 
       await fastify.knex("project").where({ id: project_id }).update({ reqgroups_updated_at: new Date(Date.now()) });
 
-      const ppuid_id = (await fastify
-        .knex("per_project_unique_id")
-        .insert({
-          project_id,
-          readable_id: maxPpuid + 1
-        })
-        .returning("id"))[0];
+      const { id: ppuid_id, readable_id } = await fastify.getNewPpuid(project_id);
 
       const [id] = await fastify
         .knex("reqgroup")
@@ -389,7 +375,7 @@ module.exports = async function (fastify, opts) {
       if (token) {
         const channel = await fastify.slackGetChannelId(projectId);
         await fastify.slack.chat.postMessage({
-          text: `${request.user.name} made a new ${getReqgroupType(type)}: <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|#${maxPpuid + 1} - ${name}>.`,
+          text: `${request.user.name} made a new ${getReqgroupType(type)}: <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|#${readable_id} - ${name}>.`,
           token,
           channel,
           username: request.user.name,
@@ -449,21 +435,7 @@ module.exports = async function (fastify, opts) {
         reply.code(400).send("Missing svg or file or url");
       }
       const { projectId: project_id } = request.params;
-      const maxPpuid =
-        (
-          await fastify
-            .knex("per_project_unique_id")
-            .where({ project_id })
-            .max("readable_id")
-            .first()
-        ).max || 0;
-      const ppuid_id = (await fastify
-        .knex("per_project_unique_id")
-        .insert({
-          project_id,
-          readable_id: maxPpuid + 1
-        })
-        .returning("id"))[0];
+      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
 
       let id;
 
@@ -597,21 +569,8 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name, description } = request.body;
       const { projectId: project_id } = request.params;
-      const maxPpuid =
-        (
-          await fastify
-            .knex("per_project_unique_id")
-            .where({ project_id })
-            .max("readable_id")
-            .first()
-        ).max || 0;
-      const ppuid_id = (await fastify
-        .knex("per_project_unique_id")
-        .insert({
-          project_id,
-          readable_id: maxPpuid + 1
-        })
-        .returning("id"))[0];
+
+      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
 
       const [id] = await fastify
         .knex("stakeholderGroup")
@@ -881,21 +840,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name, description, persona, importance } = request.body;
       const { projectId: project_id } = request.params;
-      const maxPpuid =
-        (
-          await fastify
-            .knex("per_project_unique_id")
-            .where({ project_id })
-            .max("readable_id")
-            .first()
-        ).max || 0;
-      const ppuid_id = (await fastify
-        .knex("per_project_unique_id")
-        .insert({
-          project_id,
-          readable_id: maxPpuid + 1
-        })
-        .returning("id"))[0];
+      const { id: ppuid_id } = fastify.getNewPpuid(project_id);
 
       const [id] = await fastify
         .knex("userclass")
