@@ -100,7 +100,7 @@
 
   const downloadData = (template) => {
     var blob = new Blob([template.data], {
-      type: "application/json;charset=utf-8",
+      type: "text/plain;charset=utf-8",
     });
     FileSaver.saveAs(blob, `${encodeURIComponent(template.name)}.rqw`);
   };
@@ -229,7 +229,7 @@
             class="button-secondary button-outline"
             on:click={() => {
               modalContent.set(UploadProjectTemplateModal);
-              modalProps.set({ id, update, projects });
+              modalProps.set({ id, update, projects, teamId: id });
             }}>
             Upload template
           </button>

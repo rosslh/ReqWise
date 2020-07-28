@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const atob = require('atob');
 
 module.exports = async function (fastify, opts) {
   const postTeamSchema = {
@@ -803,13 +804,9 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const getProjectTemplatesSchema = {
-    queryString: {
-      type: "object",
-      properties: {
-        page: { type: "number" }
-      }
-    }, params: {
+  const postProjectTemplatesSchema = {
+    queryString: {},
+    params: {
       type: "object",
       properties: {
         projectId: { type: "number" },
@@ -828,7 +825,7 @@ module.exports = async function (fastify, opts) {
     "/:teamId/project-templates",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
-      schema: getProjectTemplatesSchema,
+      schema: postProjectTemplatesSchema,
     },
     async function (request, reply) {
       const { projectId } = request.body;
@@ -853,6 +850,45 @@ module.exports = async function (fastify, opts) {
           team_id: request.params.teamId,
           created_by: request.user.id,
           data: fastify.obfuscateIdsInJson(JSON.stringify(data))
+        })
+        .returning("id");
+      return [template_id];
+    });
+
+  const uploadTemplateSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        file: { type: "string" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/:teamId/project-templates/uploads",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: uploadTemplateSchema,
+    },
+    async function (request, reply) {
+      const { file } = request.body;
+      let data = atob(file.replace(/^data:.*\/.*;base64,/, ''));
+      const name = JSON.parse(data).project.name;
+      const [template_id] = await fastify
+        .knex("projectTemplate")
+        .insert({
+          name,
+          team_id: request.params.teamId,
+          created_by: request.user.id,
+          data: fastify.obfuscateIdsInJson(data)
         })
         .returning("id");
       return [template_id];
