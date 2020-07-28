@@ -704,6 +704,132 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getPpuid = async (project_id) => {
+    const maxPpuid =
+      (
+        await fastify
+          .knex("per_project_unique_id")
+          .where({ project_id })
+          .max("readable_id")
+          .first()
+      ).max || 0;
+    return (await fastify
+      .knex("per_project_unique_id")
+      .insert({
+        project_id,
+        readable_id: maxPpuid + 1
+      })
+      .returning("id"))[0];
+  };
+
+  const postProjectFromTemplateSchema = {
+    body: {
+      type: "object",
+      required: ["templateId"],
+      properties: {
+        templateId: { type: ["string", "number"] },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "number" },
+      },
+    },
+  };
+  fastify.post(
+    "/:teamId/projects/from-template",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postProjectFromTemplateSchema,
+    },
+    async function (request, reply) {
+      const team_id = request.params.teamId;
+
+      const { data } = await fastify.knex
+        .from("projectTemplate")
+        .select("id", "name", "data", "created_at")
+        .where({ "id": fastify.deobfuscateId(request.body.templateId), "team_id": team_id }).first();
+
+      console.log(data);
+
+      const project = {
+        ...data.project,
+        id: undefined,
+        team_id,
+        created_at: undefined,
+        reqgroups_updated_at: undefined,
+        created_by: request.user.id
+      };
+
+      const [project_id] = await fastify
+        .knex("project")
+        .insert(project)
+        .returning("id");
+
+      // let reqgroupIdMapping = new Map();
+      // let requirementIdMapping = new Map();
+
+      // await Promise.all(data.reqgroups.map(async reqgroup => {
+      //   const ppuid_id = await getPpuid(project_id);
+      //   const [reqgroup_id] = await fastify
+      //     .knex("reqgroup")
+      //     .insert({
+      //       ...reqgroup,
+      //       id: null,
+      //       ppuid_id,
+      //       project_id,
+      //       created_at: null,
+      //       created_by: request.user.id,
+      //       updated_at: null,
+      //       updated_by: request.user.id
+      //     })
+      //     .returning("id");
+      //   reqgroupIdMapping.set(reqgroup.id, reqgroup_id);
+      // }));
+
+      // await Promise.all(data.requirements.map(async requirement => {
+      //   const ppuid_id = await getPpuid(project_id);
+      //   const [requirement_id] = await fastify
+      //     .knex("requirement")
+      //     .insert({
+      //       ...requirement,
+      //       ppuid_id,
+      //       project_id,
+      //       created_at: undefined,
+      //       created_by: request.user.id,
+      //       updated_at: undefined,
+      //       updated_by: request.user.id
+      //     })
+      //     .returning("id");
+      //   requirementIdMapping.set(requirement.id, requirement_id);
+      // }));
+
+      // requirements
+      // userclasses
+      // stakeholderGroups
+      // files
+      // questionnaires
+      // prompts
+    }
+  );
+
   const putTeamSlackSchema = {
     body: {
       type: "object",

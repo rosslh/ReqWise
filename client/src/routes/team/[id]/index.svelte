@@ -105,7 +105,13 @@
     FileSaver.saveAs(blob, `${encodeURIComponent(template.name)}.rqw`);
   };
 
-  const newProjectFromTemplate = async () => {};
+  const newProjectFromTemplate = async ({ id: templateId }) => {
+    await post(
+      `/teams/${id}/projects/from-template`,
+      { templateId },
+      $session.user && $session.user.jwt
+    );
+  };
 
   const deleteTemplate = async (template) => {
     modalContent.set(DeleteTemplateModal);
@@ -194,7 +200,7 @@
                     newProjectFromTemplate(template);
                   }}
                   class="button button-small button-primary">
-                  New project
+                  New project from template
                 </button>
                 <button
                   on:click={() => {
