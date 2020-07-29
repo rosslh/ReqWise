@@ -7,8 +7,8 @@
   "private": true,
   "scripts": {
     "test": "tap test/**/*.test.js",
-    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152 --trustProxy true -- --knexMode=production",
-    "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --trustProxy true -- --knexMode=qa",
+    "start": "cross-env KNEXMODE=production fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152 --trustProxy true",
+    "dev": "cross-env KNEXMODE=production fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --trustProxy true",
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa=tcp:1112,reqwise:us-central1:reqwise=tcp:1111",
     "lint": "eslint src/**/*.js --fix",
     "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.7.0;buffers@0.1.1;event-stream@0.9.8;png-js@0.1.1\""
