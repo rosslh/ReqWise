@@ -27,15 +27,15 @@
   export let user;
   let { name } = user;
 
-  const capitalizeFirstLetter = str =>
+  const capitalizeFirstLetter = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
-  const themeOptions = ["light", "system", "dark"].map(attr => ({
+  const themeOptions = ["light", "system", "dark"].map((attr) => ({
     value: attr,
-    label: capitalizeFirstLetter(attr)
+    label: capitalizeFirstLetter(attr),
   }));
 
-  let theme = themeOptions.find(x => x.value === user.theme);
+  let theme = themeOptions.find((x) => x.value === user.theme);
   $: currentImage = user.imageName;
 
   const refetchSettings = async () => {
@@ -49,15 +49,15 @@
       credentials: "include",
       body: JSON.stringify({ theme: theme.value, imageName }),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(r => r.json())
+      .then((r) => r.json())
       .then(({ imageName }) => {
         $session.user = {
           ...$session.user,
           theme: theme.value,
-          imageName
+          imageName,
         };
         goto("/account/settings", { replaceState: true });
       });
@@ -66,7 +66,7 @@
   const submit = async () => {
     if (!files.length || files[0]["type"].split("/")[0] === "image") {
       if (files.length && !validateFileSize(files[0])) {
-        alert("File too large");
+        alert("File too large (1.5 MB maximum)");
         return;
       }
       await put(
@@ -75,7 +75,7 @@
           name,
           theme: theme.value,
           file: files.length ? await toBase64(files.item(0)) : undefined,
-          fileName: files.length ? files[0].name : undefined
+          fileName: files.length ? files[0].name : undefined,
         },
         $session.user && $session.user.jwt
       );
@@ -90,7 +90,7 @@
     await put(
       `/users/${$session.user.id}/settings`,
       {
-        file: ""
+        file: "",
       },
       $session.user && $session.user.jwt
     );

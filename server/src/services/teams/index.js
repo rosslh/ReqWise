@@ -749,10 +749,9 @@ module.exports = async function (fastify, opts) {
         .select("id", "name", "data", "created_at")
         .where({ "id": fastify.deobfuscateId(request.body.templateId), "team_id": team_id }).first();
 
-      console.log(data);
-
       const project = {
         ...data.project,
+        name: `${data.project.name} (from template)`,
         id: undefined,
         team_id,
         created_at: undefined,
@@ -760,57 +759,166 @@ module.exports = async function (fastify, opts) {
         created_by: request.user.id
       };
 
-      console.log(project);
+      const [project_id] = await fastify
+        .knex("project")
+        .insert(project)
+        .returning("id");
 
-      // const [project_id] = await fastify
-      //   .knex("project")
-      //   .insert(project)
-      //   .returning("id");
+      let reqgroupIdMapping = new Map(); // maps old ids to new ids
 
-      // let reqgroupIdMapping = new Map();
-      // let requirementIdMapping = new Map();
+      // duplicate reqgroups
+      console.log("Duplicating reqgroups");
 
-      // await Promise.all(data.reqgroups.map(async reqgroup => {
-      // const {id: ppuid_id} = await fastify.getNewPpuid(project_id);
-      //   const [reqgroup_id] = await fastify
-      //     .knex("reqgroup")
-      //     .insert({
-      //       ...reqgroup,
-      //       id: null,
-      //       ppuid_id,
-      //       project_id,
-      //       created_at: null,
-      //       created_by: request.user.id,
-      //       updated_at: null,
-      //       updated_by: request.user.id
-      //     })
-      //     .returning("id");
-      //   reqgroupIdMapping.set(reqgroup.id, reqgroup_id);
-      // }));
+      await Promise.all(data.reqgroups.map(async reqgroup => {
+        const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+        const [reqgroup_id] = await fastify
+          .knex("reqgroup")
+          .insert({
+            ...reqgroup,
+            id: undefined,
+            ppuid_id,
+            project_id,
+            created_at: undefined,
+            created_by: request.user.id,
+            updated_at: undefined,
+            updated_by: request.user.id
+          })
+          .returning("id");
+        reqgroupIdMapping.set(fastify.deobfuscateId(reqgroup.id), fastify.deobfuscateId(reqgroup_id));
+      }));
 
-      // await Promise.all(data.requirements.map(async requirement => {
-      // const {id: ppuid_id} = await fastify.getNewPpuid(project_id);
-      //   const [requirement_id] = await fastify
-      //     .knex("requirement")
-      //     .insert({
-      //       ...requirement,
-      //       ppuid_id,
-      //       project_id,
-      //       created_at: undefined,
-      //       created_by: request.user.id,
-      //       updated_at: undefined,
-      //       updated_by: request.user.id
-      //     })
-      //     .returning("id");
-      //   requirementIdMapping.set(requirement.id, requirement_id);
-      // }));
+      let requirementIdMapping = new Map(); // maps old ids to new ids
 
-      // requirements
+      // duplicate requirements and reqversions
+
+      console.log("Duplicating requirements and reqversions");
+
+      await Promise.all(data.requirements.map(async requirement => {
+        const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+        const data = {
+          ...requirement,
+          ppuid_id,
+          project_id,
+          reqgroup_id: reqgroupIdMapping.get(fastify.deobfuscateId(requirement.reqgroup_id)),
+          id: undefined,
+          parent_requirement_id: requirement.parent_requirement_id && fastify.deobfuscateId(requirement.parent_requirement_id)
+        };
+        delete data.reqversions;
+        const [requirement_id] = await fastify
+          .knex("requirement")
+          .insert(data)
+          .returning("id");
+        requirementIdMapping.set(fastify.deobfuscateId(requirement.id), requirement_id);
+
+        const reqversions = requirement.reqversions;
+        await Promise.all(reqversions.map(async version => {
+          await fastify
+            .knex("reqversion")
+            .insert({
+              ...version,
+              id: undefined,
+              requirement_id,
+              account_id: request.user.id,
+              created_at: undefined,
+              updated_at: undefined,
+              updated_by: request.user.id
+            })
+            .returning("id");
+        }))
+      }));
+
+      // fix requirement recursive references
+      console.log("Fixing requirement recursive references");
+
+      const requirements = await fastify.knex.from("requirement").select("*").where({ project_id });
+
+      await Promise.all(requirements.map(async requirement => {
+        await fastify.knex("requirement").update({
+          parent_requirement_id: requirement.parent_requirement_id && requirementIdMapping.get(fastify.deobfuscateId(requirement.parent_requirement_id))
+        }).where({ id: requirement.id });
+      }));
+
       // userclasses
+      console.log("Duplicating userclasses");
+
+      await Promise.all(data.userclasses.map(async userclass => {
+        const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+        await fastify
+          .knex("userclass")
+          .insert({
+            ...userclass,
+            id: undefined,
+            ppuid_id,
+            project_id,
+            created_at: undefined,
+            created_by: request.user.id,
+            updated_at: undefined,
+            updated_by: request.user.id
+          })
+          .returning("id");
+      }));
+
       // stakeholderGroups
-      // files
+
+      console.log("Duplicating stakeholder groups");
+
+      await Promise.all(data.stakeholderGroups.map(async stakeholderGroup => {
+        const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+        await fastify
+          .knex("stakeholderGroup")
+          .insert({
+            ...stakeholderGroup,
+            id: undefined,
+            ppuid_id,
+            project_id,
+            created_at: undefined,
+            created_by: request.user.id,
+            updated_at: undefined,
+            updated_by: request.user.id
+          })
+          .returning("id");
+      }));
+
       // questionnaires
+      console.log("Duplicating questionnaires");
+
+      let questionnaireIdMapping = new Map(); // maps old ids to new ids
+
+      await Promise.all(data.questionnaires.map(async questionnaire => {
+        const [id] = await fastify
+          .knex("brainstormForm")
+          .insert({
+            ...questionnaire,
+            id: undefined,
+            project_id,
+            created_at: undefined,
+            created_by: request.user.id
+          })
+          .returning("id");
+        questionnaireIdMapping.set(fastify.deobfuscateId(questionnaire.id), id);
+      }));
+
       // prompts
+      console.log("Duplicating brainstorm prompts");
+
+      await Promise.all(data.prompts.map(async prompt => {
+        const brainstormForm_id = questionnaireIdMapping.get(fastify.deobfuscateId(prompt.brainstormForm_id));
+        const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+        await fastify
+          .knex("brainstormPrompt")
+          .insert({
+            ...prompt,
+            ppuid_id,
+            brainstormForm_id,
+            id: undefined,
+            created_at: undefined
+          })
+          .returning("id");
+      }));
+
+      // TODO: duplicate files
+
+      return ["success"];
     }
   );
 
@@ -942,9 +1050,13 @@ module.exports = async function (fastify, opts) {
       const templateSourceId = fastify.deobfuscateId(projectId);
       const project = await fastify.knex.from("project").select("*").where({ id: templateSourceId }).first();
       const reqgroups = await fastify.knex.from("reqgroup").select("*").where({ project_id: templateSourceId });
-      const requirements = await fastify.knex.from("requirement").select("*").where({ project_id: templateSourceId });
+      let requirements = await fastify.knex.from("requirement").select("*").where({ project_id: templateSourceId });
+      requirements = await Promise.all(requirements.map(async req => {
+        const reqversions = await fastify.knex.from("reqversion").select("*").where({ requirement_id: req.id });
+        return { ...req, reqversions };
+      }));
       const userclasses = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
-      const stakeholderGroups = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
+      const stakeholderGroups = await fastify.knex.from("stakeholderGroup").select("*").where({ project_id: templateSourceId });
       const files = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
       const questionnaires = await fastify.knex.from("brainstormForm").select("*").where({ project_id: templateSourceId });
       const prompts = await fastify.knex.from("brainstormPrompt").select("brainstormPrompt.*")

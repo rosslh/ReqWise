@@ -21,7 +21,7 @@
       alert("No file selected");
       return;
     } else if (!validateFileSize(files[0])) {
-      alert("File too large");
+      alert("File too large (1.5 MB maximum)");
       return;
     }
     if (file) {
@@ -31,7 +31,7 @@
           name,
           description,
           file: await toBase64(files.item(0)),
-          fileName: files[0].name
+          fileName: files[0].name,
         },
         $session.user && $session.user.jwt
       );
@@ -44,7 +44,7 @@
           name,
           description,
           file: await toBase64(files.item(0)),
-          fileName: files[0].name
+          fileName: files[0].name,
         },
         $session.user && $session.user.jwt
       );

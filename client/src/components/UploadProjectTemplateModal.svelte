@@ -14,7 +14,7 @@
 
   const submit = async () => {
     if (files.length && !validateFileSize(files[0])) {
-      alert("File too large");
+      alert("File too large (1.5 MB maximum)");
       return;
     }
     await post(

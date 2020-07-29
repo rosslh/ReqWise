@@ -106,11 +106,13 @@
   };
 
   const newProjectFromTemplate = async ({ id: templateId }) => {
+    setTimeout(function() { alert("Creating a project from a template takes a moment. Please check back in a few minutes."); }, 1); // don't block
     await post(
       `/teams/${id}/projects/from-template`,
       { templateId },
       $session.user && $session.user.jwt
     );
+    await update();
   };
 
   const deleteTemplate = async (template) => {
