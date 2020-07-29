@@ -30,7 +30,7 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./client
-  appengine-deploy:
+  appengine-deploy-prod:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -69,3 +69,42 @@ jobs:
           gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
           gcloud app deploy --stop-previous-version --promote --version=staging
+  appengine-deploy-qa:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@master
+      - name: add env variables to app.yaml
+        run: 'printf "\nenv_variables:\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  DB_NAME: \"$DB_NAME\"\n  DB_USERNAME: \"$DB_USERNAME\"\n  DB_PASS: \"$DB_PASS\"\n  DB_HOST: \"$DB_HOST\"\n  DB_PORT: $DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
+        shell: bash
+        env:
+          DB_NAME: ${{secrets.QA_DB_NAME}}
+          DB_USERNAME: ${{secrets.DB_USERNAME}}
+          DB_PASS: ${{secrets.QA_DB_PASS}}
+          DB_HOST: ${{secrets.QA_DB_HOST}}
+          DB_PORT: ${{secrets.DB_PORT}}
+          JWT_KEY: ${{secrets.JWT_KEY}}
+          HASHID_KEY: ${{secrets.HASHID_KEY}}
+          REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
+          REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
+          REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
+      - name: Initialize Google Cloud SDK
+        uses: zxyle/publish-gae-action@master
+        with:
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.PROJECT_ID }}
+          gae_config_path: ./server/app.yaml
+      - name: echo key to file
+        run: 'echo "$GCP_SA_KEY" | base64 -d > client-secret.json'
+        shell: bash
+        env:
+          GCP_SA_KEY: ${{secrets.GCP_SA_KEY}}
+      - name: Publish app to Google App Engine
+        run: |
+          # This client-secret.json is converted from GCP_SA_KEY.
+          gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
+          gcloud config set project ${{ secrets.PROJECT_ID }}
+          gcloud app deploy --stop-previous-version --no-promote --version=qa
