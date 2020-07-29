@@ -48,7 +48,7 @@ const preprocess = getPreprocessor({
 const envVars = sapperEnv('REQWISE');
 
 const apiUrl =
-  process.env.TESTING_API_URL || (mode === "development"
+  process.env.TESTING_API_URL || (mode === "development" // TESTING_API_URL must be quoted
     ? '"http://localhost:3001"'
     : '"https://reqwise.uc.r.appspot.com"');
 
