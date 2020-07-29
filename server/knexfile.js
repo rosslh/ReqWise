@@ -24,10 +24,10 @@ module.exports = {
     client: "pg",
     connection: {
       database: process.env.QA_DB_NAME,
-      user: process.env.DB_USERNAME,
+      user: process.env.QA_DB_USERNAME,
       password: process.env.QA_DB_PASS,
       port: process.env.QA_DB_PORT,
-      host: process.env.DB_HOST
+      host: process.env.QA_DB_HOST
     },
     pool: {
       min: 2,

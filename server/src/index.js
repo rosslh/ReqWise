@@ -46,7 +46,9 @@ module.exports = function (fastify, opts, next) {
     origin: true,
   });
 
-  if (process.env.knexMode === "production") {
+  console.log(`Using database config: ${process.env.KNEXMODE}`);
+
+  if (process.env.KNEXMODE === "production") {
     fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), production);
   } else {
     fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), qa);

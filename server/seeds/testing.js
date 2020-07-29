@@ -4,12 +4,16 @@ exports.seed = async function (knex) {
   await knex('reqversion').del().then(() => { knex.raw('TRUNCATE TABLE reqversion RESTART IDENTITY'); });
   await knex('requirement').del().then(() => { knex.raw('TRUNCATE TABLE requirement RESTART IDENTITY'); });
   await knex('reqgroup').del().then(() => { knex.raw('TRUNCATE TABLE reqgroup RESTART IDENTITY'); });
+  await knex('stakeholderGroup').del().then(() => { knex.raw('TRUNCATE TABLE stakeholderGroup RESTART IDENTITY'); });
+  await knex('userclass').del().then(() => { knex.raw('TRUNCATE TABLE userclass RESTART IDENTITY'); });
+  await knex('file').del().then(() => { knex.raw('TRUNCATE TABLE file RESTART IDENTITY'); });
   await knex('per_project_unique_id').del().then(() => { knex.raw('TRUNCATE TABLE per_project_unique_id RESTART IDENTITY'); });
   await knex('project').del().then(() => { knex.raw('TRUNCATE TABLE project RESTART IDENTITY'); });
-  await knex('account_team').truncate()
-  await knex('team').del().then(() => { knex.raw('TRUNCATE TABLE team RESTART IDENTITY'); });
+  await knex('projectTemplate').del().then(() => { knex.raw('TRUNCATE TABLE projectTemplate RESTART IDENTITY'); });
+  await knex('account_team').del().then(() => { knex.raw('TRUNCATE TABLE team RESTART IDENTITY'); });
   await knex('account').del().then(() => { knex.raw('TRUNCATE TABLE account RESTART IDENTITY'); });
-
+  await knex('slackUser').del().then(() => { knex.raw('TRUNCATE TABLE slackUser RESTART IDENTITY'); });
+  await knex('team').del().then(() => { knex.raw('TRUNCATE TABLE team RESTART IDENTITY'); });
 
   await knex('account').insert([
     {
