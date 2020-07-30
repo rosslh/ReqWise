@@ -19,61 +19,61 @@
       label: "Brainstorm",
       slug: "brainstorm",
       icon: MdLightbulbOutline,
-      newSection: true
+      newSection: "Requirement Elicitation",
     },
     {
       label: "Business Requirements",
       slug: "business-requirements",
       icon: FaBriefcase,
-      newSection: true,
-      extraPadding: true
+      newSection: "Requirements",
+      extraPadding: true,
     },
     {
       label: "Features",
       slug: "features",
       icon: FaCheck,
-      extraPadding: true
+      extraPadding: true,
     },
     {
       label: "Quality Attributes",
       slug: "quality-attributes",
-      icon: IoMdRibbon
+      icon: IoMdRibbon,
     },
     {
       label: "Diagrams and Files",
       slug: "files",
       icon: FaRegFileAlt,
-      newSection: true,
-      extraPadding: true
+      newSection: "Linkable",
+      extraPadding: true,
     },
     {
       label: "User Classes",
       slug: "user-classes",
-      icon: IoMdPeople
+      icon: IoMdPeople,
     },
     {
       label: "Tests",
       slug: "tests",
       icon: FaCheckDouble,
-      extraPadding: true
+      extraPadding: true,
     },
     {
-      label: "Stakeholders",
+      label: "External Stakeholders",
       slug: "stakeholders",
       icon: FaUserTie,
-      newSection: true,
-      extraPadding: true
+      newSection: "Project Details",
+      extraPadding: true,
     },
     {
       label: "Activity",
       slug: "activity",
-      icon: MdHistory
+      icon: MdHistory,
     },
     {
       label: "Settings",
       slug: "settings",
-      icon: IoIosSettings
-    }
+      icon: IoIosSettings,
+    },
   ];
 </script>
 
@@ -82,10 +82,11 @@
     list-style-type: none;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 5rem;
-    padding: 0.5rem 2rem;
+    /* justify-content: space-between; */
+    height: 3.75rem;
+    padding: 0 2rem;
     text-decoration: none !important;
+    font-size: 1.4rem;
   }
   a span {
     line-height: 2rem;
@@ -110,19 +111,22 @@
   }
 
   span.icon {
-    float: right;
     height: 1.8rem;
     width: 1.8rem;
+    margin-right: 1rem;
   }
 
   div.items {
-    padding: 0;
+    padding: 0 0 1.5rem;
   }
 
   div.separator {
-    height: 1rem;
     border-top: 0.1rem solid var(--borderColor);
     margin: 1rem 0 0;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    opacity: 0.95;
+    color: var(--secondaryText);
   }
 
   nav {
@@ -144,17 +148,17 @@
   <div class="items">
     {#each tabs as item (item.slug)}
       {#if item.newSection}
-        <div class="separator" />
+        <div class="separator">{item.newSection}</div>
       {/if}
       <a
         rel="prefetch"
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>
-        <span>{item.label}</span>
         <span
           class={`icon ${item.slug} ${item.extraPadding ? 'extraPadding' : ''}`}>
           <svelte:component this={item.icon} />
         </span>
+        <span>{item.label}</span>
       </a>
     {/each}
   </div>

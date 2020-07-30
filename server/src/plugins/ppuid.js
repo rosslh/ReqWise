@@ -4,7 +4,10 @@ const retry = require('async-retry')
 module.exports = fp(function (fastify, opts, done) {
 
   fastify.decorate("getNewPpuid", async function (project_id) {
-    return await retry(async () => {
+    return await retry(async (_, attempt) => {
+      if (attempt > 1) {
+        console.log(`Retrying create PPUID - ${attempt}`)
+      }
       const maxPpuid =
         (
           await fastify
@@ -21,7 +24,7 @@ module.exports = fp(function (fastify, opts, done) {
         })
         .returning("*"))[0];
     }, {
-      retries: 5
+      retries: 10
     }
     );
   });

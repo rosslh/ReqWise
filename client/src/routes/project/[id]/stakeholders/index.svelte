@@ -30,14 +30,19 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>Stakeholders</h2>
+  <h2>External Stakeholders</h2>
   <p class="infoBlurb">
-    A stakeholder is an individual, group, or organization that is actively
-    involved in a project, is affected by its process or outcome, or can
-    influence its process or outcome. Some examples might be the product owners,
-    developers, or customers.
+    A stakeholder is an individual, group, or organization that is involved in
+    or affected by a project's process or outcome. External stakeholders added
+    to your project can fill out brainstorm questionnaires and sign-off on
+    requirements.
   </p>
   <button class="button-success" on:click={createStakeholderGroup}>
+    Invite external stakeholder
+  </button>
+  <button
+    class="button-success button-outline"
+    on:click={createStakeholderGroup}>
     Add stakeholder group
   </button>
 </section>
