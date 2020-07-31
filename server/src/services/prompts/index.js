@@ -83,7 +83,7 @@ module.exports = async function (fastify, opts) {
 
       const { promptId } = request.params;
 
-      const { is_draft, is_open } = await fastify.knex
+      const { is_public, is_draft, is_open } = await fastify.knex
         .from("brainstormPrompt")
         .select("*")
         .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
@@ -93,16 +93,22 @@ module.exports = async function (fastify, opts) {
         reply.code(400);
         return "Questionnaire is not open for responses";
       }
+      if (!is_public && !(request.user && request.user.id)) {
+        reply.code(401);
+        return "Questionnaire is not open for anonymous responses";
+      }
+
+      const responses = await fastify.knex
+        .from("brainstormResponse")
+        .select("*")
+        .where({
+          brainstormPrompt_id: promptId,
+          ...(request.user && { account_id: request.user.id }),
+          ...(!(request.user && request.user.id) && { ipAddress: request.ip })
+        });
 
       const alreadyResponded = (
-        await fastify.knex
-          .from("brainstormResponse")
-          .select("id")
-          .where({
-            brainstormPrompt_id: promptId,
-            ...(request.user && { account_id: request.user.id }),
-            ...(!(request.user && request.user.id) && { ipAddress: request.ip })
-          })
+        responses
       ).length;
 
       if (alreadyResponded) {

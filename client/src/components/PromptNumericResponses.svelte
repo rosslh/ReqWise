@@ -4,12 +4,15 @@
   import range from "lodash.range";
   import ResponseEntry from "./ResponseEntry.svelte";
 
-  const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
+  const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
 
-  $: values = responses.map(x => x.numericResponse);
+  $: values = responses.map((x) => x.numericResponse);
   $: avg = average(values);
 
   const totalCount = responses.length;
+  const respondents = responses.map(
+    (x) => x.respondentName || "<em>Anonymous</em>"
+  );
 
   const numericRange =
     prompt.responseType === "likert"
@@ -18,22 +21,28 @@
           "Somewhat disagree",
           "Neutral / unsure",
           "Somewhat agree",
-          "Strongly agree"
+          "Strongly agree",
         ].map((e, i) => ({ value: i + 1, label: e }))
-      : range(prompt.numericFloor, prompt.numericCeiling + 1, 1).map(x => ({
+      : range(prompt.numericFloor, prompt.numericCeiling + 1, 1).map((x) => ({
           value: x,
-          label: x
+          label: x,
         }));
 
   $: results = numericRange
-    .map(x => ({
+    .map((x) => ({
       ...x,
-      count: responses.filter(y => y.numericResponse === x.value).length,
+      count: responses.filter((y) => y.numericResponse === x.value).length,
       selectedByYou:
-        prompt.yourResponse && prompt.yourResponse.numericResponse === x.value
+        prompt.yourResponse && prompt.yourResponse.numericResponse === x.value,
     }))
-    .filter(z => z.count || numericRange.length <= 15);
+    .filter((z) => z.count || numericRange.length <= 15);
 </script>
+
+<style>
+  .secondary {
+    color: var(--secondaryText);
+  }
+</style>
 
 <!-- for small ranges (n<15) rows for numbers with no responses are still shown -->
 <!-- for larger ranges, only numbers which received answers are shown-->
@@ -43,9 +52,11 @@
   {#if responses.length > 1}responses{:else}response{/if}
   received.
   {#if prompt.responseType === 'number'}
-    Average: {avg}. Maximum: {Math.max(values)}. Minimum: {Math.min(values)}.
+    <span class="secondary">
+      Average: {avg}. Maximum: {Math.max(...values)}. Minimum: {Math.min(...values)}.
+    </span>
   {/if}
 {:else}No responses yet{/if}
 {#each results as option}
-  <ResponseEntry {option} {totalCount} />
+  <ResponseEntry {option} {totalCount} {respondents} />
 {/each}

@@ -2,7 +2,7 @@
   export let questionnaire;
   export let projectId;
   import { formatDistanceToNow } from "date-fns";
-  const formatDatetime = dt =>
+  const formatDatetime = (dt) =>
     `Created ${formatDistanceToNow(new Date(dt))} ago`;
 </script>
 
@@ -10,6 +10,12 @@
   .top {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+  }
+
+  .top h3 {
+    font-size: 1.8rem;
+    margin: 0;
   }
   .top a {
     color: var(--normalText);
@@ -22,9 +28,11 @@
 
 <li class="panel">
   <div class="top panelHeader">
-    <a href={`/project/${projectId}/brainstorm/forms/${questionnaire.id}`}>
-      {questionnaire.description}
-    </a>
+    <h3>
+      <a href={`/project/${projectId}/brainstorm/forms/${questionnaire.id}`}>
+        {questionnaire.description}
+      </a>
+    </h3>
     <time class="createdAt" datetime={questionnaire.created_at}>
       {formatDatetime(questionnaire.created_at)}
     </time>

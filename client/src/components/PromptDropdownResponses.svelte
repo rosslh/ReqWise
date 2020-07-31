@@ -4,20 +4,21 @@
   import ResponseEntry from "./ResponseEntry.svelte";
 
   $: options = prompt.options
-    .map(option => {
+    .map((option) => {
       const count = responses.filter(
-        r => r.brainstormResponseOption_id === option.id
+        (r) => r.brainstormResponseOption_id === option.id
       ).length;
       return {
         ...option,
         count,
         selectedByYou:
-          prompt.yourResponse && prompt.yourResponse.brainstormResponseOption_id === option.id
+          prompt.yourResponse &&
+          prompt.yourResponse.brainstormResponseOption_id === option.id,
       };
     })
     .sort((a, b) => b.count - a.count);
 
-  $: totalCount = options.map(x => x.count).reduce((a, b) => a + b, 0);
+  $: totalCount = options.map((x) => x.count).reduce((a, b) => a + b, 0);
 </script>
 
 {#if responses.length}

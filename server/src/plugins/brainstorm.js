@@ -2,9 +2,12 @@ const fp = require("fastify-plugin");
 
 module.exports = fp(function (fastify, opts, done) {
   fastify.decorate("getPromptDetails", async function (p, request) {
-    let responses = await fastify.knex.from("brainstormResponse").select("*").where({
-      "brainstormPrompt_id": p.id
-    });
+    let responses = await fastify.knex.from("brainstormResponse")
+      .select("brainstormResponse.*", "account.name as respondentName", "account.email as respondentEmail")
+      .leftJoin("account", "account.id", "brainstormResponse.account_id")
+      .where({
+        "brainstormPrompt_id": p.id
+      });
 
     responses = await Promise.all(responses.map(async r => {
       const reactions = await fastify.knex.from("brainstormReaction").select("*").where({

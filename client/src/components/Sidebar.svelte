@@ -84,7 +84,7 @@
     align-items: center;
     /* justify-content: space-between; */
     height: 3.75rem;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     text-decoration: none !important;
     font-size: 1.4rem;
   }
@@ -124,7 +124,7 @@
     border-top: 0.1rem solid var(--borderColor);
     margin: 1rem 0 0;
     font-weight: 600;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
     opacity: 0.95;
     color: var(--secondaryText);
   }

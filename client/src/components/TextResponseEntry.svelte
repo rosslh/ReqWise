@@ -26,7 +26,7 @@
       await post(
         `/responses/${response.id}/reactions`,
         {
-          reactionType: "upvote"
+          reactionType: "upvote",
         },
         $session.user && $session.user.jwt
       );
@@ -45,7 +45,7 @@
       await post(
         `/responses/${response.id}/reactions`,
         {
-          reactionType: "downvote"
+          reactionType: "downvote",
         },
         $session.user && $session.user.jwt
       );
@@ -56,10 +56,10 @@
 
 <style>
   .barWrapper {
-    max-width: 45rem;
+    max-width: 55rem;
     display: flex;
     align-items: center;
-    height: 4.75rem;
+    min-height: 4.75rem;
     border-radius: 0.8rem;
     border: 0.1rem solid var(--borderColor);
     margin: 1rem 0.5rem 0;
@@ -135,6 +135,10 @@
   .reactButton.selected {
     background: var(--grey2) !important;
   }
+
+  div.respondent {
+    color: var(--secondaryText);
+  }
 </style>
 
 <div class="barWrapper">
@@ -156,6 +160,13 @@
       </div>
       <div class="reactCount">{response.downvotes}</div>
     </button>
+  </div>
+  <div class="respondent">
+    {#if response.respondentName}
+      {response.respondentName}
+    {:else}
+      <em>Anonymous</em>
+    {/if}
   </div>
   <div class="responseSelected">
     {#if response.selectedByYou}
