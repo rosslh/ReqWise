@@ -3,6 +3,7 @@
   import { get } from "../../../../api.js";
   import { modalContent, modalProps } from "../../../../stores.js";
   import AddStakeholderGroupModal from "../../../../components/AddStakeholderGroupModal.svelte";
+  import StakeholderInvitationsModal from "../../../../components/StakeholderInvitationsModal.svelte";
   import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
   import StakeholderGroup from "../../../../components/StakeholderGroup.svelte";
 
@@ -26,6 +27,11 @@
     modalProps.set({ id, update });
   };
 
+  const viewInvitations = () => {
+    modalContent.set(StakeholderInvitationsModal);
+    modalProps.set({ id, update });
+  };
+
   let searchResults = [];
 </script>
 
@@ -37,9 +43,7 @@
     to your project can fill out brainstorm questionnaires and sign-off on
     requirements.
   </p>
-  <button class="button-success" on:click={createStakeholderGroup}>
-    Invite external stakeholder
-  </button>
+  <button class="button-success" on:click={viewInvitations}>Invitations</button>
   <button
     class="button-success button-outline"
     on:click={createStakeholderGroup}>
