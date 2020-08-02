@@ -84,7 +84,7 @@
     "svelte-media": "0.0.3",
     "svelte-preprocess": "^4.0.9",
     "svelte-preprocess-postcss": "^1.1.1",
-    "svelte-select": "^3.3.5",
+    "svelte-select": "^3.10.0",
     "sveltejs-tippy": "^3.0.0",
     "text-diff": "^1.0.1"
   }
