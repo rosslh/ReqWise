@@ -12,7 +12,7 @@
   NProgress.configure({
     minimum: 0.25,
     trickleSpeed: 120,
-    showSpinner: false
+    showSpinner: false,
   });
 
   $: {
@@ -29,13 +29,18 @@
 
   let closeStream;
 
-  $: startStream = function() {
+  $: startStream = function () {
     if (closeStream) {
       closeStream();
     }
-    closeStream = stream("getUserAlertStatus", {}, $session.user.jwt, event => {
-      $unreadAlerts = JSON.parse(event).unreadAlerts;
-    });
+    closeStream = stream(
+      "getUserAlertStatus",
+      {},
+      $session.user.jwt,
+      (event) => {
+        $unreadAlerts = JSON.parse(event).unreadAlerts;
+      }
+    );
   };
 
   onMount(() => async () => {
@@ -44,7 +49,7 @@
     }
   });
 
-  onDestroy(function() {
+  onDestroy(function () {
     if (closeStream) {
       closeStream();
     }
@@ -68,6 +73,29 @@
     padding-top: 5rem; /* account for navbar */
     padding-bottom: 6rem;
   }
+
+  div.environmentBanner {
+    height: 2.25rem;
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 20000;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 1.4rem;
+  }
+
+  div.environmentBanner.qa {
+    background-color: var(--orange);
+  }
+
+  div.environmentBanner.dev {
+    background-color: var(--red);
+  }
 </style>
 
 <svelte:head>
@@ -81,6 +109,11 @@
   <Modal let:close>
     <svelte:component this={$modalContent} {...$modalProps} {close} />
   </Modal>
+{/if}
+{#if process.env.API_URL.includes('qa-dot-reqwise')}
+  <div class="environmentBanner qa">QA Environment</div>
+{:else if process.env.API_URL.includes('localhost')}
+  <div class="environmentBanner dev">Development Environment</div>
 {/if}
 <Nav />
 <main id={$preloading ? 'preloading' : ''}>
