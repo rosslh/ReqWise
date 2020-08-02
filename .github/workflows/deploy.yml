@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  firebase-deploy:
+  firebase-deploy-prod:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -30,6 +30,32 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./client
+  firebase-deploy-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: "10"
+      - name: Install dependencies
+        working-directory: ./client
+        run: |
+          npm install
+      - name: Build client
+        working-directory: ./client
+        run: |
+          npm run build
+        env:
+          REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
+          REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: ./client
+          PROJECT_ID: reqwise-qa
+          TESTING_API_URL: \"https://qa-dot-reqwise.uc.r.appspot.com\"
   appengine-deploy-prod:
     runs-on: ubuntu-latest
     defaults:
