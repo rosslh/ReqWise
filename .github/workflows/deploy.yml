@@ -30,6 +30,7 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./client
+          API_URL: https://reqwise.uc.r.appspot.com
   firebase-deploy-qa:
     runs-on: ubuntu-latest
     steps:
@@ -55,7 +56,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./client
           PROJECT_ID: reqwise-qa
-          TESTING_API_URL: \"https://qa-dot-reqwise.uc.r.appspot.com\"
+          API_URL: https://qa-dot-reqwise.uc.r.appspot.com
   appengine-deploy-prod:
     runs-on: ubuntu-latest
     defaults:

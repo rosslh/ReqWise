@@ -43,7 +43,7 @@ jobs:
           wait-on-timeout: 120
           working-directory: ./client
         env:
-          TESTING_API_URL: ${{secrets.TESTING_API_URL}}
+          API_URL: https://qa-dot-reqwise.uc.r.appspot.com
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
