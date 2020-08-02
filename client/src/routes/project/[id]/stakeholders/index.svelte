@@ -29,7 +29,7 @@
 
   const viewInvitations = () => {
     modalContent.set(StakeholderInvitationsModal);
-    modalProps.set({ id, update });
+    modalProps.set({ id, update, projectId: id });
   };
 
   let searchResults = [];

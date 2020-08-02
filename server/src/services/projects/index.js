@@ -860,4 +860,178 @@ module.exports = async function (fastify, opts) {
       return [id];
     }
   );
+
+  const getTeamInvitesSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            inviteeEmail: { type: "string" },
+            name: { type: "string" }
+          },
+          required: ["inviteeEmail", "id"],
+        },
+      },
+    },
+  };
+  fastify.get(
+    "/:projectId/invites",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: getTeamInvitesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("stakeholderInvite")
+        .select("*", "stakeholderInvite.id as id")
+        .leftJoin("stakeholderGroup", "stakeholderGroup.id", "stakeholderInvite.stakeholderGroup_id")
+        .where("stakeholderInvite.project_id", request.params.projectId);
+    }
+  );
+
+  const postTeamInviteSchema = {
+    body: {
+      type: "object",
+      required: ["inviteeEmail"],
+      properties: {
+        inviteeEmail: { type: "string" },
+        stakeholderGroup_id: { type: ["string", "number"] },
+      },
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+      409: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.post(
+    "/:projectId/invites",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: postTeamInviteSchema,
+    },
+    async function (request, reply) {
+      let { inviteeEmail, stakeholderGroup_id } = request.body;
+      stakeholderGroup_id = fastify.deobfuscateId(stakeholderGroup_id);
+
+      const memberAlreadyExists = (
+        await fastify.knex
+          .from("account")
+          .select("account.id")
+          .where({
+            email: inviteeEmail,
+            "stakeholder_project.project_id": request.params.projectId,
+          })
+          .join("stakeholder_project", "stakeholder_project.account_id", "account.id")
+      ).length;
+
+      if (memberAlreadyExists) {
+        reply.code(409);
+        return ["Member already exists"];
+      }
+
+      const inviteAlreadyExists = (
+        await fastify.knex.from("stakeholderInvite").select("id").where({
+          inviteeEmail,
+          project_id: request.params.projectId,
+        })
+      ).length;
+
+      if (inviteAlreadyExists) {
+        reply.code(409);
+        return ["Invite already exists"];
+      }
+
+      await fastify
+        .knex("stakeholderInvite")
+        .insert({
+          inviteeEmail,
+          stakeholderGroup_id,
+          inviter_id: request.user.id,
+          project_id: request.params.projectId,
+        })
+        .returning("id");
+
+      return ["success"];
+    }
+  );
+
+  const deleteInviteSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+        inviteId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+
+  fastify.delete(
+    "/:projectId/invites/:inviteId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: deleteInviteSchema,
+    },
+    async function (request, reply) {
+      await fastify
+        .knex("stakeholderInvite")
+        .where({ project_id: request.params.projectId, id: request.params.inviteId })
+        .del();
+      return ["success"];
+    }
+  );
 };
