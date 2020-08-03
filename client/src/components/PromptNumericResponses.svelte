@@ -10,9 +10,6 @@
   $: avg = average(values);
 
   const totalCount = responses.length;
-  const respondents = responses.map(
-    (x) => x.respondentName || "<em>Anonymous</em>"
-  );
 
   const numericRange =
     prompt.responseType === "likert"
@@ -32,6 +29,9 @@
     .map((x) => ({
       ...x,
       count: responses.filter((y) => y.numericResponse === x.value).length,
+      respondents: responses
+        .filter((y) => y.numericResponse === x.value)
+        .map((x) => x.respondentName || "<em>Anonymous</em>"),
       selectedByYou:
         prompt.yourResponse && prompt.yourResponse.numericResponse === x.value,
     }))
@@ -58,5 +58,5 @@
   {/if}
 {:else}No responses yet{/if}
 {#each results as option}
-  <ResponseEntry {option} {totalCount} {respondents} />
+  <ResponseEntry {option} {totalCount} respondents={option.respondents} />
 {/each}

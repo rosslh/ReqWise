@@ -39,10 +39,13 @@
 
   .optionCount {
     font-weight: 600;
-    border-bottom: 0.2rem dashed var(--secondaryText);
     margin: 0 2rem;
-    padding: 0 1rem !important;
+    padding: 0 0.5rem !important;
+  }
+
+  .optionCount.tippy {
     cursor: help;
+    border-bottom: 0.15rem dashed var(--secondaryText);
   }
 
   .barWrapper > *:not(.optionBar) {
@@ -74,7 +77,11 @@
   <div
     class={`optionBar ${option.selectedByYou ? 'selected' : ''}`}
     style={`width: ${(option.count / totalCount) * 100}%`} />
-  <div class="optionCount" use:tippy={tippyProps}>{option.count}</div>
+  {#if respondents.length}
+    <div class="optionCount tippy" use:tippy={tippyProps}>{option.count}</div>
+  {:else}
+    <div class="optionCount">{option.count}</div>
+  {/if}
   <div class="optionValue">{option.label || option.value}</div>
   <div class="optionSelected">
     {#if option.selectedByYou}
