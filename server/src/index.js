@@ -54,3 +54,7 @@ module.exports = function (fastify, opts, next) {
 
   next();
 };
+
+module.exports.options = {
+  trustProxy: true
+}

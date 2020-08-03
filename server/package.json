@@ -7,8 +7,8 @@
   "private": true,
   "scripts": {
     "test": "tap test/**/*.test.js",
-    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152 --trustProxy true",
-    "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --trustProxy true",
+    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152 --options",
+    "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --options",
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112",
     "sqlProduction": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112,reqwise:us-central1:reqwise=tcp:1111",
     "lint": "eslint src/**/*.js --fix",
