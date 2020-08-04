@@ -10,7 +10,11 @@
       `/users/${session.user.id}/teams`,
       session.user && session.user.jwt
     );
-    return { teams };
+    const projects = await get(
+      `/users/${session.user.id}/projects`,
+      session.user && session.user.jwt
+    );
+    return { teams, projects };
   }
 </script>
 
@@ -23,6 +27,7 @@
   import Skeleton from "../../components/Skeleton.svelte";
 
   export let teams;
+  export let projects;
 
   let invites = get(
     `/users/${$session.user.id}/invites`,
@@ -34,24 +39,38 @@
       `/users/${$session.user.id}/teams`,
       $session.user && $session.user.jwt
     );
+    projects = await get(
+      `/users/${$session.user.id}/projects`,
+      $session.user && $session.user.jwt
+    );
     invites = await get(
       `/users/${$session.user.id}/invites`,
       $session.user && $session.user.jwt
     );
   };
 
-  const acceptInvite = async inviteId => {
-    await post(
-      `/users/${$session.user.id}/teams`,
-      {
-        inviteId
-      },
-      $session.user.jwt
-    );
-    await update();
+  const acceptInvite = async ({ id: inviteId, projectName, teamName }) => {
+    if (projectName) {
+      await post(
+        `/users/${$session.user.id}/projects`,
+        {
+          inviteId,
+        },
+        $session.user.jwt
+      );
+      await update();
+    } else {
+      await post(
+        `/users/${$session.user.id}/teams`,
+        {
+          inviteId,
+        },
+        $session.user.jwt
+      );
+    }
   };
 
-  const deleteInvite = async inviteId => {
+  const deleteInvite = async (inviteId) => {
     await del(
       `/users/${$session.user.id}/invites/${inviteId}`,
       $session.user.jwt
@@ -59,7 +78,7 @@
     await update();
   };
 
-  const leaveTeam = async teamId => {
+  const leaveTeam = async (teamId) => {
     await del(`/users/${$session.user.id}/teams/${teamId}`, $session.user.jwt);
     await update();
   };
@@ -75,6 +94,78 @@
   <title>Account - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
+  {#if projects.length}
+    <h2>Project collaboration</h2>
+    <div class="panel compact">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each projects as project (project.id)}
+            <tr>
+              <td>
+                <a
+                  rel="prefetch"
+                  class="projectLink"
+                  href={`/project/${project.id}`}>
+                  {project.name}
+                </a>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  {/if}
+  {#await invites}
+    <!-- loading -->
+  {:then result}
+    {#if result.length}
+      <h2>Invites</h2>
+      <div class="panel compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Team name</th>
+              <th>Inviter name</th>
+              <th />
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {#each result as invite (invite.id)}
+              <tr>
+                <td>
+                  {invite.teamName}
+                  {#if invite.projectName}/ {invite.projectName}{/if}
+                </td>
+                <td>{invite.inviterName}</td>
+                <td>
+                  <button
+                    class="button-success button-small button-outline"
+                    style="margin: 0;"
+                    on:click={() => acceptInvite(invite)}>
+                    Accept
+                  </button>
+                </td>
+                <td>
+                  <button
+                    class="button-danger button-small button-outline"
+                    style="margin: 0;"
+                    on:click={() => deleteInvite(invite)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  {/await}
   <h2>My Teams</h2>
   <div class="panel compact">
     <table>
@@ -119,50 +210,5 @@
       }}>
       Create team
     </button>
-  </div>
-  <h2>Invites</h2>
-  <div class="panel compact">
-    {#await invites}
-      <Skeleton rows={2} />
-    {:then result}
-      <table>
-        <thead>
-          <tr>
-            <th>Team name</th>
-            <th>Inviter name</th>
-            <th />
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {#each result as invite (invite.id)}
-            <tr>
-              <td>{invite.teamName}</td>
-              <td>{invite.inviterName}</td>
-              <td>
-                <button
-                  class="button-success button-small button-outline"
-                  style="margin: 0;"
-                  on:click={() => acceptInvite(invite.id)}>
-                  Accept
-                </button>
-              </td>
-              <td>
-                <button
-                  class="button-danger button-small button-outline"
-                  style="margin: 0;"
-                  on:click={() => deleteInvite(invite.id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    {:catch error}
-      <section class="contentWrapper">
-        <p style="color: var(--red)">{error.message}</p>
-      </section>
-    {/await}
   </div>
 </div>
