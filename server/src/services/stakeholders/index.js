@@ -19,7 +19,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:stakeholderGroupId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getStakeholderGroupSchema,
     },
     async function (request, reply) {
@@ -54,7 +54,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:stakeholderGroupId/users",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getStakeholderGroupUsers,
     },
     async function (request, reply) {
@@ -324,7 +324,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:stakeholderGroupId/reqgroups",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getStakeholderGroupReqgroupsSchema,
     },
     async function (request, reply) {

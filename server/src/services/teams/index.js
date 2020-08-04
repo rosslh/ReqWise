@@ -700,6 +700,16 @@ module.exports = async function (fastify, opts) {
           .returning("id");
       }));
 
+      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+      await fastify
+        .knex("stakeholderGroup")
+        .insert({
+          project_id,
+          name: "Uncategorized",
+          ppuid_id
+        })
+        .returning("id");
+
       return [project_id];
     }
   );

@@ -733,7 +733,20 @@ module.exports = async (fastify, opts) => {
 
       // add member to team
       if (invite) {
-        const { project_id, stakeholderGroup_id } = invite;
+        let { project_id, stakeholderGroup_id } = invite;
+
+        if (!stakeholderGroup_id) {
+          ({ id: stakeholderGroup_id } = await fastify.knex("stakeholderGroup")
+            .select("id")
+            .where(
+              "stakeholderGroup.created_at",
+              fastify.knex.raw(
+                `(select max("created_at") from "stakeholderGroup" where "stakeholderGroup"."project_id"=${project_id})`
+              )
+            )
+            .andWhere("stakeholderGroup.project_id", project_id)
+            .first());
+        }
 
         const memberAlreadyExists = await fastify
           .knex("stakeholder_project")
@@ -746,12 +759,10 @@ module.exports = async (fastify, opts) => {
             account_id: request.user.id,
             project_id
           });
-          if (stakeholderGroup_id) {
-            await fastify.knex("account_stakeholderGroup").insert({
-              account_id: request.user.id,
-              stakeholderGroup_id
-            });
-          }
+          await fastify.knex("account_stakeholderGroup").insert({
+            account_id: request.user.id,
+            stakeholderGroup_id
+          });
         }
 
         // delete invite

@@ -419,26 +419,53 @@ module.exports = fp(async function (fastify, opts) {
     }
   });
 
+  const authenticatorFactory = async (request, reply, requireAdmin = false, allowStakeholder = false) => {
+    const methods = [
+      { param: "teamId", memberHandler: isTeamMemberByTeamId },
+      { param: "projectId", memberHandler: isTeamMemberByProjectId, stakeholderHandler: isProjectStakeholderByProjectId },
+      { param: "templateId", memberHandler: isTeamMemberByTemplateId },
+      { param: "stakeholderGroupId", memberHandler: isTeamMemberByStakeholderGroupId },
+      { param: "fileId", memberHandler: isTeamMemberByFileId },
+      { param: "reqgroupId", memberHandler: isTeamMemberByReqgroupId },
+      { param: "requirementId", memberHandler: isTeamMemberByRequirementId },
+      { param: "reqversionId", memberHandler: isTeamMemberByReqversionId },
+      { param: "commentId", memberHandler: isTeamMemberByCommentId },
+      { param: "questionnaireId", memberHandler: isTeamMemberByQuestionnaireId },
+      { param: "promptId", memberHandler: isTeamMemberByPromptId },
+      { param: "responseId", memberHandler: isTeamMemberByResponseId },
+      { param: "reactionId", memberHandler: isTeamMemberByReactionId },
+      { param: "userclassId", memberHandler: isTeamMemberByUserclassId },
+    ];
+    if (!methods.some(x => request.params[x.param])) {
+      throw new Error("Could not authenticate using URL parameters");
+    }
+    methods.forEach(async method => {
+      if (request.params[method.param]) {
+        if (allowStakeholder) {
+          try {
+            return method.stakeholderHandler(request, reply);
+          }
+          catch {
+            return method.memberHandler(request, reply);
+          }
+        }
+        return method.memberHandler(request, reply, requireAdmin);
+      }
+    });
+  };
+
   fastify.decorate("hasProjectAccess", async function (request, reply) {
     if (!request.user) {
       reply.code(401);
       reply.send("Not authenticated");
     }
-    if (request.params.projectId) {
-      try {
-        try {
-          return await isTeamMemberByProjectId(request, reply);
-        }
-        catch {
-          return await isProjectStakeholderByProjectId(request, reply)
-        }
-      }
-      catch (error) {
-        reply.code(403);
-        reply.send(error);
-      }
+    try {
+      authenticatorFactory(request, reply, false, true);
     }
-    throw new Error("Could not authenticate using URL parameters");
+    catch (error) {
+      reply.code(403);
+      reply.send(error);
+    }
   });
 
   fastify.decorate("isTeamMember", async function (request, reply) {
@@ -447,43 +474,11 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      if (request.params.teamId) {
-        return isTeamMemberByTeamId(request, reply);
-      } else if (request.params.projectId) {
-        return isTeamMemberByProjectId(request, reply);
-      } else if (request.params.templateId) {
-        return isTeamMemberByTemplateId(request, reply);
-      }
-      else if (request.params.stakeholderGroupId) {
-        return isTeamMemberByStakeholderGroupId(request, reply);
-      }
-      else if (request.params.fileId) {
-        return isTeamMemberByFileId(request, reply);
-      }
-      else if (request.params.reqgroupId) {
-        return isTeamMemberByReqgroupId(request, reply);
-      } else if (request.params.requirementId) {
-        return isTeamMemberByRequirementId(request, reply);
-      } else if (request.params.reqversionId) {
-        return isTeamMemberByReqversionId(request, reply);
-      } else if (request.params.commentId) {
-        return isTeamMemberByCommentId(request, reply);
-      } else if (request.params.questionnaireId) {
-        return isTeamMemberByQuestionnaireId(request, reply);
-      } else if (request.params.promptId) {
-        return isTeamMemberByPromptId(request, reply);
-      } else if (request.params.responseId) {
-        return isTeamMemberByResponseId(request, reply);
-      } else if (request.params.reactionId) {
-        return isTeamMemberByReactionId(request, reply);
-      } else if (request.params.userclassId) {
-        return isTeamMemberByUserclassId(request, reply);
-      }
+      authenticatorFactory(request, reply, false, false);
     } catch (error) {
       reply.code(403);
       reply.send(error);
     }
-    throw new Error("Could not authenticate using URL parameters");
   });
 
   fastify.decorate("isTeamAdmin", async function (request, reply) {
@@ -492,43 +487,11 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      if (request.params.teamId) {
-        return isTeamMemberByTeamId(request, reply, true);
-      } else if (request.params.projectId) {
-        return isTeamMemberByProjectId(request, reply, true);
-      } else if (request.params.templateId) {
-        return isTeamMemberByTemplateId(request, reply, true);
-      }
-      else if (request.params.stakeholderGroupId) {
-        return isTeamMemberByStakeholderGroupId(request, reply, true);
-      }
-      else if (request.params.fileId) {
-        return isTeamMemberByFileId(request, reply, true);
-      }
-      else if (request.params.reqgroupId) {
-        return isTeamMemberByReqgroupId(request, reply, true);
-      } else if (request.params.requirementId) {
-        return isTeamMemberByRequirementId(request, reply, true);
-      } else if (request.params.reqversionId) {
-        return isTeamMemberByReqversionId(request, reply, true);
-      } else if (request.params.commentId) {
-        return isTeamMemberByCommentId(request, reply, true);
-      } else if (request.params.questionnaireId) {
-        return isTeamMemberByQuestionnaireId(request, reply, true);
-      } else if (request.params.promptId) {
-        return isTeamMemberByPromptId(request, reply, true);
-      } else if (request.params.responseId) {
-        return isTeamMemberByResponseId(request, reply, true);
-      } else if (request.params.reactionId) {
-        return isTeamMemberByReactionId(request, reply, true);
-      } else if (request.params.userclassId) {
-        return isTeamMemberByUserclassId(request, reply, true);
-      }
+      authenticatorFactory(request, reply, true, false);
     }
     catch (error) {
       reply.code(403);
       reply.send(error);
     }
-    throw new Error("Could not authenticate using URL parameters");
   });
 });
