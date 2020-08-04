@@ -24,6 +24,7 @@ module.exports = async function (fastify, opts) {
           reqgroup_ppuid: { type: "number" },
           parent_ppuid: { type: "number" },
           isPrioritized: { type: "boolean" },
+          is_draft: { type: "boolean" },
           reqgroup_id: { type: "number" },
           project_id: { type: "number" },
           ppuid: { type: "number" },
@@ -108,6 +109,7 @@ module.exports = async function (fastify, opts) {
           "per_project_unique_id.readable_id as ppuid",
           "reqgroup.name as reqgroupName",
           "reqgroup.isPrioritized as isPrioritized",
+          "reqgroup.is_draft as is_draft",
           "p_ppuid.readable_id as parent_ppuid",
           "rg_ppuid.readable_id as reqgroup_ppuid",
         )

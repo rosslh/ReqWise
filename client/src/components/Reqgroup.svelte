@@ -21,7 +21,7 @@
       get(
         `/reqgroups/${reqgroup.id}/requirements`,
         $session.user && $session.user.jwt
-      ).then(r => {
+      ).then((r) => {
         requirements = r;
         selectedReqs = [];
       });
@@ -38,8 +38,8 @@
   let selectedReqs = [];
 
   const toggleReq = ({ id, reqversion_id }) => {
-    if (selectedReqs.map(x => x.id).includes(id)) {
-      selectedReqs = selectedReqs.filter(x => x.id !== id);
+    if (selectedReqs.map((x) => x.id).includes(id)) {
+      selectedReqs = selectedReqs.filter((x) => x.id !== id);
     } else {
       selectedReqs = [...selectedReqs, { id, reqversion_id }]; // push doesn't update state
     }
@@ -50,17 +50,17 @@
     (() => {
       updateReqgroup();
       updateReqs();
-      $reqgroupsToUpdate = $reqgroupsToUpdate.filter(x => x != reqgroup.id);
+      $reqgroupsToUpdate = $reqgroupsToUpdate.filter((x) => x != reqgroup.id);
     })();
 
-  $: getIllegalParents = req => {
+  $: getIllegalParents = (req) => {
     const illegalParents = [];
     // req
     illegalParents.push(req);
 
     // req's descendents
     requirements
-      .filter(x => {
+      .filter((x) => {
         let currentReq = x;
         while (currentReq.parent_requirement_id) {
           if (
@@ -70,16 +70,16 @@
             return true;
           }
           currentReq = requirements.find(
-            y => y.id === currentReq.parent_requirement_id
+            (y) => y.id === currentReq.parent_requirement_id
           );
         }
         return false;
       })
-      .forEach(x => illegalParents.push(x.id));
+      .forEach((x) => illegalParents.push(x.id));
 
     // req's parent
     illegalParents.push(
-      requirements.find(x => x.id === req).parent_requirement_id || -1
+      requirements.find((x) => x.id === req).parent_requirement_id || -1
     );
 
     return illegalParents;
@@ -98,7 +98,7 @@
     await patch(
       `/requirements/${childId}`,
       {
-        parent_requirement_id: parentId === -1 ? null : parentId
+        parent_requirement_id: parentId === -1 ? null : parentId,
       },
       $session.user && $session.user.jwt
     );
@@ -115,18 +115,18 @@
           draggable: ".draggable",
           mirror: {
             cursorOffsetX: 15,
-            cursorOffsetY: 15
+            cursorOffsetY: 15,
           },
           scrollable: {
             speed: 10,
             sensitivity: 30,
-            scrollableElements: document.querySelectorAll(`div.pageContent`)
-          }
+            scrollableElements: document.querySelectorAll(`div.pageContent`),
+          },
         });
-        draggable.on("drag:start", e => {
+        draggable.on("drag:start", (e) => {
           draggingRequirement = e.source.dataset.reqid;
         });
-        draggable.on("drag:over", e => {
+        draggable.on("drag:over", (e) => {
           if (
             e.over.dataset.isplaceholder &&
             !hiddenPlaceholders.includes(e.over.dataset.parentid)
@@ -201,7 +201,7 @@
       {#each requirements as requirement, index}
         <RequirementInGroup
           isPrioritized={reqgroup.isPrioritized}
-          selected={selectedReqs.map(x => x.id).includes(requirement.id)}
+          selected={selectedReqs.map((x) => x.id).includes(requirement.id)}
           {toggleReq}
           update={updateReqs}
           {hiddenPlaceholders}

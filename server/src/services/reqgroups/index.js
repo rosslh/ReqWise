@@ -27,6 +27,7 @@ module.exports = async function (fastify, opts) {
           isDeletable: { type: "boolean" },
           isMaxOneRequirement: { type: "boolean" },
           isPrioritized: { type: "boolean" },
+          is_draft: { type: "boolean" },
           requirements: {
             type: "array", items: {
               type: "object",
@@ -125,7 +126,8 @@ module.exports = async function (fastify, opts) {
       type: "object",
       properties: {
         name: { type: "string" },
-        isPrioritized: { type: "boolean" }
+        isPrioritized: { type: "boolean" },
+        is_draft: { type: "boolean" }
       },
       required: ["name"],
     },
@@ -158,13 +160,14 @@ module.exports = async function (fastify, opts) {
       schema: putReqgroupSchema,
     },
     async function (request, reply) {
-      const { name, isPrioritized } = request.body;
+      const { name, isPrioritized, is_draft } = request.body;
       const [{ id, project_id }] = await fastify
         .knex("reqgroup")
         .where("id", request.params.reqgroupId)
         .update({
           name,
           isPrioritized,
+          is_draft,
           updated_at: new Date(Date.now()),
           updated_by: request.user.id,
         })

@@ -1,7 +1,8 @@
 <script>
   import MdInfoOutline from "svelte-icons/md/MdInfoOutline.svelte";
   import { modalContent, modalProps } from "../stores.js";
-  import ReqgroupDescriptionModal from "../components/ReqgroupDescriptionModal.svelte";
+  import ReqgroupDescriptionModal from "./ReqgroupDescriptionModal.svelte";
+  import DraftIndicator from "./DraftIndicator.svelte";
   export let reqgroup;
 
   const showDescriptionModal = () => {
@@ -14,7 +15,7 @@
   div.reqgroupHeader {
     background-color: var(--background1);
     margin: -1.25rem -1.25rem 0 -1.25rem;
-    padding: 1.75rem 1.25rem;
+    padding: 1.25rem 1.5rem;
     /* border-bottom: 0.1rem solid var(--borderColor); */
     min-height: 5rem;
     display: flex;
@@ -64,6 +65,7 @@
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
+  <DraftIndicator is_draft={reqgroup.is_draft} />
   {#if reqgroup.description}
     <button on:click={showDescriptionModal}>
       <MdInfoOutline />

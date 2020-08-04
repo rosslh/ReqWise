@@ -36,6 +36,7 @@
   div.reqgroupFooter > div.right {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 </style>
 
@@ -49,7 +50,7 @@
         modalProps.set({
           reqgroupId: reqgroup.id,
           update: updateReqs,
-          isPrioritized: reqgroup.isPrioritized
+          isPrioritized: reqgroup.isPrioritized,
         });
       }}>
       Add Requirement

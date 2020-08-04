@@ -167,6 +167,7 @@ module.exports = async function (fastify, opts) {
             isDeletable: { type: "boolean" },
             isMaxOneRequirement: { type: "boolean" },
             isPrioritized: { type: "boolean" },
+            is_draft: { type: "boolean" },
             updated_at: { type: "string" },
             requirements: {
               type: "array", items: {
@@ -314,6 +315,7 @@ module.exports = async function (fastify, opts) {
       properties: {
         name: { type: "string" },
         isPrioritized: { type: "boolean" },
+        is_draft: { type: "boolean" }
       },
     },
     queryString: {},
