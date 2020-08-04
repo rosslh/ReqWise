@@ -10,7 +10,7 @@
   import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
   import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
-  import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
+  // import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
 
   import { menuHidden } from "../stores.js";
 

@@ -24,7 +24,6 @@
   const { session } = stores();
   import { modalContent, modalProps } from "../../stores.js";
   import AddTeamModal from "../../components/AddTeamModal.svelte";
-  import Skeleton from "../../components/Skeleton.svelte";
 
   export let teams;
   export let projects;
@@ -49,7 +48,7 @@
     );
   };
 
-  const acceptInvite = async ({ id: inviteId, projectName, teamName }) => {
+  const acceptInvite = async ({ id: inviteId, projectName }) => {
     if (projectName) {
       await post(
         `/users/${$session.user.id}/projects`,
