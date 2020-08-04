@@ -65,7 +65,7 @@
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
-  <DraftIndicator is_draft={reqgroup.is_draft} />
+  <DraftIndicator isDraft={reqgroup.is_draft} />
   {#if reqgroup.description}
     <button on:click={showDescriptionModal}>
       <MdInfoOutline />

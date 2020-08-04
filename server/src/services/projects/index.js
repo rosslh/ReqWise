@@ -398,6 +398,7 @@ module.exports = async function (fastify, opts) {
         name: { type: "string" },
         description: { type: "string" },
         svg: { type: "string" },
+        is_draft: { type: "boolean" },
         file: { type: "string" },
         fileName: { type: "string" },
         url: { type: "string" },
@@ -432,7 +433,7 @@ module.exports = async function (fastify, opts) {
       schema: postFileSchema,
     },
     async function (request, reply) {
-      const { name, description, svg, file, fileName, url } = request.body;
+      const { name, description, svg, is_draft, file, fileName, url } = request.body;
       if (!(svg || fileName || url)) {
         reply.code(400).send("Missing svg or file or url");
       }
@@ -488,6 +489,7 @@ module.exports = async function (fastify, opts) {
             created_by: request.user.id,
             updated_by: request.user.id,
             svg,
+            is_draft,
             type: "diagram"
           })
           .returning("id");
@@ -537,7 +539,6 @@ module.exports = async function (fastify, opts) {
       properties: {
         name: { type: "string" },
         description: { type: "string" },
-        svg: { type: "string" },
       },
     },
     queryString: {},

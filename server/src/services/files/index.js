@@ -45,6 +45,7 @@ module.exports = async function (fastify, opts) {
         name: { type: "string" },
         description: { type: "string" },
         svg: { type: "string" },
+        is_draft: { type: "boolean" },
         file: { type: "string" },
         fileName: { type: "string" },
       }
@@ -78,7 +79,7 @@ module.exports = async function (fastify, opts) {
       schema: putFileSchema,
     },
     async function (request, reply) {
-      const { name, description, svg, file, fileName } = request.body;
+      const { name, description, svg, is_draft, file, fileName } = request.body;
       const currentFile = await fastify.knex
         .from("file")
         .select("*")
@@ -119,6 +120,7 @@ module.exports = async function (fastify, opts) {
             name,
             description,
             svg,
+            is_draft,
             updated_at: new Date(Date.now()),
             updated_by: request.user.id,
           })

@@ -1,5 +1,5 @@
 <script>
-  export let is_draft;
+  export let isDraft;
 </script>
 
 <style>
@@ -33,7 +33,7 @@
   }
 </style>
 
-<div class={`indicator ${is_draft ? 'visible' : ''}`}>
+<div class={`indicator ${isDraft ? 'visible' : ''}`}>
   Draft
   <div class="bottomTriangle" aria-hidden={true} />
 </div>

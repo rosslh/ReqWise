@@ -8,9 +8,10 @@
 
   import { modalContent, modalProps } from "../stores.js";
   import { del } from "../api.js";
-  import EditFileDetailsModal from "../components/EditFileDetailsModal.svelte";
-  import DeleteFileModal from "../components/DeleteFileModal.svelte";
-  import UploadFileModal from "../components/UploadFileModal.svelte";
+  import EditFileDetailsModal from "./EditFileDetailsModal.svelte";
+  import DeleteFileModal from "./DeleteFileModal.svelte";
+  import UploadFileModal from "./UploadFileModal.svelte";
+  import DraftIndicator from "./DraftIndicator.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
@@ -22,18 +23,18 @@
 
   const { session } = stores();
 
-  const editFileDetails = file => {
+  const editFileDetails = (file) => {
     modalContent.set(EditFileDetailsModal);
     modalProps.set({
       file,
-      update
+      update,
     });
   };
   const deleteFile = () => {
     modalContent.set(DeleteFileModal);
     modalProps.set({
       file,
-      update
+      update,
     });
   };
   const uploadNewVersion = async () => {
@@ -41,11 +42,11 @@
     modalProps.set({
       projectId,
       update,
-      file
+      file,
     });
   };
 
-  const isImageFile = fileName =>
+  const isImageFile = (fileName) =>
     /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(fileName);
 
   const unlinkFile = async () => {
@@ -93,7 +94,13 @@
     margin-bottom: 0;
   }
 
-  .textContent h3 {
+  .heading {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .heading h3 {
     margin-top: 0;
     font-size: 1.8rem;
   }
@@ -211,13 +218,16 @@
       {/if}
     {/if}
   </div>
-  <div class="textContent">
+  <div class="heading">
     <h3>
       <a rel="prefetch" href={`/project/${projectId}/files/${file.id}`}>
         {file.name}
       </a>
       <span class="filePpuid">#{file.ppuid}</span>
     </h3>
+    <DraftIndicator isDraft={file.is_draft} />
+  </div>
+  <div class="textContent">
     <p>{file.description}</p>
   </div>
   <div class="footer">
