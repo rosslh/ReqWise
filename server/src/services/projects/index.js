@@ -32,7 +32,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectSchema,
     },
     async function (request, reply) {
@@ -198,7 +198,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/reqgroups",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectReqgroupsSchema,
     },
     async function (request, reply) {
@@ -282,7 +282,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/files",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectFilesSchema,
     },
     async function (request, reply) {
@@ -515,7 +515,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/stakeholders",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectStakeholderGroupsSchema,
     },
     async function (request, reply) {
@@ -668,7 +668,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/questionnaires",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectQuestionnairesSchema,
     },
     async function (request, reply) {
@@ -705,7 +705,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/prompts",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectPromptsSchema,
     },
     async function (request, reply) {
@@ -742,7 +742,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/userclasses",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectUserclassesSchema,
     },
     async function (request, reply) {
@@ -779,7 +779,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/activity",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectActivitySchema,
     },
     async function (request, reply) {
@@ -894,7 +894,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:projectId/invites",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getTeamInvitesSchema,
     },
     async function (request, reply) {

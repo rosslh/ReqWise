@@ -110,6 +110,24 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isProjectStakeholderByProjectId = async (request, reply) => {
+    const association = (
+      await fastify.knex
+        .from("project")
+        .join("stakeholder_project", "stakeholder_project.project_id", "project.id")
+        .select("stakeholder_project.id")
+        .where({
+          "project.id": request.params.projectId,
+          "stakeholder_project.account_id": request.user.id
+        })
+    ).length;
+
+    if (!association) {
+      reply.code(403);
+      reply.send(`Not a project stakeholder`);
+    }
+  };
+
   const isTeamMemberByTemplateId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -416,6 +434,17 @@ module.exports = fp(async function (fastify, opts) {
       reply.code(403);
       reply.send("Not correct user");
     }
+  });
+
+  fastify.decorate("hasProjectAccess", async function (request, reply) {
+    if (!request.user) {
+      reply.code(401);
+      reply.send("Not authenticated");
+    }
+    if (request.params.projectId) {
+      return isProjectStakeholderByProjectId(request, reply) || isTeamMemberByProjectId(request, reply);
+    }
+    throw new Error("Could not authenticate using URL parameters");
   });
 
   fastify.decorate("isTeamMember", async function (request, reply) {
