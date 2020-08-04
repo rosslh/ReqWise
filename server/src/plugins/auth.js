@@ -15,8 +15,7 @@ module.exports = fp(async function (fastify, opts) {
     if (jwtContent.id === account.id) {
       request.user = { ...jwtContent, imageName: account.imageName };
     } else {
-      reply.code(403);
-      reply.send("Email and ID do not match");
+      throw new Error("Email and ID do not match");
     }
   });
 
@@ -57,8 +56,7 @@ module.exports = fp(async function (fastify, opts) {
       if (jwtContent.id === account.id) {
         request.user = { ...jwtContent, imageName: account.imageName };
       } else {
-        reply.code(403);
-        reply.send("Email and ID do not match");
+        throw new Error("Email and ID do not match");
       }
     };
 
@@ -86,8 +84,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -105,8 +102,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -123,8 +119,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!association) {
-      reply.code(403);
-      reply.send(`Not a project stakeholder`);
+      throw new Error(`Not a project stakeholder`);
     }
   };
 
@@ -142,8 +137,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -162,8 +156,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -182,8 +175,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -202,8 +194,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -222,8 +213,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -247,8 +237,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -273,8 +262,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -300,8 +288,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -324,8 +311,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -349,8 +335,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -375,8 +360,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -402,8 +386,7 @@ module.exports = fp(async function (fastify, opts) {
     ).length;
 
     if (!membership) {
-      reply.code(403);
-      reply.send(`Not a team ${isAdmin ? "admin" : "member"}`);
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };
 
@@ -442,7 +425,18 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     if (request.params.projectId) {
-      return isProjectStakeholderByProjectId(request, reply) || isTeamMemberByProjectId(request, reply);
+      try {
+        try {
+          return await isTeamMemberByProjectId(request, reply);
+        }
+        catch {
+          return await isProjectStakeholderByProjectId(request, reply)
+        }
+      }
+      catch (error) {
+        reply.code(403);
+        reply.send(error);
+      }
     }
     throw new Error("Could not authenticate using URL parameters");
   });
@@ -452,37 +446,42 @@ module.exports = fp(async function (fastify, opts) {
       reply.code(401);
       reply.send("Not authenticated");
     }
-    if (request.params.teamId) {
-      return isTeamMemberByTeamId(request, reply);
-    } else if (request.params.projectId) {
-      return isTeamMemberByProjectId(request, reply);
-    } else if (request.params.templateId) {
-      return isTeamMemberByTemplateId(request, reply);
-    }
-    else if (request.params.stakeholderGroupId) {
-      return isTeamMemberByStakeholderGroupId(request, reply);
-    }
-    else if (request.params.fileId) {
-      return isTeamMemberByFileId(request, reply);
-    }
-    else if (request.params.reqgroupId) {
-      return isTeamMemberByReqgroupId(request, reply);
-    } else if (request.params.requirementId) {
-      return isTeamMemberByRequirementId(request, reply);
-    } else if (request.params.reqversionId) {
-      return isTeamMemberByReqversionId(request, reply);
-    } else if (request.params.commentId) {
-      return isTeamMemberByCommentId(request, reply);
-    } else if (request.params.questionnaireId) {
-      return isTeamMemberByQuestionnaireId(request, reply);
-    } else if (request.params.promptId) {
-      return isTeamMemberByPromptId(request, reply);
-    } else if (request.params.responseId) {
-      return isTeamMemberByResponseId(request, reply);
-    } else if (request.params.reactionId) {
-      return isTeamMemberByReactionId(request, reply);
-    } else if (request.params.userclassId) {
-      return isTeamMemberByUserclassId(request, reply);
+    try {
+      if (request.params.teamId) {
+        return isTeamMemberByTeamId(request, reply);
+      } else if (request.params.projectId) {
+        return isTeamMemberByProjectId(request, reply);
+      } else if (request.params.templateId) {
+        return isTeamMemberByTemplateId(request, reply);
+      }
+      else if (request.params.stakeholderGroupId) {
+        return isTeamMemberByStakeholderGroupId(request, reply);
+      }
+      else if (request.params.fileId) {
+        return isTeamMemberByFileId(request, reply);
+      }
+      else if (request.params.reqgroupId) {
+        return isTeamMemberByReqgroupId(request, reply);
+      } else if (request.params.requirementId) {
+        return isTeamMemberByRequirementId(request, reply);
+      } else if (request.params.reqversionId) {
+        return isTeamMemberByReqversionId(request, reply);
+      } else if (request.params.commentId) {
+        return isTeamMemberByCommentId(request, reply);
+      } else if (request.params.questionnaireId) {
+        return isTeamMemberByQuestionnaireId(request, reply);
+      } else if (request.params.promptId) {
+        return isTeamMemberByPromptId(request, reply);
+      } else if (request.params.responseId) {
+        return isTeamMemberByResponseId(request, reply);
+      } else if (request.params.reactionId) {
+        return isTeamMemberByReactionId(request, reply);
+      } else if (request.params.userclassId) {
+        return isTeamMemberByUserclassId(request, reply);
+      }
+    } catch (error) {
+      reply.code(403);
+      reply.send(error);
     }
     throw new Error("Could not authenticate using URL parameters");
   });
@@ -492,37 +491,43 @@ module.exports = fp(async function (fastify, opts) {
       reply.code(401);
       reply.send("Not authenticated");
     }
-    if (request.params.teamId) {
-      return isTeamMemberByTeamId(request, reply, true);
-    } else if (request.params.projectId) {
-      return isTeamMemberByProjectId(request, reply, true);
-    } else if (request.params.templateId) {
-      return isTeamMemberByTemplateId(request, reply, true);
+    try {
+      if (request.params.teamId) {
+        return isTeamMemberByTeamId(request, reply, true);
+      } else if (request.params.projectId) {
+        return isTeamMemberByProjectId(request, reply, true);
+      } else if (request.params.templateId) {
+        return isTeamMemberByTemplateId(request, reply, true);
+      }
+      else if (request.params.stakeholderGroupId) {
+        return isTeamMemberByStakeholderGroupId(request, reply, true);
+      }
+      else if (request.params.fileId) {
+        return isTeamMemberByFileId(request, reply, true);
+      }
+      else if (request.params.reqgroupId) {
+        return isTeamMemberByReqgroupId(request, reply, true);
+      } else if (request.params.requirementId) {
+        return isTeamMemberByRequirementId(request, reply, true);
+      } else if (request.params.reqversionId) {
+        return isTeamMemberByReqversionId(request, reply, true);
+      } else if (request.params.commentId) {
+        return isTeamMemberByCommentId(request, reply, true);
+      } else if (request.params.questionnaireId) {
+        return isTeamMemberByQuestionnaireId(request, reply, true);
+      } else if (request.params.promptId) {
+        return isTeamMemberByPromptId(request, reply, true);
+      } else if (request.params.responseId) {
+        return isTeamMemberByResponseId(request, reply, true);
+      } else if (request.params.reactionId) {
+        return isTeamMemberByReactionId(request, reply, true);
+      } else if (request.params.userclassId) {
+        return isTeamMemberByUserclassId(request, reply, true);
+      }
     }
-    else if (request.params.stakeholderGroupId) {
-      return isTeamMemberByStakeholderGroupId(request, reply, true);
-    }
-    else if (request.params.fileId) {
-      return isTeamMemberByFileId(request, reply, true);
-    }
-    else if (request.params.reqgroupId) {
-      return isTeamMemberByReqgroupId(request, reply, true);
-    } else if (request.params.requirementId) {
-      return isTeamMemberByRequirementId(request, reply, true);
-    } else if (request.params.reqversionId) {
-      return isTeamMemberByReqversionId(request, reply, true);
-    } else if (request.params.commentId) {
-      return isTeamMemberByCommentId(request, reply, true);
-    } else if (request.params.questionnaireId) {
-      return isTeamMemberByQuestionnaireId(request, reply, true);
-    } else if (request.params.promptId) {
-      return isTeamMemberByPromptId(request, reply, true);
-    } else if (request.params.responseId) {
-      return isTeamMemberByResponseId(request, reply, true);
-    } else if (request.params.reactionId) {
-      return isTeamMemberByReactionId(request, reply, true);
-    } else if (request.params.userclassId) {
-      return isTeamMemberByUserclassId(request, reply, true);
+    catch (error) {
+      reply.code(403);
+      reply.send(error);
     }
     throw new Error("Could not authenticate using URL parameters");
   });
