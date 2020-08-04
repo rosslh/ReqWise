@@ -419,7 +419,7 @@ module.exports = fp(async function (fastify, opts) {
     }
   });
 
-  const authenticatorFactory = async (request, reply, requireAdmin = false, allowStakeholder = false) => {
+  const authenticateRoute = async (request, reply, requireAdmin = false, allowStakeholder = false) => {
     const methods = [
       { param: "teamId", memberHandler: isTeamMemberByTeamId },
       { param: "projectId", memberHandler: isTeamMemberByProjectId, stakeholderHandler: isProjectStakeholderByProjectId },
@@ -436,22 +436,19 @@ module.exports = fp(async function (fastify, opts) {
       { param: "reactionId", memberHandler: isTeamMemberByReactionId },
       { param: "userclassId", memberHandler: isTeamMemberByUserclassId },
     ];
-    if (!methods.some(x => request.params[x.param])) {
+    const method = methods.find(x => request.params[x.param])
+    if (!method) {
       throw new Error("Could not authenticate using URL parameters");
     }
-    methods.forEach(async method => {
-      if (request.params[method.param]) {
-        if (allowStakeholder) {
-          try {
-            return method.stakeholderHandler(request, reply);
-          }
-          catch {
-            return method.memberHandler(request, reply);
-          }
-        }
-        return method.memberHandler(request, reply, requireAdmin);
+    if (allowStakeholder) {
+      try {
+        await method.stakeholderHandler(request, reply);
       }
-    });
+      catch {
+        await method.memberHandler(request, reply);
+      }
+    }
+    await method.memberHandler(request, reply, requireAdmin);
   };
 
   fastify.decorate("hasProjectAccess", async function (request, reply) {
@@ -460,7 +457,7 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      authenticatorFactory(request, reply, false, true);
+      authenticateRoute(request, reply, false, true);
     }
     catch (error) {
       reply.code(403);
@@ -474,7 +471,7 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      authenticatorFactory(request, reply, false, false);
+      authenticateRoute(request, reply, false, false);
     } catch (error) {
       reply.code(403);
       reply.send(error);
@@ -487,7 +484,7 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      authenticatorFactory(request, reply, true, false);
+      authenticateRoute(request, reply, true, false);
     }
     catch (error) {
       reply.code(403);

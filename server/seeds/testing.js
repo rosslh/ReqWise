@@ -84,6 +84,11 @@ exports.seed = async function (knex) {
         readable_id: 2,
         project_id: 1
       },
+      {
+        id: 3,
+        readable_id: 3,
+        project_id: 1
+      },
     ]);
 
     await knex('reqgroup').insert([
@@ -114,6 +119,15 @@ exports.seed = async function (knex) {
         status: "proposed",
         priority: "medium",
         description: "Test requirement (don't delete)",
+      }
+    ]);
+
+    await knex('stakeholderGroup').insert([
+      {
+        id: 1,
+        name: "Uncategorized",
+        project_id: 1,
+        ppuid_id: 3
       }
     ]);
   }
