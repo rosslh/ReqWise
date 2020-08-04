@@ -11,7 +11,7 @@
     menuHidden,
     currentProjectId,
     unreadAlerts,
-    media
+    media,
   } from "../stores.js";
 
   const { session, page } = stores();
@@ -19,7 +19,7 @@
   const logout = async () => {
     await fetch("auth/logout", {
       method: "POST",
-      credentials: "include"
+      credentials: "include",
     });
     $session.user = null;
     location.reload();
@@ -166,7 +166,8 @@
     {#if $page.path.includes('/project/')}
       <button
         class="iconButton menuButton"
-        on:click={() => {
+        on:click={(e) => {
+          e.stopPropagation();
           $menuHidden = !$menuHidden;
         }}>
         <MdMenu />

@@ -19,7 +19,7 @@
     reqgroupsToUpdate,
     projectShouldUpdate,
     currentProjectId,
-    media
+    media,
   } from "../../../stores.js";
   import { stream } from "../../../api.js";
 
@@ -28,15 +28,12 @@
   const { page, session } = stores();
 
   $: ({ path, params } = $page);
-  $: tab = path
-    .split("/")
-    .slice(3)
-    .join("/");
+  $: tab = path.split("/").slice(3).join("/");
   $: id = params.id;
 
   let closeStream;
 
-  $: startStream = function() {
+  $: startStream = function () {
     if (closeStream) {
       closeStream();
     }
@@ -45,7 +42,7 @@
         "getProjectNotifications",
         { projectId: id },
         $session.user.jwt,
-        event => {
+        (event) => {
           const data = JSON.parse(event);
           if (data.projectUpdated) {
             $projectShouldUpdate = true;
@@ -66,7 +63,7 @@
     }
   });
 
-  onDestroy(function() {
+  onDestroy(function () {
     if (closeStream) {
       closeStream();
     }
@@ -156,7 +153,7 @@
   <div class="menuContent">
     {#if !$media.small}
       <Sidebar {tab} {id} name={project.name} />
-    {:else}
+    {:else if !$menuHidden}
       <MobileMenu {tab} {id} name={project.name} />
     {/if}
   </div>

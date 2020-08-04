@@ -51,12 +51,12 @@
       slug: "user-classes",
       icon: IoMdPeople,
     },
-    {
-      label: "Tests",
-      slug: "tests",
-      icon: FaCheckDouble,
-      extraPadding: true,
-    },
+    // {
+    //   label: "Tests",
+    //   slug: "tests",
+    //   icon: FaCheckDouble,
+    //   extraPadding: true,
+    // },
     {
       label: "External Stakeholders",
       slug: "stakeholders",

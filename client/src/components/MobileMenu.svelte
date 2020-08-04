@@ -1,4 +1,6 @@
 <script>
+  import { onMount, onDestroy } from "svelte";
+
   import IoMdRibbon from "svelte-icons/io/IoMdRibbon.svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
@@ -10,71 +12,91 @@
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
   import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
 
+  import { menuHidden } from "../stores.js";
+
   export let name;
   export let id;
   export let tab;
+
+  const close = () => {
+    $menuHidden = true;
+  };
 
   const tabs = [
     {
       label: "Brainstorm",
       slug: "brainstorm",
       icon: MdLightbulbOutline,
-      newSection: true
+      newSection: true,
     },
     {
       label: "Business Requirements",
       slug: "business-requirements",
       icon: FaBriefcase,
       newSection: true,
-      extraPadding: true
+      extraPadding: true,
     },
     {
       label: "Features",
       slug: "features",
       icon: FaCheck,
-      extraPadding: true
+      extraPadding: true,
     },
     {
       label: "Quality Attributes",
       slug: "quality-attributes",
-      icon: IoMdRibbon
+      icon: IoMdRibbon,
     },
     {
       label: "Diagrams and Files",
       slug: "files",
       icon: FaRegFileAlt,
       newSection: true,
-      extraPadding: true
+      extraPadding: true,
     },
     {
       label: "User Classes",
       slug: "user-classes",
-      icon: IoMdPeople
+      icon: IoMdPeople,
     },
-    {
-      label: "Tests",
-      slug: "tests",
-      icon: FaCheckDouble,
-      extraPadding: true
-    },
+    // {
+    //   label: "Tests",
+    //   slug: "tests",
+    //   icon: FaCheckDouble,
+    //   extraPadding: true
+    // },
     {
       label: "Stakeholders",
       slug: "stakeholders",
       icon: FaUserTie,
       newSection: true,
-      extraPadding: true
+      extraPadding: true,
     },
     {
       label: "Activity",
       slug: "activity",
-      icon: MdHistory
+      icon: MdHistory,
     },
     {
       label: "Settings",
       slug: "settings",
-      icon: IoIosSettings
-    }
+      icon: IoIosSettings,
+    },
   ];
+
+  let navMenu;
+
+  const onClick = (e) => e.stopPropagation();
+
+  onMount(() => {
+    document.addEventListener("click", close);
+    navMenu.addEventListener("click", onClick);
+  });
+
+  onDestroy(() => {
+    document.removeEventListener("click", close);
+    navMenu.removeEventListener("click", onClick);
+  });
 </script>
 
 <style>
@@ -107,9 +129,8 @@
     font-size: 1.6rem;
     font-weight: 600;
     display: flex;
+    padding: 0.5rem;
     align-items: center;
-    padding: 0.5rem 1.5rem 0;
-    height: 5.5rem;
     margin-bottom: 0;
   }
 
@@ -136,7 +157,9 @@
     top: 4rem;
     z-index: 300000;
     left: 0.5rem;
-    max-width: 40rem;
+    max-width: min(95vw, 33rem);
+    max-height: calc(98vh - 5rem);
+    overflow-y: scroll;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -148,11 +171,13 @@
   }
 </style>
 
-<nav>
+<nav tabindex={0} bind:this={navMenu}>
   <h1>{name}</h1>
   <div class="items">
-    {#each tabs as item (item.slug)}
+    {#each tabs as item, i (item.slug)}
       <a
+        tabindex={i + 1}
+        on:click={close}
         rel="prefetch"
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>
