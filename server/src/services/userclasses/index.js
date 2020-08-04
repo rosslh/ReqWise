@@ -214,8 +214,8 @@ module.exports = async function (fastify, opts) {
           updated_at: new Date(Date.now()),
           updated_by: request.user.id,
         })
-        .returning(["id", "name"]);
-      await fastify.createAlert("update", "requirement", userclassName, id, project_id, request.user.id);
+        .returning(["id", "name", "project_id"]);
+      await fastify.createAlert("update", "userclass", userclassName, id, project_id, request.user.id);
       return [id];
     }
   );

@@ -9,14 +9,15 @@
   export let close;
 
   export let reqgroup;
-  let { name, isPrioritized } = reqgroup;
+  let { name, isPrioritized, is_draft } = reqgroup;
 
   $: update = async () => {
     await put(
       `/reqgroups/${reqgroupId}`,
       {
         name,
-        isPrioritized
+        isPrioritized,
+        is_draft,
       },
       $session.user && $session.user.jwt
     );
@@ -24,6 +25,12 @@
     close();
   };
 </script>
+
+<style>
+  .secondary {
+    color: var(--secondaryText);
+  }
+</style>
 
 <h3>Update requirement group</h3>
 <form>
@@ -40,6 +47,13 @@
     <input type="checkbox" id="isPrioritized" bind:checked={isPrioritized} />
     <label class="label-inline" for="isPrioritized">
       Requirements are prioritizable
+    </label>
+  </fieldset>
+  <fieldset>
+    <input type="checkbox" id="isDraft" bind:checked={is_draft} />
+    <label class="label-inline" for="isDraft">
+      Requirement group is a draft
+      <span class="secondary">(not ready for stakeholder review)</span>
     </label>
   </fieldset>
   <SubmitButton

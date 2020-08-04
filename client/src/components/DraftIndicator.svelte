@@ -15,7 +15,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: var(--boxShadow);
     font-weight: 500;
   }
   .indicator.visible {

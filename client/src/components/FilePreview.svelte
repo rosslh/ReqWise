@@ -87,7 +87,7 @@
   }
 
   .textContent {
-    padding: 2rem;
+    padding: 0 1.5rem 2rem;
   }
 
   .textContent p {
