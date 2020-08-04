@@ -810,6 +810,7 @@ module.exports = async function (fastify, opts) {
         description: { type: "string" },
         persona: { type: "string" },
         importance: { type: "string" },
+        is_draft: { type: "boolean" },
       },
     },
     queryString: {},
@@ -841,9 +842,9 @@ module.exports = async function (fastify, opts) {
       schema: postUserclassSchema,
     },
     async function (request, reply) {
-      const { name, description, persona, importance } = request.body;
+      const { name, description, persona, importance, is_draft } = request.body;
       const { projectId: project_id } = request.params;
-      const { id: ppuid_id } = fastify.getNewPpuid(project_id);
+      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
 
       const [id] = await fastify
         .knex("userclass")
@@ -853,6 +854,7 @@ module.exports = async function (fastify, opts) {
           description,
           persona,
           importance,
+          is_draft,
           ppuid_id,
           created_by: request.user.id,
           updated_by: request.user.id,

@@ -6,11 +6,12 @@
 
   import { modalContent, modalProps } from "../stores.js";
   import { get, del } from "../api.js";
-  import DeleteUserclassModal from "../components/DeleteUserclassModal.svelte";
-  import EditUserclassModal from "../components/EditUserclassModal.svelte";
-  import AddProductChampionModal from "../components/AddProductChampionModal.svelte";
-  import Skeleton from "../components/Skeleton.svelte";
-  import ProductChampion from "../components/ProductChampion.svelte";
+  import DeleteUserclassModal from "./DeleteUserclassModal.svelte";
+  import EditUserclassModal from "./EditUserclassModal.svelte";
+  import AddProductChampionModal from "./AddProductChampionModal.svelte";
+  import Skeleton from "./Skeleton.svelte";
+  import ProductChampion from "./ProductChampion.svelte";
+  import DraftIndicator from "./DraftIndicator.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
@@ -23,18 +24,18 @@
     modalContent.set(DeleteUserclassModal);
     modalProps.set({
       userclass,
-      update
+      update,
     });
   };
   const editUserclass = async () => {
     modalContent.set(EditUserclassModal);
     modalProps.set({
       update,
-      userclass
+      userclass,
     });
   };
 
-  const getImportanceColor = status => {
+  const getImportanceColor = (status) => {
     switch (status) {
       case "favored":
         return "green";
@@ -64,7 +65,7 @@
     modalProps.set({
       update: updateChampions,
       userclassId: userclass.id,
-      projectId
+      projectId,
     });
   };
 
@@ -93,7 +94,7 @@
   }
 
   div.userclassHeader {
-    padding: 2rem 2rem 0;
+    padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
   }
@@ -109,6 +110,10 @@
     margin-left: 0.5rem;
   }
 
+  div.userclassHeader .right {
+    display: flex;
+  }
+
   .footer {
     display: flex;
     justify-content: space-between;
@@ -120,11 +125,15 @@
   }
 
   div.userclassHeader span.importanceLabel {
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     border-radius: 0.4rem;
     color: #fff;
     font-size: 1.3rem;
     font-weight: 500;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
   }
 
   h4 {
@@ -178,6 +187,7 @@
       </h3>
     </div>
     <div class="right">
+      <DraftIndicator isDraft={userclass.is_draft} />
       <span
         class="importanceLabel"
         style={`background-color: var(--${getImportanceColor(userclass.importance)})`}>

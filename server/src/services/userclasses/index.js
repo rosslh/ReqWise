@@ -168,6 +168,7 @@ module.exports = async function (fastify, opts) {
         description: { type: "string" },
         persona: { type: "string" },
         importance: { type: "string" },
+        is_draft: { type: "boolean" },
       },
       required: ["name"],
     },
@@ -200,7 +201,7 @@ module.exports = async function (fastify, opts) {
       schema: putUserclassSchema,
     },
     async function (request, reply) {
-      const { name, description, persona, importance } = request.body;
+      const { name, description, persona, importance, is_draft } = request.body;
       const [{ id, name: userclassName, project_id }] = await fastify
         .knex("userclass")
         .where("id", request.params.userclassId)
@@ -209,6 +210,7 @@ module.exports = async function (fastify, opts) {
           description,
           persona,
           importance,
+          is_draft,
           updated_at: new Date(Date.now()),
           updated_by: request.user.id,
         })
