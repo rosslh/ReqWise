@@ -18,6 +18,7 @@
   import { stores, goto } from "@sapper/app";
   import { format } from "date-fns";
   import FileSaver from "file-saver";
+  import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
 
   import { modalContent, modalProps } from "../../../stores.js";
   import { get, del, post } from "../../../api.js";
@@ -106,7 +107,11 @@
   };
 
   const newProjectFromTemplate = async ({ id: templateId }) => {
-    setTimeout(function() { alert("Creating a project from a template takes a moment. Please check back in a few minutes."); }, 1); // don't block
+    setTimeout(function () {
+      alert(
+        "Creating a project from a template takes a moment. Please check back in a few minutes."
+      );
+    }, 1); // don't block
     await post(
       `/teams/${id}/projects/from-template`,
       { templateId },
@@ -125,19 +130,44 @@
   .userActions {
     color: var(--secondaryText);
   }
+
+  .headingWrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .headingWrapper #settingsButton {
+    margin-left: 1.5rem;
+    border: none;
+    padding: 0;
+    margin-top: 0.5rem;
+  }
+
+  .settingsIconWrapper {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+  :global(.settingsIconWrapper svg) {
+    max-height: 2.5rem;
+    max-width: 2.5rem;
+  }
 </style>
 
 <svelte:head>
   <title>{name} - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
-  <h1>{title}</h1>
-  <button
-    id="settingsButton"
-    on:click={editTeam}
-    class="button button-secondary button-outline">
-    Settings
-  </button>
+  <div class="headingWrapper">
+    <h1>{title}</h1>
+    <button
+      id="settingsButton"
+      on:click={editTeam}
+      class="button button-secondary button-outline">
+      <span class="settingsIconWrapper">
+        <IoIosSettings />
+      </span>
+    </button>
+  </div>
   <h2>Projects</h2>
   <div class="panel compact">
     <table class="compact">
