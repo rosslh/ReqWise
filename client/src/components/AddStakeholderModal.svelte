@@ -20,7 +20,7 @@
       `/stakeholders/${stakeholderGroupId}/users`,
       {
         description,
-        account_id: selectedUser.value
+        account_id: selectedUser.value,
       },
       $session.user && $session.user.jwt
     );
@@ -29,12 +29,8 @@
   };
 
   $: userOptions = (async () => {
-    const { team_id } = await get(
-      `/projects/${projectId}`,
-      $session.user && $session.user.jwt
-    );
     const result = await get(
-      `/teams/${team_id}/members`,
+      `/projects/${projectId}/stakeholder-users`,
       $session.user && $session.user.jwt
     );
     return result;
@@ -53,7 +49,7 @@
           inputAttributes={{ id: 'user' }}
           isClearable={false}
           isSearchable={true}
-          items={result.map(user => ({ label: user.name, value: user.id }))}
+          items={result.map((user) => ({ label: user.name, value: user.id }))}
           bind:selectedValue={selectedUser} />
       {:catch err}
         <p style="color: var(--red)">{err.message}</p>

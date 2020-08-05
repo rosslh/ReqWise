@@ -541,6 +541,38 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getProjectStakeholderUsersSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:projectId/stakeholder-users",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getProjectStakeholderUsersSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("stakeholder_project")
+        .select("account.*")
+        .join("account", "account.id", "stakeholder_project.account_id")
+        .where("stakeholder_project.project_id", request.params.projectId);
+    }
+  );
+
   const postStakeholderGroupSchema = {
     body: {
       type: "object",
