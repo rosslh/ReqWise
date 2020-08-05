@@ -57,7 +57,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:reqgroupId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getReqgroupSchema,
     },
     async function (request, reply) {
@@ -272,7 +272,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:reqgroupId/requirements",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getRequirementsSchema,
     },
     async function (request, reply) {
@@ -462,7 +462,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:reqgroupId/stakeholders",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getReqgroupStakeholderGroupsSchema,
     },
     async function (request, reply) {
@@ -539,7 +539,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:reqgroupId/prompts",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getReqgroupPromptsSchema,
     },
     async function (request, reply) {

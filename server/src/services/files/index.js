@@ -23,7 +23,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:fileId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getFileSchema,
     },
     async function (request, reply) {
@@ -213,7 +213,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:fileId/requirements",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getFileRequirementsSchema,
     },
     async function (request, reply) {

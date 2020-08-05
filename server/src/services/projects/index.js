@@ -239,7 +239,7 @@ module.exports = async function (fastify, opts) {
         .where({ "reqgroup.project_id": request.params.projectId, type })
         .orderBy("ppuid", "asc");
 
-      return await Promise.all(reqgroups.map(async (g) => {
+      const result = await Promise.all(reqgroups.map(async (g) => {
         const requirements = await fastify.knex.withRecursive('ancestors', (qb) => {
           qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
             .where('requirement.parent_requirement_id', null)
@@ -261,6 +261,9 @@ module.exports = async function (fastify, opts) {
           requirements
         });
       }));
+
+      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      return result.filter(x => scopes.includes("member") || !x.is_draft);
     });
 
   const getProjectFilesSchema = {
@@ -287,12 +290,15 @@ module.exports = async function (fastify, opts) {
       schema: getProjectFilesSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+      const result = await fastify.knex
         .from("file")
         .select("file.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
         .where({ "file.project_id": request.params.projectId })
         .orderBy("ppuid", "asc");
+
+      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      return result.filter(x => scopes.includes("member") || !x.is_draft);
     }
   );
 
@@ -749,12 +755,15 @@ module.exports = async function (fastify, opts) {
       schema: getProjectUserclassesSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+      const result = await fastify.knex
         .from("userclass")
         .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
         .where({ "userclass.project_id": request.params.projectId })
         .orderBy("ppuid", "asc");
+
+      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      return result.filter(x => scopes.includes("member") || !x.is_draft);
     }
   );
 

@@ -19,7 +19,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:userclassId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getUserclassSchema,
     },
     async function (request, reply) {
@@ -52,7 +52,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:userclassId/champions",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getUserclassChampions,
     },
     async function (request, reply) {
@@ -341,7 +341,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:userclassId/requirements",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getUserclassRequirementsSchema,
     },
     async function (request, reply) {

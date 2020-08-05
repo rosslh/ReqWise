@@ -448,7 +448,9 @@ module.exports = fp(async function (fastify, opts) {
         await method.memberHandler(request, reply);
       }
     }
-    await method.memberHandler(request, reply, requireAdmin);
+    else {
+      await method.memberHandler(request, reply, requireAdmin);
+    }
   };
 
   fastify.decorate("hasProjectAccess", async function (request, reply) {
@@ -457,7 +459,7 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      authenticateRoute(request, reply, false, true);
+      await authenticateRoute(request, reply, false, true);
     }
     catch (error) {
       reply.code(403);
@@ -471,7 +473,7 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      authenticateRoute(request, reply, false, false);
+      await authenticateRoute(request, reply, false, false);
     } catch (error) {
       reply.code(403);
       reply.send(error);
@@ -484,11 +486,49 @@ module.exports = fp(async function (fastify, opts) {
       reply.send("Not authenticated");
     }
     try {
-      authenticateRoute(request, reply, true, false);
+      await authenticateRoute(request, reply, true, false);
     }
     catch (error) {
       reply.code(403);
       reply.send(error);
     }
+  });
+
+  fastify.decorate("getScopes", async function (account_id, project_id) {
+    const scopes = [];
+    const teamMembership = await fastify.knex
+      .from("project")
+      .join("team", "team.id", "project.team_id")
+      .join("account_team", "account_team.team_id", "team.id")
+      .select("account_team.isAdmin", "account_team.isOwner")
+      .where({
+        "project.id": project_id,
+        "account_team.account_id": account_id
+      })
+      .first();
+
+    const projectStakeholdership = await fastify.knex
+      .from("project")
+      .join("stakeholder_project", "stakeholder_project.project_id", "project.id")
+      .select("*")
+      .where({
+        "project.id": project_id,
+        "stakeholder_project.account_id": account_id
+      })
+      .first();
+
+    if (teamMembership) {
+      scopes.push("member");
+    }
+    if (teamMembership && teamMembership.isAdmin) {
+      scopes.push("admin");
+    }
+    if (teamMembership && teamMembership.isOwner) {
+      scopes.push("owner");
+    }
+    if (projectStakeholdership) {
+      scopes.push("stakeholder");
+    }
+    return scopes;
   });
 });
