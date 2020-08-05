@@ -40,6 +40,7 @@
 <section class="contentWrapper">
   <h1>
     {#if questionnaire.is_draft}[Draft]{/if}
+    <!-- TODO: something aint right -->
     {questionnaire.description}
   </h1>
 </section>

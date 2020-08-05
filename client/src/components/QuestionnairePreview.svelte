@@ -2,6 +2,9 @@
   export let questionnaire;
   export let projectId;
   import { formatDistanceToNow } from "date-fns";
+
+  import DraftIndicator from "./DraftIndicator.svelte";
+
   const formatDatetime = (dt) =>
     `Created ${formatDistanceToNow(new Date(dt))} ago`;
 </script>
@@ -36,6 +39,7 @@
     <time class="createdAt" datetime={questionnaire.created_at}>
       {formatDatetime(questionnaire.created_at)}
     </time>
+    <DraftIndicator isDraft={questionnaire.is_draft} />
   </div>
   <div class="bottom">
     {questionnaire.numPrompts} prompts and {questionnaire.numResponses}

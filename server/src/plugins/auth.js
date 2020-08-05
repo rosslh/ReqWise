@@ -514,6 +514,7 @@ module.exports = fp(async function (fastify, opts) {
 
   fastify.decorate("getScopes", async function (account_id, project_id) {
     const scopes = [];
+
     const teamMembership = await fastify.knex
       .from("project")
       .join("team", "team.id", "project.team_id")
@@ -534,18 +535,22 @@ module.exports = fp(async function (fastify, opts) {
         "stakeholder_project.account_id": account_id
       })
       .first();
+
     if (projectStakeholdership) {
       scopes.push("stakeholder");
     }
+
     if (teamMembership) {
       scopes.push("member");
     }
+
     if (teamMembership && teamMembership.isOwner) {
       scopes.push("admin", "owner");
     }
     else if (teamMembership && teamMembership.isAdmin) {
       scopes.push("admin");
     }
+
     return scopes;
   });
 });

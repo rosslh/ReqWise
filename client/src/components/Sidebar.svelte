@@ -98,6 +98,7 @@
 
   a:hover {
     color: var(--themeColor);
+    background-color: var(--background2);
   }
 
   h1 {
@@ -106,7 +107,7 @@
     display: flex;
     align-items: center;
     padding: 0.5rem 1.5rem 0;
-    height: 5.5rem;
+    min-height: 5.5rem;
     margin-bottom: 0;
   }
 
@@ -124,7 +125,7 @@
     border-top: 0.1rem solid var(--borderColor);
     margin: 1rem 0 0;
     font-weight: 600;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.5rem 0.5rem;
     opacity: 0.95;
     color: var(--secondaryText);
   }

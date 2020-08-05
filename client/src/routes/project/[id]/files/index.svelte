@@ -49,8 +49,12 @@
       id="create-file-button">
       Draw Diagram
     </a>
-    <button class="button button-outline" on:click={upload}>Upload File</button>
-    <button class="button button-outline" on:click={link}>Link Resource</button>
+    <button class="button button-outline button-secondary" on:click={upload}>
+      Upload File
+    </button>
+    <button class="button button-outline button-secondary" on:click={link}>
+      Link Resource
+    </button>
   {/if}
 </section>
 {#await files}

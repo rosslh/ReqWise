@@ -14,6 +14,7 @@
   import { modalContent, modalProps } from "../../../../../../stores.js";
   import AddBrainstormPromptModal from "../../../../../../components/AddBrainstormPromptModal.svelte";
   import EditQuestionnaireModal from "../../../../../../components/EditQuestionnaireModal.svelte";
+  import DraftIndicator from "../../../../../../components/DraftIndicator.svelte";
   import BrainstormPrompt from "../../../../../../components/BrainstormPrompt.svelte";
 
   export let questionnaire;
@@ -47,11 +48,24 @@
   };
 </script>
 
+<style>
+  .formHeader {
+    display: flex;
+    align-items: center;
+    padding-top: 0.5rem;
+  }
+
+  .formHeader h2 {
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+  }
+</style>
+
 <section class="contentWrapper">
-  <h2>
-    {#if questionnaire.is_draft}[Draft]{/if}
-    {questionnaire.description}
-  </h2>
+  <div class="formHeader">
+    <DraftIndicator inline isDraft={questionnaire.is_draft} />
+    <h2>{questionnaire.description}</h2>
+  </div>
   {#if questionnaire.is_draft}
     <button on:click={addPrompt} class="button button-success">
       Add prompt

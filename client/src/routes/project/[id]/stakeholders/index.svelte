@@ -51,7 +51,7 @@
       Invitations
     </button>
     <button
-      class="button-success button-outline"
+      class="button-success button-outline button-secondary"
       on:click={createStakeholderGroup}>
       Add stakeholder group
     </button>
