@@ -1,5 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
   import { get } from "../../../../api.js";
   import { modalContent, modalProps } from "../../../../stores.js";
   import AddStakeholderGroupModal from "../../../../components/AddStakeholderGroupModal.svelte";
@@ -33,6 +34,8 @@
   };
 
   let searchResults = [];
+
+  const scopes = getContext("scopes");
 </script>
 
 <section class="contentWrapper">
@@ -43,12 +46,16 @@
     to your project can fill out brainstorm questionnaires and sign-off on
     requirements.
   </p>
-  <button class="button-success" on:click={viewInvitations}>Invitations</button>
-  <button
-    class="button-success button-outline"
-    on:click={createStakeholderGroup}>
-    Add stakeholder group
-  </button>
+  {#if scopes.includes('member')}
+    <button class="button-success" on:click={viewInvitations}>
+      Invitations
+    </button>
+    <button
+      class="button-success button-outline"
+      on:click={createStakeholderGroup}>
+      Add stakeholder group
+    </button>
+  {/if}
 </section>
 <section class="contentWrapper">
   {#await stakeholders then result}

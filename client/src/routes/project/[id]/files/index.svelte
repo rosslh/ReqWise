@@ -1,5 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
   import { get } from "../../../../api.js";
   import FilePreview from "../../../../components/FilePreview.svelte";
   import UploadFileModal from "../../../../components/UploadFileModal.svelte";
@@ -9,6 +10,7 @@
 
   const { page, session } = stores();
   const { id } = $page.params;
+  const scopes = getContext("scopes");
 
   let files = get(`/projects/${id}/files`, $session.user && $session.user.jwt);
 
@@ -39,15 +41,17 @@
     communication that goes beyond what textual representation of requirements
     can provide.
   </p>
-  <a
-    rel="prefetch"
-    href={`/project/${id}/files/create`}
-    class="button"
-    id="create-file-button">
-    Draw Diagram
-  </a>
-  <button class="button button-outline" on:click={upload}>Upload File</button>
-  <button class="button button-outline" on:click={link}>Link Resource</button>
+  {#if scopes.includes('member')}
+    <a
+      rel="prefetch"
+      href={`/project/${id}/files/create`}
+      class="button"
+      id="create-file-button">
+      Draw Diagram
+    </a>
+    <button class="button button-outline" on:click={upload}>Upload File</button>
+    <button class="button button-outline" on:click={link}>Link Resource</button>
+  {/if}
 </section>
 {#await files}
   <!-- loading -->

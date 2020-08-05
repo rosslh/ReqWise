@@ -1,5 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
 
   import { modalContent, modalProps } from "../../../../stores.js";
   import AddUserclassModal from "../../../../components/AddUserclassModal.svelte";
@@ -27,6 +28,8 @@
     modalProps.set({ id, update });
   };
 
+  const scopes = getContext("scopes");
+
   let searchResults = [];
 </script>
 
@@ -36,9 +39,11 @@
     A user class is a group of users who have similar characteristics and
     requirements for the system.
   </p>
-  <button class="button button-success" on:click={addUserclass}>
-    Add user class
-  </button>
+  {#if scopes.includes('member')}
+    <button class="button button-success" on:click={addUserclass}>
+      Add user class
+    </button>
+  {/if}
 </section>
 {#await userclasses}
   <!-- loading -->

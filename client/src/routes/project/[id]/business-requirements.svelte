@@ -11,7 +11,7 @@
 </script>
 
 <script>
-  import { onMount } from "svelte";
+  import { onMount, getContext } from "svelte";
   import { projectShouldUpdate } from "../../../stores.js";
   import { get } from "../../../api.js";
   import { stores } from "@sapper/app";
@@ -26,6 +26,7 @@
   const { id } = $page.params;
 
   export let reqgroups;
+  const scopes = getContext("scopes");
 
   const update = async () => {
     reqgroups = await get(
@@ -57,9 +58,11 @@
     Business requirements describe the reason behind a project and what
     objectives of the organization will be fulfilled by undertaking the project.
   </p>
-  <button id="addReqGroupButton" on:click={showAddBrModal}>
-    Add requirement group
-  </button>
+  {#if scopes.includes('member')}
+    <button id="addReqGroupButton" on:click={showAddBrModal}>
+      Add requirement group
+    </button>
+  {/if}
 </section>
 <section class="contentWrapper">
   <SearchSortFilter

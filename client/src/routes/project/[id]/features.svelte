@@ -18,11 +18,14 @@
   import Reqgroup from "../../../components/Reqgroup.svelte";
   import AddFeature from "../../../components/AddFeature.svelte";
   import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
+  import { getContext } from "svelte";
 
   const { page, session } = stores();
   const { id } = $page.params;
 
   export let reqgroups;
+
+  const scopes = getContext("scopes");
 
   const update = async () => {
     reqgroups = await get(
@@ -50,7 +53,9 @@
     Requirements tend to be more granular, and are written with implementation
     in mind.
   </p>
-  <AddFeature {update} {id} />
+  {#if scopes.includes('member')}
+    <AddFeature {update} {id} />
+  {/if}
 </section>
 <section class="contentWrapper">
   <SearchSortFilter

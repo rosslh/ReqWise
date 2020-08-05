@@ -24,7 +24,8 @@ module.exports = async function (fastify, opts) {
         properties: {
           name: { type: "string" },
           team_id: { type: "number" },
-          slackChannelName: { type: "string" }
+          slackChannelName: { type: "string" },
+          scopes: { type: "array", items: { type: "string" } }
         },
       },
     },
@@ -36,11 +37,13 @@ module.exports = async function (fastify, opts) {
       schema: getProjectSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+      const project = await fastify.knex
         .from("project")
         .select("name", "team_id", "slackChannelName")
         .where("id", request.params.projectId)
         .first();
+      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      return { ...project, scopes };
     }
   );
 

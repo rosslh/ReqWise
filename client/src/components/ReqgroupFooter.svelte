@@ -1,4 +1,6 @@
 <script>
+  import { getContext } from "svelte";
+
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
   import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
@@ -24,6 +26,8 @@
     modalContent.set(DeleteFeatureModal);
     modalProps.set({ reqgroupId: reqgroup.id, update });
   };
+
+  const scopes = getContext("scopes");
 </script>
 
 <style>
@@ -41,7 +45,7 @@
 </style>
 
 <div class="reqgroupFooter">
-  {#if !reqgroup.isMaxOneRequirement || (requirements && !requirements.length)}
+  {#if scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
     <button
       class="addRequirementButton button-create"
       data-reqgroup={reqgroup.name}
@@ -77,27 +81,29 @@
       </div>
       Brainstorming
     </a>
-    <button
-      id="editReqgroupButton"
-      data-reqgroup={reqgroup.name}
-      on:click={editReqgroup}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegEdit />
-      </div>
-      Edit
-    </button>
-    {#if reqgroup.isDeletable}
+    {#if scopes.includes('member')}
       <button
-        on:click={deleteReqgroup}
+        id="editReqgroupButton"
         data-reqgroup={reqgroup.name}
-        class="deleteReqgroupButton button-outline button-small button-secondary
-        button-clear">
+        on:click={editReqgroup}
+        class="button-outline button-small button-secondary button-clear">
         <div class="iconWrapper">
-          <FaRegTrashAlt />
+          <FaRegEdit />
         </div>
-        Delete
+        Edit
       </button>
+      {#if reqgroup.isDeletable}
+        <button
+          on:click={deleteReqgroup}
+          data-reqgroup={reqgroup.name}
+          class="deleteReqgroupButton button-outline button-small
+          button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegTrashAlt />
+          </div>
+          Delete
+        </button>
+      {/if}
     {/if}
   </div>
 </div>

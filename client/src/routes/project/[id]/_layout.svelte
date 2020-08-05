@@ -12,7 +12,7 @@
 <script>
   import Sidebar from "../../../components/Sidebar.svelte";
   import MobileMenu from "../../../components/MobileMenu.svelte";
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, setContext } from "svelte";
   import { stores } from "@sapper/app";
   import {
     menuHidden,
@@ -24,6 +24,8 @@
   import { stream } from "../../../api.js";
 
   export let project;
+
+  setContext("scopes", project.scopes);
 
   const { page, session } = stores();
 

@@ -13,6 +13,7 @@
 <script>
   import { get } from "../../../api.js";
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
 
   import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
   import Reqgroup from "../../../components/Reqgroup.svelte";
@@ -46,6 +47,8 @@
     })();
 
   let searchResults = [];
+
+  const scopes = getContext("scopes");
 </script>
 
 <section class="contentWrapper">
@@ -59,7 +62,9 @@
     Examples of quality attributes include usability, maintainability,
     efficiency, and reliability.
   </p>
-  <button on:click={showAddQaModal}>Add quality attribute</button>
+  {#if scopes.includes('member')}
+    <button on:click={showAddQaModal}>Add quality attribute</button>
+  {/if}
 </section>
 <section class="contentWrapper">
   <SearchSortFilter

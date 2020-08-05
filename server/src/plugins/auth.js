@@ -160,6 +160,24 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isProjectStakeholderByStakeholderGroupId = async (request, reply) => {
+    const association = (
+      await fastify.knex
+        .from("stakeholderGroup")
+        .join("project", "project.id", "stakeholderGroup.project_id")
+        .join("stakeholder_project", "stakeholder_project.project_id", "project.id")
+        .select("stakeholder_project.id")
+        .where({
+          "stakeholderGroup.id": request.params.stakeholderGroupId,
+          "stakeholder_project.account_id": request.user.id
+        })
+    ).length;
+
+    if (!association) {
+      throw new Error(`Not a project stakeholder`);
+    }
+  };
+
   const isTeamMemberByUserclassId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -424,7 +442,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "teamId", memberHandler: isTeamMemberByTeamId },
       { param: "projectId", memberHandler: isTeamMemberByProjectId, stakeholderHandler: isProjectStakeholderByProjectId },
       { param: "templateId", memberHandler: isTeamMemberByTemplateId },
-      { param: "stakeholderGroupId", memberHandler: isTeamMemberByStakeholderGroupId },
+      { param: "stakeholderGroupId", memberHandler: isTeamMemberByStakeholderGroupId, stakeholderHandler: isProjectStakeholderByStakeholderGroupId },
       { param: "fileId", memberHandler: isTeamMemberByFileId },
       { param: "reqgroupId", memberHandler: isTeamMemberByReqgroupId },
       { param: "requirementId", memberHandler: isTeamMemberByRequirementId },
@@ -516,18 +534,17 @@ module.exports = fp(async function (fastify, opts) {
         "stakeholder_project.account_id": account_id
       })
       .first();
-
+    if (projectStakeholdership) {
+      scopes.push("stakeholder");
+    }
     if (teamMembership) {
       scopes.push("member");
     }
-    if (teamMembership && teamMembership.isAdmin) {
-      scopes.push("admin");
-    }
     if (teamMembership && teamMembership.isOwner) {
-      scopes.push("owner");
+      scopes.push("admin", "owner");
     }
-    if (projectStakeholdership) {
-      scopes.push("stakeholder");
+    else if (teamMembership && teamMembership.isAdmin) {
+      scopes.push("admin");
     }
     return scopes;
   });
