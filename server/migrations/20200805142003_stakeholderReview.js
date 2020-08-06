@@ -9,8 +9,7 @@ exports.up = function (knex) {
         .references("account.id")
         .onUpdate("CASCADE")
         .onDelete("SET NULL")
-        .unsigned()
-        .notNullable();
+        .unsigned();
       table
         .integer("project_id")
         .references("project.id")

@@ -87,6 +87,7 @@ module.exports = async function (fastify, opts) {
           id: request.params.fileId,
         })
         .first();
+      let id;
       if (currentFile.type === "upload") {
         const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
         const uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
@@ -100,7 +101,7 @@ module.exports = async function (fastify, opts) {
           console.error(e);
         }
 
-        return await fastify
+        ([id] = await fastify
           .knex("file")
           .where("id", request.params.fileId)
           .update({
@@ -108,12 +109,13 @@ module.exports = async function (fastify, opts) {
             description,
             updated_at: new Date(Date.now()),
             updated_by: request.user.id,
-            fileName: uploadedFileName
+            fileName: uploadedFileName,
+            is_draft
           })
-          .returning("id");
+          .returning("id"));
       }
       else {
-        return await fastify
+        ([id] = await fastify
           .knex("file")
           .where("id", request.params.fileId)
           .update({
@@ -124,8 +126,10 @@ module.exports = async function (fastify, opts) {
             updated_at: new Date(Date.now()),
             updated_by: request.user.id,
           })
-          .returning("id");
+          .returning("id"));
       }
+      await fastify.createPendingReview("file", id);
+      return [id];
     }
   );
 

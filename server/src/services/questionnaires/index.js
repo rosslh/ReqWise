@@ -161,13 +161,16 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { description, is_draft, is_open, is_public } = request.body;
-      return (
+      const id = (
         await fastify
           .knex("brainstormForm")
           .update({ description, is_draft, is_open, is_public })
           .where("id", request.params.questionnaireId)
-          .returning(["description"])
+          .returning("id")
       )[0];
+      console.log(id);
+      await fastify.createPendingReview("brainstormForm", id);
+      return { description };
     }
   );
 };
