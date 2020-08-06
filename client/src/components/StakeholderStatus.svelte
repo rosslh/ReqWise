@@ -3,28 +3,28 @@
   export let latestReviewStatus = "pending";
   export let inline = false;
 
-  const statuses = {
-    draft: {
-      bgColor: "var(--secondaryText)",
-      label: "Draft",
-      width: "3.75rem",
-    },
-    pending: {
-      bgColor: "var(--indigo)",
-      label: "Pending",
-      width: "4.5rem",
-    },
-    accept: {
-      bgColor: "var(--green)",
-      label: "Accepted",
-      width: "4.5rem",
-    },
-    requestChanges: {
-      bgColor: "var(--red)",
-      label: "Changes Requested",
-      width: "5rem",
-    },
-  };
+  // const statuses = {
+  //   draft: {
+  //     bgColor: "var(--secondaryText)",
+  //     label: "Draft",
+  //     width: "3.75rem",
+  //   },
+  //   pending: {
+  //     bgColor: "var(--indigo)",
+  //     label: "Pending",
+  //     width: "4.5rem",
+  //   },
+  //   accept: {
+  //     bgColor: "var(--green)",
+  //     label: "Accepted",
+  //     width: "4.5rem",
+  //   },
+  //   requestChanges: {
+  //     bgColor: "var(--red)",
+  //     label: "Changes Requested",
+  //     width: "5rem",
+  //   },
+  // };
 </script>
 
 <style>
