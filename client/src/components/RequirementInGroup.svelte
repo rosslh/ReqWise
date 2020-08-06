@@ -3,6 +3,7 @@
   import Requirement from "./Requirement.svelte";
   import ViewRequirementModal from "./ViewRequirementModal.svelte";
   import { modalContent, modalProps } from "../stores.js";
+  import { getContext } from "svelte";
 
   export let requirement;
   export let update;
@@ -13,10 +14,12 @@
       id,
       update,
       url: `/project/${requirement.project_id}/requirement/${id}`,
-      isPrioritized
+      isPrioritized,
     });
     modalContent.set(ViewRequirementModal);
   };
+
+  const scopes = getContext("scopes");
 </script>
 
 <style lang="scss">
@@ -44,11 +47,13 @@
 </style>
 
 <Requirement {...$$props} isInteractive={true}>
-  <div class="iconCell">
-    <button
-      on:click|stopPropagation={e => viewRequirement(e, requirement.id)}
-      class="commentIconWrapper">
-      <FaRegComment />
-    </button>
-  </div>
+  {#if scopes.includes('member')}
+    <div class="iconCell">
+      <button
+        on:click|stopPropagation={(e) => viewRequirement(e, requirement.id)}
+        class="commentIconWrapper">
+        <FaRegComment />
+      </button>
+    </div>
+  {/if}
 </Requirement>

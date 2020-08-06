@@ -9,6 +9,7 @@
   import RequirementDropzone from "./RequirementDropzone.svelte";
 
   import { formatDistanceToNow } from "date-fns";
+  import { getContext } from "svelte";
 
   export let requirement;
   export let toggleReq = () => {};
@@ -20,9 +21,9 @@
   export let isContextModal = false;
   export let close = () => {};
 
-  const formatDatetime = dt => `${formatDistanceToNow(new Date(dt))} ago`;
+  const formatDatetime = (dt) => `${formatDistanceToNow(new Date(dt))} ago`;
 
-  const getStatusColor = status => {
+  const getStatusColor = (status) => {
     switch (status) {
       case "proposed":
         return "red";
@@ -35,7 +36,7 @@
     }
   };
 
-  const getPriorityColor = status => {
+  const getPriorityColor = (status) => {
     switch (status) {
       case "high":
         return "red";
@@ -46,15 +47,17 @@
     }
   };
 
-  const showHistoryModal = id => {
+  const showHistoryModal = (id) => {
     modalContent.set(ViewRequirementHistoryModal);
     modalProps.set({
       id,
       isPrioritized,
       update,
-      url: `/project/${requirement.project_id}/requirement/${id}/history`
+      url: `/project/${requirement.project_id}/requirement/${id}/history`,
     });
   };
+
+  const scopes = getContext("scopes");
 </script>
 
 <style lang="scss">
@@ -190,11 +193,11 @@
   class={`${selected ? 'selected' : ''} ${isContextModal ? 'noninteractive' : ''} requirement draggable depth-${requirement.depth}`}
   on:click={() => toggleReq({
       id: requirement.id,
-      reqversion_id: requirement.reqversion_id
+      reqversion_id: requirement.reqversion_id,
     })}
   data-reqdesc={requirement.description}
   data-reqid={requirement.id}>
-  {#if !isContextModal}
+  {#if scopes.includes('member') && !isContextModal}
     <div class="reqHandle">
       <div class="gripWrapper">
         <FaGripVertical />
@@ -203,37 +206,39 @@
   {/if}
   <div class="desc">{requirement.description}</div>
   <div class="ppuid">#{requirement.ppuid}</div>
-  <div class="status">
-    {#if requirement.status === 'proposed'}
-      <span
-        class="statusIconWrapper"
-        style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaExclamation />
-      </span>
-      <span class="statusText">Proposed</span>
-    {:else if requirement.status === 'accepted'}
-      <span
-        class="statusIconWrapper"
-        style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaThumbsUp />
-      </span>
-      <span class="statusText">Accepted</span>
-    {:else if requirement.status === 'modified'}
-      <span
-        class="statusIconWrapper"
-        style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaExclamation />
-      </span>
-      <span class="statusText">Modified</span>
-    {:else}
-      <span
-        class="statusIconWrapper"
-        style={`color:var(--${getStatusColor(requirement.status)})`}>
-        <FaCheck />
-      </span>
-      <span class="statusText">Implemented</span>
-    {/if}
-  </div>
+  {#if scopes.includes('member')}
+    <div class="status">
+      {#if requirement.status === 'proposed'}
+        <span
+          class="statusIconWrapper"
+          style={`color:var(--${getStatusColor(requirement.status)})`}>
+          <FaExclamation />
+        </span>
+        <span class="statusText">Proposed</span>
+      {:else if requirement.status === 'accepted'}
+        <span
+          class="statusIconWrapper"
+          style={`color:var(--${getStatusColor(requirement.status)})`}>
+          <FaThumbsUp />
+        </span>
+        <span class="statusText">Accepted</span>
+      {:else if requirement.status === 'modified'}
+        <span
+          class="statusIconWrapper"
+          style={`color:var(--${getStatusColor(requirement.status)})`}>
+          <FaExclamation />
+        </span>
+        <span class="statusText">Modified</span>
+      {:else}
+        <span
+          class="statusIconWrapper"
+          style={`color:var(--${getStatusColor(requirement.status)})`}>
+          <FaCheck />
+        </span>
+        <span class="statusText">Implemented</span>
+      {/if}
+    </div>
+  {/if}
   {#if isPrioritized}
     <div
       class="priority"

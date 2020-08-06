@@ -72,7 +72,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:requirementId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getRequirementSchema,
     },
     async function (request, reply) {
@@ -364,7 +364,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:requirementId/versions",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getRequirementVersionsSchema,
     },
     async function (request, reply) {

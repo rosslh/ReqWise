@@ -259,6 +259,29 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isProjectStakeholderByRequirementId = async (
+    request,
+    reply,
+    isAdmin = false
+  ) => {
+    const stakeholdership = (
+      await fastify.knex
+        .from("requirement")
+        .join("reqgroup", "reqgroup.id", "requirement.reqgroup_id")
+        .join("stakeholder_project", "stakeholder_project.project_id", "reqgroup.project_id")
+        .select("stakeholder_project.id")
+        .where({
+          "requirement.id": request.params.requirementId,
+          "stakeholder_project.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!stakeholdership) {
+      throw new Error(`Not a stakeholder`);
+    }
+  };
+
   const isTeamMemberByReqversionId = async (
     request,
     reply,
@@ -464,7 +487,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "stakeholderGroupId", memberHandler: isTeamMemberByStakeholderGroupId, stakeholderHandler: isProjectStakeholderByStakeholderGroupId },
       { param: "fileId", memberHandler: isTeamMemberByFileId },
       { param: "reqgroupId", memberHandler: isTeamMemberByReqgroupId },
-      { param: "requirementId", memberHandler: isTeamMemberByRequirementId },
+      { param: "requirementId", memberHandler: isTeamMemberByRequirementId, stakeholderHandler: isProjectStakeholderByRequirementId },
       { param: "reqversionId", memberHandler: isTeamMemberByReqversionId },
       { param: "commentId", memberHandler: isTeamMemberByCommentId },
       { param: "questionnaireId", memberHandler: isTeamMemberByQuestionnaireId },
@@ -480,10 +503,10 @@ module.exports = fp(async function (fastify, opts) {
     }
     if (allowStakeholder) {
       try {
-        await method.stakeholderHandler(request, reply);
+        await method.memberHandler(request, reply);
       }
       catch {
-        await method.memberHandler(request, reply);
+        await method.stakeholderHandler(request, reply);
       }
     }
     else {

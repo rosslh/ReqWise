@@ -1,7 +1,7 @@
 <script>
   import { stores } from "@sapper/app";
   const { session } = stores();
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, getContext } from "svelte";
   import RequirementInGroup from "../components/RequirementInGroup.svelte";
   import ReqgroupSelectTools from "../components/ReqgroupSelectTools.svelte";
   import ReqgroupHeader from "../components/ReqgroupHeader.svelte";
@@ -13,6 +13,8 @@
 
   export let reqgroup;
   export let update;
+
+  const scopes = getContext("scopes");
 
   $: requirements = reqgroup.requirements;
 
@@ -38,10 +40,12 @@
   let selectedReqs = [];
 
   const toggleReq = ({ id, reqversion_id }) => {
-    if (selectedReqs.map((x) => x.id).includes(id)) {
-      selectedReqs = selectedReqs.filter((x) => x.id !== id);
-    } else {
-      selectedReqs = [...selectedReqs, { id, reqversion_id }]; // push doesn't update state
+    if (scopes.includes("member")) {
+      if (selectedReqs.map((x) => x.id).includes(id)) {
+        selectedReqs = selectedReqs.filter((x) => x.id !== id);
+      } else {
+        selectedReqs = [...selectedReqs, { id, reqversion_id }]; // push doesn't update state
+      }
     }
   };
 
@@ -191,7 +195,9 @@
   class={`reqgroup ${draggingRequirement ? 'dragging' : ''}`}
   id={`reqgroup-${reqgroup.id}`}>
   <ReqgroupHeader {reqgroup} />
-  <ReqgroupStatusBar {requirements} />
+  {#if scopes.includes('member')}
+    <ReqgroupStatusBar {requirements} />
+  {/if}
   <ReqgroupSelectTools
     {selectedReqs}
     update={updateReqs}
