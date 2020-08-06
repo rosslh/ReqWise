@@ -559,7 +559,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/:projectId/stakeholder-users",
+    "/:projectId/external-stakeholders",
     {
       preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectStakeholderUsersSchema,
@@ -567,7 +567,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("stakeholder_project")
-        .select("account.*")
+        .select("account.*", "stakeholder_project.id as id", "account.id as account_id")
         .join("account", "account.id", "stakeholder_project.account_id")
         .where("stakeholder_project.project_id", request.params.projectId);
     }

@@ -251,7 +251,8 @@ module.exports = async function (fastify, opts) {
           "account.name",
           "account.email",
           "account_team.isAdmin",
-          "account_team.isOwner"
+          "account_team.isOwner",
+          "account.id as account_id"
         )
         .where("team_id", request.params.teamId)
         .join("account", "account.id", "=", "account_team.account_id");

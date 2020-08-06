@@ -408,6 +408,25 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isTeamMemberByExternalStakeholderId = async (request, reply, isAdmin = false) => {
+    const membership = (
+      await fastify.knex
+        .from("stakeholder_project")
+        .join("project", "project.id", "stakeholder_project.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "stakeholder_project.id": request.params.externalStakeholderId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membership) {
+      throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
+    }
+  };
+
   fastify.decorate("isCorrectUser", async (request, reply) => {
     if (!request.user) {
       reply.code(401);
@@ -453,6 +472,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "responseId", memberHandler: isTeamMemberByResponseId },
       { param: "reactionId", memberHandler: isTeamMemberByReactionId },
       { param: "userclassId", memberHandler: isTeamMemberByUserclassId },
+      { param: "externalStakeholderId", memberHandler: isTeamMemberByExternalStakeholderId }
     ];
     const method = methods.find(x => request.params[x.param])
     if (!method) {

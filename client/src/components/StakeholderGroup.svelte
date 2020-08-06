@@ -27,7 +27,7 @@
     modalProps.set({
       stakeholderGroupId: group.id,
       projectId,
-      update: updateStakeholders
+      update: updateStakeholders,
     });
   };
   const editGroup = () => {
@@ -129,7 +129,7 @@
       <h3>
         <a
           rel="prefetch"
-          href={`/project/${projectId}/stakeholders/${group.id}`}>
+          href={`/project/${projectId}/stakeholders/group/${group.id}`}>
           {group.name}
         </a>
         <span class="groupPpuid">#{group.ppuid}</span>
@@ -175,7 +175,7 @@
       {:else}
         <a
           rel="prefetch"
-          href={`/project/${projectId}/stakeholders/${group.id}/reqgroups`}
+          href={`/project/${projectId}/stakeholders/group/${group.id}/reqgroups`}
           class="button button-outline button-small button-secondary
           button-clear">
           <div class="iconWrapper iconWrapper-padded">

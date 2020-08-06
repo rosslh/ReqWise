@@ -1,6 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
-  import { get } from "../../../../../api.js";
+  import { get } from "../../../../../../api.js";
 
   const { page, session } = stores();
   const { stakeholderGroupId } = $page.params;

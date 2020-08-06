@@ -39,22 +39,21 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>External Stakeholders</h2>
+  <h2>Stakeholders</h2>
   <p class="infoBlurb">
     A stakeholder is an individual, group, or organization that is involved in
-    or affected by a project's process or outcome. External stakeholders added
-    to your project can fill out brainstorm questionnaires and sign-off on
-    requirements.
+    or affected by a project's process or outcome. Stakeholders in your project
+    can fill out brainstorm questionnaires and sign-off on requirements.
   </p>
   {#if scopes.includes('member')}
-    <button class="button-success" on:click={viewInvitations}>
-      Invitations
-    </button>
-    <button
-      class="button-success button-outline button-secondary"
-      on:click={createStakeholderGroup}>
+    <button class="button-success" on:click={createStakeholderGroup}>
       Add stakeholder group
     </button>
+    <a
+      class="button button-outline button-secondary"
+      href={`${$page.path}/external`}>
+      External stakeholders
+    </a>
   {/if}
 </section>
 <section class="contentWrapper">

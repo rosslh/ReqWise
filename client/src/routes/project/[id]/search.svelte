@@ -99,7 +99,9 @@
               #{r.ppuid} - {r.name || r.description}
             </a>
           {:else if r.result_type === 'stakeholder group'}
-            <a rel="prefetch" href={`/project/${id}/stakeholders/${r.id}`}>
+            <a
+              rel="prefetch"
+              href={`/project/${id}/stakeholders/group/${r.id}`}>
               #{r.ppuid} - {r.name || r.description}
             </a>
           {:else if r.result_type === 'file'}

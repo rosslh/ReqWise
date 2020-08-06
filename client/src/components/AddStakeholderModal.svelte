@@ -29,11 +29,19 @@
   };
 
   $: userOptions = (async () => {
-    const result = await get(
-      `/projects/${projectId}/stakeholder-users`,
+    const { team_id } = await get(
+      `/projects/${projectId}`,
       $session.user && $session.user.jwt
     );
-    return result;
+    const members = await get(
+      `/teams/${team_id}/members`,
+      $session.user && $session.user.jwt
+    );
+    const external = await get(
+      `/projects/${projectId}/external-stakeholders`,
+      $session.user && $session.user.jwt
+    );
+    return [...external, ...members];
   })();
 </script>
 
@@ -49,7 +57,10 @@
           inputAttributes={{ id: 'user' }}
           isClearable={false}
           isSearchable={true}
-          items={result.map((user) => ({ label: user.name, value: user.id }))}
+          items={result.map((user) => ({
+            label: user.name,
+            value: user.account_id,
+          }))}
           bind:selectedValue={selectedUser} />
       {:catch err}
         <p style="color: var(--red)">{err.message}</p>

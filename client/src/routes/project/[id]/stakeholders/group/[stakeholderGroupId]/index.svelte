@@ -1,8 +1,8 @@
 <script>
-  import { get } from "../../../../../api.js";
+  import { get } from "../../../../../../api.js";
   import { stores } from "@sapper/app";
 
-  import StakeholderGroup from "../../../../../components/StakeholderGroup.svelte";
+  import StakeholderGroup from "../../../../../../components/StakeholderGroup.svelte";
 
   const { page, session } = stores();
   const { stakeholderGroupId, id } = $page.params;

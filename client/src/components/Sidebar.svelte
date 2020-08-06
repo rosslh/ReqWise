@@ -58,7 +58,7 @@
     //   extraPadding: true,
     // },
     {
-      label: "External Stakeholders",
+      label: "Stakeholders",
       slug: "stakeholders",
       icon: FaUserTie,
       newSection: "Project Details",
