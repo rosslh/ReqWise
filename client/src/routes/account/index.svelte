@@ -69,11 +69,18 @@
     }
   };
 
-  const deleteInvite = async (inviteId) => {
-    await del(
-      `/users/${$session.user.id}/invites/${inviteId}`,
-      $session.user.jwt
-    );
+  const deleteInvite = async (inviteId, projectName) => {
+    if (projectName) {
+      await del(
+        `/users/${$session.user.id}/project-invites/${inviteId}`,
+        $session.user.jwt
+      );
+    } else {
+      await del(
+        `/users/${$session.user.id}/team-invites/${inviteId}`,
+        $session.user.jwt
+      );
+    }
     await update();
   };
 
@@ -154,7 +161,7 @@
                   <button
                     class="button-danger button-small button-outline"
                     style="margin: 0;"
-                    on:click={() => deleteInvite(invite)}>
+                    on:click={() => deleteInvite(invite.id, invite.projectName)}>
                     Delete
                   </button>
                 </td>

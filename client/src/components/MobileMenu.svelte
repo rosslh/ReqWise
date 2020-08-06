@@ -1,88 +1,15 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-
-  import IoMdRibbon from "svelte-icons/io/IoMdRibbon.svelte";
-  import FaCheck from "svelte-icons/fa/FaCheck.svelte";
-  import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
-  import MdHistory from "svelte-icons/md/MdHistory.svelte";
-  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
-  import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
-  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
-  import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
-  import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
-  // import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
-
   import { menuHidden } from "../stores.js";
 
   export let name;
   export let id;
   export let tab;
+  export let menuLinks;
 
   const close = () => {
     $menuHidden = true;
   };
-
-  const tabs = [
-    {
-      label: "Brainstorm",
-      slug: "brainstorm",
-      icon: MdLightbulbOutline,
-      newSection: true,
-    },
-    {
-      label: "Business Requirements",
-      slug: "business-requirements",
-      icon: FaBriefcase,
-      newSection: true,
-      extraPadding: true,
-    },
-    {
-      label: "Features",
-      slug: "features",
-      icon: FaCheck,
-      extraPadding: true,
-    },
-    {
-      label: "Quality Attributes",
-      slug: "quality-attributes",
-      icon: IoMdRibbon,
-    },
-    {
-      label: "Diagrams and Files",
-      slug: "files",
-      icon: FaRegFileAlt,
-      newSection: true,
-      extraPadding: true,
-    },
-    {
-      label: "User Classes",
-      slug: "user-classes",
-      icon: IoMdPeople,
-    },
-    // {
-    //   label: "Tests",
-    //   slug: "tests",
-    //   icon: FaCheckDouble,
-    //   extraPadding: true
-    // },
-    {
-      label: "Stakeholders",
-      slug: "stakeholders",
-      icon: FaUserTie,
-      newSection: true,
-      extraPadding: true,
-    },
-    {
-      label: "Activity",
-      slug: "activity",
-      icon: MdHistory,
-    },
-    {
-      label: "Settings",
-      slug: "settings",
-      icon: IoIosSettings,
-    },
-  ];
 
   let navMenu;
 
@@ -174,7 +101,7 @@
 <nav tabindex={0} bind:this={navMenu}>
   <h1>{name}</h1>
   <div class="items">
-    {#each tabs as item, i (item.slug)}
+    {#each menuLinks as item, i (item.slug)}
       <a
         tabindex={i + 1}
         on:click={close}

@@ -731,22 +731,8 @@ module.exports = async (fastify, opts) => {
         .where("id", inviteId)
         .first();
 
-      // add member to team
       if (invite) {
         let { project_id, stakeholderGroup_id } = invite;
-
-        if (!stakeholderGroup_id) {
-          ({ id: stakeholderGroup_id } = await fastify.knex("stakeholderGroup")
-            .select("id")
-            .where(
-              "stakeholderGroup.created_at",
-              fastify.knex.raw(
-                `(select max("created_at") from "stakeholderGroup" where "stakeholderGroup"."project_id"=${project_id})`
-              )
-            )
-            .andWhere("stakeholderGroup.project_id", project_id)
-            .first());
-        }
 
         const memberAlreadyExists = await fastify
           .knex("stakeholder_project")
@@ -759,10 +745,12 @@ module.exports = async (fastify, opts) => {
             account_id: request.user.id,
             project_id
           });
-          await fastify.knex("account_stakeholderGroup").insert({
-            account_id: request.user.id,
-            stakeholderGroup_id
-          });
+          if (stakeholderGroup_id) {
+            await fastify.knex("account_stakeholderGroup").insert({
+              account_id: request.user.id,
+              stakeholderGroup_id
+            });
+          }
         }
 
         // delete invite
@@ -779,7 +767,7 @@ module.exports = async (fastify, opts) => {
     }
   );
 
-  const deleteInviteSchema = {
+  const deleteTeamInviteSchema = {
     queryString: {},
     params: {
       type: "object",
@@ -805,10 +793,10 @@ module.exports = async (fastify, opts) => {
     },
   };
   fastify.delete(
-    "/:userId/invites/:inviteId",
+    "/:userId/team-invites/:inviteId",
     {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
-      schema: deleteInviteSchema,
+      schema: deleteTeamInviteSchema,
     },
     async function (request, reply) {
       // get invite
@@ -825,6 +813,63 @@ module.exports = async (fastify, opts) => {
         // delete invite
         await fastify
           .knex("teamInvite")
+          .select("*")
+          .where("id", request.params.inviteId)
+          .del();
+
+        return ["success"];
+      }
+      reply.code(400);
+      return ["invalid invite"];
+    }
+  );
+
+  const deleteProjectInviteSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+        inviteId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        "Content-Type": {
+          type: "string",
+        },
+      },
+      required: ["Content-Type"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.delete(
+    "/:userId/project-invites/:inviteId",
+    {
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
+      schema: deleteProjectInviteSchema,
+    },
+    async function (request, reply) {
+      // get invite
+      const invite = await fastify
+        .knex("stakeholderInvite")
+        .select("*")
+        .where({
+          id: request.params.inviteId,
+          inviteeEmail: request.user.email,
+        })
+        .first();
+
+      if (invite) {
+        // delete invite
+        await fastify
+          .knex("stakeholderInvite")
           .select("*")
           .where("id", request.params.inviteId)
           .del();

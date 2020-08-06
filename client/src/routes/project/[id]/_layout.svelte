@@ -10,6 +10,18 @@
 </script>
 
 <script>
+  import IoMdRibbon from "svelte-icons/io/IoMdRibbon.svelte";
+  import FaCheck from "svelte-icons/fa/FaCheck.svelte";
+  import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
+  import MdHistory from "svelte-icons/md/MdHistory.svelte";
+  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
+  import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
+  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
+  import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
+  import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
+  import FaSignature from "svelte-icons/fa/FaSignature.svelte";
+  // import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
+
   import Sidebar from "../../../components/Sidebar.svelte";
   import MobileMenu from "../../../components/MobileMenu.svelte";
   import { onMount, onDestroy, setContext } from "svelte";
@@ -93,6 +105,73 @@
       $menuHidden = false;
     }
   }
+
+  const menuLinks = [
+    {
+      label: "Brainstorm",
+      slug: "brainstorm",
+      icon: MdLightbulbOutline,
+      newSection: "Requirement Elicitation",
+    },
+    {
+      label: "Business Requirements",
+      slug: "business-requirements",
+      icon: FaBriefcase,
+      newSection: "Requirements",
+      extraPadding: true,
+    },
+    {
+      label: "Features",
+      slug: "features",
+      icon: FaCheck,
+      extraPadding: true,
+    },
+    {
+      label: "Quality Attributes",
+      slug: "quality-attributes",
+      icon: IoMdRibbon,
+    },
+    {
+      label: "Diagrams and Files",
+      slug: "files",
+      icon: FaRegFileAlt,
+      newSection: "Linkable",
+      extraPadding: true,
+    },
+    {
+      label: "User Classes",
+      slug: "user-classes",
+      icon: IoMdPeople,
+    },
+    // {
+    //   label: "Tests",
+    //   slug: "tests",
+    //   icon: FaCheckDouble,
+    //   extraPadding: true,
+    // },
+    {
+      label: "Stakeholders",
+      slug: "stakeholders",
+      icon: FaUserTie,
+      newSection: "Project Details",
+      extraPadding: true,
+    },
+    {
+      label: "Stakeholder Sign-off",
+      slug: "sign-off",
+      icon: FaSignature,
+    },
+    {
+      label: "Activity",
+      slug: "activity",
+      icon: MdHistory,
+    },
+    {
+      label: "Settings",
+      slug: "settings",
+      icon: IoIosSettings,
+    },
+  ];
 </script>
 
 <style>
@@ -154,9 +233,9 @@
   </div>
   <div class="menuContent">
     {#if !$media.small}
-      <Sidebar {tab} {id} name={project.name} />
+      <Sidebar {tab} {id} name={project.name} {menuLinks} />
     {:else if !$menuHidden}
-      <MobileMenu {tab} {id} name={project.name} />
+      <MobileMenu {tab} {id} name={project.name} {menuLinks} />
     {/if}
   </div>
 </div>
