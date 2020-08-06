@@ -14,7 +14,7 @@
   import { modalContent, modalProps } from "../../../../../../stores.js";
   import AddBrainstormPromptModal from "../../../../../../components/AddBrainstormPromptModal.svelte";
   import EditQuestionnaireModal from "../../../../../../components/EditQuestionnaireModal.svelte";
-  import DraftIndicator from "../../../../../../components/DraftIndicator.svelte";
+  import StakeholderStatus from "../../../../../../components/StakeholderStatus.svelte";
   import BrainstormPrompt from "../../../../../../components/BrainstormPrompt.svelte";
 
   export let questionnaire;
@@ -63,7 +63,10 @@
 
 <section class="contentWrapper">
   <div class="formHeader">
-    <DraftIndicator inline isDraft={questionnaire.is_draft} />
+    <StakeholderStatus
+      inline
+      isDraft={questionnaire.is_draft}
+      latestReviewStatus={questionnaire.latestReviewStatus} />
     <h2>{questionnaire.description}</h2>
   </div>
   {#if questionnaire.is_draft}

@@ -38,11 +38,7 @@
   <title>{questionnaire.description} - ReqWise</title>
 </svelte:head>
 <section class="contentWrapper">
-  <h1>
-    {#if questionnaire.is_draft}[Draft]{/if}
-    <!-- TODO: something aint right -->
-    {questionnaire.description}
-  </h1>
+  <h1>{questionnaire.description}</h1>
 </section>
 <section class="contentWrapper">
   {#each prompts as prompt (prompt.id)}

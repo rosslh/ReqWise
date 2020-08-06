@@ -18,6 +18,27 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .unsigned()
         .notNullable();
+      table
+        .integer("entity_reqgroup_id")
+        .references("reqgroup.id")
+        .onDelete("SET NULL")
+        .unsigned();
+      table
+        .integer("entity_file_id")
+        .references("file.id")
+        .onDelete("SET NULL")
+        .unsigned();
+      table
+        .integer("entity_userclass_id")
+        .references("userclass.id")
+        .onDelete("SET NULL")
+        .unsigned();
+      table
+        .integer("entity_brainstormForm_id")
+        .references("brainstormForm.id")
+        .onDelete("SET NULL")
+        .unsigned();
+      table.enu("entityType", ["reqgroup", "file", "userclass", "brainstormForm"]).notNullable();
       table.text("comment");
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.timestamp("completed_at");
@@ -46,5 +67,8 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-
+  return Promise.all([
+    knex.schema.dropTable("stakeholderReviewResponse"),
+    knex.schema.dropTable("stakeholderReview"),
+  ]);
 };

@@ -2,7 +2,7 @@
   import MdInfoOutline from "svelte-icons/md/MdInfoOutline.svelte";
   import { modalContent, modalProps } from "../stores.js";
   import ReqgroupDescriptionModal from "./ReqgroupDescriptionModal.svelte";
-  import DraftIndicator from "./DraftIndicator.svelte";
+  import StakeholderStatus from "./StakeholderStatus.svelte";
   export let reqgroup;
 
   const showDescriptionModal = () => {
@@ -65,7 +65,9 @@
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
-  <DraftIndicator isDraft={reqgroup.is_draft} />
+  <StakeholderStatus
+    isDraft={reqgroup.is_draft}
+    latestReviewStatus={reqgroup.latestReviewStatus} />
   {#if reqgroup.description}
     <button on:click={showDescriptionModal}>
       <MdInfoOutline />

@@ -11,7 +11,7 @@
   import AddProductChampionModal from "./AddProductChampionModal.svelte";
   import Skeleton from "./Skeleton.svelte";
   import ProductChampion from "./ProductChampion.svelte";
-  import DraftIndicator from "./DraftIndicator.svelte";
+  import StakeholderStatus from "./StakeholderStatus.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
@@ -187,7 +187,9 @@
       </h3>
     </div>
     <div class="right">
-      <DraftIndicator isDraft={userclass.is_draft} />
+      <StakeholderStatus
+        isDraft={userclass.is_draft}
+        latestReviewStatus={userclass.latestReviewStatus} />
       <span
         class="importanceLabel"
         style={`background-color: var(--${getImportanceColor(userclass.importance)})`}>

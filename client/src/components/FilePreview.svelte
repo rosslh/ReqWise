@@ -11,7 +11,7 @@
   import EditFileDetailsModal from "./EditFileDetailsModal.svelte";
   import DeleteFileModal from "./DeleteFileModal.svelte";
   import UploadFileModal from "./UploadFileModal.svelte";
-  import DraftIndicator from "./DraftIndicator.svelte";
+  import StakeholderStatus from "./StakeholderStatus.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
@@ -225,7 +225,9 @@
       </a>
       <span class="filePpuid">#{file.ppuid}</span>
     </h3>
-    <DraftIndicator isDraft={file.is_draft} />
+    <StakeholderStatus
+      isDraft={file.is_draft}
+      latestReviewStatus={file.latestReviewStatus} />
   </div>
   <div class="textContent">
     <p>{file.description}</p>

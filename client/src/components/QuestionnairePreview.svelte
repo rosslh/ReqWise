@@ -3,7 +3,7 @@
   export let projectId;
   import { formatDistanceToNow } from "date-fns";
 
-  import DraftIndicator from "./DraftIndicator.svelte";
+  import StakeholderStatus from "./StakeholderStatus.svelte";
 
   const formatDatetime = (dt) =>
     `Created ${formatDistanceToNow(new Date(dt))} ago`;
@@ -39,7 +39,9 @@
     <time class="createdAt" datetime={questionnaire.created_at}>
       {formatDatetime(questionnaire.created_at)}
     </time>
-    <DraftIndicator isDraft={questionnaire.is_draft} />
+    <StakeholderStatus
+      isDraft={questionnaire.is_draft}
+      latestReviewStatus={questionnaire.latestReviewStatus} />
   </div>
   <div class="bottom">
     {questionnaire.numPrompts} prompts and {questionnaire.numResponses}

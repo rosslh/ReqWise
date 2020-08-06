@@ -1,15 +1,39 @@
 <script>
-  export let isDraft;
+  export let isDraft = false;
+  export let latestReviewStatus = "pending";
   export let inline = false;
+
+  const statuses = {
+    draft: {
+      bgColor: "var(--secondaryText)",
+      label: "Draft",
+      width: "3.75rem",
+    },
+    pending: {
+      bgColor: "var(--indigo)",
+      label: "Pending",
+      width: "4.5rem",
+    },
+    accept: {
+      bgColor: "var(--green)",
+      label: "Accepted",
+      width: "4.5rem",
+    },
+    requestChanges: {
+      bgColor: "var(--red)",
+      label: "Changes Requested",
+      width: "5rem",
+    },
+  };
 </script>
 
 <style>
   .indicator {
-    --draftIndicatorWidth: 3.75rem;
+    --stakeholderStatusWidth: 3.75rem;
     position: relative;
     visibility: hidden;
     height: 5rem;
-    width: var(--draftIndicatorWidth);
+    width: var(--stakeholderStatusWidth);
     margin-top: -1.25rem;
     background-color: var(--secondaryText);
     color: var(--background1);
@@ -46,15 +70,15 @@
     bottom: 0;
     width: 0;
     height: 0;
-    border-left: calc(var(--draftIndicatorWidth) / 2) solid transparent;
-    border-right: calc(var(--draftIndicatorWidth) / 2) solid transparent;
+    border-left: calc(var(--stakeholderStatusWidth) / 2) solid transparent;
+    border-right: calc(var(--stakeholderStatusWidth) / 2) solid transparent;
     border-bottom: 1rem solid var(--background1);
   }
 </style>
 
 <div
   class={`${inline ? 'inlineIndicator' : 'indicator'} ${isDraft ? 'isDraft' : ''}`}>
-  {#if isDraft}Draft{:else}Published{/if}
+  {#if isDraft}Draft{:else}{latestReviewStatus}{/if}
   {#if !inline}
     <div class="bottomTriangle" aria-hidden={true} />
   {/if}

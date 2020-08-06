@@ -4,7 +4,6 @@
   import { get } from "../../../../api.js";
   import { modalContent, modalProps } from "../../../../stores.js";
   import AddStakeholderGroupModal from "../../../../components/AddStakeholderGroupModal.svelte";
-  import StakeholderInvitationsModal from "../../../../components/StakeholderInvitationsModal.svelte";
   import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
   import StakeholderGroup from "../../../../components/StakeholderGroup.svelte";
 
@@ -26,11 +25,6 @@
   const createStakeholderGroup = () => {
     modalContent.set(AddStakeholderGroupModal);
     modalProps.set({ id, update });
-  };
-
-  const viewInvitations = () => {
-    modalContent.set(StakeholderInvitationsModal);
-    modalProps.set({ id, update, projectId: id });
   };
 
   let searchResults = [];
