@@ -260,7 +260,6 @@ module.exports = async function (fastify, opts) {
       const {
         plaintext,
         quillDelta,
-        type,
         requestedDescription,
         requestedPriority,
       } = request.body;
@@ -304,7 +303,6 @@ module.exports = async function (fastify, opts) {
         plaintext,
         html,
         mrkdwn,
-        type,
         requestedDescription,
         requestedPriority,
       });
