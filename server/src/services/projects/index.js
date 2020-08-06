@@ -720,12 +720,16 @@ module.exports = async function (fastify, opts) {
         .from("brainstormForm")
         .select("*", "brainstormForm.id as id")
         .where({ "brainstormForm.project_id": request.params.projectId, "brainstormForm.is_draft": request.query.draft });
-      return await Promise.all(questionnaires.map(async q => {
+
+      const result = await Promise.all(questionnaires.map(async q => {
         const numPrompts = (await fastify.knex.from("brainstormPrompt").select("*").where("brainstormForm_id", q.id)).length;
         const numResponses = (await fastify.knex.from("brainstormResponse").select("*").join("brainstormPrompt", "brainstormPrompt.id", "brainstormResponse.brainstormPrompt_id").where("brainstormForm_id", q.id)).length;
 
         return { ...q, numPrompts, numResponses };
       }));
+
+      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      return result.filter(x => scopes.includes("member") || !x.is_draft);
     }
   );
 

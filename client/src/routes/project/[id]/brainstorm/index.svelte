@@ -1,5 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
   import { modalContent, modalProps } from "../../../../stores.js";
   import NewQuestionnaireModal from "../../../../components/NewQuestionnaireModal.svelte";
   import QuestionnairePreview from "../../../../components/QuestionnairePreview.svelte";
@@ -16,6 +17,8 @@
     `/projects/${$page.params.id}/questionnaires?draft=false`,
     $session.user && $session.user.jwt
   );
+
+  const scopes = getContext(`scopes`);
 </script>
 
 <style>
@@ -31,14 +34,16 @@
     customers and team members. Individual questionnaire prompts can be linked
     to requirements.
   </p>
-  <button on:click={newQuestionnaire} class="button button-success">
-    Create questionnaire
-  </button>
-  <a
-    href={`/project/${$page.params.id}/brainstorm/drafts`}
-    class="button button-outline button-secondary">
-    View drafts
-  </a>
+  {#if scopes.includes('member')}
+    <button on:click={newQuestionnaire} class="button button-success">
+      Create questionnaire
+    </button>
+    <a
+      href={`/project/${$page.params.id}/brainstorm/drafts`}
+      class="button button-outline button-secondary">
+      View drafts
+    </a>
+  {/if}
 </section>
 <section class="contentWrapper">
   {#await questionnaires}
