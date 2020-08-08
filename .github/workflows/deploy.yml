@@ -136,13 +136,7 @@ jobs:
           gcloud config set project ${{ secrets.PROJECT_ID }}
           gcloud app deploy --stop-previous-version --no-promote --version=qa
   run-quality-assurance:
-    needs:
-      [
-        firebase-deploy-prod,
-        firebase-deploy-qa,
-        appengine-deploy-qa,
-        appengine-deploy-prod,
-      ]
+    needs: appengine-deploy-qa
     runs-on: ubuntu-latest
     steps:
       - name: Repository Dispatch
