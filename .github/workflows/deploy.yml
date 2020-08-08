@@ -135,6 +135,16 @@ jobs:
           gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
           gcloud app deploy --stop-previous-version --no-promote --version=qa
+  run-quality-assurance:
+    needs:
+      [
+        firebase-deploy-prod,
+        firebase-deploy-qa,
+        appengine-deploy-qa,
+        appengine-deploy-prod,
+      ]
+    runs-on: ubuntu-latest
+    steps:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
