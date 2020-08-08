@@ -46,7 +46,7 @@
     "make-promises-safe": "^5.0.0",
     "nodemailer": "^6.4.6",
     "pg": "^8.3.0",
-    "pino-colada": "^1.4.4",
+    "pino-colada": "^2.0.1",
     "pump": "^3.0.0",
     "quill-delta-to-html": "^0.11.0",
     "request-promise": "^4.2.5",
