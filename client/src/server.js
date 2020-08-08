@@ -27,6 +27,8 @@ const expressServer = express()
       saveUninitialized: false,
       cookie: {
         maxAge: 31536000,
+        sameSite: 'none',
+        secure: true
       },
       store: dev
         ? new LokiStore({})
