@@ -79,7 +79,7 @@
     "rollup-plugin-terser": "^6.1.0",
     "sapper": "^0.27.16",
     "sass": "^1.24.0",
-    "svelte": "^3.23.2",
+    "svelte": "^3.24.1",
     "svelte-icons": "^1.1.0",
     "svelte-media": "0.0.3",
     "svelte-preprocess": "^4.0.9",
