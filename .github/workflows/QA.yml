@@ -1,16 +1,19 @@
 name: Quality assurance
 
 on:
+  repository_dispatch:
+    types: [deploy-completed]
   push:
     branches:
       - "**"
+      - "!master"
 
 jobs:
   lint-check-licenses:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@2.3.2
+      - uses: actions/setup-node@v2.1.0
         with:
           node-version: "10"
       - name: Lint client and check licenses
@@ -28,8 +31,8 @@ jobs:
   test-client:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@2.3.2
+      - uses: actions/setup-node@v2.1.0
         with:
           node-version: "10"
       - name: Install dependencies

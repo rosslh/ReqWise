@@ -9,8 +9,8 @@ jobs:
   firebase-deploy-prod:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@v2.3.2
+      - uses: actions/setup-node@v2.1.0
         with:
           node-version: "10"
       - name: Install dependencies
@@ -25,7 +25,7 @@ jobs:
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
           API_URL: https://reqwise.uc.r.appspot.com
-      - uses: w9jds/firebase-action@master
+      - uses: w9jds/firebase-action@v1.5.0
         with:
           args: deploy
         env:
@@ -34,8 +34,8 @@ jobs:
   firebase-deploy-qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@2.3.2
+      - uses: actions/setup-node@v2.1.0
         with:
           node-version: "10"
       - name: Install dependencies
@@ -50,7 +50,7 @@ jobs:
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
           API_URL: https://qa-dot-reqwise.uc.r.appspot.com
-      - uses: w9jds/firebase-action@master
+      - uses: w9jds/firebase-action@v1.5.0
         with:
           args: deploy
         env:
@@ -63,7 +63,7 @@ jobs:
       run:
         working-directory: ./server
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@2.3.2
       - name: add env variables to app.yaml
         run: 'printf "\nenv_variables:\n  KNEXMODE: \"production\"\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  DB_NAME: \"$DB_NAME\"\n  DB_USERNAME: \"$DB_USERNAME\"\n  DB_PASS: \"$DB_PASS\"\n  DB_HOST: \"$DB_HOST\"\n  DB_PORT: $DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
         shell: bash
@@ -79,7 +79,7 @@ jobs:
           REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
       - name: Initialize Google Cloud SDK
-        uses: zxyle/publish-gae-action@master
+        uses: zxyle/publish-gae-action@v2.3
         with:
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
@@ -102,7 +102,7 @@ jobs:
       run:
         working-directory: ./server
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@2.3.2
       - name: add env variables to app.yaml
         run: 'printf "\nenv_variables:\n  KNEXMODE: \"qa\"\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  QA_DB_NAME: \"$QA_DB_NAME\"\n  QA_DB_USERNAME: \"$QA_DB_USERNAME\"\n  QA_DB_PASS: \"$QA_DB_PASS\"\n  QA_DB_HOST: \"$QA_DB_HOST\"\n  QA_DB_PORT: $QA_DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
         shell: bash
@@ -118,7 +118,7 @@ jobs:
           REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
       - name: Initialize Google Cloud SDK
-        uses: zxyle/publish-gae-action@master
+        uses: zxyle/publish-gae-action@v2.3
         with:
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
@@ -135,3 +135,10 @@ jobs:
           gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
           gcloud app deploy --stop-previous-version --no-promote --version=qa
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: rosslh/reqwise
+          event-type: deploy-completed
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
