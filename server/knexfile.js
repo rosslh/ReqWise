@@ -37,4 +37,22 @@ module.exports = {
       tableName: "knex_migrations"
     }
   },
+
+  dev: {
+    client: "pg",
+    connection: {
+      database: "reqwise",
+      user: "postgres",
+      password: "1234",
+      port: "5432",
+      host: "127.0.0.1"
+    },
+    pool: {
+      min: 2,
+      max: 12
+    },
+    migrations: {
+      tableName: "knex_migrations"
+    }
+  },
 };

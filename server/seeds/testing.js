@@ -1,19 +1,14 @@
-const yesno = require('yesno');
-
 const resetTable = async (tableName, knex) => {
   await knex(tableName).del();
-  // await knex.raw(`TRUNCATE TABLE ${tableName} RESTART IDENTITY`);
+  await knex.raw(`
+    CREATE SEQUENCE IF NOT EXISTS ${tableName}_id_seq;
+    ALTER SEQUENCE ${tableName}_id_seq RESTART WITH 1;
+    UPDATE "${tableName}" SET id=nextval('${tableName}_id_seq');
+  `);
 };
 exports.seed = async function (knex) {
-  const confirm = await yesno({
-    question: 'Are you sure you want to delete all data in your current database?'
-  });
-  if (!confirm) {
-    console.log("Aborting.")
-    return;
-  }
-  if (process.env.KNEXMODE !== "qa") {
-    throw new Error("Environment is not QA! Aborting.")
+  if (!["qa", "dev"].includes(process.env.KNEXMODE)) {
+    throw new Error("Environment is not QA or dev! Aborting.")
   }
   else {
     const tables = [
@@ -40,7 +35,7 @@ exports.seed = async function (knex) {
 
     await knex('account').insert([
       {
-        id: 1,
+        // id: 1,
         password_hash: "$2b$10$DAfKfLLJ9ci5a/QP4DHWBO6aaW0yXgl7tYDbkwXY31.S1yeCV0.yW",
         name: "Test Account",
         is_verified: true,
@@ -50,7 +45,7 @@ exports.seed = async function (knex) {
 
     await knex('team').insert([
       {
-        id: 1,
+        // id: 1,
         name: "Test team (don't delete)"
       }
     ]);
@@ -66,7 +61,7 @@ exports.seed = async function (knex) {
 
     await knex('project').insert([
       {
-        id: 1,
+        // id: 1,
         name: "Test project (don't delete)",
         team_id: 1,
         created_by: 1
@@ -75,7 +70,7 @@ exports.seed = async function (knex) {
 
     await knex('per_project_unique_id').insert([
       {
-        id: 1,
+        // id: 1,
         readable_id: 1,
         project_id: 1
       },
@@ -93,7 +88,7 @@ exports.seed = async function (knex) {
 
     await knex('reqgroup').insert([
       {
-        id: 1,
+        // id: 1,
         project_id: 1,
         name: "Test feature (don't delete)",
         ppuid_id: 1,
@@ -104,7 +99,7 @@ exports.seed = async function (knex) {
 
     await knex('requirement').insert([
       {
-        id: 1,
+        // id: 1,
         project_id: 1,
         reqgroup_id: 1,
         ppuid_id: 1
@@ -124,7 +119,7 @@ exports.seed = async function (knex) {
 
     await knex('stakeholderGroup').insert([
       {
-        id: 1,
+        // id: 1,
         name: "Uncategorized",
         project_id: 1,
         ppuid_id: 3

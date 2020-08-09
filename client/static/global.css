@@ -871,11 +871,6 @@ textarea {
   color: var(--normalText);
 }
 
-input.solidPlaceholder::-webkit-input-placeholder {
-  color: var(--normalText);
-  opacity: 1;
-}
-
 input.solidPlaceholder::-moz-placeholder {
   color: var(--normalText);
   opacity: 1;

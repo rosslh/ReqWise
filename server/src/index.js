@@ -1,4 +1,4 @@
-const { qa, production } = require("../knexfile");
+const { dev, qa, production } = require("../knexfile");
 const fastifyPlugin = require("fastify-plugin");
 const knex = require("knex");
 const path = require("path");
@@ -48,8 +48,10 @@ module.exports = function (fastify, opts, next) {
 
   if (process.env.KNEXMODE === "production") {
     fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), production);
-  } else {
+  } else if (process.env.KNEXMODE === "qa") {
     fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), qa);
+  } else {
+    fastify.register(fastifyPlugin(fastifyKnexJS, ">=0.30.0"), dev);
   }
 
   next();

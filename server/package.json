@@ -12,7 +12,8 @@
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112",
     "sqlProduction": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112,reqwise:us-central1:reqwise=tcp:1111",
     "lint": "eslint src/**/*.js --fix",
-    "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.7.0;buffers@0.1.1;event-stream@0.9.8;png-js@0.1.1\""
+    "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.7.0;buffers@0.1.1;event-stream@0.9.8;png-js@0.1.1\"",
+    "seed": "knex migrate:latest --env=dev && knex seed:run --env=dev"
   },
   "engines": {
     "node": "12.x"
@@ -54,8 +55,7 @@
     "sharp": "^0.25.4",
     "socket.io": "^2.3.0",
     "uuid": "^8.1.0",
-    "yargs-parser": "^16.0.0",
-    "yesno": "^0.3.1"
+    "yargs-parser": "^16.0.0"
   },
   "devDependencies": {
     "eslint": "^7.6.0",

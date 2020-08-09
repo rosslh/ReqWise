@@ -1,13 +1,9 @@
 name: Quality assurance
 
 on:
-  repository_dispatch:
-    types: [deploy-completed]
   push:
     branches:
       - "**"
-      - "!master"
-      - "!dependabot/**"
 
 jobs:
   lint-check-licenses:
@@ -36,18 +32,35 @@ jobs:
       - uses: actions/setup-node@v2.1.1
         with:
           node-version: "10"
-      - name: Install dependencies
+      - uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: "11"
+          postgresql db: "reqwise"
+          postgresql user: "postgres"
+          postgresql password: "1234"
+      - name: Install server dependencies and seed database
+        working-directory: ./server
+        run: |
+          npm install
+          npm run seed
+        env:
+          KNEXMODE: dev
+      - name: Install client dependencies
         working-directory: ./client
         run: |
           npm install
       - uses: cypress-io/github-action@v2
         with:
-          start: npm run dev
+          start: npm run runFullStack
           wait-on: "http://localhost:3000/"
           wait-on-timeout: 120
           working-directory: ./client
         env:
-          API_URL: https://qa-dot-reqwise.uc.r.appspot.com
+          API_URL: http://localhost:3001
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
+          REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
+          JWT_KEY: ${{secrets.JWT_KEY}}
+          HASHID_KEY: ${{secrets.HASHID_KEY}}
+          KNEXMODE: dev

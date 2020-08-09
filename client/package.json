@@ -16,8 +16,10 @@
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "run-p --race dev cy:run",
-    "testGui": "run-p --race dev cy:open",
+    "runBackend": "cd ../server && npm run dev",
+    "runFullStack": "run-p --race runBackend dev",
+    "test": "run-p --race runBackend dev cy:run",
+    "testGui": "run-p --race runBackend dev cy:open",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
     "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.7.0;buffers@0.1.1;event-stream@0.9.8;png-js@0.1.1\""
