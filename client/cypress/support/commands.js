@@ -3,7 +3,9 @@ import 'cypress-wait-until';
 Cypress.Commands.add("login", () => {
   cy.clearCookie('__session');
   cy.reload();
+  cy.waitForPreload();
   cy.url().should('include', '/login');
+  cy.wait(2000);
   cy.get("#email").click().type('test@reqwise.com');
   cy.get("#pwd").click().type('1234');
   cy.get(".submitButton").click();
