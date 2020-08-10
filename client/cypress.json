@@ -1,7 +1,8 @@
 {
   "baseUrl": "http://localhost:3000",
   "video": false,
+  "screenshotOnRunFailure": false,
   "env": {
-    "RETRIES": 3
+    "RETRIES": 2
   }
 }
