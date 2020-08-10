@@ -13,6 +13,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           PULL_REQUEST_FROM_BRANCH: "staging"
           PULL_REQUEST_BRANCH: "master"
-          FAIL_ON_ERROR: true
           PULL_REQUEST_TITLE: "Update branch master from staging"
           PULL_REQUEST_BODY: "[Preview website](https://reqwise-qa.web.app)"
