@@ -1,12 +1,12 @@
-name: Deploy (production)
+name: Deploy (QA)
 
 on:
   push:
     branches:
-      - master
+      - staging
 
 jobs:
-  firebase-deploy-prod:
+  firebase-deploy-qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
@@ -24,14 +24,15 @@ jobs:
         env:
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
-          API_URL: https://reqwise.uc.r.appspot.com
+          API_URL: https://qa-dot-reqwise.uc.r.appspot.com
       - uses: w9jds/firebase-action@v1.5.0
         with:
           args: deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./client
-  appengine-deploy-prod:
+          PROJECT_ID: reqwise-qa
+  appengine-deploy-qa:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -39,14 +40,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.2
       - name: add env variables to app.yaml
-        run: 'printf "\nenv_variables:\n  KNEXMODE: \"production\"\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  DB_NAME: \"$DB_NAME\"\n  DB_USERNAME: \"$DB_USERNAME\"\n  DB_PASS: \"$DB_PASS\"\n  DB_HOST: \"$DB_HOST\"\n  DB_PORT: $DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
+        run: 'printf "\nenv_variables:\n  KNEXMODE: \"qa\"\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  QA_DB_NAME: \"$QA_DB_NAME\"\n  QA_DB_USERNAME: \"$QA_DB_USERNAME\"\n  QA_DB_PASS: \"$QA_DB_PASS\"\n  QA_DB_HOST: \"$QA_DB_HOST\"\n  QA_DB_PORT: $QA_DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
         shell: bash
         env:
-          DB_NAME: ${{secrets.DB_NAME}}
-          DB_USERNAME: ${{secrets.DB_USERNAME}}
-          DB_PASS: ${{secrets.DB_PASS}}
-          DB_HOST: ${{secrets.DB_HOST}}
-          DB_PORT: ${{secrets.DB_PORT}}
+          QA_DB_NAME: ${{secrets.QA_DB_NAME}}
+          QA_DB_USERNAME: ${{secrets.QA_DB_USERNAME}}
+          QA_DB_PASS: ${{secrets.QA_DB_PASS}}
+          QA_DB_HOST: ${{secrets.QA_DB_HOST}}
+          QA_DB_PORT: ${{secrets.QA_DB_PORT}}
           JWT_KEY: ${{secrets.JWT_KEY}}
           HASHID_KEY: ${{secrets.HASHID_KEY}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
@@ -69,4 +70,4 @@ jobs:
           # This client-secret.json is converted from GCP_SA_KEY.
           gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
           gcloud config set project ${{ secrets.PROJECT_ID }}
-          gcloud app deploy --stop-previous-version --promote --version=staging
+          gcloud app deploy --stop-previous-version --no-promote --version=qa
