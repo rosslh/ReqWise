@@ -66,8 +66,6 @@ describe('Features page', () => {
       .trigger('mousedown', { button: 0 })
       .trigger('dragstart', { dataTransfer });
 
-    cy.waitUntil(() => Cypress.$('.nestedPlaceholder.depth-1').length);
-
     cy.get('.reqWrapper[data-reqgroup="Updated feature"] .nestedPlaceholder.depth-1').eq(0)
       .trigger('mousemove')
       .trigger('mouseover')
@@ -76,6 +74,8 @@ describe('Features page', () => {
       })
       .trigger('drop', { dataTransfer })
       .trigger('mouseup', { button: 0 });
+
+    cy.waitUntil(() => Cypress.$('.nestedPlaceholder.depth-1').length);
 
     cy.contains("li.requirement.depth-1 div.desc", "Nested requirement");
   });
