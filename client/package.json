@@ -14,11 +14,13 @@
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "node __sapper__/build",
-    "cy:run": "sleep 15 && cypress run",
+    "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "runBackend": "cd ../server && npm run dev",
-    "test": "run-p --race runBackend dev cy:run",
-    "testGui": "run-p --race runBackend dev cy:open",
+    "run:client": "npm run dev",
+    "run:backend": "cd ../server && npm run dev",
+    "run:fullStack": "run-p --race run:backend run:client",
+    "test": "server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:run",
+    "testGui": "server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:open",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
     "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.10.1;buffers@0.1.1;event-stream@0.9.8;png-js@0.1.1\""
@@ -90,6 +92,7 @@
   "optionalDependencies": {
     "cypress": "^4.12.1",
     "cypress-plugin-retries": "^1.5.2",
-    "cypress-wait-until": "^1.7.1"
+    "cypress-wait-until": "^1.7.1",
+    "start-server-and-test": "^1.11.3"
   }
 }
