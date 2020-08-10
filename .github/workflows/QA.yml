@@ -16,7 +16,7 @@ jobs:
       - name: Lint client and check licenses
         working-directory: ./client
         run: |
-          npm install
+          npm install --no-optional
           npm run lint
           npm run licenseChecker
       - name: Lint server and check licenses

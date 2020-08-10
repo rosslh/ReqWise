@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./client
         run: |
-          npm install
+          npm install --no-optional
       - name: Build client
         working-directory: ./client
         run: |
@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./client
         run: |
-          npm install
+          npm install --no-optional
       - name: Build client
         working-directory: ./client
         run: |

@@ -54,9 +54,6 @@
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "cssnano": "^4.1.10",
-    "cypress": "^4.12.1",
-    "cypress-plugin-retries": "^1.5.2",
-    "cypress-wait-until": "^1.7.1",
     "date-fns": "^2.12.0",
     "eslint": "^7.1.0",
     "eslint-plugin-svelte3": "^2.7.3",
@@ -89,5 +86,10 @@
     "svelte-select": "^3.10.1",
     "sveltejs-tippy": "^3.0.0",
     "text-diff": "^1.0.1"
+  },
+  "optionalDependencies": {
+    "cypress": "^4.12.1",
+    "cypress-plugin-retries": "^1.5.2",
+    "cypress-wait-until": "^1.7.1"
   }
 }
