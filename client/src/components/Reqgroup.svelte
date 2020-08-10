@@ -66,7 +66,7 @@
     requirements
       .filter((x) => {
         let currentReq = x;
-        while (currentReq.parent_requirement_id) {
+        while (currentReq && currentReq.parent_requirement_id) {
           if (
             currentReq.id === req ||
             currentReq.parent_requirement_id === req
@@ -81,10 +81,10 @@
       })
       .forEach((x) => illegalParents.push(x.id));
 
+    const reqObject = requirements.find((x) => x.id === req);
+
     // req's parent
-    illegalParents.push(
-      requirements.find((x) => x.id === req).parent_requirement_id || -1
-    );
+    illegalParents.push((reqObject && reqObject.parent_requirement_id) || -1);
 
     return illegalParents;
   };
