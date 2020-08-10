@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@google-cloud/connect-firestore": "^1.0.6",
-    "@google-cloud/firestore": "^3.7.5",
+    "@google-cloud/firestore": "^3.8.6",
     "@shopify/draggable": "^1.0.0-beta.8",
     "body-parser": "^1.19.0",
     "compression": "^1.7.1",
