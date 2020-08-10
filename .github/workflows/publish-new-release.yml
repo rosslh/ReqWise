@@ -55,15 +55,15 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Merge release into dev branch
+      - name: Merge release into staging branch
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           head: release/${{ env.RELEASE_VERSION }}
-          base: dev
-          title: Merge release ${{ env.RELEASE_VERSION }} into dev branch
+          base: staging
+          title: Merge release ${{ env.RELEASE_VERSION }} into staging branch
           body: |
-            This PR merges the release branch for ${{ env.RELEASE_VERSION }} back into dev.
-            This happens to ensure that the updates that happend on the release branch, i.e. CHANGELOG and manifest updates are also present on the dev branch.
+            This PR merges the release branch for ${{ env.RELEASE_VERSION }} back into staging.
+            This happens to ensure that the updates that happend on the release branch, i.e. CHANGELOG and manifest updates are also present on the staging branch.
       # if needed, you can checkout the latest master here, build artifacts and publish / deploy them somewhere
       # the create-release action has an output `upload_url` output that you can use to upload assets
