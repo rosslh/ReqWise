@@ -38,21 +38,22 @@ jobs:
           postgresql db: "reqwise"
           postgresql user: "postgres"
           postgresql password: "1234"
-      - name: Install server dependencies and seed database
+      - name: Install server dependencies
         working-directory: ./server
         run: |
           npm install
-          npm run seed
         env:
           KNEXMODE: dev
       - name: Install client dependencies
         working-directory: ./client
         run: |
           npm install
-      - name: Run tests
-        working-directory: ./client
-        run: |
-          npm run test
+      - name: Seed database and run tests
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 20
+          max_attempts: 2
+          command: cd client && npm run test
         env:
           API_URL: http://localhost:3001
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
