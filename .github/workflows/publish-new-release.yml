@@ -60,7 +60,7 @@ jobs:
       - name: Merge release into staging branch
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           head: release/${{ env.RELEASE_VERSION }}
           base: staging
           title: Merge release ${{ env.RELEASE_VERSION }} into staging branch
