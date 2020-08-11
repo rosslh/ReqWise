@@ -44,7 +44,10 @@
 
 <style>
   .personaInfoIcon {
-    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    height: 1.8rem;
+    width: 1.5rem;
+    display: inline-block;
   }
   :global(.personaInfoIcon svg) {
     height: 1.5rem;

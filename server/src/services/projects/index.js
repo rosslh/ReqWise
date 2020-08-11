@@ -172,6 +172,7 @@ module.exports = async function (fastify, opts) {
             isPrioritized: { type: "boolean" },
             is_draft: { type: "boolean" },
             updated_at: { type: "string" },
+            latestReviewStatus: { type: "string" },
             requirements: {
               type: "array", items: {
                 type: "object",
@@ -259,9 +260,13 @@ module.exports = async function (fastify, opts) {
                 .join("account as updater", "updater.id", "reqversion.updated_by")
             })
         }).select('*').from('ancestors').orderBy('hierarchical_id');
+
+        const latestReview = await fastify.getLatestReview("reqgroup", g.id);
+
         return ({
           ...g,
-          requirements
+          requirements,
+          latestReviewStatus: latestReview && latestReview.status
         });
       }));
 
@@ -293,12 +298,20 @@ module.exports = async function (fastify, opts) {
       schema: getProjectFilesSchema,
     },
     async function (request, reply) {
-      const result = await fastify.knex
+      let result = await fastify.knex
         .from("file")
         .select("file.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
         .where({ "file.project_id": request.params.projectId })
         .orderBy("ppuid", "asc");
+
+      result = await Promise.all(result.map(async file => {
+        const latestReview = await fastify.getLatestReview("file", file.id);
+        return {
+          ...file,
+          latestReviewStatus: latestReview && latestReview.status
+        };
+      }));
 
       const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
       return result.filter(x => scopes.includes("member") || !x.is_draft);
@@ -724,8 +737,8 @@ module.exports = async function (fastify, opts) {
       const result = await Promise.all(questionnaires.map(async q => {
         const numPrompts = (await fastify.knex.from("brainstormPrompt").select("*").where("brainstormForm_id", q.id)).length;
         const numResponses = (await fastify.knex.from("brainstormResponse").select("*").join("brainstormPrompt", "brainstormPrompt.id", "brainstormResponse.brainstormPrompt_id").where("brainstormForm_id", q.id)).length;
-
-        return { ...q, numPrompts, numResponses };
+        const latestReview = await fastify.getLatestReview("brainstormForm", q.id);
+        return { ...q, numPrompts, numResponses, latestReviewStatus: latestReview && latestReview.status };
       }));
 
       const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
@@ -794,12 +807,17 @@ module.exports = async function (fastify, opts) {
       schema: getProjectUserclassesSchema,
     },
     async function (request, reply) {
-      const result = await fastify.knex
+      let result = await fastify.knex
         .from("userclass")
         .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
         .where({ "userclass.project_id": request.params.projectId })
         .orderBy("ppuid", "asc");
+
+      result = await Promise.all(result.map(async userclass => {
+        const latestReview = await fastify.getLatestReview("userclass", userclass.id);
+        return { ...userclass, latestReviewStatus: latestReview && latestReview.status };
+      }));
 
       const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
       return result.filter(x => scopes.includes("member") || !x.is_draft);

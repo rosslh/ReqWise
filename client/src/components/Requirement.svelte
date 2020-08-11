@@ -173,11 +173,12 @@
 
   .statusIconWrapper {
     margin-right: 0.5rem;
+    width: 1.5rem;
+    height: 1.8rem;
   }
   :global(.statusIconWrapper svg) {
     width: 1.5rem;
     height: 1.5rem;
-    margin-top: 0.8rem;
   }
 
   button,

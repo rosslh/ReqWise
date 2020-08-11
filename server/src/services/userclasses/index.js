@@ -23,12 +23,14 @@ module.exports = async function (fastify, opts) {
       schema: getUserclassSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+      const userclass = await fastify.knex
         .from("userclass")
         .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
         .where("userclass.id", request.params.userclassId)
         .first();
+      const latestReview = await fastify.getLatestReview("userclass", request.params.userclassId);
+      return { ...userclass, latestReviewStatus: latestReview && latestReview.status };
     }
   );
 

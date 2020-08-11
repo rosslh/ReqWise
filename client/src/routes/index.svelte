@@ -14,5 +14,4 @@
 <div class="contentWrapper">
   <h1>ReqWise</h1>
   <p class="first">The next-gen requirements management tool.</p>
-  <p>Coming Summer 2020.</p>
 </div>

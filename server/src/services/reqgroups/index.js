@@ -28,6 +28,7 @@ module.exports = async function (fastify, opts) {
           isMaxOneRequirement: { type: "boolean" },
           isPrioritized: { type: "boolean" },
           is_draft: { type: "boolean" },
+          latestReviewStatus: { type: "string" },
           requirements: {
             type: "array", items: {
               type: "object",
@@ -114,9 +115,12 @@ module.exports = async function (fastify, opts) {
           })
       }).select('*').from('ancestors').orderBy('hierarchical_id');
 
+      const latestReview = await fastify.getLatestReview("reqgroup", request.params.reqgroupId);
+
       return ({
         ...reqgroup,
-        requirements
+        requirements,
+        latestReviewStatus: latestReview && latestReview.status
       });
     }
   );
