@@ -64,6 +64,6 @@ jobs:
           title: Merge release ${{ env.RELEASE_VERSION }} into staging branch
           body: |
             This PR merges the release branch for ${{ env.RELEASE_VERSION }} back into staging.
-            This happens to ensure that the updates that happend on the release branch, i.e. CHANGELOG and manifest updates are also present on the staging branch.
+            This happens to ensure that the updates that happened on the release branch, i.e. CHANGELOG updates are also present on the staging branch.
       # if needed, you can checkout the latest master here, build artifacts and publish / deploy them somewhere
       # the create-release action has an output `upload_url` output that you can use to upload assets
