@@ -39,7 +39,7 @@ jobs:
           curl \
             -X PATCH \
             -H 'Accept: application/vnd.github.v3+json' \
-            -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
             $RELEASE_ISSUE_URL \
             -d '{"state":"closed"}'
