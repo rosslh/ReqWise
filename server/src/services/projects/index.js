@@ -932,7 +932,7 @@ module.exports = async function (fastify, opts) {
     }
   );
 
-  const getTeamInvitesSchema = {
+  const getProjectInvitesSchema = {
     queryString: {},
     params: {
       type: "object",
@@ -966,7 +966,7 @@ module.exports = async function (fastify, opts) {
     "/:projectId/invites",
     {
       preValidation: [fastify.authenticate, fastify.hasProjectAccess],
-      schema: getTeamInvitesSchema,
+      schema: getProjectInvitesSchema,
     },
     async function (request, reply) {
       return await fastify.knex
@@ -1103,6 +1103,46 @@ module.exports = async function (fastify, opts) {
         .where({ project_id: request.params.projectId, id: request.params.inviteId })
         .del();
       return ["success"];
+    }
+  );
+
+  const getStakeholderReviewsSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:projectId/reviews",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getStakeholderReviewsSchema,
+    },
+    async function (request, reply) {
+      let reviews = await fastify.knex
+        .from("stakeholderReview")
+        .select("*", "stakeholderReview.id as id")
+        .where("stakeholderReview.project_id", request.params.projectId);
+
+      reviews = await Promise.all(reviews.map(async review => {
+        const responses = await fastify.knex
+          .from("stakeholderReviewResponse")
+          .select("*")
+          .where("stakeholderReviewResponse.stakeholderReview_id", review.id);
+        return { ...review, responses };
+      }));
+      return reviews;
     }
   );
 };
