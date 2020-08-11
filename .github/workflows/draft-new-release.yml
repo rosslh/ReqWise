@@ -54,7 +54,6 @@ jobs:
           head: release/${{ env.RELEASE_VERSION }}
           base: master
           title: ${{ github.event.issue.title }}
-          reviewers: ${{ github.event.issue.user.login }} # By default, we request a review from the person who opened the issue. You can replace this with a static list of users.
           # Write a nice message to the user.
           # We are claiming things here based on the `publish-new-release.yml` workflow.
           # You should obviously adopt it to say the truth depending on your release workflow :)
