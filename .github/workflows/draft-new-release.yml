@@ -14,8 +14,6 @@ jobs:
     if: startsWith(github.event.issue.title, 'Release version') && contains(github.event.issue.labels.*.name, 'release') && contains('rosslh', github.event.issue.user.login)
     steps:
       - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
       - name: Extract version from issue title
         run: |
           TITLE="${{ github.event.issue.title }}"
@@ -52,7 +50,7 @@ jobs:
       - name: Create pull request
         uses: thomaseizinger/create-pull-request@1.0.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           head: release/${{ env.RELEASE_VERSION }}
           base: master
           title: ${{ github.event.issue.title }}

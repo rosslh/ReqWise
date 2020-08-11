@@ -39,7 +39,7 @@ jobs:
           curl \
             -X PATCH \
             -H 'Accept: application/vnd.github.v3+json' \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
             -H "Content-Type: application/json" \
             $RELEASE_ISSUE_URL \
             -d '{"state":"closed"}'
@@ -47,7 +47,7 @@ jobs:
       - name: Create Release
         uses: thomaseizinger/create-release@1.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
           target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
           tag_name: ${{ env.RELEASE_VERSION }}
