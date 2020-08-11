@@ -66,4 +66,5 @@ jobs:
           title: Merge release ${{ env.RELEASE_VERSION }} into staging branch
           body: |
             This PR merges the release branch for ${{ env.RELEASE_VERSION }} back into staging.
+            
             This happens to ensure that the updates that happened on the release branch, e.g. bug fixes are also present on the staging branch.

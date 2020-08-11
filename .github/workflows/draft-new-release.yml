@@ -26,12 +26,14 @@ jobs:
       - name: Create release branch
         run: git checkout -b release/${{ env.RELEASE_VERSION }}
 
+
       # In order to make a commit, we need to initialize a user.
       # You may choose to write something less generic here if you want, it doesn't matter functionality wise.
       - name: Initialize mandatory git config
         run: |
           git config user.name "GitHub actions"
           git config user.email noreply@github.com
+
 
       - name: Push new branch
         run: git push origin release/${{ env.RELEASE_VERSION }}
@@ -47,5 +49,6 @@ jobs:
             Hi @${{ github.event.issue.user.login }}!
 
             This PR was created in response to this release issue: #${{ github.event.issue.number }}.
+
 
             Merging this PR will update the master branch and create a GitHub release.
