@@ -35,8 +35,7 @@ jobs:
       - name: Close release issue
         run: |
           RELEASE_ISSUE_URL=$(
-            curl https://api.github.com/repos/${{ github.repository }}/issues\?labels=release\&state=open -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}"
-            | jq -r '.[0].url'
+            curl https://api.github.com/repos/${{ github.repository }}/issues\?labels=release\&state=open -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" | jq -r '.[0].url'
           )
 
           curl \
