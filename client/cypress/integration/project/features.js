@@ -61,8 +61,11 @@ describe('Features page', () => {
     cy.contains("li.requirement.depth-0 div.desc", "Nested requirement");
 
     const dataTransfer = new DataTransfer();
-    cy.get('.requirement[data-reqdesc="Nested requirement"]').find('.reqHandle').invoke('show').invoke('attr', 'style', 'visibility: visible').should('be.visible');
-    cy.get('.requirement[data-reqdesc="Nested requirement"]').find('.reqHandle')
+    cy.get('.requirement[data-reqdesc="Nested requirement"]')
+      .find('.reqHandle')
+      .invoke('show')
+      .invoke('attr', 'style', 'visibility: visible')
+      .should('be.visible')
       .trigger('mousedown', { button: 0 })
       .trigger('dragstart', { dataTransfer });
 
