@@ -18,7 +18,7 @@
         name,
         description: desc,
         persona,
-        importance: importance.value
+        importance: importance.value,
       },
       $session.user && $session.user.jwt
     );
@@ -26,12 +26,15 @@
     close();
   };
 
-  const capitalizeFirstLetter = str =>
+  const capitalizeFirstLetter = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
-  const importanceOptions = ["favored", "disfavored", "ignored", "other"].map(
-    attr => ({ value: attr, label: capitalizeFirstLetter(attr) })
-  );
+  const importanceOptions = [
+    "favored",
+    "disfavored",
+    "ignored",
+    "other",
+  ].map((attr) => ({ value: attr, label: capitalizeFirstLetter(attr) }));
 
   let importance = importanceOptions[0];
   let name = "";
@@ -45,7 +48,10 @@
   }
 
   .personaInfoIcon {
-    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    height: 1.8rem;
+    width: 1.5rem;
+    display: inline-block;
   }
   :global(.personaInfoIcon svg) {
     height: 1.5rem;

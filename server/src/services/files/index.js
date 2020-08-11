@@ -27,7 +27,7 @@ module.exports = async function (fastify, opts) {
       schema: getFileSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+      const file = await fastify.knex
         .from("file")
         .select("file.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
@@ -35,6 +35,8 @@ module.exports = async function (fastify, opts) {
           "file.id": request.params.fileId,
         })
         .first();
+      const latestReview = await fastify.getLatestReview("reqgroup", request.params.fileId);
+      return { ...file, latestReviewStatus: latestReview && latestReview.status };
     }
   );
 

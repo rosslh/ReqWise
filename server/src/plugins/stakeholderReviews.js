@@ -14,6 +14,7 @@ module.exports = fp(function (fastify, opts, done) {
         fastify.knex.raw(
           `(select max(created_at) from "stakeholderReview" where "stakeholderReview"."${foreignId}"=${entityId})`
         ))
+      .first();
   });
 
   fastify.decorate("createPendingReview", async function (entityType, entityId) {

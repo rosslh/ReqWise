@@ -37,9 +37,9 @@ module.exports = async function (fastify, opts) {
 
       prompts = await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
 
-      const latestReviewStatus = await fastify.getLatestReview("brainstormForm", request.params.questionnaireId);
+      const latestReview = await fastify.getLatestReview("brainstormForm", request.params.questionnaireId);
 
-      return { ...questionnaire, prompts, latestReviewStatus };
+      return { ...questionnaire, prompts, latestReviewStatus: latestReview && latestReview.status };
     }
   );
 
