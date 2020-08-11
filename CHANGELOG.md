@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.1] - 2020-08-11
+
 ## [v1.0.0] - 2020-08-11
 
-[Unreleased]: https://github.com/rosslh/ReqWise/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/rosslh/ReqWise/compare/v1.0.1...HEAD
+
+[v1.0.1]: https://github.com/rosslh/ReqWise/compare/v1.0.0...v1.0.1
 
 [v1.0.0]: https://github.com/rosslh/ReqWise/compare/35e4d056bf35102a97fb568dd201139e491ea14c...v1.0.0
