@@ -33,8 +33,8 @@ jobs:
       # You may choose to write something less generic here if you want, it doesn't matter functionality wise.
       - name: Initialize mandatory git config
         run: |
-          git config user.name "GitHub actions"
-          git config user.email noreply@github.com
+          git config user.name "Ross Hill"
+          git config user.email ross@rosshill.ca
 
       - name: Commit changelog and manifest files
         id: make-commit
@@ -54,9 +54,6 @@ jobs:
           head: release/${{ env.RELEASE_VERSION }}
           base: master
           title: ${{ github.event.issue.title }}
-          # Write a nice message to the user.
-          # We are claiming things here based on the `publish-new-release.yml` workflow.
-          # You should obviously adopt it to say the truth depending on your release workflow :)
           body: |
             Hi @${{ github.event.issue.user.login }}!
 
