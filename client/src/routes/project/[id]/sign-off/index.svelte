@@ -12,6 +12,7 @@
 
 <script>
   import { get } from "../../../../api";
+  import StakeholderReview from "../../../../components/StakeholderReview.svelte";
   export let reviews;
 </script>
 
@@ -23,5 +24,7 @@
   </p>
 </section>
 <section class="contentWrapper">
-  <pre>{JSON.stringify(reviews, null, 2)}</pre>
+  {#each reviews as review (review.id)}
+    <StakeholderReview {review} />
+  {/each}
 </section>
