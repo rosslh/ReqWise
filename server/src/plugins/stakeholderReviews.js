@@ -46,10 +46,21 @@ module.exports = fp(function (fastify, opts, done) {
       .from("stakeholderReview")
       .select("*", "stakeholderReview.id as id")
       .where("id", review_id).first();
-    return await fastify.knex.from(review.entityType).select("*", "readable_id as ppuid")
-      .where(`${review.entityType}.id`, review[`entity_${review.entityType}_id`])
+
+    const entityId = review[`entity_${review.entityType}_id`];
+
+    const entity = await fastify.knex.from(review.entityType).select("*", "readable_id as ppuid")
+      .where(`${review.entityType}.id`, entityId)
       .join("per_project_unique_id", "per_project_unique_id.id", "ppuid_id")
       .first();
+
+    const latestReview = await fastify.getLatestReview(review.entityType, entityId);
+
+    return {
+      ...entity,
+      latestReviewStatus: latestReview && latestReview.status
+    };
+
   });
 
   done();

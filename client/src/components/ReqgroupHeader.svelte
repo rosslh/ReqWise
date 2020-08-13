@@ -4,6 +4,7 @@
   import ReqgroupDescriptionModal from "./ReqgroupDescriptionModal.svelte";
   import StakeholderStatus from "./StakeholderStatus.svelte";
   export let reqgroup;
+  export let hideStakeholderStatus;
 
   const showDescriptionModal = () => {
     modalContent.set(ReqgroupDescriptionModal);
@@ -65,9 +66,11 @@
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
-  <StakeholderStatus
-    isDraft={reqgroup.is_draft}
-    latestReviewStatus={reqgroup.latestReviewStatus} />
+  {#if !hideStakeholderStatus}
+    <StakeholderStatus
+      isDraft={reqgroup.is_draft}
+      latestReviewStatus={reqgroup.latestReviewStatus} />
+  {/if}
   {#if reqgroup.description}
     <button on:click={showDescriptionModal}>
       <MdInfoOutline />

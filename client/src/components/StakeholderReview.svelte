@@ -1,6 +1,8 @@
 <script>
   export let review;
   import StakeholderStatus from "./StakeholderStatus.svelte";
+  import ReqGroup from "./ReqGroup.svelte";
+
   import CommentEditor from "./CommentEditor.svelte";
 
   let quillDelta;
@@ -8,7 +10,7 @@
 
   const postResponse = () => {};
 
-  $: entityType = (() => {
+  $: entityTypeLabel = (() => {
     const type = review.entityType;
     if (type === "reqgroup") {
       return review.reviewedEntity.type;
@@ -45,7 +47,7 @@
   <div class="panelHeader">
     <div>
       <h3>
-        Reviewing {entityType}
+        Reviewing {entityTypeLabel}
         <span class="ppuid">#{ppuid}</span>
       </h3>
     </div>
@@ -53,7 +55,11 @@
       <StakeholderStatus latestReviewStatus={review.status} isDraft={false} />
     </div>
   </div>
-  <div>proposed requirements...</div>
+  <div>
+    {#if review.entityType === 'reqgroup'}
+      <ReqGroup reqgroup={review.reviewedEntity} hideStakeholderStatus />
+    {/if}
+  </div>
   <div>
     <button>Approve</button>
     <button class="button-danger button-outline">Request changes</button>
