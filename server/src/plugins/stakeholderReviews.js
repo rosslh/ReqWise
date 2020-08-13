@@ -41,5 +41,16 @@ module.exports = fp(function (fastify, opts, done) {
       });
   });
 
+  fastify.decorate("getReviewedEntity", async function (review_id) {
+    const review = await fastify.knex
+      .from("stakeholderReview")
+      .select("*", "stakeholderReview.id as id")
+      .where("id", review_id).first();
+    return await fastify.knex.from(review.entityType).select("*", "readable_id as ppuid")
+      .where(`${review.entityType}.id`, review[`entity_${review.entityType}_id`])
+      .join("per_project_unique_id", "per_project_unique_id.id", "ppuid_id")
+      .first();
+  });
+
   done();
 });

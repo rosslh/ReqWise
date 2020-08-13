@@ -1140,7 +1140,8 @@ module.exports = async function (fastify, opts) {
           .from("stakeholderReviewResponse")
           .select("*")
           .where("stakeholderReviewResponse.stakeholderReview_id", review.id);
-        return { ...review, responses };
+        const reviewedEntity = await fastify.getReviewedEntity(review.id,);
+        return { ...review, responses, reviewedEntity };
       }));
       return reviews;
     }

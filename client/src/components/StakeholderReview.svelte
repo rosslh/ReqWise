@@ -7,6 +7,16 @@
   let plaintextComment = "";
 
   const postResponse = () => {};
+
+  $: entityType = (() => {
+    const type = review.entityType;
+    if (type === "reqgroup") {
+      return review.reviewedEntity.type;
+    } else {
+      return type;
+    }
+  })();
+  $: ppuid = review.reviewedEntity.ppuid; //review[entityType].ppuid;
 </script>
 
 <style>
@@ -24,12 +34,20 @@
   .panel h4 {
     font-size: 1.6rem;
   }
+
+  .ppuid {
+    color: var(--secondaryText);
+    font-weight: 300;
+  }
 </style>
 
 <div class="panel">
   <div class="panelHeader">
     <div>
-      <h3>Reviewing</h3>
+      <h3>
+        Reviewing {entityType}
+        <span class="ppuid">#{ppuid}</span>
+      </h3>
     </div>
     <div>
       <StakeholderStatus latestReviewStatus={review.status} isDraft={false} />
