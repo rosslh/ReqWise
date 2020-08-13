@@ -49,7 +49,8 @@ module.exports = fp(function (fastify, opts, done) {
 
     const entityId = review[`entity_${review.entityType}_id`];
 
-    const entity = await fastify.knex.from(review.entityType).select("*", "readable_id as ppuid")
+    const entity = await fastify.knex.from(review.entityType)
+      .select("*", "readable_id as ppuid", `${review.entityType}.id as id`)
       .where(`${review.entityType}.id`, entityId)
       .join("per_project_unique_id", "per_project_unique_id.id", "ppuid_id")
       .first();

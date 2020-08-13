@@ -4,6 +4,9 @@
   export let projectId;
   export let unlinkRequirement;
 
+  export let hideStakeholderStatus = false;
+  $: showEditButtons = !userclass.latestReviewStatus;
+
   import { modalContent, modalProps } from "../stores.js";
   import { get, del } from "../api.js";
   import DeleteUserclassModal from "./DeleteUserclassModal.svelte";
@@ -187,9 +190,11 @@
       </h3>
     </div>
     <div class="right">
-      <StakeholderStatus
-        isDraft={userclass.is_draft}
-        latestReviewStatus={userclass.latestReviewStatus} />
+      {#if !hideStakeholderStatus}
+        <StakeholderStatus
+          isDraft={userclass.is_draft}
+          latestReviewStatus={userclass.latestReviewStatus} />
+      {/if}
       <span
         class="importanceLabel"
         style={`background-color: var(--${getImportanceColor(userclass.importance)})`}>
@@ -224,7 +229,7 @@
     {#await champions}
       <Skeleton rows={2} />
     {:then result}
-      {#if !result.length}
+      {#if showEditButtons && !result.length}
         <div class="championEmptyState">
           <button
             class="button button-small button-outline"
@@ -285,22 +290,24 @@
           Requirements
         </a>
       {/if}
-      <button
-        on:click={editUserclass}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegEdit />
-        </div>
-        Edit details
-      </button>
-      <button
-        on:click={deleteUserclass}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegTrashAlt />
-        </div>
-        Delete
-      </button>
+      {#if showEditButtons}
+        <button
+          on:click={editUserclass}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegEdit />
+          </div>
+          Edit details
+        </button>
+        <button
+          on:click={deleteUserclass}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegTrashAlt />
+          </div>
+          Delete
+        </button>
+      {/if}
     </div>
   </div>
 </div>

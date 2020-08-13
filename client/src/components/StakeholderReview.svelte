@@ -1,12 +1,18 @@
 <script>
+  import { stores } from "@sapper/app";
+
   export let review;
   import StakeholderStatus from "./StakeholderStatus.svelte";
   import ReqGroup from "./ReqGroup.svelte";
+  import FilePreview from "./FilePreview.svelte";
+  import Userclass from "./Userclass.svelte";
 
   import CommentEditor from "./CommentEditor.svelte";
 
   let quillDelta;
   let plaintextComment = "";
+
+  const { page } = stores();
 
   const postResponse = () => {};
 
@@ -41,6 +47,14 @@
     color: var(--secondaryText);
     font-weight: 300;
   }
+
+  .entityWrapper {
+    background-color: var(--backdrop);
+    margin: -1.25rem -1.5rem 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 0.1rem solid var(--borderColor);
+    border-bottom: 0.1rem solid var(--borderColor);
+  }
 </style>
 
 <div class="panel">
@@ -55,9 +69,14 @@
       <StakeholderStatus latestReviewStatus={review.status} isDraft={false} />
     </div>
   </div>
-  <div>
+  <div class="entityWrapper">
     {#if review.entityType === 'reqgroup'}
       <ReqGroup reqgroup={review.reviewedEntity} hideStakeholderStatus />
+    {:else if review.entityType === 'userclass'}
+      <Userclass
+        hideStakeholderStatus
+        userclass={review.reviewedEntity}
+        projectId={$page.params.id} />
     {/if}
   </div>
   <div>
