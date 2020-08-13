@@ -1,4 +1,5 @@
 <script context="module">
+  import { get } from "../../../../api";
   export async function preload({ params }, { user }) {
     if (user && user.jwt) {
       const reviews = await get(
@@ -11,7 +12,6 @@
 </script>
 
 <script>
-  import { get } from "../../../../api";
   import StakeholderReview from "../../../../components/StakeholderReview.svelte";
   export let reviews;
 </script>
