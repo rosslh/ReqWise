@@ -737,8 +737,7 @@ module.exports = async function (fastify, opts) {
       const result = await Promise.all(questionnaires.map(async q => {
         const numPrompts = (await fastify.knex.from("brainstormPrompt").select("*").where("brainstormForm_id", q.id)).length;
         const numResponses = (await fastify.knex.from("brainstormResponse").select("*").join("brainstormPrompt", "brainstormPrompt.id", "brainstormResponse.brainstormPrompt_id").where("brainstormForm_id", q.id)).length;
-        const latestReview = await fastify.getLatestReview("brainstormForm", q.id);
-        return { ...q, numPrompts, numResponses, latestReviewStatus: latestReview && latestReview.status };
+        return { ...q, numPrompts, numResponses };
       }));
 
       const scopes = await fastify.getScopes(request.user.id, request.params.projectId);

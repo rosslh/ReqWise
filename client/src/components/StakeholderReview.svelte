@@ -31,6 +31,7 @@
   .panelHeader {
     display: flex;
     justify-content: space-between;
+    background-color: var(--background1);
   }
 
   .panelHeader h3 {
@@ -49,7 +50,7 @@
   }
 
   .entityWrapper {
-    background-color: var(--backdrop);
+    background-color: var(--background2);
     margin: -1.25rem -1.5rem 1.25rem;
     padding: 1.25rem 1.5rem;
     border-top: 0.1rem solid var(--borderColor);
