@@ -3,6 +3,8 @@
   export let file;
   export let projectId;
   export let unlinkRequirement;
+  export let hideStakeholderStatus = false;
+  $: showEditButtons = !file.latestReviewStatus;
 
   import { stores } from "@sapper/app";
 
@@ -168,15 +170,17 @@
   <div class="diagramWrapper">
     {#if file.type === 'diagram'}
       <div class="fileButtonWrapper">
-        <a
-          rel="prefetch"
-          title="Edit"
-          href={`/project/${projectId}/files/${file.id}/edit`}
-          class="button fileButton">
-          <div class="fileIconWrapper">
-            <MdEdit />
-          </div>
-        </a>
+        {#if showEditButtons}
+          <a
+            rel="prefetch"
+            title="Edit"
+            href={`/project/${projectId}/files/${file.id}/edit`}
+            class="button fileButton">
+            <div class="fileIconWrapper">
+              <MdEdit />
+            </div>
+          </a>
+        {/if}
       </div>
       {@html file.svg}
     {:else if file.type === 'externalResource'}
@@ -194,14 +198,16 @@
             <MdFileDownload />
           </div>
         </a>
-        <button
-          title="Upload new version"
-          on:click={uploadNewVersion}
-          class="button fileButton">
-          <div class="fileIconWrapper">
-            <MdCloudUpload />
-          </div>
-        </button>
+        {#if showEditButtons}
+          <button
+            title="Upload new version"
+            on:click={uploadNewVersion}
+            class="button fileButton">
+            <div class="fileIconWrapper">
+              <MdCloudUpload />
+            </div>
+          </button>
+        {/if}
       </div>
       {#if isImageFile(file.fileName)}
         <img
@@ -225,9 +231,11 @@
       </a>
       <span class="filePpuid">#{file.ppuid}</span>
     </h3>
-    <StakeholderStatus
-      isDraft={file.is_draft}
-      latestReviewStatus={file.latestReviewStatus} />
+    {#if !hideStakeholderStatus}
+      <StakeholderStatus
+        isDraft={file.is_draft}
+        latestReviewStatus={file.latestReviewStatus} />
+    {/if}
   </div>
   <div class="textContent">
     <p>{file.description}</p>
@@ -253,21 +261,23 @@
         Requirements
       </a>
     {/if}
-    <button
-      on:click={() => editFileDetails(file)}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegEdit />
-      </div>
-      Edit details
-    </button>
-    <button
-      on:click={deleteFile}
-      class="button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <FaRegTrashAlt />
-      </div>
-      Delete
-    </button>
+    {#if showEditButtons}
+      <button
+        on:click={() => editFileDetails(file)}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegEdit />
+        </div>
+        Edit details
+      </button>
+      <button
+        on:click={deleteFile}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegTrashAlt />
+        </div>
+        Delete
+      </button>
+    {/if}
   </div>
 </div>

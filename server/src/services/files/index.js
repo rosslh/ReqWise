@@ -91,16 +91,19 @@ module.exports = async function (fastify, opts) {
         .first();
       let id;
       if (currentFile.type === "upload") {
-        const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
-        const uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
-        const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
-        await gcloudFile.save(data);
-        await gcloudFile.makePublic();
-        try {
-          await storage.bucket('user-file-storage').file(currentFile.fileName).delete();
-        }
-        catch (e) {
-          console.error(e);
+        let uploadedFileName;
+        if (file) {
+          const data = Buffer.from(file.replace(/^data:.*\/.*;base64,/, ''), 'base64');
+          uploadedFileName = `${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9_. -]/g, '')}`; // remove illegal characters
+          const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
+          await gcloudFile.save(data);
+          await gcloudFile.makePublic();
+          try {
+            await storage.bucket('user-file-storage').file(currentFile.fileName).delete();
+          }
+          catch (e) {
+            console.error(e);
+          }
         }
 
         ([id] = await fastify

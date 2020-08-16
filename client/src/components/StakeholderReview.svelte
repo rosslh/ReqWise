@@ -78,6 +78,11 @@
         hideStakeholderStatus
         userclass={review.reviewedEntity}
         projectId={$page.params.id} />
+    {:else if review.entityType === 'file'}
+      <FilePreview
+        hideStakeholderStatus
+        file={review.reviewedEntity}
+        projectId={$page.params.id} />
     {/if}
   </div>
   <div>
