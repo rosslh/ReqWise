@@ -3,7 +3,7 @@
 
   export let review;
   import StakeholderStatus from "./StakeholderStatus.svelte";
-  import ReqGroup from "./ReqGroup.svelte";
+  import Reqgroup from "./Reqgroup.svelte";
   import FilePreview from "./FilePreview.svelte";
   import Userclass from "./Userclass.svelte";
 
@@ -72,7 +72,7 @@
   </div>
   <div class="entityWrapper">
     {#if review.entityType === 'reqgroup'}
-      <ReqGroup reqgroup={review.reviewedEntity} hideStakeholderStatus />
+      <Reqgroup reqgroup={review.reviewedEntity} hideStakeholderStatus />
     {:else if review.entityType === 'userclass'}
       <Userclass
         hideStakeholderStatus
