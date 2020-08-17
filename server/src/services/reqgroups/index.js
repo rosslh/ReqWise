@@ -62,66 +62,8 @@ module.exports = async function (fastify, opts) {
       schema: getReqgroupSchema,
     },
     async function (request, reply) {
-      const reqgroup = await fastify.knex
-        .from("reqgroup")
-        .select("*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id")
-        .where({
-          "reqgroup.id": request.params.reqgroupId,
-        })
-        .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
-        .first();
 
-      const getReqversion = function () {
-        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
-          "reqversion.created_at",
-          "=",
-          fastify.knex.raw(
-            "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
-          )
-        );
-      };
-
-      const selectColumns = [
-        "requirement.id",
-        "requirement.parent_requirement_id",
-        "requirement.reqgroup_id",
-        "requirement.project_id",
-        "reqversion.id as reqversion_id",
-        "reqversion.account_id",
-        "reqversion.priority",
-        "reqversion.status",
-        "reqversion.description",
-        "reqversion.created_at",
-        "reqversion.updated_at",
-        "per_project_unique_id.readable_id as ppuid",
-        "account.name as authorName",
-        "updater.name as updaterName"
-      ];
-
-      const requirements = await fastify.knex.withRecursive('ancestors', (qb) => {
-        qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
-          .where('requirement.parent_requirement_id', null)
-          .andWhere("reqgroup_id", request.params.reqgroupId)
-          .join("reqversion", getReqversion)
-          .join("account", "account.id", "reqversion.account_id")
-          .join("account as updater", "updater.id", "reqversion.updated_by")
-          .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
-          .union((qb) => {
-            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', LPAD(per_project_unique_id.readable_id::text, 5, '0')) as hierarchical_id")).from('requirement')
-              .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
-              .join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
-              .join("account", "account.id", "reqversion.account_id")
-              .join("account as updater", "updater.id", "reqversion.updated_by")
-          })
-      }).select('*').from('ancestors').orderBy('hierarchical_id');
-
-      const latestReview = await fastify.getLatestReview("reqgroup", request.params.reqgroupId);
-
-      return ({
-        ...reqgroup,
-        requirements,
-        latestReviewStatus: latestReview && latestReview.status
-      });
+      return await fastify.getReqgroup(request.params.reqgroupId);
     }
   );
 
@@ -281,49 +223,7 @@ module.exports = async function (fastify, opts) {
       schema: getRequirementsSchema,
     },
     async function (request, reply) {
-      const getReqversion = function () {
-        this.on("requirement.id", "=", "reqversion.requirement_id").andOn(
-          "reqversion.created_at",
-          "=",
-          fastify.knex.raw(
-            "(select max(created_at) from reqversion where reqversion.requirement_id = requirement.id)"
-          )
-        );
-      };
-
-      const selectColumns = [
-        "requirement.id",
-        "requirement.parent_requirement_id",
-        "requirement.reqgroup_id",
-        "requirement.project_id",
-        "reqversion.id as reqversion_id",
-        "reqversion.account_id",
-        "reqversion.priority",
-        "reqversion.status",
-        "reqversion.description",
-        "reqversion.created_at",
-        "reqversion.updated_at",
-        "per_project_unique_id.readable_id as ppuid",
-        "account.name as authorName",
-        "updater.name as updaterName"
-      ]
-
-      const result = fastify.knex.withRecursive('ancestors', (qb) => {
-        qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
-          .where('requirement.parent_requirement_id', null)
-          .andWhere("reqgroup_id", request.params.reqgroupId)
-          .join("reqversion", getReqversion)
-          .join("account", "account.id", "reqversion.account_id")
-          .join("account as updater", "updater.id", "reqversion.updated_by")
-          .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
-          .union((qb) => {
-            qb.select(...selectColumns, fastify.knex.raw("ancestors.depth + 1"), fastify.knex.raw("concat(ancestors.hierarchical_id, '-', LPAD(per_project_unique_id.readable_id::text, 5, '0')) as hierarchical_id")).from('requirement')
-              .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
-              .join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
-              .join("account", "account.id", "reqversion.account_id")
-              .join("account as updater", "updater.id", "reqversion.updated_by")
-          })
-      }).select('*').from('ancestors').orderBy('hierarchical_id');
+      const result = await fastify.getReqgroup(request.params.reqgroupId);
 
       return await result;
     }
