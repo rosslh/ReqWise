@@ -16,6 +16,7 @@
   export let update;
   export let reqgroup;
   export let requirements;
+  export let showEditButtons;
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
@@ -45,7 +46,7 @@
 </style>
 
 <div class="reqgroupFooter">
-  {#if scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
+  {#if showEditButtons && scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
     <button
       class="addRequirementButton button-create"
       data-reqgroup={reqgroup.name}
@@ -81,7 +82,7 @@
       </div>
       Brainstorming
     </a>
-    {#if scopes.includes('member')}
+    {#if showEditButtons && scopes.includes('member')}
       <button
         id="editReqgroupButton"
         data-reqgroup={reqgroup.name}
@@ -92,7 +93,7 @@
         </div>
         Edit
       </button>
-      {#if reqgroup.isDeletable}
+      {#if showEditButtons && reqgroup.isDeletable}
         <button
           on:click={deleteReqgroup}
           data-reqgroup={reqgroup.name}

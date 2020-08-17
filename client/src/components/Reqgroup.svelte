@@ -13,6 +13,7 @@
 
   export let reqgroup;
   export let update;
+  export let hideStakeholderStatus = false;
 
   const scopes = getContext("scopes");
 
@@ -189,12 +190,20 @@
     margin-bottom: 0;
     position: relative;
   }
+
+  div.noReqs {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondaryText);
+    font-size: 1.4rem;
+  }
 </style>
 
 <div
   class={`reqgroup ${draggingRequirement ? 'dragging' : ''}`}
   id={`reqgroup-${reqgroup.id}`}>
-  <ReqgroupHeader {reqgroup} />
+  <ReqgroupHeader {reqgroup} {hideStakeholderStatus} />
   {#if scopes.includes('member')}
     <ReqgroupStatusBar {requirements} />
   {/if}
@@ -202,8 +211,8 @@
     {selectedReqs}
     update={updateReqs}
     isPrioritized={reqgroup.isPrioritized} />
-  <ul class="reqWrapper" data-reqgroup={reqgroup.name}>
-    {#if requirements}
+  {#if requirements && requirements.length}
+    <ul class="reqWrapper" data-reqgroup={reqgroup.name}>
       {#each requirements as requirement, index}
         <RequirementInGroup
           isPrioritized={reqgroup.isPrioritized}
@@ -214,9 +223,12 @@
           {requirement}
           {index} />
       {/each}
-    {/if}
-  </ul>
+    </ul>
+  {:else}
+    <div class="noReqs">No requirements yet</div>
+  {/if}
   <ReqgroupFooter
+    showEditButtons={!reqgroup.latestReviewStatus}
     {reqgroup}
     {updateReqs}
     {updateReqgroup}

@@ -184,9 +184,6 @@ module.exports = async function (fastify, opts) {
             plaintext: { type: "string" },
             html: { type: "string" },
             mrkdwn: { type: "string" },
-            type: { type: "string" },
-            requestedDescription: { type: "string" },
-            requestedPriority: { type: "string" },
             created_at: { type: "string" },
           },
         },
@@ -222,9 +219,6 @@ module.exports = async function (fastify, opts) {
       properties: {
         quillDelta: { type: "string" },
         plaintext: { type: "string" },
-        type: { type: "string" },
-        requestedDescription: { type: "string" },
-        requestedPriority: { type: "string" },
       },
       required: ["quillDelta", "plaintext", "type"],
     },
@@ -259,9 +253,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const {
         plaintext,
-        quillDelta,
-        requestedDescription,
-        requestedPriority,
+        quillDelta
       } = request.body;
 
       const quillDeltaConverter = new QuillDeltaToHtmlConverter(
@@ -302,9 +294,7 @@ module.exports = async function (fastify, opts) {
         quillDelta,
         plaintext,
         html,
-        mrkdwn,
-        requestedDescription,
-        requestedPriority,
+        mrkdwn
       });
       await fastify.createAlert("comment", "requirement", description, requirement_id, project_id, request.user.id);
       return ["success"];

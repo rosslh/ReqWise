@@ -8,9 +8,9 @@
 
   const { session } = stores();
 
-  const formatDatetime = dt => `${formatDistanceToNow(new Date(dt))} ago`;
+  const formatDatetime = (dt) => `${formatDistanceToNow(new Date(dt))} ago`;
 
-  const deleteComment = async () => {
+  $: deleteComment = async () => {
     if (confirm("Are you sure you want to delete this comment?")) {
       await del(`/comments/${comment.id}`, $session.user && $session.user.jwt);
       await update();
