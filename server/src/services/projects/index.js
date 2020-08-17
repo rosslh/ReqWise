@@ -1136,10 +1136,17 @@ module.exports = async function (fastify, opts) {
 
       reviews = await Promise.all(reviews.map(async review => {
         const responses = await fastify.knex
-          .from("stakeholderReviewResponse")
-          .select("*")
-          .where("stakeholderReviewResponse.stakeholderReview_id", review.id);
-        const reviewedEntity = await fastify.getReviewedEntity(review.id,);
+          .from("comment")
+          .select(
+            "comment.*",
+            "account.name as authorName",
+            "account.email as authorEmail",
+            "account.imageName as authorImageName",
+            "account.placeholderImage as authorPlaceholderImage"
+          )
+          .join("account", "account.id", "=", "comment.account_id")
+          .where("comment.stakeholderReview_id", review.id);
+        const reviewedEntity = await fastify.getReviewedEntity(review.id);
         return { ...review, responses, reviewedEntity };
       }));
       return reviews;

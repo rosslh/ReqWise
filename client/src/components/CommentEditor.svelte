@@ -4,6 +4,7 @@
   export let plaintext = "";
   export let postComment;
   export let id = 0;
+  export let buttonText = "Post comment";
 
   let quill;
 
@@ -72,6 +73,6 @@
     id="postCommentButton"
     on:click={postCommentAndClear}
     class="button-success">
-    Post comment
+    {buttonText}
   </button>
 </div>

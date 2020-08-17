@@ -2,19 +2,38 @@
   import { stores } from "@sapper/app";
 
   export let review;
+
+  import { post, get } from "../api.js";
   import StakeholderStatus from "./StakeholderStatus.svelte";
   import Reqgroup from "./Reqgroup.svelte";
   import FilePreview from "./FilePreview.svelte";
+  import Comment from "./Comment.svelte";
   import Userclass from "./Userclass.svelte";
-
   import CommentEditor from "./CommentEditor.svelte";
 
   let quillDelta;
   let plaintextComment = "";
 
-  const { page } = stores();
+  const { page, session } = stores();
 
-  const postResponse = () => {};
+  const update = async () => {
+    review = await get(
+      `/reviews/${review.id}`,
+      $session.user && $session.user.jwt
+    );
+  };
+
+  const postResponse = async () => {
+    await post(
+      `/reviews/${review.id}/responses`,
+      {
+        plaintext: plaintextComment,
+        quillDelta: JSON.stringify(quillDelta),
+      },
+      $session.user && $session.user.jwt
+    );
+    await update();
+  };
 
   $: entityTypeLabel = (() => {
     const type = review.entityType;
@@ -42,6 +61,7 @@
 
   .panel h4 {
     font-size: 1.6rem;
+    margin-top: 3rem;
   }
 
   .ppuid {
@@ -55,6 +75,18 @@
     padding: 1.25rem 1.5rem;
     border-top: 0.1rem solid var(--borderColor);
     border-bottom: 0.1rem solid var(--borderColor);
+  }
+
+  .secondary {
+    color: var(--secondaryText);
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+  }
+
+  .reviewChangesButtonWrapper {
+    display: flex;
+    justify-content: flex-end;
   }
 </style>
 
@@ -85,21 +117,24 @@
         projectId={$page.params.id} />
     {/if}
   </div>
-  <div>
-    <button>Approve</button>
-    <button class="button-danger button-outline">Request changes</button>
+  <div class="reviewChangesButtonWrapper">
+    <button>Review changes</button>
   </div>
   <div>
     <h4>Responses</h4>
     {#each review.responses as response}
-      <pre>{JSON.stringify(response, null, 2)}</pre>
+      <Comment comment={response} {update} />
     {/each}
+    {#if !review.responses.length}
+      <div class="secondary">No responses yet</div>
+    {/if}
   </div>
   <div>
     <CommentEditor
       id={review.id}
-      {postResponse}
+      postComment={postResponse}
       bind:quillDelta
-      bind:plaintext={plaintextComment} />
+      bind:plaintext={plaintextComment}
+      buttonText="Add response" />
   </div>
 </div>
