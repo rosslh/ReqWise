@@ -225,7 +225,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const result = await fastify.getReqgroup(request.params.reqgroupId);
 
-      return await result;
+      return result.requirements;
     }
   );
 
