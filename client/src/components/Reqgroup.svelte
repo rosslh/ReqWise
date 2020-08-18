@@ -228,7 +228,7 @@
     <div class="noReqs">No requirements yet</div>
   {/if}
   <ReqgroupFooter
-    showEditButtons={!reqgroup.latestReviewStatus}
+    showEditButtons={!reqgroup.latestReview}
     {reqgroup}
     {updateReqs}
     {updateReqgroup}

@@ -61,7 +61,7 @@ module.exports = fp(function (fastify, opts, done) {
       return ({
         ...g,
         requirements,
-        latestReviewStatus: latestReview && latestReview.status
+        latestReview
       });
     }));
   });
@@ -83,7 +83,7 @@ module.exports = fp(function (fastify, opts, done) {
     return {
       ...reqgroup,
       requirements,
-      latestReviewStatus: latestReview && latestReview.status
+      latestReview
     };
 
   });

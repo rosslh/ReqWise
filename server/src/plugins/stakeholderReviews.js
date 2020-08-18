@@ -65,7 +65,7 @@ module.exports = fp(function (fastify, opts, done) {
 
     return {
       ...entity,
-      latestReviewStatus: latestReview && latestReview.status
+      latestReview
     };
 
   });

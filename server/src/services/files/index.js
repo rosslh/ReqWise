@@ -36,7 +36,7 @@ module.exports = async function (fastify, opts) {
         })
         .first();
       const latestReview = await fastify.getLatestReview("reqgroup", request.params.fileId);
-      return { ...file, latestReviewStatus: latestReview && latestReview.status };
+      return { ...file, latestReview };
     }
   );
 

@@ -172,7 +172,13 @@ module.exports = async function (fastify, opts) {
             isPrioritized: { type: "boolean" },
             is_draft: { type: "boolean" },
             updated_at: { type: "string" },
-            latestReviewStatus: { type: "string" },
+            latestReview: {
+              type: "object",
+              properties: {
+                status: { type: "string" },
+                id: { type: ["number", "string"] },
+              }
+            },
             requirements: {
               type: "array", items: {
                 type: "object",
@@ -248,7 +254,7 @@ module.exports = async function (fastify, opts) {
         const latestReview = await fastify.getLatestReview("file", file.id);
         return {
           ...file,
-          latestReviewStatus: latestReview && latestReview.status
+          latestReview
         };
       }));
 
@@ -754,7 +760,7 @@ module.exports = async function (fastify, opts) {
 
       result = await Promise.all(result.map(async userclass => {
         const latestReview = await fastify.getLatestReview("userclass", userclass.id);
-        return { ...userclass, latestReviewStatus: latestReview && latestReview.status };
+        return { ...userclass, latestReview };
       }));
 
       const scopes = await fastify.getScopes(request.user.id, request.params.projectId);

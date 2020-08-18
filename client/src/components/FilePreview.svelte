@@ -4,7 +4,7 @@
   export let projectId;
   export let unlinkRequirement;
   export let hideStakeholderStatus = false;
-  $: showEditButtons = !file.latestReviewStatus;
+  $: showEditButtons = !file.latestReview;
 
   import { stores } from "@sapper/app";
 
@@ -234,7 +234,8 @@
     {#if !hideStakeholderStatus}
       <StakeholderStatus
         isDraft={file.is_draft}
-        latestReviewStatus={file.latestReviewStatus} />
+        latestReviewStatus={file.latestReview.status}
+        latestReviewId={file.latestReview.id} />
     {/if}
   </div>
   <div class="textContent">

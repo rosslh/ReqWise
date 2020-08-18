@@ -2,6 +2,10 @@
   export let isDraft = false;
   export let latestReviewStatus;
   export let inline = false;
+  export let latestReviewId;
+
+  import { stores } from "@sapper/app";
+  const { page } = stores();
 
   $: status = isDraft ? "draft" : latestReviewStatus;
 
@@ -67,9 +71,15 @@
     border-right: calc(var(--stakeholderStatusWidth) / 2) solid transparent;
     border-bottom: 1rem solid var(--background1);
   }
+
+  a:hover {
+    text-decoration: none;
+    opacity: 0.8;
+  }
 </style>
 
-<div
+<a
+  href={`/project/${$page.params.id}/sign-off/${latestReviewId}`}
   class={`${inline ? 'inlineIndicator' : 'indicator'}`}
   style={`
     background-color: ${statuses[status].bgColor};
@@ -79,4 +89,4 @@
   {#if !inline}
     <div class="bottomTriangle" aria-hidden={true} />
   {/if}
-</div>
+</a>

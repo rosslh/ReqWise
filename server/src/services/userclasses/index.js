@@ -30,7 +30,7 @@ module.exports = async function (fastify, opts) {
         .where("userclass.id", request.params.userclassId)
         .first();
       const latestReview = await fastify.getLatestReview("userclass", request.params.userclassId);
-      return { ...userclass, latestReviewStatus: latestReview && latestReview.status };
+      return { ...userclass, latestReview };
     }
   );
 

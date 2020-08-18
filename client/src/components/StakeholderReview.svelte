@@ -119,7 +119,10 @@
       </h3>
     </div>
     <div>
-      <StakeholderStatus latestReviewStatus={review.status} isDraft={false} />
+      <StakeholderStatus
+        latestReviewStatus={review.status}
+        isDraft={false}
+        latestReviewId={review.id} />
     </div>
   </div>
   <div class="entityWrapper">

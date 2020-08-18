@@ -5,7 +5,7 @@
   export let unlinkRequirement;
 
   export let hideStakeholderStatus = false;
-  $: showEditButtons = !userclass.latestReviewStatus;
+  $: showEditButtons = !userclass.latestReview;
 
   import { modalContent, modalProps } from "../stores.js";
   import { get, del } from "../api.js";
@@ -193,7 +193,8 @@
       {#if !hideStakeholderStatus}
         <StakeholderStatus
           isDraft={userclass.is_draft}
-          latestReviewStatus={userclass.latestReviewStatus} />
+          latestReviewStatus={userclass.latestReview.status}
+          latestReviewId={userclass.latestReview.id} />
       {/if}
       <span
         class="importanceLabel"

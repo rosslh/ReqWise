@@ -28,7 +28,13 @@ module.exports = async function (fastify, opts) {
           isMaxOneRequirement: { type: "boolean" },
           isPrioritized: { type: "boolean" },
           is_draft: { type: "boolean" },
-          latestReviewStatus: { type: "string" },
+          latestReview: {
+            type: "object",
+            properties: {
+              status: { type: "string" },
+              id: { type: ["number", "string"] },
+            }
+          },
           requirements: {
             type: "array", items: {
               type: "object",
