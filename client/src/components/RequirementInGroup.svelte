@@ -8,6 +8,7 @@
   export let requirement;
   export let update;
   export let isPrioritized;
+  export let is_draft = true;
 
   const viewRequirement = (event, id) => {
     modalProps.set({
@@ -46,8 +47,8 @@
   }
 </style>
 
-<Requirement {...$$props} isInteractive={true}>
-  {#if scopes.includes('member')}
+<Requirement {...$$props}>
+  {#if is_draft && scopes.includes('member')}
     <div class="iconCell">
       <button
         on:click|stopPropagation={(e) => viewRequirement(e, requirement.id)}

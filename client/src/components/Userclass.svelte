@@ -5,7 +5,7 @@
   export let unlinkRequirement;
 
   export let hideStakeholderStatus = false;
-  $: showEditButtons = !userclass.latestReview;
+  $: showEditButtons = userclass.is_draft;
 
   import { modalContent, modalProps } from "../stores.js";
   import { get, del } from "../api.js";

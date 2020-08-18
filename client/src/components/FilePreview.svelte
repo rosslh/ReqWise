@@ -4,7 +4,7 @@
   export let projectId;
   export let unlinkRequirement;
   export let hideStakeholderStatus = false;
-  $: showEditButtons = !file.latestReview;
+  $: showEditButtons = file.is_draft;
 
   import { stores } from "@sapper/app";
 

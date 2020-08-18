@@ -44,8 +44,9 @@ module.exports = fp(function (fastify, opts, done) {
   fastify.decorate("getReviewedEntity", async function (review_id) {
     const review = await fastify.knex
       .from("stakeholderReview")
-      .select("*", "stakeholderReview.id as id")
-      .where("id", review_id).first();
+      .leftJoin("account", "account.id", "stakeholderReview.reviewedBy")
+      .select("*", "account.name as reviewerName", "stakeholderReview.id as id")
+      .where("stakeholderReview.id", review_id).first();
 
     const entityId = review[`entity_${review.entityType}_id`];
 

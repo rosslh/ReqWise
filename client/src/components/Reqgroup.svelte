@@ -204,7 +204,7 @@
   class={`reqgroup ${draggingRequirement ? 'dragging' : ''}`}
   id={`reqgroup-${reqgroup.id}`}>
   <ReqgroupHeader {reqgroup} {hideStakeholderStatus} />
-  {#if scopes.includes('member')}
+  {#if reqgroup.is_draft && scopes.includes('member')}
     <ReqgroupStatusBar {requirements} />
   {/if}
   <ReqgroupSelectTools
@@ -215,6 +215,7 @@
     <ul class="reqWrapper" data-reqgroup={reqgroup.name}>
       {#each requirements as requirement, index}
         <RequirementInGroup
+          is_draft={reqgroup.is_draft}
           isPrioritized={reqgroup.isPrioritized}
           selected={selectedReqs.map((x) => x.id).includes(requirement.id)}
           {toggleReq}
@@ -228,7 +229,7 @@
     <div class="noReqs">No requirements yet</div>
   {/if}
   <ReqgroupFooter
-    showEditButtons={!reqgroup.latestReview}
+    showEditButtons={reqgroup.is_draft}
     {reqgroup}
     {updateReqs}
     {updateReqgroup}

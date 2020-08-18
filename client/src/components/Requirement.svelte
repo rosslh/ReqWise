@@ -19,6 +19,7 @@
   export let hiddenPlaceholders = [];
   export let index = 0;
   export let isContextModal = false;
+  export let is_draft;
   export let close = () => {};
 
   const formatDatetime = (dt) => `${formatDistanceToNow(new Date(dt))} ago`;
@@ -76,7 +77,7 @@
 
   li.requirement > div.desc {
     flex-grow: 1;
-    min-width: 27rem;
+    min-width: 16rem;
   }
 
   li.requirement > div.ppuid {
@@ -198,7 +199,7 @@
     })}
   data-reqdesc={requirement.description}
   data-reqid={requirement.id}>
-  {#if scopes.includes('member') && !isContextModal}
+  {#if is_draft && scopes.includes('member') && !isContextModal}
     <div class="reqHandle">
       <div class="gripWrapper">
         <FaGripVertical />
@@ -207,7 +208,7 @@
   {/if}
   <div class="desc">{requirement.description}</div>
   <div class="ppuid">#{requirement.ppuid}</div>
-  {#if scopes.includes('member')}
+  {#if is_draft && scopes.includes('member')}
     <div class="status">
       {#if requirement.status === 'proposed'}
         <span

@@ -30,7 +30,8 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const review = await fastify.knex
         .from("stakeholderReview")
-        .select("*", "stakeholderReview.id as id")
+        .leftJoin("account", "account.id", "stakeholderReview.reviewedBy")
+        .select("*", "account.name as reviewerName", "stakeholderReview.id as id")
         .where("stakeholderReview.id", request.params.reviewId)
         .first();
 

@@ -13,6 +13,7 @@
   import Userclass from "./Userclass.svelte";
   import CommentEditor from "./CommentEditor.svelte";
   import SubmitReviewModal from "./SubmitReviewModal.svelte";
+  import ReviewClosed from "./ReviewClosed.svelte";
 
   let quillDelta;
   let plaintextComment = "";
@@ -140,24 +141,30 @@
         projectId={$page.params.id} />
     {/if}
   </div>
-  <div class="reviewChangesButtonWrapper">
-    <button on:click={reviewChanges}>Review changes</button>
-  </div>
+  {#if review.status === 'pending'}
+    <div class="reviewChangesButtonWrapper">
+      <button on:click={reviewChanges}>Review changes</button>
+    </div>
+  {/if}
   <div>
     <h4>Responses</h4>
     {#each review.responses as response}
       <Comment comment={response} {update} />
     {/each}
-    {#if !review.responses.length}
+    {#if !review.responses.length && review.status === 'pending'}
       <div class="secondary">No responses yet</div>
     {/if}
   </div>
-  <div>
-    <CommentEditor
-      id={review.id}
-      postComment={postResponse}
-      bind:quillDelta
-      bind:plaintext={plaintextComment}
-      buttonText="Add response" />
-  </div>
+  {#if review.status === 'pending'}
+    <div>
+      <CommentEditor
+        id={review.id}
+        postComment={postResponse}
+        bind:quillDelta
+        bind:plaintext={plaintextComment}
+        buttonText="Add response" />
+    </div>
+  {:else}
+    <ReviewClosed {review} />
+  {/if}
 </div>
