@@ -231,13 +231,6 @@
           <FaExclamation />
         </span>
         <span class="statusText">Modified</span>
-      {:else}
-        <span
-          class="statusIconWrapper"
-          style={`color:var(--${getStatusColor(requirement.status)})`}>
-          <FaCheck />
-        </span>
-        <span class="statusText">Implemented</span>
       {/if}
     </div>
   {/if}

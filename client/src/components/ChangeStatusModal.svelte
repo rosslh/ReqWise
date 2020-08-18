@@ -15,7 +15,6 @@
     { value: "proposed", label: "Proposed" },
     { value: "accepted", label: "Accepted" },
     { value: "modified", label: "Modified" },
-    { value: "implemented", label: "Implemented" }
   ];
 
   let status = statusOptions[0];
@@ -27,7 +26,7 @@
         put(
           `/reqversions/${reqversion_id}`,
           {
-            status: status.value
+            status: status.value,
           },
           $session.user && $session.user.jwt
         )

@@ -5,38 +5,33 @@
     {
       name: "proposed",
       color: "red",
-      label: "Proposed"
+      label: "Proposed",
     },
     {
       name: "accepted",
       color: "indigo",
-      label: "Accepted"
+      label: "Accepted",
     },
     {
       name: "modified",
       color: "orange",
-      label: "Modified"
+      label: "Modified",
     },
-    {
-      name: "implemented",
-      color: "green",
-      label: "Implemented"
-    }
   ];
 
   $: entries = requirements
-    ? statusTypes.map(status => ({
-        count: requirements.filter(req => req.status === status.name).length,
+    ? statusTypes.map((status) => ({
+        count: requirements.filter((req) => req.status === status.name).length,
         status: status.name,
         color: status.color,
         label: status.label,
-        name: status.name
+        name: status.name,
       }))
     : [];
 
   let active = false;
 
-  const roundNumber = num => Math.round((num + Number.EPSILON) * 10) / 10;
+  const roundNumber = (num) => Math.round((num + Number.EPSILON) * 10) / 10;
 </script>
 
 <style>

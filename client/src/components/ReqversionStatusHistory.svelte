@@ -15,6 +15,9 @@
 {#await notifications}
   <!-- loading -->
 {:then result}
+  {#if result.length}
+    <h5>Activity</h5>
+  {/if}
   {#each result as notification (notification.id)}
     <Notification {notification} context="reqversion" compact={true} />
   {/each}

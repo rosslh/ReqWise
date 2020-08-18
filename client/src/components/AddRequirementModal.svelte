@@ -21,7 +21,7 @@
         description,
         rationale,
         priority: isPrioritized ? priority.value : undefined,
-        status: status.value
+        status: status.value,
       },
       $session.user && $session.user.jwt
     );
@@ -32,14 +32,12 @@
   const priorityOptions = [
     { value: "high", label: "High" },
     { value: "medium", label: "Medium" },
-    { value: "low", label: "Low" }
+    { value: "low", label: "Low" },
   ];
 
   const statusOptions = [
     { value: "proposed", label: "Proposed" },
     { value: "accepted", label: "Accepted" },
-    { value: "modified", label: "Modified" },
-    { value: "implemented", label: "Implemented" }
   ];
 
   let priority = priorityOptions[1];

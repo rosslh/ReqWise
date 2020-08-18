@@ -77,7 +77,7 @@
       parent_requirement_id,
       ppuid,
       parent_ppuid,
-      reqgroup_ppuid
+      reqgroup_ppuid,
     } = requirement);
     loaded = true;
   };
@@ -104,7 +104,7 @@
       {
         plaintext: plaintextComment,
         quillDelta: JSON.stringify(quillDelta),
-        type: "comment"
+        type: "comment",
       },
       $session.user && $session.user.jwt
     );
@@ -120,12 +120,12 @@
 
   let closeStream;
 
-  const getUnique = list =>
-    Array.from(new Set(list.map(a => a.id))).map(id => {
-      return list.find(a => a.id === id);
+  const getUnique = (list) =>
+    Array.from(new Set(list.map((a) => a.id))).map((id) => {
+      return list.find((a) => a.id === id);
     });
 
-  $: startStream = function() {
+  $: startStream = function () {
     if (closeStream) {
       closeStream();
     }
@@ -134,7 +134,7 @@
         "getCommentNotifications",
         { reqversionId },
         $session.user.jwt,
-        event => {
+        (event) => {
           const data = JSON.parse(event);
           comments = getUnique([...comments, ...data]);
           // scrollToBottom();
@@ -143,7 +143,7 @@
     }
   };
 
-  onDestroy(function() {
+  onDestroy(function () {
     if (closeStream) {
       closeStream();
     }
@@ -161,7 +161,7 @@
   }
   const acceptProposal = async () => {
     const data = {
-      status: "accepted"
+      status: "accepted",
     };
     await put(
       `/reqversions/${reqversionId}`,
@@ -206,10 +206,8 @@
     }
   };
 
-  const getStatusColor = status => {
+  const getStatusColor = (status) => {
     switch (status) {
-      case "implemented":
-        return "green";
       case "modified":
         return "orange";
       case "proposed":
@@ -493,10 +491,10 @@
         </button>
       {/if}
     </div>
-    <h5>Activity</h5>
     {#if reqversionId}
       <ReqversionStatusHistory id={reqversionId} />
     {:else}
+      <h5>Activity</h5>
       <Skeleton />
     {/if}
   </div>

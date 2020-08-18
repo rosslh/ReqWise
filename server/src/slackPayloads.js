@@ -227,13 +227,6 @@ module.exports = {
                     text: "Accepted"
                   },
                   value: "accepted"
-                },
-                {
-                  text: {
-                    type: "plain_text",
-                    text: "Implemented"
-                  },
-                  value: "implemented"
                 }
               ]
             },
