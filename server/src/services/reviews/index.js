@@ -50,6 +50,59 @@ module.exports = async function (fastify, opts) {
       return { ...review, responses, reviewedEntity };
     });
 
+  const putReviewSchema = {
+    body: {
+      type: "object",
+      properties: {
+        status: { type: "string" },
+        comment: { type: "string" },
+      },
+      required: ["status", "comment"],
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reviewId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        maxItems: 1,
+        items: { type: "string" },
+      },
+    },
+  };
+  fastify.put(
+    "/:reviewId",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: putReviewSchema,
+    },
+    async function (request, reply) {
+      const { status, comment } = request.body;
+      await fastify
+        .knex("stakeholderReview")
+        .where("id", request.params.reviewId)
+        .update({
+          status,
+          comment,
+          reviewedBy: request.user.id,
+          completed_at: new Date(Date.now())
+        });
+
+      return ["success"];
+    }
+  );
+
   const postResponseSchema = {
     body: {
       type: "object",

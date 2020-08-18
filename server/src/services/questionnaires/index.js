@@ -166,7 +166,7 @@ module.exports = async function (fastify, opts) {
           .where("id", request.params.questionnaireId)
           .returning("id")
       )[0];
-      console.log(id);
+
       await fastify.createPendingReview("brainstormForm", id);
       return { description };
     }

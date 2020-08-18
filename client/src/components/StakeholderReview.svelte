@@ -4,12 +4,15 @@
   export let review;
 
   import { post, get } from "../api.js";
+  import { modalContent, modalProps } from "../stores.js";
+
   import StakeholderStatus from "./StakeholderStatus.svelte";
   import Reqgroup from "./Reqgroup.svelte";
   import FilePreview from "./FilePreview.svelte";
   import Comment from "./Comment.svelte";
   import Userclass from "./Userclass.svelte";
   import CommentEditor from "./CommentEditor.svelte";
+  import SubmitReviewModal from "./SubmitReviewModal.svelte";
 
   let quillDelta;
   let plaintextComment = "";
@@ -35,15 +38,31 @@
     await update();
   };
 
+  const getReqgroupType = (type) => {
+    if (type === "quality") {
+      return "quality attribute";
+    } else if (type === "business") {
+      return "business requirement group";
+    } else {
+      return type;
+    }
+  };
+
   $: entityTypeLabel = (() => {
     const type = review.entityType;
     if (type === "reqgroup") {
-      return review.reviewedEntity.type;
+      return getReqgroupType(review.reviewedEntity.type);
     } else {
       return type;
     }
   })();
-  $: ppuid = review.reviewedEntity.ppuid; //review[entityType].ppuid;
+
+  $: ppuid = review.reviewedEntity.ppuid;
+
+  const reviewChanges = async () => {
+    modalContent.set(SubmitReviewModal);
+    modalProps.set({ id: review.id, update });
+  };
 </script>
 
 <style>
@@ -67,6 +86,7 @@
   .ppuid {
     color: var(--secondaryText);
     font-weight: 300;
+    margin-left: 0.5rem;
   }
 
   .entityWrapper {
@@ -118,7 +138,7 @@
     {/if}
   </div>
   <div class="reviewChangesButtonWrapper">
-    <button>Review changes</button>
+    <button on:click={reviewChanges}>Review changes</button>
   </div>
   <div>
     <h4>Responses</h4>

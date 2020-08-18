@@ -1,6 +1,8 @@
 
 exports.up = function (knex) {
-  knex.schema.dropTable("stakeholderReviewResponse")
+  return Promise.all([
+    knex.schema.dropTable("stakeholderReviewResponse")
+  ]);
 };
 
 exports.down = function (knex) {

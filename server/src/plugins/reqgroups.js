@@ -84,8 +84,7 @@ module.exports = fp(function (fastify, opts, done) {
       ...reqgroup,
       requirements,
       latestReviewStatus: latestReview && latestReview.status
-
-    }
+    };
 
   });
 
