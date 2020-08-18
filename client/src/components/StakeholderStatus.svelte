@@ -6,7 +6,6 @@
 
   import { stores } from "@sapper/app";
   const { page } = stores();
-
   $: status = isDraft ? "draft" : latestReviewStatus;
 
   const statuses = {
