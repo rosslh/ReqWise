@@ -14,6 +14,7 @@
   import CommentEditor from "./CommentEditor.svelte";
   import SubmitReviewModal from "./SubmitReviewModal.svelte";
   import ReviewClosed from "./ReviewClosed.svelte";
+  import { getContext } from "svelte";
 
   let quillDelta;
   let plaintextComment = "";
@@ -64,6 +65,8 @@
     modalContent.set(SubmitReviewModal);
     modalProps.set({ id: review.id, update });
   };
+
+  const scopes = getContext("scopes");
 </script>
 
 <style>
@@ -141,7 +144,7 @@
         projectId={$page.params.id} />
     {/if}
   </div>
-  {#if review.status === 'pending'}
+  {#if scopes.includes('stakeholder') && review.status === 'pending'}
     <div class="reviewChangesButtonWrapper">
       <button on:click={reviewChanges}>Review changes</button>
     </div>

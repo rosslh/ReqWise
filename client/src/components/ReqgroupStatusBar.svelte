@@ -46,18 +46,24 @@
   .outerWrapper {
     cursor: pointer;
     transform: translateY(-0.25rem);
+    margin-right: -1.25rem;
+    margin-left: -1.25rem;
   }
 
   .outerWrapper.inactive {
     padding: 0.5rem 0;
-    margin: -0.5rem 0;
+    margin: -0.5rem -1.25rem;
+  }
+
+  .outerWrapper.active {
+    border-bottom: 0.1rem solid var(--borderColor);
   }
 
   .barsWrapper {
     max-height: 0.3rem;
     overflow: hidden;
     padding: 0;
-    margin: 0 -1.25rem;
+    margin: 0;
     display: flex;
     justify-content: space-between;
   }
