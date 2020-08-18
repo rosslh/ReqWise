@@ -1,7 +1,6 @@
 <script>
   import FaExclamation from "svelte-icons/fa/FaExclamation.svelte";
   import FaThumbsUp from "svelte-icons/fa/FaThumbsUp.svelte";
-  import FaCheck from "svelte-icons/fa/FaCheck.svelte";
   import FaGripVertical from "svelte-icons/fa/FaGripVertical.svelte";
 
   import { modalContent, modalProps } from "../stores.js";
