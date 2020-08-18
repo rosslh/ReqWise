@@ -69,8 +69,8 @@
   {#if !hideStakeholderStatus}
     <StakeholderStatus
       isDraft={reqgroup.is_draft}
-      latestReviewStatus={reqgroup.latestReview.status}
-      latestReviewId={reqgroup.latestReview.id} />
+      latestReviewStatus={reqgroup.latestReview && reqgroup.latestReview.status}
+      latestReviewId={reqgroup.latestReview && reqgroup.latestReview.id} />
   {/if}
   {#if reqgroup.description}
     <button on:click={showDescriptionModal}>

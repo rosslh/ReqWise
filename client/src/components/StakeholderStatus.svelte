@@ -72,15 +72,21 @@
     border-bottom: 1rem solid var(--background1);
   }
 
-  a:hover {
+  a.hoverable:hover {
     text-decoration: none;
     opacity: 0.8;
+  }
+
+  a:not(.hoverable) {
+    cursor: none;
+    pointer-events: none;
   }
 </style>
 
 <a
-  href={`/project/${$page.params.id}/sign-off/${latestReviewId}`}
-  class={`${inline ? 'inlineIndicator' : 'indicator'}`}
+  href={isDraft ? undefined : `/project/${$page.params.id}/sign-off/${latestReviewId}`}
+  on:click={isDraft ? () => false : undefined}
+  class={`${inline ? 'inlineIndicator' : 'indicator'} ${isDraft ? '' : 'hoverable'}`}
   style={`
     background-color: ${statuses[status].bgColor};
     --stakeholderStatusWidth: ${statuses[status].width};

@@ -193,8 +193,8 @@
       {#if !hideStakeholderStatus}
         <StakeholderStatus
           isDraft={userclass.is_draft}
-          latestReviewStatus={userclass.latestReview.status}
-          latestReviewId={userclass.latestReview.id} />
+          latestReviewStatus={userclass.latestReview && userclass.latestReview.status}
+          latestReviewId={userclass.latestReview && userclass.latestReview.id} />
       {/if}
       <span
         class="importanceLabel"

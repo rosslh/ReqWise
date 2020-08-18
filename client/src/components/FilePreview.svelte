@@ -234,8 +234,8 @@
     {#if !hideStakeholderStatus}
       <StakeholderStatus
         isDraft={file.is_draft}
-        latestReviewStatus={file.latestReview.status}
-        latestReviewId={file.latestReview.id} />
+        latestReviewStatus={file.latestReview && file.latestReview.status}
+        latestReviewId={file.latestReview && file.latestReview.id} />
     {/if}
   </div>
   <div class="textContent">
