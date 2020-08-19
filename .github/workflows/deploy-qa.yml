@@ -56,7 +56,7 @@ jobs:
           REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
       - name: Initialize Google Cloud SDK
-        uses: rosslh/publish-gae-action@master
+        uses: rosslh/deploy-gae-action@master
         with:
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
