@@ -56,7 +56,7 @@ jobs:
           REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
       - name: Initialize Google Cloud SDK
-        uses: zxyle/publish-gae-action@v2.3
+        uses: inquid/publish-gae-action@73c535a
         with:
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
