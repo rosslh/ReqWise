@@ -64,6 +64,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           command: cd client && npm run test
+          working-directory: ./client
         env:
           API_URL: http://localhost:3001
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}
