@@ -47,7 +47,7 @@ jobs:
             -d '{"state":"closed"}'
 
       - name: Create Release
-        uses: thomaseizinger/create-release@1.0.0
+        uses: thomaseizinger/create-release@4430913
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
@@ -58,7 +58,7 @@ jobs:
           prerelease: false
 
       - name: Merge release into staging branch
-        uses: thomaseizinger/create-pull-request@1.0.0
+        uses: thomaseizinger/create-pull-request@708b87f
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           head: release/${{ env.RELEASE_VERSION }}
@@ -66,5 +66,5 @@ jobs:
           title: Merge release ${{ env.RELEASE_VERSION }} into staging branch
           body: |
             This PR merges the release branch for ${{ env.RELEASE_VERSION }} back into staging.
-            
+
             This happens to ensure that the updates that happened on the release branch, e.g. bug fixes are also present on the staging branch.

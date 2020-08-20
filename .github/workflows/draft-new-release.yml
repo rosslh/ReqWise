@@ -26,7 +26,6 @@ jobs:
       - name: Create release branch
         run: git checkout -b release/${{ env.RELEASE_VERSION }}
 
-
       # In order to make a commit, we need to initialize a user.
       # You may choose to write something less generic here if you want, it doesn't matter functionality wise.
       - name: Initialize mandatory git config
@@ -34,12 +33,11 @@ jobs:
           git config user.name "GitHub actions"
           git config user.email noreply@github.com
 
-
       - name: Push new branch
         run: git push origin release/${{ env.RELEASE_VERSION }}
 
       - name: Create pull request
-        uses: thomaseizinger/create-pull-request@1.0.0
+        uses: thomaseizinger/create-pull-request@708b87f
         with:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           head: release/${{ env.RELEASE_VERSION }}
