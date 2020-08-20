@@ -13,6 +13,12 @@ jobs:
       - uses: actions/setup-node@v2.1.1
         with:
           node-version: "10"
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Lint client and check licenses
         working-directory: ./client
         run: |
@@ -53,12 +59,10 @@ jobs:
       - name: Install client dependencies
         working-directory: ./client
         run: |
-          npm install
+          npm install --no-optional
       - name: Seed database and run tests
-        uses: nick-invision/retry@v1
+        uses: cypress-io/github-action@v2
         with:
-          timeout_minutes: 20
-          max_attempts: 2
           command: cd client && npm run test
         env:
           API_URL: http://localhost:3001
