@@ -21,6 +21,7 @@
     "run:fullStack": "run-p --race run:backend run:client",
     "seed": "cd ../server && npm run seed",
     "test": "npm run seed && server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:run",
+    "testAndRetry": "npm run test || npm run test",
     "testGui": "npm run seed && server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:open",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
