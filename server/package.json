@@ -41,7 +41,7 @@
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",
     "html-to-text": "^5.1.1",
-    "knex": "^0.21.4",
+    "knex": "^0.21.5",
     "make-promises-safe": "^5.0.0",
     "nodemailer": "^6.4.11",
     "pg": "^8.3.0",
