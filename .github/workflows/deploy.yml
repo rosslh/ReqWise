@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./client
         run: |
-          npm install --no-optional
+          npm ci --no-optional
       - name: Build client
         working-directory: ./client
         run: |
