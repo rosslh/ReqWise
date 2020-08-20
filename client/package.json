@@ -92,7 +92,6 @@
   },
   "optionalDependencies": {
     "cypress": "^5.0.0",
-    "cypress-plugin-retries": "^1.5.2",
     "cypress-wait-until": "^1.7.1",
     "start-server-and-test": "^1.11.3"
   }

@@ -32,6 +32,12 @@ jobs:
       - uses: actions/setup-node@v2.1.1
         with:
           node-version: "10"
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - uses: harmon758/postgresql-action@v1
         with:
           postgresql version: "11"

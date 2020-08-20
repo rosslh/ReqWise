@@ -6,7 +6,7 @@ Cypress.Commands.add("login", () => {
   cy.waitForPreload();
   cy.url().should('include', '/login');
   cy.wait(2000);
-  cy.get("#email").click().type('test@reqwise.com');
+  cy.get("#email").click().type('test.owner@reqwise.com');
   cy.get("#pwd").click().type('1234');
   cy.get(".submitButton").click();
   cy.waitForSpinner();
