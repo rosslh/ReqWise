@@ -71,5 +71,27 @@ module.exports = fp(function (fastify, opts, done) {
 
   });
 
+  fastify.decorate("getReviewStakeholders", async function (review_id) {
+    const review = await fastify.knex
+      .from("stakeholderReview")
+      .leftJoin("account", "account.id", "stakeholderReview.reviewedBy")
+      .select("*", "account.name as reviewerName", "stakeholderReview.id as id")
+      .where("stakeholderReview.id", review_id).first();
+
+    if (review.entityType !== "reqgroup") {
+      return [];
+    }
+
+    const entityId = review[`entity_${review.entityType}_id`];
+
+    return (await fastify.knex.from(`stakeholderGroup_reqgroup`)
+      .join("stakeholderGroup", "stakeholderGroup.id", `stakeholderGroup_reqgroup.stakeholderGroup_id`)
+      .join("account_stakeholderGroup", "account_stakeholderGroup.stakeholderGroup_id", "stakeholderGroup.id")
+      .join("account", "account.id", "account_stakeholderGroup.account_id")
+      .select("account.id")
+      .where(`stakeholderGroup_reqgroup.reqgroup_id`, entityId))
+      .map(x => fastify.obfuscateId(x.id));
+  });
+
   done();
 });

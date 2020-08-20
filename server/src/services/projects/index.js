@@ -1093,7 +1093,9 @@ module.exports = async function (fastify, opts) {
           .join("account", "account.id", "=", "comment.account_id")
           .where("comment.stakeholderReview_id", review.id);
         const reviewedEntity = await fastify.getReviewedEntity(review.id);
-        return { ...review, responses, reviewedEntity };
+        const stakeholders = await fastify.getReviewStakeholders(review.id);
+        console.log(stakeholders);
+        return { ...review, responses, reviewedEntity, stakeholders };
       }));
       return reviews;
     }

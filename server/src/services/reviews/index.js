@@ -48,7 +48,8 @@ module.exports = async function (fastify, opts) {
         .where("comment.stakeholderReview_id", request.params.reviewId);
 
       const reviewedEntity = await fastify.getReviewedEntity(request.params.reviewId);
-      return { ...review, responses, reviewedEntity };
+      const stakeholders = await fastify.getReviewStakeholders(request.params.reviewId);
+      return { ...review, responses, reviewedEntity, stakeholders };
     });
 
   const putReviewSchema = {
@@ -85,7 +86,7 @@ module.exports = async function (fastify, opts) {
   fastify.put(
     "/:reviewId",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: putReviewSchema,
     },
     async function (request, reply) {

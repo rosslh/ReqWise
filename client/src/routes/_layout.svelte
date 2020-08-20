@@ -87,11 +87,10 @@
     left: 0;
     right: 0;
     font-size: 1.4rem;
-    pointer-events: none;
   }
 
   div.environmentBanner:hover {
-    visibility: hidden;
+    opacity: 0;
   }
 
   div.environmentBanner.qa {

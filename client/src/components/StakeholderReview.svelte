@@ -67,6 +67,11 @@
   };
 
   const scopes = getContext("scopes");
+
+  $: userIsReviewer =
+    scopes.includes("stakeholder") &&
+    (!review.stakeholders.length ||
+      review.stakeholders.includes($session.user.id));
 </script>
 
 <style>
@@ -144,7 +149,7 @@
         projectId={$page.params.id} />
     {/if}
   </div>
-  {#if scopes.includes('stakeholder') && review.status === 'pending'}
+  {#if review.status === 'pending' && userIsReviewer}
     <div class="reviewChangesButtonWrapper">
       <button on:click={reviewChanges}>Review changes</button>
     </div>
