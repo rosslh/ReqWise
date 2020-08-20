@@ -83,7 +83,7 @@
 </style>
 
 <a
-  href={isDraft ? undefined : `/project/${$page.params.id}/sign-off/${latestReviewId}`}
+  href={isDraft ? undefined : `/project/${$page.params.id}/reviews/${latestReviewId}`}
   on:click={isDraft ? () => false : undefined}
   class={`${inline ? 'inlineIndicator' : 'indicator'} ${isDraft ? '' : 'hoverable'}`}
   style={`

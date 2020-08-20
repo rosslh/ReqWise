@@ -5,7 +5,7 @@
 
 <div class="contentWrapper">
   <div class="backLink">
-    <a rel="prefetch" href={`/project/${$page.params.id}/sign-off`}>
+    <a rel="prefetch" href={`/project/${$page.params.id}/reviews`}>
       &larr;&nbsp;View all reviews
     </a>
   </div>

@@ -50,7 +50,7 @@ module.exports = fp(function (fastify, opts, done) {
       .from("reqgroup")
       .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid")
       .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
-      .where({ "reqgroup.project_id": projectId, type })
+      .where({ "reqgroup.project_id": projectId, type, "is_baseline": false })
       .orderBy("ppuid", "asc");
 
     return await Promise.all(reqgroups.map(async (g) => {
@@ -73,6 +73,7 @@ module.exports = fp(function (fastify, opts, done) {
       .select("*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id")
       .where({
         "reqgroup.id": reqgroupId,
+        "is_baseline": false
       })
       .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
       .first();

@@ -20,6 +20,7 @@
   import FaBriefcase from "svelte-icons/fa/FaBriefcase.svelte";
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
   import FaSignature from "svelte-icons/fa/FaSignature.svelte";
+  import FaEye from "svelte-icons/fa/FaEye.svelte";
   // import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
 
   import Sidebar from "../../../components/Sidebar.svelte";
@@ -153,18 +154,25 @@
       label: "Stakeholders",
       slug: "stakeholders",
       icon: FaUserTie,
-      newSection: "Project Details",
+      newSection: "Stakeholder Sign-Off",
       extraPadding: true,
     },
     {
-      label: "Stakeholder Sign-off",
-      slug: "sign-off",
+      label: "Stakeholder Reviews",
+      slug: "reviews",
+      icon: FaEye,
+      extraPadding: true,
+    },
+    {
+      label: "Requirements Baseline",
+      slug: "baseline",
       icon: FaSignature,
     },
     {
       label: "Activity",
       slug: "activity",
       icon: MdHistory,
+      newSection: "Project Details",
     },
     {
       label: "Settings",
