@@ -63,7 +63,7 @@ jobs:
       - name: Seed database and run tests
         uses: cypress-io/github-action@v2
         with:
-          command: cd client && npm run test
+          command: npm run test
           working-directory: ./client
         env:
           API_URL: http://localhost:3001
