@@ -58,7 +58,7 @@ jobs:
           prerelease: false
 
       - name: Merge release into staging branch
-        uses: thomaseizinger/create-pull-request@708b87f
+        uses: thomaseizinger/create-pull-request@1.0.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           head: release/${{ env.RELEASE_VERSION }}
