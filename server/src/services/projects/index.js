@@ -171,6 +171,7 @@ module.exports = async function (fastify, opts) {
             isMaxOneRequirement: { type: "boolean" },
             isPrioritized: { type: "boolean" },
             is_draft: { type: "boolean" },
+            is_baseline: { type: "boolean" },
             updated_at: { type: "string" },
             latestReview: {
               type: "object",
@@ -217,6 +218,83 @@ module.exports = async function (fastify, opts) {
       const reqgroups = await fastify.getReqgroups(request.params.projectId, type);
       const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
       return reqgroups.filter(x => scopes.includes("member") || !x.is_draft);
+    });
+
+  const getProjectBaselinesSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            project_id: { type: "number" },
+            name: { type: "string" },
+            description: { type: "string" },
+            ppuid: { type: "number" },
+            type: { type: "string" },
+            isDeletable: { type: "boolean" },
+            isMaxOneRequirement: { type: "boolean" },
+            isPrioritized: { type: "boolean" },
+            is_draft: { type: "boolean" },
+            is_baseline: { type: "boolean" },
+            updated_at: { type: "string" },
+            latestReview: {
+              type: "object",
+              properties: {
+                status: { type: "string" },
+                id: { type: ["number", "string"] },
+              }
+            },
+            requirements: {
+              type: "array", items: {
+                type: "object",
+                properties: {
+                  id: { type: ["number", "string"] },
+                  parent_requirement_id: { type: ["number", "string", "null"] },
+                  reqgroup_id: { type: ["number", "string"] },
+                  reqversion_id: { type: ["number", "string"] },
+                  project_id: { type: ["number", "string"] },
+                  account_id: { type: ["number", "string"] },
+                  priority: { type: "string" },
+                  status: { type: "string" },
+                  description: { type: "string" },
+                  created_at: { type: "string" },
+                  updated_at: { type: "string" },
+                  ppuid: { type: "number" },
+                  authorName: { type: "string" },
+                  updaterName: { type: "string" },
+                  depth: { type: "number" }
+                }
+              }
+            },
+          },
+        },
+      },
+    },
+  };
+  fastify.get(
+    "/:projectId/baselines",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getProjectBaselinesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.getReqgroups(request.params.projectId, undefined, true);
     });
 
   const getProjectFilesSchema = {
@@ -1094,7 +1172,6 @@ module.exports = async function (fastify, opts) {
           .where("comment.stakeholderReview_id", review.id);
         const reviewedEntity = await fastify.getReviewedEntity(review.id);
         const stakeholders = await fastify.getReviewStakeholders(review.id);
-        console.log(stakeholders);
         return { ...review, responses, reviewedEntity, stakeholders };
       }));
       return reviews;

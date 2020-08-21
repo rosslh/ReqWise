@@ -4,6 +4,7 @@ module.exports = fp(function (fastify, opts, done) {
   fastify.decorate("getRequirements", async function (reqgroupId) {
     const selectColumns = [
       "requirement.id",
+      "requirement.ppuid_id",
       "requirement.parent_requirement_id",
       "requirement.reqgroup_id",
       "requirement.project_id",
@@ -45,12 +46,15 @@ module.exports = fp(function (fastify, opts, done) {
     }).select('*').from('ancestors').orderBy('hierarchical_id');
   });
 
-  fastify.decorate("getReqgroups", async function (projectId, type) {
+  fastify.decorate("getReqgroups", async function (projectId, type, baselines = false) {
+    const whereClause = { "reqgroup.project_id": projectId, type, "is_baseline": baselines };
+    if (!type) delete whereClause.type;
+
     const reqgroups = await fastify.knex
       .from("reqgroup")
       .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid")
       .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
-      .where({ "reqgroup.project_id": projectId, type, "is_baseline": false })
+      .where(whereClause)
       .orderBy("ppuid", "asc");
 
     return await Promise.all(reqgroups.map(async (g) => {

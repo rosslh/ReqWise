@@ -197,6 +197,24 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isProjectStakeholderByUserclassId = async (request, reply) => {
+    const association = (
+      await fastify.knex
+        .from("userclass")
+        .join("project", "project.id", "userclass.project_id")
+        .join("stakeholder_project", "stakeholder_project.project_id", "project.id")
+        .select("stakeholder_project.id")
+        .where({
+          "userclass.id": request.params.userclassId,
+          "stakeholder_project.account_id": request.user.id
+        })
+    ).length;
+
+    if (!association) {
+      throw new Error(`Not a project stakeholder`);
+    }
+  };
+
   const isTeamMemberByFileId = async (request, reply, isAdmin = false) => {
     const membership = (
       await fastify.knex
@@ -553,7 +571,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "promptId", memberHandler: isTeamMemberByPromptId },
       { param: "responseId", memberHandler: isTeamMemberByResponseId },
       { param: "reactionId", memberHandler: isTeamMemberByReactionId },
-      { param: "userclassId", memberHandler: isTeamMemberByUserclassId },
+      { param: "userclassId", memberHandler: isTeamMemberByUserclassId, stakeholderHandler: isProjectStakeholderByUserclassId },
       { param: "externalStakeholderId", memberHandler: isTeamMemberByExternalStakeholderId },
       { param: "reviewId", memberHandler: isTeamMemberByReviewId, stakeholderHandler: isProjectStakeholderByReviewId },
     ];
