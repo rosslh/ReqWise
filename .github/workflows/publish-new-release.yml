@@ -47,7 +47,7 @@ jobs:
             -d '{"state":"closed"}'
 
       - name: Create Release
-        uses: thomaseizinger/create-release@4430913
+        uses: thomaseizinger/create-release@1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
