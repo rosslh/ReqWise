@@ -52,7 +52,7 @@
   div.contentWrapper {
     z-index: 2000;
     background-color: var(--backdrop);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     position: fixed;
     top: 50%;
     left: 50%;

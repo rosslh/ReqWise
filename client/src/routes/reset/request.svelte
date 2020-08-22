@@ -28,7 +28,7 @@
 
   .loginWrapper .loginContent {
     box-shadow: var(--boxShadow);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     background-color: var(--background1);

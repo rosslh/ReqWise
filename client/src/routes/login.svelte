@@ -13,8 +13,8 @@
       credentials: "include",
       body: JSON.stringify({ email, password }),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     const data = await r.json();
@@ -23,7 +23,7 @@
       jwt: data.token,
       id: data.userId,
       theme: data.theme,
-      imageName: data.imageName
+      imageName: data.imageName,
     };
 
     if ($page.query.redirect) {
@@ -51,7 +51,7 @@
   .loginWrapper .loginContent,
   .loginWrapper .createAccountContent {
     box-shadow: var(--boxShadow);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     padding: 1.75rem;
     margin-bottom: 1.75rem;
     background-color: var(--background1);

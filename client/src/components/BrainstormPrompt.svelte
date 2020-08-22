@@ -22,7 +22,7 @@
     modalContent.set(DeletePromptModal);
     modalProps.set({
       prompt,
-      update
+      update,
     });
   };
 
@@ -35,7 +35,7 @@
 
   $: responses = prompt.responses;
 
-  const capitalizeFirstLetter = str =>
+  const capitalizeFirstLetter = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
   const getType = () => {
@@ -71,7 +71,7 @@
 <style>
   .promptWrapper {
     box-shadow: var(--boxShadow);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     margin: 2rem 0;
     background-color: var(--background1);
     overflow: hidden;

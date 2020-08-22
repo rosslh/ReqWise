@@ -31,11 +31,11 @@
 
   h1 {
     font-size: 2.1rem;
-    font-weight: 600;
     display: flex;
     align-items: center;
     padding: 0.5rem 1.5rem 0;
     min-height: 5.5rem;
+    margin-top: 0.5rem;
     margin-bottom: 0;
   }
 

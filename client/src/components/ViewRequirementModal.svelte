@@ -274,7 +274,7 @@
   }
   .revisionStatus {
     padding: 0.5rem;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     color: #fff;
     font-size: 1.3rem;
     font-weight: 500;

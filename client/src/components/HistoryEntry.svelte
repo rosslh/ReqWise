@@ -16,7 +16,7 @@
 <style>
   .outerWrapper {
     background-color: var(--background1);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: var(--boxShadow);
     margin: 1rem 0;

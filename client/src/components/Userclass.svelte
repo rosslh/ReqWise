@@ -84,7 +84,7 @@
 <style>
   .userclassWrapper {
     box-shadow: var(--boxShadow);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     margin: 2rem 0;
     background-color: var(--background1);
     overflow: hidden;

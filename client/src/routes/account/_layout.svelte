@@ -40,6 +40,7 @@
   div.userColumnLeft {
     transition: transform 0.2s ease;
     border-top: 0.1rem solid var(--borderColor);
+    border-right: 0.1rem solid var(--borderColor);
     padding: 1.5rem;
     text-align: center;
     background-color: var(--background1);

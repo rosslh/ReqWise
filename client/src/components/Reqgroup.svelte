@@ -169,7 +169,7 @@
 <style>
   div.reqgroup {
     box-shadow: var(--boxShadow);
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     padding: 1.25rem;
     margin: 2rem 0;
     overflow: hidden;

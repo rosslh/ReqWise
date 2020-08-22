@@ -12,7 +12,7 @@
     background-color: var(--background1);
     margin: 0.75rem 0;
     padding: 0.75rem;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     align-items: center;
   }
 

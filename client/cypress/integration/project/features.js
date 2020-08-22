@@ -52,7 +52,7 @@ describe('Features page', () => {
     cy.contains("li.requirement div.priority", "Low", { matchCase: false });
   });
 
-  it('can add nested requirement', () => {
+  it('can add nested requirement', () => { // TODO: make this less flakey
     cy.get('.addRequirementButton[data-reqgroup="Updated feature"]').first().click();
     cy.contains('h3', "Add a Requirement");
     cy.get('#desc').click().type("Nested requirement");

@@ -90,7 +90,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
   }
 
   span.icon.extraPadding {

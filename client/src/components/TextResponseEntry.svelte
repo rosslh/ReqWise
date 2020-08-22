@@ -60,7 +60,7 @@
     display: flex;
     align-items: center;
     min-height: 4.75rem;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     border: 0.1rem solid var(--borderColor);
     margin: 1rem 0.5rem 0;
     position: relative;
@@ -94,7 +94,7 @@
 
   button.reactButton {
     border: none;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     height: 2.8rem;
     min-width: 2.8rem;
     display: flex;

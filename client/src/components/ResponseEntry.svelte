@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     height: 4rem;
-    border-radius: 0.8rem;
+    border-radius: 0.5rem;
     border: 0.1rem solid var(--borderColor);
     margin: 1rem 0.5rem 0;
     position: relative;
