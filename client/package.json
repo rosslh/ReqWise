@@ -14,20 +14,14 @@
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "node __sapper__/build",
-    "cy:run": "cypress run",
-    "cy:open": "cypress open",
-    "run:client": "npm run dev",
-    "run:backend": "cd ../server && npm run dev",
-    "run:fullStack": "run-p --race run:backend run:client",
-    "seed": "cd ../server && npm run seed",
-    "test": "npm run seed && server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:run",
-    "testAndRetry": "npm run test || npm run test",
-    "testGui": "npm run seed && server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:open",
+    "test": "cypress run",
+    "test:retry": "npm run test || npm run test",
+    "test:gui": "cypress open",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
     "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
     "count-loc": "cloc --vcs=git --exclude-dir=static,.firebase --not-match-f=package-lock\\.json .",
-    "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.11.1;buffers@0.1.1;event-stream@0.9.8;map-stream@0.1.0;png-js@0.1.1\""
+    "licenseChecker": "license-checker"
   },
   "engines": {
     "node": "10"
@@ -68,7 +62,6 @@
     "fuse.js": "^6.4.1",
     "license-checker": "^25.0.1",
     "lodash.range": "^3.2.0",
-    "npm-run-all": "^4.1.5",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
     "postcss": "^7.0.27",
@@ -91,8 +84,7 @@
     "svelte-preprocess-postcss": "^1.1.1",
     "svelte-select": "^3.11.1",
     "sveltejs-tippy": "^3.0.0",
-    "text-diff": "^1.0.1",
-    "start-server-and-test": "^1.11.3"
+    "text-diff": "^1.0.1"
   },
   "optionalDependencies": {
     "cypress": "^5.0.0",

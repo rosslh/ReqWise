@@ -19,18 +19,26 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Lint client and check licenses
-        working-directory: ./client
+      - name: Install root dependencies
+        working-directory: ./
         run: |
-          npm ci --no-optional
-          npm run lint
-          npm run licenseChecker
-      - name: Lint server and check licenses
+          npm ci
+      - name: Install server dependencies
         working-directory: ./server
         run: |
           npm ci
-          npm run lint
+      - name: Install client dependencies
+        working-directory: ./client
+        run: |
+          npm ci --no-optional
+      - name: Check licenses
+        working-directory: ./
+        run: |
           npm run licenseChecker
+      - name: Lint code
+        working-directory: ./
+        run: |
+          npm run lint
   test-client:
     runs-on: ubuntu-latest
     steps:
@@ -50,12 +58,14 @@ jobs:
           postgresql db: "reqwise"
           postgresql user: "postgres"
           postgresql password: "1234"
+      - name: Install root dependencies
+        working-directory: ./
+        run: |
+          npm ci
       - name: Install server dependencies
         working-directory: ./server
         run: |
           npm ci
-        env:
-          KNEXMODE: dev
       - name: Install client dependencies
         working-directory: ./client
         run: |
@@ -63,8 +73,8 @@ jobs:
       - name: Seed database and run tests
         uses: cypress-io/github-action@v2
         with:
-          command: npm run testAndRetry
-          working-directory: ./client
+          command: npm run test
+          working-directory: ./
         env:
           API_URL: http://localhost:3001
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}

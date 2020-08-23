@@ -11,7 +11,7 @@
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112",
     "sqlProduction": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112,reqwise:us-central1:reqwise=tcp:1111",
     "lint": "eslint src/**/*.js --fix",
-    "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.11.1;buffers@0.1.1;event-stream@0.9.8;map-stream@0.1.0;png-js@0.1.1\"",
+    "licenseChecker": "license-checker",
     "seed": "knex migrate:latest --env=dev && knex seed:run --env=dev",
     "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
     "count-loc": "cloc --vcs=git --exclude-dir=migrations,test --not-match-f=package-lock\\.json ."
@@ -23,7 +23,6 @@
     "fastify",
     "nodejs"
   ],
-  "author": "Ross Hill <ross@rosshill.ca>",
   "dependencies": {
     "@google-cloud/storage": "^5.2.0",
     "@slack/web-api": "^5.11.0",
