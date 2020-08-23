@@ -9,6 +9,10 @@ __sapper__/
 .sessions/
 sessions/
 
+# Executables
+
+*.exe
+
 # Logs
 logs
 *.log

@@ -25,6 +25,7 @@
     "testGui": "npm run seed && server-test run:fullStack \"http-get://localhost:3000|http-get://localhost:3001\" cy:open",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
+    "count-loc": "cloc --vcs=git --exclude-dir=static,.firebase --not-match-f=package-lock\\.json .",
     "licenseChecker": "license-checker --onlyAllow \"MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense\" --excludePackages \"reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.11.1;buffers@0.1.1;event-stream@0.9.8;map-stream@0.1.0;png-js@0.1.1\""
   },
   "engines": {
@@ -57,6 +58,7 @@
     "@fullhuman/postcss-purgecss": "^2.3.0",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
+    "cloc": "^2.6.0",
     "cssnano": "^4.1.10",
     "date-fns": "^2.15.0",
     "eslint": "^7.1.0",
@@ -89,11 +91,11 @@
     "svelte-preprocess-postcss": "^1.1.1",
     "svelte-select": "^3.11.1",
     "sveltejs-tippy": "^3.0.0",
-    "text-diff": "^1.0.1"
+    "text-diff": "^1.0.1",
+    "start-server-and-test": "^1.11.3"
   },
   "optionalDependencies": {
     "cypress": "^5.0.0",
-    "cypress-wait-until": "^1.7.1",
-    "start-server-and-test": "^1.11.3"
+    "cypress-wait-until": "^1.7.1"
   }
 }
