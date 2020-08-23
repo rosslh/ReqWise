@@ -69,12 +69,13 @@ jobs:
       - name: Install client dependencies
         working-directory: ./client
         run: |
-          npm ci --no-optional
+          npm ci
       - name: Seed database and run tests
-        uses: cypress-io/github-action@v2
+        uses: nick-invision/retry@v1
         with:
+          timeout_minutes: 20
+          max_attempts: 2
           command: npm run test
-          working-directory: ./
         env:
           API_URL: http://localhost:3001
           CYPRESS_DEFAULT_COMMAND_TIMEOUT: ${{secrets.CYPRESS_DEFAULT_COMMAND_TIMEOUT}}

@@ -15,7 +15,6 @@
     "shell": "firebase functions:shell",
     "start": "node __sapper__/build",
     "test": "cypress run",
-    "test:retry": "npm run test || npm run test",
     "test:gui": "cypress open",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
