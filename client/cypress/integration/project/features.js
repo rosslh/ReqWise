@@ -52,14 +52,16 @@ describe('Features page', () => {
     cy.contains("li.requirement div.priority", "Low", { matchCase: false });
   });
 
-  it('can add nested requirement', () => { // TODO: make this less flakey
+  it('can add second requirement', () => {
     cy.get('.addRequirementButton[data-reqgroup="Updated feature"]').first().click();
     cy.contains('h3', "Add a Requirement");
     cy.get('#desc').click().type("Nested requirement");
     cy.get('#submitRequirementButton').click();
     cy.waitForSpinner();
     cy.contains("li.requirement.depth-0 div.desc", "Nested requirement");
+  });
 
+  it('can nest requirement', () => { // TODO: make this less flakey
     const dataTransfer = new DataTransfer();
     cy.get('.requirement[data-reqdesc="Nested requirement"]')
       .find('.reqHandle')
