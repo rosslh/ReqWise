@@ -235,57 +235,7 @@ module.exports = async function (fastify, opts) {
       },
       required: ["Authorization"],
     },
-    response: {
-      200: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            project_id: { type: "number" },
-            name: { type: "string" },
-            description: { type: "string" },
-            ppuid: { type: "number" },
-            type: { type: "string" },
-            isDeletable: { type: "boolean" },
-            isMaxOneRequirement: { type: "boolean" },
-            isPrioritized: { type: "boolean" },
-            is_draft: { type: "boolean" },
-            is_baseline: { type: "boolean" },
-            updated_at: { type: "string" },
-            latestReview: {
-              type: "object",
-              properties: {
-                status: { type: "string" },
-                id: { type: ["number", "string"] },
-              }
-            },
-            requirements: {
-              type: "array", items: {
-                type: "object",
-                properties: {
-                  id: { type: ["number", "string"] },
-                  parent_requirement_id: { type: ["number", "string", "null"] },
-                  reqgroup_id: { type: ["number", "string"] },
-                  reqversion_id: { type: ["number", "string"] },
-                  project_id: { type: ["number", "string"] },
-                  account_id: { type: ["number", "string"] },
-                  priority: { type: "string" },
-                  status: { type: "string" },
-                  description: { type: "string" },
-                  created_at: { type: "string" },
-                  updated_at: { type: "string" },
-                  ppuid: { type: "number" },
-                  authorName: { type: "string" },
-                  updaterName: { type: "string" },
-                  depth: { type: "number" }
-                }
-              }
-            },
-          },
-        },
-      },
-    },
+    response: {}
   };
   fastify.get(
     "/:projectId/baselines",
@@ -294,7 +244,7 @@ module.exports = async function (fastify, opts) {
       schema: getProjectBaselinesSchema,
     },
     async function (request, reply) {
-      return await fastify.getReqgroups(request.params.projectId, undefined, true);
+      return await fastify.getBaselined(request.params.projectId);
     });
 
   const getProjectFilesSchema = {

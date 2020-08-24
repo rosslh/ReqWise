@@ -46,8 +46,8 @@ module.exports = fp(function (fastify, opts, done) {
     }).select('*').from('ancestors').orderBy('hierarchical_id');
   });
 
-  fastify.decorate("getReqgroups", async function (projectId, type, baselines = false) {
-    const whereClause = { "reqgroup.project_id": projectId, type, "is_baseline": baselines };
+  fastify.decorate("getReqgroups", async function (projectId, type) {
+    const whereClause = { "reqgroup.project_id": projectId, type };
     if (!type) delete whereClause.type;
 
     const reqgroups = await fastify.knex

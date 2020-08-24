@@ -5,6 +5,41 @@ const storage = new Storage();
 
 module.exports = fp(function (fastify, opts, done) {
 
+  fastify.decorate("getBaselined", async function (projectId) {
+    let reviews = await fastify.knex
+      .from("stakeholderReview")
+      .select("*")
+      .where({ project_id: projectId, status: "accept" });
+    // TODO: only get latest review for each entity
+
+    reviews = Promise.all(reviews.map(async r => {
+      if (r.entityType === "reqgroup") {
+        const reqgroup = await fastify.getReqgroup(r.entity_reqgroup_id);
+        return { ...r, reqgroup };
+      } else if (r.entityType === "userclass") {
+        const userclass = await fastify.knex
+          .from("userclass")
+          .select("*", "per_project_unique_id.readable_id as ppuid", "userclass.id as id")
+          .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
+          .where("userclass.id", r.entity_userclass_id)
+          .first();
+        const latestReview = await fastify.getLatestReview("userclass", userclass.id);
+        return { ...r, userclass: { ...userclass, latestReview } };
+      } else { // file
+        const file = await fastify.knex
+          .from("file")
+          .select("*", "per_project_unique_id.readable_id as ppuid", "userclass.id as id")
+          .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
+          .where("file.id", r.entity_file_id)
+          .first();
+        const latestReview = await fastify.getLatestReview("file", file.id);
+        return { ...r, file: { ...file, latestReview } };
+      }
+    }));
+
+    return reviews;
+  });
+
   fastify.decorate("createBaseline", async function (reviewId) {
     // get entity associated with review
     const review = await fastify.knex

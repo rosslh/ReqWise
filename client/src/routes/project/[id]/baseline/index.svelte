@@ -2,17 +2,20 @@
   import { get } from "../../../../api";
   export async function preload({ params }, { user }) {
     if (user && user.jwt) {
-      const reqgroups = await get(
+      const baselines = await get(
         `/projects/${params.id}/baselines`,
         user && user.jwt
       );
-      return { reqgroups };
+      return { baselines };
     }
   }
 </script>
 
 <script>
-  export let reqgroups;
+  export let baselines;
+  import Reqgroup from "../../../../components/Reqgroup.svelte";
+  import Userclass from "../../../../components/Userclass.svelte";
+  import FilePreview from "../../../../components/FilePreview.svelte";
 </script>
 
 <section class="contentWrapper">
@@ -24,5 +27,13 @@
   </p>
 </section>
 <section class="contentWrapper">
-  <pre>{JSON.stringify(reqgroups, null, 2)}</pre>
+  {#each baselines as baseline}
+    {#if baseline.reqgroup}
+      <Reqgroup reqgroup={baseline.reqgroup} />
+    {:else if baseline.userclass}
+      <Userclass userclass={baseline.userclass} />
+    {:else}
+      <FilePreview file={baseline.file} />
+    {/if}
+  {/each}
 </section>
