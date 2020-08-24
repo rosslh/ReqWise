@@ -47,7 +47,7 @@ module.exports = fp(function (fastify, opts, done) {
   });
 
   fastify.decorate("getReqgroups", async function (projectId, type) {
-    const whereClause = { "reqgroup.project_id": projectId, type };
+    const whereClause = { "reqgroup.project_id": projectId, type, "is_baseline": false };
     if (!type) delete whereClause.type;
 
     const reqgroups = await fastify.knex
@@ -76,8 +76,7 @@ module.exports = fp(function (fastify, opts, done) {
       .from("reqgroup")
       .select("*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id")
       .where({
-        "reqgroup.id": reqgroupId,
-        "is_baseline": false
+        "reqgroup.id": reqgroupId
       })
       .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
       .first();
