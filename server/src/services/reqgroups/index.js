@@ -28,6 +28,7 @@ module.exports = async function (fastify, opts) {
           isMaxOneRequirement: { type: "boolean" },
           isPrioritized: { type: "boolean" },
           is_draft: { type: "boolean" },
+          is_baseline: { type: "boolean" },
           latestReview: {
             type: "object",
             properties: {
@@ -124,7 +125,7 @@ module.exports = async function (fastify, opts) {
         })
         .returning(["id", "project_id"]);
 
-      await fastify.createPendingReview("reqgroup", id);
+      await fastify.updateReviews("reqgroup", id);
       await fastify.createAlert("update", "reqgroup", name, id, project_id, request.user.id);
       return [id];
     }

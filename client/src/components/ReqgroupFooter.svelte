@@ -17,7 +17,6 @@
   export let update;
   export let reqgroup;
   export let requirements;
-  export let isDraft;
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
@@ -31,7 +30,11 @@
 
   const makeDraft = () => {
     modalContent.set(MakeDraftModal);
-    modalProps.set({ entityId: reqgroup.id, entityType: "reqgroup", update });
+    modalProps.set({
+      entityId: reqgroup.id,
+      entityType: "reqgroup",
+      update: updateReqgroup,
+    });
   };
 
   const scopes = getContext("scopes");
@@ -52,7 +55,7 @@
 </style>
 
 <div class="reqgroupFooter">
-  {#if isDraft && scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
+  {#if reqgroup.is_draft && scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
     <button
       class="addRequirementButton button-create"
       data-reqgroup={reqgroup.name}
@@ -88,39 +91,41 @@
       </div>
       Brainstorming
     </a>
-    {#if !isDraft && scopes.includes('member')}
-      <button
-        id="makeDraftButton"
-        on:click={makeDraft}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegEdit />
-        </div>
-        Make draft
-      </button>
-    {/if}
-    {#if isDraft && scopes.includes('member')}
-      <button
-        id="editReqgroupButton"
-        data-reqgroup={reqgroup.name}
-        on:click={editReqgroup}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegEdit />
-        </div>
-        Edit
-      </button>
-      {#if isDraft && reqgroup.isDeletable}
+    {#if !reqgroup.is_baseline}
+      {#if !reqgroup.is_draft && scopes.includes('member')}
         <button
-          on:click={deleteReqgroup}
-          data-reqgroup={reqgroup.name}
-          class="deleteReqgroupButton button-outline button-small
-          button-secondary button-clear">
+          id="makeDraftButton"
+          on:click={makeDraft}
+          class="button-outline button-small button-secondary button-clear">
           <div class="iconWrapper">
-            <FaRegTrashAlt />
+            <FaRegEdit />
           </div>
-          Delete
+          Make draft
         </button>
+      {/if}
+      {#if reqgroup.is_draft && scopes.includes('member')}
+        <button
+          id="editReqgroupButton"
+          data-reqgroup={reqgroup.name}
+          on:click={editReqgroup}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegEdit />
+          </div>
+          Edit
+        </button>
+        {#if reqgroup.is_draft && reqgroup.isDeletable}
+          <button
+            on:click={deleteReqgroup}
+            data-reqgroup={reqgroup.name}
+            class="deleteReqgroupButton button-outline button-small
+              button-secondary button-clear">
+            <div class="iconWrapper">
+              <FaRegTrashAlt />
+            </div>
+            Delete
+          </button>
+        {/if}
       {/if}
     {/if}
   </div>

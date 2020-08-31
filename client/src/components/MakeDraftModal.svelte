@@ -32,6 +32,7 @@
 </script>
 
 <h3>Convert to draft</h3>
+<p>Pending reviews will be withdrawn.</p>
 <form>
   <SubmitButton handler={makeDraft}>Make draft</SubmitButton>
 </form>

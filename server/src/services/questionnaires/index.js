@@ -167,7 +167,7 @@ module.exports = async function (fastify, opts) {
           .returning("id")
       )[0];
 
-      await fastify.createPendingReview("brainstormForm", id);
+      await fastify.updateReviews("brainstormForm", id);
       return { description };
     }
   );

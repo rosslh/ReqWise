@@ -29,6 +29,11 @@
       label: "Changes Requested",
       width: "7rem",
     },
+    withdrawn: {
+      bgColor: "var(--secondaryText)",
+      label: "Withdrawn",
+      width: "6.5rem",
+    },
   };
 </script>
 
