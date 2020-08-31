@@ -22,6 +22,7 @@
   };
 </script>
 
+<h3>Edit team</h3>
 <form>
   <fieldset>
     <label for="name">Team name</label>

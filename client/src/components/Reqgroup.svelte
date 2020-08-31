@@ -229,7 +229,7 @@
     <div class="noReqs">No requirements yet</div>
   {/if}
   <ReqgroupFooter
-    showEditButtons={reqgroup.is_draft}
+    isDraft={reqgroup.is_draft}
     {reqgroup}
     {updateReqs}
     {updateReqgroup}

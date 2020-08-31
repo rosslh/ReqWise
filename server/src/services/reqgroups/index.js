@@ -80,8 +80,7 @@ module.exports = async function (fastify, opts) {
         name: { type: "string" },
         isPrioritized: { type: "boolean" },
         is_draft: { type: "boolean" }
-      },
-      required: ["name"],
+      }
     },
     queryString: {},
     params: {

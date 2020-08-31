@@ -92,10 +92,6 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { status, comment } = request.body;
 
-      if (status === "accept") {
-        await fastify.createBaseline(request.params.reviewId);
-      }
-
       await fastify
         .knex("stakeholderReview")
         .where("id", request.params.reviewId)

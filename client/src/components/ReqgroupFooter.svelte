@@ -7,6 +7,7 @@
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { modalContent, modalProps } from "../stores.js";
   import AddRequirementModal from "./AddRequirementModal.svelte";
+  import MakeDraftModal from "./MakeDraftModal.svelte";
 
   import DeleteFeatureModal from "../components/DeleteFeatureModal.svelte";
   import EditFeatureModal from "../components/EditFeatureModal.svelte";
@@ -16,7 +17,7 @@
   export let update;
   export let reqgroup;
   export let requirements;
-  export let showEditButtons;
+  export let isDraft;
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
@@ -26,6 +27,11 @@
   const deleteReqgroup = () => {
     modalContent.set(DeleteFeatureModal);
     modalProps.set({ reqgroupId: reqgroup.id, update });
+  };
+
+  const makeDraft = () => {
+    modalContent.set(MakeDraftModal);
+    modalProps.set({ entityId: reqgroup.id, entityType: "reqgroup", update });
   };
 
   const scopes = getContext("scopes");
@@ -46,7 +52,7 @@
 </style>
 
 <div class="reqgroupFooter">
-  {#if showEditButtons && scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
+  {#if isDraft && scopes.includes('member') && (!reqgroup.isMaxOneRequirement || (requirements && !requirements.length))}
     <button
       class="addRequirementButton button-create"
       data-reqgroup={reqgroup.name}
@@ -82,7 +88,18 @@
       </div>
       Brainstorming
     </a>
-    {#if showEditButtons && scopes.includes('member')}
+    {#if !isDraft && scopes.includes('member')}
+      <button
+        id="makeDraftButton"
+        on:click={makeDraft}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegEdit />
+        </div>
+        Make draft
+      </button>
+    {/if}
+    {#if isDraft && scopes.includes('member')}
       <button
         id="editReqgroupButton"
         data-reqgroup={reqgroup.name}
@@ -93,7 +110,7 @@
         </div>
         Edit
       </button>
-      {#if showEditButtons && reqgroup.isDeletable}
+      {#if isDraft && reqgroup.isDeletable}
         <button
           on:click={deleteReqgroup}
           data-reqgroup={reqgroup.name}

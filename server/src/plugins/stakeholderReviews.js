@@ -19,26 +19,27 @@ module.exports = fp(function (fastify, opts, done) {
 
   fastify.decorate("createPendingReview", async function (entityType, entityId) {
     const { project_id, is_draft } = await fastify.knex.from(entityType).select("*").where("id", entityId).first();
+    await fastify
+      .knex("stakeholderReview")
+      .where({ [`entity_${entityType}_id`]: entityId, status: "pending" })
+      .update({
+        is_outdated: true
+      })
+      .returning(["id"]);
     if (is_draft) {
       return; // drafts don't need reviews
     }
-    const pendingReviewExists = (await fastify.knex
-      .from("stakeholderReview")
-      .select("*")
-      .where({ [`entity_${entityType}_id`]: entityId, status: "pending" })).length;
 
-    if (pendingReviewExists) {
-      return;
-    }
-
-    await fastify
+    const [id] = await fastify
       .knex("stakeholderReview")
       .insert({
         project_id,
         status: "pending",
         entityType,
         [`entity_${entityType}_id`]: entityId // computed property name syntax
-      });
+      }).returning("id");
+
+    await fastify.createBaseline(id);
   });
 
   fastify.decorate("getReviewedEntity", async function (review_id) {
