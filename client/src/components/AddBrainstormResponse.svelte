@@ -12,6 +12,7 @@
 
   import SubmitButton from "./SubmitButton.svelte";
   import { post } from "../api.js";
+  import { normalizeString } from "../utils.js";
 
   let numericResponse;
 
@@ -44,12 +45,9 @@
     toggleView();
   };
 
-  const capitalizeFirstLetter = str =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
-  let options = prompt.options.map(option => ({
-    label: capitalizeFirstLetter(option.value),
-    value: option.id
+  let options = prompt.options.map((option) => ({
+    label: normalizeString(option.value),
+    value: option.id,
   }));
   let selectedOption = options[0];
 </script>
@@ -92,10 +90,8 @@
   {#if prompt.responseType === 'number'}
     <fieldset>
       <label for="responseNumber">
-        Response
-        <span class="secondary">
-          (minimum: {prompt.numericFloor}, maximum: {prompt.numericCeiling})
-        </span>
+        Response <span class="secondary"> (minimum: {prompt.numericFloor},
+          maximum: {prompt.numericCeiling}) </span>
       </label>
       <input
         type="number"
@@ -117,8 +113,7 @@
   {:else if prompt.responseType === 'dropdown'}
     <fieldset>
       <label for="responseSelect">
-        Response
-        <span class="secondary">(select one)</span>
+        Response <span class="secondary">(select one)</span>
       </label>
       <Select
         inputAttributes={{ id: 'responseSelect' }}

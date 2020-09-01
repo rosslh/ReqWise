@@ -419,7 +419,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
         .join("file_requirement", "file.id", "file_requirement.file_id")
         .where({ "file_requirement.requirement_id": request.params.requirementId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
     });
 
   const postRequirementFileSchema = {
@@ -496,7 +496,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
         .join("requirement_userclass", "userclass.id", "requirement_userclass.userclass_id")
         .where({ "requirement_userclass.requirement_id": request.params.requirementId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
     });
 
   const postRequirementUserclassSchema = {
@@ -573,7 +573,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "brainstormPrompt.ppuid_id")
         .join("brainstormPrompt_requirement", "brainstormPrompt.id", "brainstormPrompt_requirement.brainstormPrompt_id")
         .where({ "brainstormPrompt_requirement.requirement_id": request.params.requirementId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
       return await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
     });
 

@@ -355,7 +355,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
         .join("requirement_userclass", "requirement.id", "requirement_userclass.requirement_id")
         .where({ "requirement_userclass.userclass_id": request.params.userclassId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
     }
   );
 

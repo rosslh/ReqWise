@@ -334,7 +334,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
         .join("stakeholderGroup_reqgroup", "reqgroup.id", "stakeholderGroup_reqgroup.reqgroup_id")
         .where({ "stakeholderGroup_reqgroup.stakeholderGroup_id": request.params.stakeholderGroupId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
     }
   );
 

@@ -1,10 +1,15 @@
 <script>
+  import getProp from "lodash.get";
   import Fuse from "fuse.js";
+  import Select from "svelte-select";
+
   export let list;
   export let searchKeys = [];
   export let searchResults = [...list];
+  export let sortKeyRecent = "updated_at";
+  export let sortKeyAlpha = "name";
 
-  let selectedSort = "default";
+  let selectedSort = "recent";
   let searchQuery = "";
 
   const options = {
@@ -18,23 +23,27 @@
     // threshold: 0.6,
     // distance: 100,
     // useExtendedSearch: false,
-    keys: searchKeys
+    keys: searchKeys,
   };
 
   $: fuse = new Fuse(list, options);
 
   $: {
     searchResults = searchQuery
-      ? fuse.search(searchQuery).map(x => x.item)
+      ? fuse.search(searchQuery).map((x) => x.item)
       : [...list];
     if (selectedSort === "recent") {
       searchResults = searchResults.sort(
-        (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+        (a, b) => new Date(b[sortKeyRecent]) - new Date(a[sortKeyRecent])
       );
     } else if (selectedSort === "alpha") {
-      searchResults = searchResults.sort((a, b) => b.name < a.name);
+      searchResults = searchResults.sort(
+        (a, b) => getProp(b, sortKeyAlpha) < getProp(a, sortKeyAlpha)
+      );
     }
   }
+
+  export let filters = [];
 </script>
 
 <style>
@@ -72,20 +81,13 @@
     <input
       id="searchString"
       type="text"
-      on:input={e => {
+      on:input={(e) => {
         searchQuery = e.target.value;
       }} />
   </div>
   <div class="sortField">
     <label for="sort">Sort</label>
     <fieldset id="sort" class="sortButtonWrapper">
-      <button
-        on:click={() => {
-          selectedSort = 'default';
-        }}
-        class={`button sortButton button-small button-outline button-${selectedSort === 'default' ? 'primary' : 'secondary'}`}>
-        Default
-      </button>
       <button
         on:click={() => {
           selectedSort = 'recent';
@@ -102,4 +104,14 @@
       </button>
     </fieldset>
   </div>
+  {#each filters as filter}
+    <div class="filterField">
+      <label for={filter.label}>{filter.label}</label>
+      <Select
+        inputAttributes={{ id: filter.label }}
+        isClearable={true}
+        items={filter.options}
+        bind:selectedValue={filter.selectedOption} />
+    </div>
+  {/each}
 </div>

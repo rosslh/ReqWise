@@ -20,19 +20,16 @@
   import SubmitButton from "../../components/SubmitButton.svelte";
 
   import { put } from "../../api.js";
-  import { toBase64, validateFileSize } from "../../utils.js";
+  import { toBase64, validateFileSize, normalizeString } from "../../utils.js";
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
 
   export let user;
   let { name } = user;
 
-  const capitalizeFirstLetter = (str) =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
   const themeOptions = ["light", "system", "dark"].map((attr) => ({
     value: attr,
-    label: capitalizeFirstLetter(attr),
+    label: normalizeString(attr),
   }));
 
   let theme = themeOptions.find((x) => x.value === user.theme);

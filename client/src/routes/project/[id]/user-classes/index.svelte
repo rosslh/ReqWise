@@ -7,6 +7,7 @@
   import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
   import Userclass from "../../../../components/Userclass.svelte";
   import { get } from "../../../../api.js";
+  import { normalizeString } from "../../../../utils.js";
 
   const { page, session } = stores();
   const { id } = $page.params;
@@ -31,6 +32,27 @@
   const scopes = getContext("scopes");
 
   let searchResults = [];
+
+  const filters = [
+    {
+      label: "Review Status",
+      options: [
+        "pending",
+        "accepted",
+        "requestChanges",
+        "withdrawn",
+      ].map((x) => ({ label: normalizeString(x), value: x })),
+      selectedOption: undefined,
+    },
+    {
+      label: "Importance",
+      options: ["favored", "disfavored", "ignored", "other"].map((x) => ({
+        label: normalizeString(x),
+        value: x,
+      })),
+      selectedOption: undefined,
+    },
+  ];
 </script>
 
 <section class="contentWrapper">
@@ -51,6 +73,7 @@
   <section class="contentWrapper">
     <SearchSortFilter
       bind:searchResults
+      {filters}
       list={result}
       searchKeys={['name', 'description', 'persona']} />
     {#each searchResults.length ? searchResults : result as userclass (userclass.id)}

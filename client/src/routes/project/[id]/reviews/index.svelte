@@ -13,7 +13,11 @@
 
 <script>
   import StakeholderReview from "../../../../components/StakeholderReview.svelte";
+  import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
+  import { normalizeString } from "../../../../utils";
   export let reviews;
+
+  let searchResults = [];
 </script>
 
 <section class="contentWrapper">
@@ -22,9 +26,18 @@
     Stakeholders can sign-off on groups of requirements that meet their
     expectations. They can also request changes to requirements.
   </p>
+  <SearchSortFilter
+    bind:searchResults
+    list={reviews}
+    filters={[{ label: 'Status', options: ['pending', 'accepted', 'requestChanges', 'withdrawn'].map(
+          (x) => ({ label: normalizeString(x), value: x })
+        ), selectedOption: undefined }]}
+    sortKeyRecent="created_at"
+    sortKeyAlpha="reviewedEntity.name"
+    searchKeys={['reviewedEntity.name', 'reviewedEntity.requirements.description']} />
 </section>
 <section class="contentWrapper">
-  {#each reviews as review (review.id)}
+  {#each searchResults as review (review.id)}
     <StakeholderReview {review} />
   {/each}
 </section>

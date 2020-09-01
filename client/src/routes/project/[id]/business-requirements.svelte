@@ -14,6 +14,7 @@
   import { onMount, getContext } from "svelte";
   import { projectShouldUpdate } from "../../../stores.js";
   import { get } from "../../../api.js";
+  import { normalizeString } from "../../../utils.js";
   import { stores } from "@sapper/app";
 
   import SearchSortFilter from "../../../components/SearchSortFilter.svelte";
@@ -50,6 +51,19 @@
     })();
 
   let searchResults = [];
+
+  const filters = [
+    {
+      label: "Review Status",
+      options: [
+        "pending",
+        "accepted",
+        "requestChanges",
+        "withdrawn",
+      ].map((x) => ({ label: normalizeString(x), value: x })),
+      selectedOption: undefined,
+    },
+  ];
 </script>
 
 <section class="contentWrapper">
@@ -67,6 +81,7 @@
 <section class="contentWrapper">
   <SearchSortFilter
     bind:searchResults
+    {filters}
     list={reqgroups}
     searchKeys={['name', 'description', 'requirements.description']} />
   {#each searchResults.length ? searchResults : reqgroups as reqgroup (reqgroup.id)}

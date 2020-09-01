@@ -34,21 +34,27 @@ describe('Features page', () => {
     cy.contains("li.requirement div.desc", "New requirement");
   });
 
-  it('can change requirement status and priority', () => {
-    cy.get('li.requirement[data-reqdesc="New requirement"]', { force: true }).click();
+  it('can change requirement status', () => {
+    cy.get('li.requirement[data-reqdesc="New requirement"]').click();
+    cy.contains("#changeRequirementStatusButton", "status");
     cy.get('#changeRequirementStatusButton').click();
     cy.get('.statusSelectWrapper .selectContainer').click();
     cy.get('.statusSelectWrapper .selectContainer .listItem').eq(1).click();
     cy.get('input#rationale').click().type("test rationale");
     cy.get('#changeStatusSubmitButton').click();
+    cy.waitForSpinner();
     cy.contains("li.requirement span.statusText", "Accepted", { matchCase: false });
+  });
 
-    cy.get('li.requirement[data-reqdesc="New requirement"]', { force: true }).click();
+  it('can change requirement priority', () => {
+    cy.get('li.requirement[data-reqdesc="New requirement"]').click();
+    cy.contains("#changeRequirementPriorityButton", "priority");
     cy.get('#changeRequirementPriorityButton').click();
     cy.get('.prioritySelectWrapper .selectContainer').click();
     cy.get('.prioritySelectWrapper .selectContainer .listItem').eq(2).click();
     cy.get('input#rationale').click().type("test rationale");
     cy.get('#changePrioritySubmitButton').click();
+    cy.waitForSpinner();
     cy.contains("li.requirement div.priority", "Low", { matchCase: false });
   });
 

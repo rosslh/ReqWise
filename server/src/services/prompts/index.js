@@ -211,7 +211,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
         .join("brainstormPrompt_requirement", "requirement.id", "brainstormPrompt_requirement.requirement_id")
         .where({ "brainstormPrompt_requirement.brainstormPrompt_id": request.params.promptId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
 
       const reqgroups = await fastify.knex
         .from("reqgroup")
@@ -220,7 +220,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
         .join("brainstormPrompt_reqgroup", "reqgroup.id", "brainstormPrompt_reqgroup.reqgroup_id")
         .where({ "brainstormPrompt_reqgroup.brainstormPrompt_id": request.params.promptId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
 
       return [...requirements, ...reqgroups].sort((a, b) => Number(a.ppuid) - Number(b.ppuid));
     }

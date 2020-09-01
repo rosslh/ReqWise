@@ -276,7 +276,7 @@ module.exports = async function (fastify, opts) {
         .select("file.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
         .where({ "file.project_id": request.params.projectId, "is_baseline": false })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
 
       result = await Promise.all(result.map(async file => {
         const latestReview = await fastify.getLatestReview("file", file.id);
@@ -523,7 +523,7 @@ module.exports = async function (fastify, opts) {
         .select("stakeholderGroup.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "stakeholderGroup.ppuid_id")
         .where({ "stakeholderGroup.project_id": request.params.projectId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
     }
   );
 
@@ -750,7 +750,7 @@ module.exports = async function (fastify, opts) {
         .where({
           "brainstormForm.project_id": request.params.projectId
         })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
       return await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
     }
   );
@@ -784,7 +784,7 @@ module.exports = async function (fastify, opts) {
         .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
         .where({ "userclass.project_id": request.params.projectId, "is_baseline": false })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
 
       result = await Promise.all(result.map(async userclass => {
         const latestReview = await fastify.getLatestReview("userclass", userclass.id);
@@ -1105,7 +1105,7 @@ module.exports = async function (fastify, opts) {
       let reviews = await fastify.knex
         .from("stakeholderReview")
         .leftJoin("account", "account.id", "stakeholderReview.reviewedBy")
-        .select("*", "account.name as reviewerName", "stakeholderReview.id as id")
+        .select("stakeholderReview.*", "account.name as reviewerName", "stakeholderReview.id as id")
         .where("stakeholderReview.project_id", request.params.projectId);
 
       reviews = await Promise.all(reviews.map(async review => {
@@ -1124,6 +1124,7 @@ module.exports = async function (fastify, opts) {
         const stakeholders = await fastify.getReviewStakeholders(review.id);
         return { ...review, responses, reviewedEntity, stakeholders };
       }));
+      console.log(reviews);
       return reviews;
     }
   );

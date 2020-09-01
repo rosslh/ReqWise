@@ -55,7 +55,7 @@ module.exports = fp(function (fastify, opts, done) {
       .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid")
       .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
       .where(whereClause)
-      .orderBy("ppuid", "asc");
+      .orderByRaw("coalesce(updated_at,created_at) desc");
 
     return await Promise.all(reqgroups.map(async (g) => {
       const requirements = await fastify.getRequirements(g.id);

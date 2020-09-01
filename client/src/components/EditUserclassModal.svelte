@@ -1,6 +1,7 @@
 <script>
   import Select from "svelte-select";
   import { put } from "../api.js";
+  import { normalizeString } from "../utils.js";
   import { stores } from "@sapper/app";
   const { session } = stores();
 
@@ -13,15 +14,12 @@
 
   let { name, description, id, persona, importance, is_draft } = userclass;
 
-  const capitalizeFirstLetter = (str) =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
   const importanceOptions = [
     "favored",
     "disfavored",
     "ignored",
     "other",
-  ].map((attr) => ({ value: attr, label: capitalizeFirstLetter(attr) }));
+  ].map((attr) => ({ value: attr, label: normalizeString(attr) }));
 
   let newImportance = importanceOptions.find((x) => x.value === importance);
 
@@ -67,8 +65,7 @@
   </fieldset>
   <fieldset>
     <label for="persona">
-      User persona
-      <a
+      User persona <a
         href="http://www.agilemodeling.com/artifacts/personas.htm"
         target="_blank"
         rel="noopener"
@@ -89,8 +86,8 @@
   <fieldset>
     <input type="checkbox" id="isDraft" bind:checked={is_draft} />
     <label class="label-inline" for="isDraft">
-      User class is a draft
-      <span class="secondary">(not ready for stakeholder review)</span>
+      User class is a draft <span class="secondary">(not ready for stakeholder
+        review)</span>
     </label>
   </fieldset>
   <SubmitButton className="button-caution" handler={save}>Save</SubmitButton>

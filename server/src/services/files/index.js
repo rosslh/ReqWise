@@ -233,7 +233,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
         .join("file_requirement", "requirement.id", "file_requirement.requirement_id")
         .where({ "file_requirement.file_id": request.params.fileId })
-        .orderBy("ppuid", "asc");
+        .orderByRaw("coalesce(updated_at,created_at) desc");
     }
   );
 

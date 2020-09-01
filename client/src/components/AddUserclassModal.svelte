@@ -1,6 +1,7 @@
 <script>
   import Select from "svelte-select";
   import { post } from "../api.js";
+  import { normalizeString } from "../utils.js";
   import { stores } from "@sapper/app";
   const { session } = stores();
   import MdInfoOutline from "svelte-icons/md/MdInfoOutline.svelte";
@@ -26,15 +27,12 @@
     close();
   };
 
-  const capitalizeFirstLetter = (str) =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
   const importanceOptions = [
     "favored",
     "disfavored",
     "ignored",
     "other",
-  ].map((attr) => ({ value: attr, label: capitalizeFirstLetter(attr) }));
+  ].map((attr) => ({ value: attr, label: normalizeString(attr) }));
 
   let importance = importanceOptions[0];
   let name = "";
@@ -72,8 +70,7 @@
     </fieldset>
     <fieldset>
       <label for="persona">
-        User persona
-        <a
+        User persona <a
           href="http://www.agilemodeling.com/artifacts/personas.htm"
           target="_blank"
           rel="noopener"

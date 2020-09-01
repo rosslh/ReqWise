@@ -11,6 +11,7 @@
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
   import PromptResponses from "./PromptResponses.svelte";
   import { get, del } from "../api.js";
+  import { normalizeString } from "../utils.js";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
@@ -35,14 +36,11 @@
 
   $: responses = prompt.responses;
 
-  const capitalizeFirstLetter = (str) =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
   const getType = () => {
     if (prompt.responseType === "likert") {
       return "Likert scale";
     } else {
-      return capitalizeFirstLetter(prompt.responseType);
+      return normalizeString(prompt.responseType);
     }
   };
 
@@ -158,7 +156,7 @@
             rel="prefetch"
             href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/requirements`}
             class="button button-outline button-small button-secondary
-            button-clear">
+              button-clear">
             <div class="iconWrapper iconWrapper-padded">
               <FaLink />
             </div>

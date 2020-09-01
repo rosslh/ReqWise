@@ -9,6 +9,7 @@
   export let id;
 
   import { post } from "../api.js";
+  import { normalizeString } from "../utils.js";
 
   import SubmitButton from "../components/SubmitButton.svelte";
 
@@ -32,21 +33,18 @@
     close();
   };
 
-  const capitalizeFirstLetter = str =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
   const typeOptions = ["text", "paragraph", "dropdown", "number", "likert"].map(
-    t => {
+    (t) => {
       let label;
 
       if (t === "likert") {
         label = "Likert scale (strongly disagree to strongly agree)";
       } else {
-        label = capitalizeFirstLetter(t);
+        label = normalizeString(t);
       }
       return {
         label,
-        value: t
+        value: t,
       };
     }
   );
@@ -142,7 +140,7 @@
                 <td>
                   <button
                     class="button button-small button-danger button-outline
-                    button-secondary">
+                      button-secondary">
                     <div class="iconWrapper">
                       <FaRegTrashAlt />
                     </div>

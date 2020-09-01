@@ -1,6 +1,7 @@
 <script>
   import Select from "svelte-select";
   import { post } from "../api.js";
+  import { normalizeString } from "../utils.js";
   import { stores } from "@sapper/app";
   const { session } = stores();
 
@@ -15,16 +16,13 @@
       `/projects/${id}/reqgroups`,
       {
         name: attribute.value,
-        type: "quality"
+        type: "quality",
       },
       $session.user && $session.user.jwt
     );
     update();
     close();
   };
-
-  const capitalizeFirstLetter = str =>
-    str.charAt(0).toUpperCase() + str.slice(1);
 
   const attributeOptions = [
     "performance",
@@ -38,8 +36,8 @@
     "testability",
     "scalability",
     "reusability",
-    "supportability"
-  ].map(attr => ({ value: attr, label: capitalizeFirstLetter(attr) }));
+    "supportability",
+  ].map((attr) => ({ value: attr, label: normalizeString(attr) }));
 
   let attribute = attributeOptions[0];
 </script>

@@ -61,15 +61,12 @@ module.exports = fp(function (fastify, opts, done) {
       data.is_baseline = true;
       const [reqgroupId] = await fastify.knex("reqgroup").insert(data).returning("id");
 
-      console.log(reqgroupId);
-
       // duplicate requirements and reqversions
 
       const { project_id } = reqgroup;
       let requirementIdMapping = new Map(); // maps old ids to new ids
 
       await Promise.all(reqgroup.requirements.map(async requirement => {
-        console.log(requirement);
         const reqData = {
           project_id,
           reqgroup_id: reqgroupId,

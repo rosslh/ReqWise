@@ -12,6 +12,7 @@
 
 <script>
   import { get } from "../../../api.js";
+  import { normalizeString } from "../../../utils.js";
   import { projectShouldUpdate } from "../../../stores.js";
   import { stores } from "@sapper/app";
 
@@ -42,16 +43,27 @@
     })();
 
   let searchResults = [];
+
+  const filters = [
+    {
+      label: "Review Status",
+      options: [
+        "pending",
+        "accepted",
+        "requestChanges",
+        "withdrawn",
+      ].map((x) => ({ label: normalizeString(x), value: x })),
+      selectedOption: undefined,
+    },
+  ];
 </script>
 
 <section class="contentWrapper">
   <h2>Features</h2>
   <p class="infoBlurb">
     A feature is a group of related requirements that allows the user to satisfy
-    a high-level objective or need.
-    <br />
-    Requirements tend to be more granular, and are written with implementation
-    in mind.
+    a high-level objective or need. <br /> Requirements tend to be more granular,
+    and are written with implementation in mind.
   </p>
   {#if scopes.includes('member')}
     <AddFeature {update} {id} />
@@ -61,6 +73,7 @@
   <SearchSortFilter
     bind:searchResults
     list={reqgroups}
+    {filters}
     searchKeys={['name', 'description', 'requirements.description']} />
   {#each searchResults.length ? searchResults : reqgroups as reqgroup (reqgroup.id)}
     <Reqgroup {reqgroup} {update} />

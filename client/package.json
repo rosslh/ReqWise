@@ -60,6 +60,7 @@
     "firebase-functions-test": "^0.2.0",
     "fuse.js": "^6.4.1",
     "license-checker": "^25.0.1",
+    "lodash.get": "^4.4.2",
     "lodash.range": "^3.2.0",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
