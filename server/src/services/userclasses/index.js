@@ -171,8 +171,7 @@ module.exports = async function (fastify, opts) {
         persona: { type: "string" },
         importance: { type: "string" },
         is_draft: { type: "boolean" },
-      },
-      required: ["name"],
+      }
     },
     queryString: {},
     params: {

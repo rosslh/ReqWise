@@ -16,22 +16,23 @@
   export let updateReqgroup;
   export let update;
   export let reqgroup;
+  export let reqgroupId;
   export let requirements;
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
-    modalProps.set({ reqgroupId: reqgroup.id, updateReqgroup, reqgroup });
+    modalProps.set({ reqgroupId: reqgroupId, updateReqgroup, reqgroup });
   };
 
   const deleteReqgroup = () => {
     modalContent.set(DeleteFeatureModal);
-    modalProps.set({ reqgroupId: reqgroup.id, update });
+    modalProps.set({ reqgroupId: reqgroupId, update });
   };
 
   const makeDraft = () => {
     modalContent.set(MakeDraftModal);
     modalProps.set({
-      entityId: reqgroup.id,
+      entityId: reqgroupId,
       entityType: "reqgroup",
       update: updateReqgroup,
     });
@@ -62,7 +63,7 @@
       on:click={() => {
         modalContent.set(AddRequirementModal);
         modalProps.set({
-          reqgroupId: reqgroup.id,
+          reqgroupId: reqgroupId,
           update: updateReqs,
           isPrioritized: reqgroup.isPrioritized,
         });
@@ -75,7 +76,7 @@
   <div class="right">
     <a
       rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}/stakeholders`}
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/stakeholders`}
       class="button button-outline button-small button-secondary button-clear">
       <div class="iconWrapper iconWrapper-padded">
         <FaUserTie />
@@ -84,7 +85,7 @@
     </a>
     <a
       rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}/brainstorm`}
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/brainstorm`}
       class="button button-outline button-small button-secondary button-clear">
       <div class="iconWrapper">
         <MdLightbulbOutline />

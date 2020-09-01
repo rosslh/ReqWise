@@ -67,6 +67,7 @@ module.exports = fp(function (fastify, opts, done) {
 
     return {
       ...baseline,
+      entityId: fastify.obfuscateId(entityId), // id of original entity which baseline is based on
       latestReview
     };
 

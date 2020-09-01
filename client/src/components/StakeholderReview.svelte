@@ -13,7 +13,9 @@
   import Userclass from "./Userclass.svelte";
   import CommentEditor from "./CommentEditor.svelte";
   import SubmitReviewModal from "./SubmitReviewModal.svelte";
+  import MakeDraftModal from "./MakeDraftModal.svelte";
   import ReviewClosed from "./ReviewClosed.svelte";
+
   import { getContext } from "svelte";
 
   let quillDelta;
@@ -72,6 +74,16 @@
     scopes.includes("stakeholder") &&
     (!review.stakeholders.length ||
       review.stakeholders.includes($session.user.id));
+
+  const withdrawReview = () => {
+    modalContent.set(MakeDraftModal);
+    modalProps.set({
+      entityId: review.reviewedEntity.entityId,
+      entityType: review.entityType,
+      update,
+      context: "withdraw",
+    });
+  };
 </script>
 
 <style>
@@ -122,10 +134,7 @@
 <div class="panel">
   <div class="panelHeader">
     <div>
-      <h3>
-        Reviewing {entityTypeLabel}
-        <span class="ppuid">#{ppuid}</span>
-      </h3>
+      <h3>Reviewing {entityTypeLabel} <span class="ppuid">#{ppuid}</span></h3>
     </div>
     <div>
       <StakeholderStatus
@@ -136,14 +145,19 @@
   </div>
   <div class="entityWrapper">
     {#if review.entityType === 'reqgroup'}
-      <Reqgroup reqgroup={review.reviewedEntity} hideStakeholderStatus />
+      <Reqgroup
+        baselineSourceId={review.reviewedEntity.entityId}
+        reqgroup={review.reviewedEntity}
+        hideStakeholderStatus />
     {:else if review.entityType === 'userclass'}
       <Userclass
+        baselineSourceId={review.reviewedEntity.entityId}
         hideStakeholderStatus
         userclass={review.reviewedEntity}
         projectId={$page.params.id} />
     {:else if review.entityType === 'file'}
       <FilePreview
+        baselineSourceId={review.reviewedEntity.entityId}
         hideStakeholderStatus
         file={review.reviewedEntity}
         projectId={$page.params.id} />
@@ -152,6 +166,11 @@
   {#if review.status === 'pending' && userIsReviewer}
     <div class="reviewChangesButtonWrapper">
       <button on:click={reviewChanges}>Review changes</button>
+    </div>
+  {:else if review.status === 'pending' && scopes.includes('member')}
+    <div class="reviewChangesButtonWrapper">
+      <button class="button button-danger" on:click={withdrawReview}>Withdraw
+        review</button>
     </div>
   {/if}
   <div>

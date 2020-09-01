@@ -159,15 +159,12 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { description, is_draft, is_open, is_public } = request.body;
-      const id = (
-        await fastify
-          .knex("brainstormForm")
-          .update({ description, is_draft, is_open, is_public })
-          .where("id", request.params.questionnaireId)
-          .returning("id")
-      )[0];
+      await fastify
+        .knex("brainstormForm")
+        .update({ description, is_draft, is_open, is_public })
+        .where("id", request.params.questionnaireId)
+        .returning("id");
 
-      await fastify.updateReviews("brainstormForm", id);
       return { description };
     }
   );

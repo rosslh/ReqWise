@@ -32,7 +32,7 @@
     withdrawn: {
       bgColor: "var(--secondaryText)",
       label: "Withdrawn",
-      width: "6.5rem",
+      width: "7rem",
     },
   };
 </script>

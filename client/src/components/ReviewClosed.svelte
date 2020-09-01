@@ -24,7 +24,7 @@
   div.icon {
     height: 3rem;
     width: 3rem;
-    margin: 0 1.5rem;
+    margin: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,6 +40,10 @@
     background-color: var(--green);
   }
 
+  div.icon.withdrawn {
+    background-color: var(--secondaryText);
+  }
+
   div.reviewSummary {
     font-weight: 500;
   }
@@ -49,17 +53,25 @@
   <div class={`icon ${review.status}`}>
     {#if review.status === 'accept'}
       <FaCheck />
+    {:else if review.status === 'withdrawn'}
+      <FaTimes />
     {:else}
       <FaTimes />
     {/if}
   </div>
   <div>
     <div class="reviewSummary">
-      {review.reviewerName}
-      {#if review.status === 'accept'}
-        accepted this revision:
-      {:else}requested changes:{/if}
+      {#if review.status === 'withdrawn'}
+        Review withdrawn from consideration.
+      {:else}
+        {review.reviewerName}
+        {#if review.status === 'accept'}
+          accepted this revision:
+        {:else}requested changes:{/if}
+      {/if}
     </div>
-    <blockquote>{review.comment}</blockquote>
+    {#if review.comment}
+      <blockquote>{review.comment}</blockquote>
+    {/if}
   </div>
 </div>

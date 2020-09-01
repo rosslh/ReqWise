@@ -275,7 +275,7 @@ module.exports = async function (fastify, opts) {
         .from("file")
         .select("file.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
-        .where({ "file.project_id": request.params.projectId })
+        .where({ "file.project_id": request.params.projectId, "is_baseline": false })
         .orderBy("ppuid", "asc");
 
       result = await Promise.all(result.map(async file => {
@@ -783,7 +783,7 @@ module.exports = async function (fastify, opts) {
         .from("userclass")
         .select("userclass.*", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
-        .where({ "userclass.project_id": request.params.projectId })
+        .where({ "userclass.project_id": request.params.projectId, "is_baseline": false })
         .orderBy("ppuid", "asc");
 
       result = await Promise.all(result.map(async userclass => {

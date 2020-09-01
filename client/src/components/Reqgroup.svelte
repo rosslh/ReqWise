@@ -14,15 +14,18 @@
   export let reqgroup;
   export let update;
   export let hideStakeholderStatus = false;
+  export let baselineSourceId;
+
+  $: reqgroupId = baselineSourceId || reqgroup.id;
 
   const scopes = getContext("scopes");
 
   $: requirements = reqgroup.requirements;
 
   const updateReqs = () => {
-    if (reqgroup && reqgroup.id) {
+    if (reqgroup && reqgroupId) {
       get(
-        `/reqgroups/${reqgroup.id}/requirements`,
+        `/reqgroups/${reqgroupId}/requirements`,
         $session.user && $session.user.jwt
       ).then((r) => {
         requirements = r;
@@ -33,7 +36,7 @@
 
   const updateReqgroup = async () => {
     reqgroup = await get(
-      `/reqgroups/${reqgroup.id}`,
+      `/reqgroups/${reqgroupId}`,
       $session.user && $session.user.jwt
     );
   };
@@ -41,7 +44,11 @@
   let selectedReqs = [];
 
   const toggleReq = ({ id, reqversion_id }) => {
-    if (scopes.includes("member")) {
+    if (
+      !reqgroup.is_baseline &&
+      reqgroup.is_draft &&
+      scopes.includes("member")
+    ) {
       if (selectedReqs.map((x) => x.id).includes(id)) {
         selectedReqs = selectedReqs.filter((x) => x.id !== id);
       } else {
@@ -51,11 +58,11 @@
   };
 
   $: updateFromStream =
-    $reqgroupsToUpdate.includes(reqgroup.id) &&
+    $reqgroupsToUpdate.includes(reqgroupId) &&
     (() => {
       updateReqgroup();
       updateReqs();
-      $reqgroupsToUpdate = $reqgroupsToUpdate.filter((x) => x != reqgroup.id);
+      $reqgroupsToUpdate = $reqgroupsToUpdate.filter((x) => x != reqgroupId);
     })();
 
   $: getIllegalParents = (req) => {
@@ -114,7 +121,7 @@
     if (typeof window !== "undefined") {
       // updateReqs();
       import("@shopify/draggable").then(({ default: d }) => {
-        const container = document.getElementById(`reqgroup-${reqgroup.id}`);
+        const container = document.getElementById(`reqgroup-${reqgroupId}`);
         draggable = new d.Draggable(container, {
           handle: ".reqHandle",
           draggable: ".draggable",
@@ -202,9 +209,9 @@
 
 <div
   class={`reqgroup ${draggingRequirement ? 'dragging' : ''}`}
-  id={`reqgroup-${reqgroup.id}`}>
-  <ReqgroupHeader {reqgroup} {hideStakeholderStatus} />
-  {#if reqgroup.is_draft && scopes.includes('member')}
+  id={`reqgroup-${reqgroupId}`}>
+  <ReqgroupHeader {reqgroupId} {reqgroup} {hideStakeholderStatus} />
+  {#if reqgroup.is_draft && !reqgroup.is_baseline && scopes.includes('member')}
     <ReqgroupStatusBar {requirements} />
   {/if}
   <ReqgroupSelectTools
@@ -216,6 +223,7 @@
       {#each requirements as requirement, index}
         <RequirementInGroup
           is_draft={reqgroup.is_draft}
+          is_baseline={reqgroup.is_baseline}
           isPrioritized={reqgroup.isPrioritized}
           selected={selectedReqs.map((x) => x.id).includes(requirement.id)}
           {toggleReq}
@@ -229,6 +237,7 @@
     <div class="noReqs">No requirements yet</div>
   {/if}
   <ReqgroupFooter
+    {reqgroupId}
     {reqgroup}
     {updateReqs}
     {updateReqgroup}

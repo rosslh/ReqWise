@@ -5,6 +5,7 @@
   import StakeholderStatus from "./StakeholderStatus.svelte";
   export let reqgroup;
   export let hideStakeholderStatus;
+  export let reqgroupId;
 
   const showDescriptionModal = () => {
     modalContent.set(ReqgroupDescriptionModal);
@@ -61,7 +62,7 @@
   <h3>
     <a
       rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}`}>
       {reqgroup.name}
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>

@@ -3,9 +3,12 @@
   export let userclass;
   export let projectId;
   export let unlinkRequirement;
+  export let baselineSourceId;
+
+  const userclassId = baselineSourceId || userclass.id;
 
   export let hideStakeholderStatus = false;
-  $: showEditButtons = userclass.is_draft;
+  $: showEditButtons = userclass.is_draft && !userclass.is_baseline;
 
   import { modalContent, modalProps } from "../stores.js";
   import { get, del } from "../api.js";
@@ -52,13 +55,13 @@
   };
 
   let champions = get(
-    `/userclasses/${userclass.id}/champions`,
+    `/userclasses/${userclassId}/champions`,
     $session.user && $session.user.jwt
   );
 
   const updateChampions = () => {
     champions = get(
-      `/userclasses/${userclass.id}/champions`,
+      `/userclasses/${userclassId}/champions`,
       $session.user && $session.user.jwt
     );
   };
@@ -67,14 +70,14 @@
     modalContent.set(AddProductChampionModal);
     modalProps.set({
       update: updateChampions,
-      userclassId: userclass.id,
+      userclassId: userclassId,
       projectId,
     });
   };
 
   const unlinkUserclass = async () => {
     await del(
-      `/userclasses/${userclass.id}/requirements/${unlinkRequirement}`,
+      `/userclasses/${userclassId}/requirements/${unlinkRequirement}`,
       $session.user && $session.user.jwt
     );
     await update();
@@ -183,7 +186,7 @@
       <h3>
         <a
           rel="prefetch"
-          href={`/project/${projectId}/user-classes/${userclass.id}`}>
+          href={`/project/${projectId}/user-classes/${userclassId}`}>
           {userclass.name}
         </a>
         <span class="userclassPpuid">#{userclass.ppuid}</span>
@@ -209,9 +212,7 @@
       <blockquote>
         {#if userclass.description}
           {userclass.description}
-        {:else}
-          <em>No description</em>
-        {/if}
+        {:else}<em>No description</em>{/if}
       </blockquote>
     </div>
     <div class="persona">
@@ -219,9 +220,7 @@
       <blockquote>
         {#if userclass.persona}
           {userclass.persona}
-        {:else}
-          <em>No persona</em>
-        {/if}
+        {:else}<em>No persona</em>{/if}
       </blockquote>
     </div>
   </div>
@@ -244,7 +243,7 @@
           {#each result as champion}
             <ProductChampion
               {champion}
-              userclassId={userclass.id}
+              {userclassId}
               update={updateChampions} />
           {/each}
         </tbody>
@@ -282,9 +281,9 @@
       {:else}
         <a
           rel="prefetch"
-          href={`/project/${projectId}/user-classes/${userclass.id}/requirements`}
+          href={`/project/${projectId}/user-classes/${userclassId}/requirements`}
           class="button button-outline button-small button-secondary
-          button-clear">
+            button-clear">
           <div class="iconWrapper iconWrapper-padded">
             <FaLink />
           </div>

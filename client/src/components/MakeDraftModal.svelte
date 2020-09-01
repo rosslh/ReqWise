@@ -5,6 +5,7 @@
   export let entityId;
   export let update;
   export let close;
+  export let context = "draftify";
 
   const { session } = stores();
 
@@ -31,8 +32,20 @@
   };
 </script>
 
-<h3>Convert to draft</h3>
-<p>Pending reviews will be withdrawn.</p>
-<form>
-  <SubmitButton handler={makeDraft}>Make draft</SubmitButton>
-</form>
+{#if context === 'withdraw'}
+  <h3>Withdraw review</h3>
+  <p>Reviewed item will be converted back into a draft.</p>
+  <form>
+    <SubmitButton className="button-danger" handler={makeDraft}>
+      Withdraw
+    </SubmitButton>
+  </form>
+{:else}
+  <h3>Convert to draft</h3>
+  <p>Pending reviews will be withdrawn.</p>
+  <form>
+    <SubmitButton className="button-caution" handler={makeDraft}>
+      Make draft
+    </SubmitButton>
+  </form>
+{/if}

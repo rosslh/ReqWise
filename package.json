@@ -13,6 +13,8 @@
     "seed": "cd server && npm run seed",
     "test": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" test:client",
     "test:client": "cd client && npm run test",
+    "test:gui": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" test:gui:client",
+    "test:gui:client": "cd client && npm run test:gui",
     "lint": "npm run lint:client && npm run lint:server",
     "lint:client": "cd client && npm run lint",
     "lint:server": "cd server && npm run lint",

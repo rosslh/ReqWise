@@ -4,7 +4,11 @@
   export let projectId;
   export let unlinkRequirement;
   export let hideStakeholderStatus = false;
-  $: showEditButtons = file.is_draft;
+  export let baselineSourceId;
+
+  const fileId = baselineSourceId || file.id;
+
+  $: showEditButtons = file.is_draft && !file.is_baseline;
 
   import { stores } from "@sapper/app";
 
@@ -53,7 +57,7 @@
 
   const unlinkFile = async () => {
     await del(
-      `/files/${file.id}/requirements/${unlinkRequirement}`,
+      `/files/${fileId}/requirements/${unlinkRequirement}`,
       $session.user && $session.user.jwt
     );
     await update();
@@ -174,7 +178,7 @@
           <a
             rel="prefetch"
             title="Edit"
-            href={`/project/${projectId}/files/${file.id}/edit`}
+            href={`/project/${projectId}/files/${fileId}/edit`}
             class="button fileButton">
             <div class="fileIconWrapper">
               <MdEdit />
@@ -226,7 +230,7 @@
   </div>
   <div class="heading">
     <h3>
-      <a rel="prefetch" href={`/project/${projectId}/files/${file.id}`}>
+      <a rel="prefetch" href={`/project/${projectId}/files/${fileId}`}>
         {file.name}
       </a>
       <span class="filePpuid">#{file.ppuid}</span>
@@ -254,7 +258,7 @@
     {:else}
       <a
         rel="prefetch"
-        href={`/project/${projectId}/files/${file.id}/requirements`}
+        href={`/project/${projectId}/files/${fileId}/requirements`}
         class="button button-outline button-small button-secondary button-clear">
         <div class="iconWrapper iconWrapper-padded">
           <FaLink />
