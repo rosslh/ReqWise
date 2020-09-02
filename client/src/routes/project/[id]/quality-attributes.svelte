@@ -54,7 +54,7 @@
   const filters = [
     {
       label: "Review Status",
-      options: ["draft", "pending", "accepted", "requestChanges"].map((x) => ({
+      options: ["draft", "pending", "accept", "requestChanges"].map((x) => ({
         label: normalizeString(x),
         value: x,
       })),
