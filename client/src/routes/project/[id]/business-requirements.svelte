@@ -14,7 +14,7 @@
   import { onMount, getContext } from "svelte";
   import { projectShouldUpdate } from "../../../stores.js";
   import { get } from "../../../api.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
   import { stores } from "@sapper/app";
 
   import SearchSortFilter from "../../../components/SearchSortFilter.svelte";

@@ -12,7 +12,7 @@
 
   import SubmitButton from "./SubmitButton.svelte";
   import { post } from "../api.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
 
   let numericResponse;
 

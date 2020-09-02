@@ -7,7 +7,7 @@
   import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
   import Userclass from "../../../../components/Userclass.svelte";
   import { get } from "../../../../api.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
 
   const { page, session } = stores();
   const { id } = $page.params;

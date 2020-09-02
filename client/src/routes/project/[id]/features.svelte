@@ -12,7 +12,7 @@
 
 <script>
   import { get } from "../../../api.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
   import { projectShouldUpdate } from "../../../stores.js";
   import { stores } from "@sapper/app";
 

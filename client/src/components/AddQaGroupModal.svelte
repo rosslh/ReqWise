@@ -1,7 +1,7 @@
 <script>
   import Select from "svelte-select";
   import { post } from "../api.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
   import { stores } from "@sapper/app";
   const { session } = stores();
 

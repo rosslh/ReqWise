@@ -21,7 +21,7 @@
 
   import { put } from "../../api.js";
   import { toBase64, validateFileSize } from "../../utils.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
 

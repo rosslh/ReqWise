@@ -2,7 +2,7 @@
   import { stores } from "@sapper/app";
   import { getContext } from "svelte";
   import { get } from "../../../../api.js";
-  import normalizeString from "lodash/startcase";
+  import normalizeString from "lodash/startCase";
   import FilePreview from "../../../../components/FilePreview.svelte";
   import UploadFileModal from "../../../../components/UploadFileModal.svelte";
   import LinkResourceModal from "../../../../components/LinkResourceModal.svelte";
