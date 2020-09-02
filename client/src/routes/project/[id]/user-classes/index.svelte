@@ -37,6 +37,7 @@
     {
       label: "Review Status",
       options: [
+        "draft",
         "pending",
         "accepted",
         "requestChanges",
@@ -76,7 +77,7 @@
       {filters}
       list={result}
       searchKeys={['name', 'description', 'persona']} />
-    {#each searchResults.length ? searchResults : result as userclass (userclass.id)}
+    {#each searchResults as userclass (userclass.id)}
       <Userclass {userclass} {update} projectId={id} />
     {/each}
   </section>

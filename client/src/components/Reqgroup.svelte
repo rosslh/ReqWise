@@ -35,10 +35,11 @@
   };
 
   const updateReqgroup = async () => {
-    reqgroup = await get(
-      `/reqgroups/${reqgroupId}`,
-      $session.user && $session.user.jwt
-    );
+    // reqgroup = await get(
+    //   `/reqgroups/${reqgroupId}`,
+    //   $session.user && $session.user.jwt
+    // );
+    await update();
   };
 
   let selectedReqs = [];

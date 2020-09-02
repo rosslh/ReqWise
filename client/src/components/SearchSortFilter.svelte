@@ -28,6 +28,8 @@
 
   $: fuse = new Fuse(list, options);
 
+  export let filters = [];
+
   $: {
     searchResults = searchQuery
       ? fuse.search(searchQuery).map((x) => x.item)
@@ -41,9 +43,16 @@
         (a, b) => getProp(b, sortKeyAlpha) < getProp(a, sortKeyAlpha)
       );
     }
+    console.log(searchResults.length);
+    filters.forEach((filter) => {
+      if (filter.selectedOption) {
+        searchResults = searchResults.filter((reqgroup) =>
+          filter.handler(reqgroup, filter.selectedOption.value)
+        );
+      }
+    });
+    console.log(searchResults.length);
   }
-
-  export let filters = [];
 </script>
 
 <style>

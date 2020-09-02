@@ -56,7 +56,7 @@
       bind:searchResults
       list={result}
       searchKeys={['name', 'description']} />
-    {#each searchResults.length ? searchResults : result as stakeholderGroup (stakeholderGroup.id)}
+    {#each searchResults as stakeholderGroup (stakeholderGroup.id)}
       <StakeholderGroup group={stakeholderGroup} {update} />
     {/each}
   {/await}

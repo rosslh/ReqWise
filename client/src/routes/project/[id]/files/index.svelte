@@ -65,7 +65,7 @@
       bind:searchResults
       list={result}
       searchKeys={['name', 'description']} />
-    {#each searchResults.length ? searchResults : result as file (file.id)}
+    {#each searchResults as file (file.id)}
       <FilePreview projectId={id} {file} {update} />
     {/each}
   </section>

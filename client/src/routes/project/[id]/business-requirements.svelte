@@ -55,13 +55,13 @@
   const filters = [
     {
       label: "Review Status",
-      options: [
-        "pending",
-        "accepted",
-        "requestChanges",
-        "withdrawn",
-      ].map((x) => ({ label: normalizeString(x), value: x })),
-      selectedOption: undefined,
+      options: ["draft", "pending", "accepted", "requestChanges"].map((x) => ({
+        label: normalizeString(x),
+        value: x,
+      })),
+      handler: (reqgroup, selectedOption) =>
+        (selectedOption === "draft" && reqgroup.is_draft) ||
+        (!reqgroup.is_draft && selectedOption === reqgroup.latestReview.status),
     },
   ];
 </script>
@@ -84,7 +84,7 @@
     {filters}
     list={reqgroups}
     searchKeys={['name', 'description', 'requirements.description']} />
-  {#each searchResults.length ? searchResults : reqgroups as reqgroup (reqgroup.id)}
+  {#each searchResults as reqgroup (reqgroup.id)}
     <Reqgroup {reqgroup} {update} />
   {/each}
 </section>
