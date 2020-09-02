@@ -11,7 +11,7 @@
   import AddBrainstormResponse from "./AddBrainstormResponse.svelte";
   import PromptResponses from "./PromptResponses.svelte";
   import { get, del } from "../api.js";
-  import { normalizeString } from "../utils.js";
+  import normalizeString from "lodash/startcase";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";

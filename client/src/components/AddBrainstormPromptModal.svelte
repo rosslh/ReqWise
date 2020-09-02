@@ -9,7 +9,7 @@
   export let id;
 
   import { post } from "../api.js";
-  import { normalizeString } from "../utils.js";
+  import normalizeString from "lodash/startcase";
 
   import SubmitButton from "../components/SubmitButton.svelte";
 

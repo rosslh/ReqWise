@@ -20,7 +20,8 @@
   import SubmitButton from "../../components/SubmitButton.svelte";
 
   import { put } from "../../api.js";
-  import { toBase64, validateFileSize, normalizeString } from "../../utils.js";
+  import { toBase64, validateFileSize } from "../../utils.js";
+  import normalizeString from "lodash/startcase";
   import { goto, stores } from "@sapper/app";
   const { session } = stores();
 

@@ -14,7 +14,7 @@
 <script>
   import StakeholderReview from "../../../../components/StakeholderReview.svelte";
   import SearchSortFilter from "../../../../components/SearchSortFilter.svelte";
-  import { normalizeString } from "../../../../utils";
+  import normalizeString from "lodash/startcase";
   export let reviews;
 
   let searchResults = [];
