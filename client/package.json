@@ -88,6 +88,6 @@
     "cypress-wait-until": "^1.7.1"
   },
   "engines": {
-    "node": "12.x"
+    "node": "12"
   }
 }
