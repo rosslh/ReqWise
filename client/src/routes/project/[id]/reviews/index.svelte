@@ -18,6 +18,19 @@
   export let reviews;
 
   let searchResults = [];
+
+  const filters = [
+    {
+      label: "Review Status",
+      options: ["pending", "accepted", "requestChanges", "withdrawn"].map(
+        (x) => ({
+          label: normalizeString(x),
+          value: x,
+        })
+      ),
+      handler: (review, selectedOption) => selectedOption === review.status,
+    },
+  ];
 </script>
 
 <section class="contentWrapper">
@@ -29,9 +42,7 @@
   <SearchSortFilter
     bind:searchResults
     list={reviews}
-    filters={[{ label: 'Status', options: ['pending', 'accepted', 'requestChanges', 'withdrawn'].map(
-          (x) => ({ label: normalizeString(x), value: x })
-        ), selectedOption: undefined }]}
+    {filters}
     sortKeyRecent="created_at"
     sortKeyAlpha="reviewedEntity.name"
     searchKeys={['reviewedEntity.name', 'reviewedEntity.requirements.description']} />

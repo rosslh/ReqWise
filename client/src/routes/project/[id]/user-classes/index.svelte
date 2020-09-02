@@ -36,14 +36,14 @@
   const filters = [
     {
       label: "Review Status",
-      options: [
-        "draft",
-        "pending",
-        "accepted",
-        "requestChanges",
-        "withdrawn",
-      ].map((x) => ({ label: normalizeString(x), value: x })),
-      selectedOption: undefined,
+      options: ["draft", "pending", "accepted", "requestChanges"].map((x) => ({
+        label: normalizeString(x),
+        value: x,
+      })),
+      handler: (userclass, selectedOption) =>
+        (selectedOption === "draft" && userclass.is_draft) ||
+        (!userclass.is_draft &&
+          selectedOption === userclass.latestReview.status),
     },
     {
       label: "Importance",
@@ -51,7 +51,8 @@
         label: normalizeString(x),
         value: x,
       })),
-      selectedOption: undefined,
+      handler: (userclass, selectedOption) =>
+        selectedOption === userclass.importance,
     },
   ];
 </script>

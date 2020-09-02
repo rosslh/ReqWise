@@ -46,8 +46,8 @@
     console.log(searchResults.length);
     filters.forEach((filter) => {
       if (filter.selectedOption) {
-        searchResults = searchResults.filter((reqgroup) =>
-          filter.handler(reqgroup, filter.selectedOption.value)
+        searchResults = searchResults.filter((result) =>
+          filter.handler(result, filter.selectedOption.value)
         );
       }
     });

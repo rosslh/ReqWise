@@ -2,6 +2,7 @@
   import { stores } from "@sapper/app";
   import { getContext } from "svelte";
   import { get } from "../../../../api.js";
+  import { normalizeString } from "../../../../utils.js";
   import FilePreview from "../../../../components/FilePreview.svelte";
   import UploadFileModal from "../../../../components/UploadFileModal.svelte";
   import LinkResourceModal from "../../../../components/LinkResourceModal.svelte";
@@ -32,6 +33,19 @@
   };
 
   let searchResults = [];
+
+  const filters = [
+    {
+      label: "Review Status",
+      options: ["draft", "pending", "accepted", "requestChanges"].map((x) => ({
+        label: normalizeString(x),
+        value: x,
+      })),
+      handler: (file, selectedOption) =>
+        (selectedOption === "draft" && file.is_draft) ||
+        (!file.is_draft && selectedOption === file.latestReview.status),
+    },
+  ];
 </script>
 
 <section class="contentWrapper">
@@ -63,6 +77,7 @@
   <section class="contentWrapper">
     <SearchSortFilter
       bind:searchResults
+      {filters}
       list={result}
       searchKeys={['name', 'description']} />
     {#each searchResults as file (file.id)}
