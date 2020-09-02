@@ -1,29 +1,26 @@
 {
   "name": "reqwise-client",
-  "description": "A beautiful svelte app",
   "version": "1.0.0",
-  "license": "UNLICENSED",
   "private": true,
+  "description": "A beautiful sapper app",
+  "license": "UNLICENSED",
   "scripts": {
     "build": "sapper build --legacy",
+    "clean": "rm -rf __sapper__/ && rm -f session-store.db",
+    "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
+    "count-loc": "cloc --vcs=git --exclude-dir=static,.firebase --not-match-f=package-lock\\.json .",
     "deploy": "firebase deploy --only functions",
     "dev": "sapper dev",
     "export": "sapper export --legacy",
     "fb_start": "npm run shell",
+    "licenseChecker": "license-checker",
+    "lint": "eslint src/**/*.svelte src/**/*.js",
     "logs": "firebase functions:log",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "node __sapper__/build",
     "test": "cypress run",
-    "test:gui": "cypress open",
-    "lint": "eslint src/**/*.svelte src/**/*.js",
-    "clean": "rm -rf __sapper__/ && rm -f session-store.db",
-    "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
-    "count-loc": "cloc --vcs=git --exclude-dir=static,.firebase --not-match-f=package-lock\\.json .",
-    "licenseChecker": "license-checker"
-  },
-  "engines": {
-    "node": "10"
+    "testGui": "cypress open"
   },
   "dependencies": {
     "@google-cloud/connect-firestore": "^1.0.6",
@@ -89,5 +86,8 @@
   "optionalDependencies": {
     "cypress": "^5.0.0",
     "cypress-wait-until": "^1.7.1"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
