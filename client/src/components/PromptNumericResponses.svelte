@@ -1,7 +1,7 @@
 <script>
   export let prompt;
   export let responses;
-  import range from "lodash.range";
+  import range from "lodash/range";
   import ResponseEntry from "./ResponseEntry.svelte";
 
   const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
@@ -49,9 +49,7 @@
 
 {#if responses.length}
   {responses.length}
-  {#if responses.length > 1}responses{:else}response{/if}
-  received.
-  {#if prompt.responseType === 'number'}
+  {#if responses.length > 1}responses{:else}response{/if} received. {#if prompt.responseType === 'number'}
     <span class="secondary">
       Average: {avg}. Maximum: {Math.max(...values)}. Minimum: {Math.min(...values)}.
     </span>

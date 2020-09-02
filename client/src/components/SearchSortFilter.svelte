@@ -1,5 +1,5 @@
 <script>
-  import getProp from "lodash.get";
+  import getProp from "lodash/get";
   import Fuse from "fuse.js";
   import Select from "svelte-select";
 
