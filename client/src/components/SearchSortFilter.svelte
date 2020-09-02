@@ -43,7 +43,7 @@
         (a, b) => getProp(b, sortKeyAlpha) < getProp(a, sortKeyAlpha)
       );
     }
-    console.log(searchResults.length);
+
     filters.forEach((filter) => {
       if (filter.selectedOption) {
         searchResults = searchResults.filter((result) =>
@@ -51,7 +51,6 @@
         );
       }
     });
-    console.log(searchResults.length);
   }
 </script>
 

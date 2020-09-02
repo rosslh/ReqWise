@@ -139,7 +139,7 @@
     height: 2.5rem;
     display: flex;
     align-items: center;
-    margin-left: 0.5rem;
+    margin-right: 1rem;
   }
 
   h4 {
@@ -193,17 +193,17 @@
       </h3>
     </div>
     <div class="right">
+      <span
+        class="importanceLabel"
+        style={`background-color: var(--${getImportanceColor(userclass.importance)})`}>
+        {userclass.importance}
+      </span>
       {#if !hideStakeholderStatus}
         <StakeholderStatus
           isDraft={userclass.is_draft}
           latestReviewStatus={userclass.latestReview && userclass.latestReview.status}
           latestReviewId={userclass.latestReview && userclass.latestReview.id} />
       {/if}
-      <span
-        class="importanceLabel"
-        style={`background-color: var(--${getImportanceColor(userclass.importance)})`}>
-        {userclass.importance}
-      </span>
     </div>
   </div>
   <div class="twoCol">

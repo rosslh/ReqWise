@@ -34,19 +34,13 @@
   };
 
   const typeOptions = ["text", "paragraph", "dropdown", "number", "likert"].map(
-    (t) => {
-      let label;
-
-      if (t === "likert") {
-        label = "Likert scale (strongly disagree to strongly agree)";
-      } else {
-        label = normalizeString(t);
-      }
-      return {
-        label,
-        value: t,
-      };
-    }
+    (t) => ({
+      label:
+        t === "likert"
+          ? "Likert scale (strongly disagree to strongly agree)"
+          : normalizeString(t),
+      value: t,
+    })
   );
 
   let selectedType = typeOptions[0];
@@ -92,7 +86,7 @@
   }
 
   .promptModalWrapper {
-    min-height: 80vh;
+    min-height: 60vh;
   }
 </style>
 

@@ -191,7 +191,7 @@
   <RequirementDropzone {hiddenPlaceholders} parentId={-1} depth={0} />
 {/if}
 <li
-  class={`${selected ? 'selected' : ''} ${isContextModal ? 'noninteractive' : ''} requirement draggable depth-${requirement.depth}`}
+  class={`${selected ? 'selected' : ''} ${is_draft && scopes.includes('member') && !isContextModal ? '' : 'noninteractive'} requirement draggable depth-${requirement.depth}`}
   on:click={() => toggleReq({
       id: requirement.id,
       reqversion_id: requirement.reqversion_id,
@@ -243,7 +243,8 @@
   <div class="history">
     {#if !isContextModal}
       <button on:click|stopPropagation={() => showHistoryModal(requirement.id)}>
-        {requirement.updaterName} {formatDatetime(requirement.updated_at)}
+        {requirement.updaterName}
+        {formatDatetime(requirement.updated_at)}
       </button>
     {:else}
       <a
@@ -251,7 +252,8 @@
         rel="prefetch"
         href={`/project/${requirement.project_id}/requirement/${requirement.id}/history`}
         class="button">
-        {requirement.updaterName} {formatDatetime(requirement.updated_at)}
+        {requirement.updaterName}
+        {formatDatetime(requirement.updated_at)}
       </a>
     {/if}
   </div>

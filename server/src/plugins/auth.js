@@ -253,6 +253,28 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isProjectStakeholderByReqgroupId = async (
+    request,
+    reply,
+    isAdmin = false
+  ) => {
+    const stakeholdership = (
+      await fastify.knex
+        .from("reqgroup")
+        .join("stakeholder_project", "stakeholder_project.project_id", "reqgroup.project_id")
+        .select("stakeholder_project.id")
+        .where({
+          "reqgroup.id": request.params.reqgroupId,
+          "stakeholder_project.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!stakeholdership) {
+      throw new Error(`Not a stakeholder`);
+    }
+  };
+
   const isTeamMemberByRequirementId = async (
     request,
     reply,
@@ -563,7 +585,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "templateId", memberHandler: isTeamMemberByTemplateId },
       { param: "stakeholderGroupId", memberHandler: isTeamMemberByStakeholderGroupId, stakeholderHandler: isProjectStakeholderByStakeholderGroupId },
       { param: "fileId", memberHandler: isTeamMemberByFileId },
-      { param: "reqgroupId", memberHandler: isTeamMemberByReqgroupId },
+      { param: "reqgroupId", memberHandler: isTeamMemberByReqgroupId, stakeholderHandler: isProjectStakeholderByReqgroupId },
       { param: "requirementId", memberHandler: isTeamMemberByRequirementId, stakeholderHandler: isProjectStakeholderByRequirementId },
       { param: "reqversionId", memberHandler: isTeamMemberByReqversionId },
       { param: "commentId", memberHandler: isTeamMemberByCommentId },

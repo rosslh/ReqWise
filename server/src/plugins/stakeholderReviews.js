@@ -63,7 +63,7 @@ module.exports = fp(function (fastify, opts, done) {
       baseline = await fastify.getReqgroup(baseline.id);
     }
 
-    const latestReview = await fastify.getLatestReview(review.entityType, entityId);
+    const latestReview = await fastify.getLatestReview(review.entityType, baseline.id);
 
     return {
       ...baseline,

@@ -67,7 +67,7 @@
     </a>
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h3>
-  {#if !hideStakeholderStatus && !reqgroup.is_baseline}
+  {#if !hideStakeholderStatus}
     <StakeholderStatus
       isDraft={reqgroup.is_draft}
       latestReviewStatus={reqgroup.latestReview && reqgroup.latestReview.status}

@@ -2,17 +2,17 @@
   import { get } from "../../../../api";
   export async function preload({ params }, { user }) {
     if (user && user.jwt) {
-      const baselines = await get(
+      const reviews = await get(
         `/projects/${params.id}/baselines`,
         user && user.jwt
       );
-      return { baselines };
+      return { reviews };
     }
   }
 </script>
 
 <script>
-  export let baselines;
+  export let reviews;
   import Reqgroup from "../../../../components/Reqgroup.svelte";
   import Userclass from "../../../../components/Userclass.svelte";
   import FilePreview from "../../../../components/FilePreview.svelte";
@@ -27,13 +27,19 @@
   </p>
 </section>
 <section class="contentWrapper">
-  {#each baselines as baseline}
-    {#if baseline.reqgroup}
-      <Reqgroup reqgroup={baseline.reqgroup} />
-    {:else if baseline.userclass}
-      <Userclass userclass={baseline.userclass} />
+  {#each reviews as review}
+    {#if review.entityType === 'reqgroup'}
+      <Reqgroup
+        reqgroup={review.reviewedEntity}
+        baselineSourceId={review.entity_reqgroup_id} />
+    {:else if review.entityType === 'userclass'}
+      <Userclass
+        userclass={review.reviewedEntity}
+        baselineSourceId={review.entity_userclass_id} />
     {:else}
-      <FilePreview file={baseline.file} />
+      <FilePreview
+        file={review.reviewedEntity}
+        baselineSourceId={review.entity_file_id} />
     {/if}
   {/each}
 </section>

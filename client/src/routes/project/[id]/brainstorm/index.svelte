@@ -25,6 +25,13 @@
   ul {
     list-style-type: none;
   }
+
+  .secondary {
+    color: var(--secondaryText);
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+  }
 </style>
 
 <section class="contentWrapper">
@@ -49,11 +56,15 @@
   {#await questionnaires}
     <!-- Loading -->
   {:then result}
-    <ul>
-      {#each result as questionnaire (questionnaire.id)}
-        <QuestionnairePreview {questionnaire} projectId={$page.params.id} />
-      {/each}
-      {#if !result.length}No published questionnaires{/if}
-    </ul>
+    {#if result.length}
+      <ul>
+        {#each result as questionnaire (questionnaire.id)}
+          <QuestionnairePreview {questionnaire} projectId={$page.params.id} />
+        {/each}
+        {#if !result.length}No published questionnaires{/if}
+      </ul>
+    {:else}
+      <div class="secondary">No questionnaires yet</div>
+    {/if}
   {/await}
 </section>

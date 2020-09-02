@@ -1124,7 +1124,7 @@ module.exports = async function (fastify, opts) {
         const stakeholders = await fastify.getReviewStakeholders(review.id);
         return { ...review, responses, reviewedEntity, stakeholders };
       }));
-      console.log(reviews);
+
       return reviews;
     }
   );

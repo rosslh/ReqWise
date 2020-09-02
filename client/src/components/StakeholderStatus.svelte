@@ -6,6 +6,9 @@
 
   import { stores } from "@sapper/app";
   const { page } = stores();
+
+  import Ribbon from "./Ribbon.svelte";
+
   $: status = isDraft ? "draft" : latestReviewStatus;
 
   const statuses = {
@@ -38,44 +41,6 @@
 </script>
 
 <style>
-  .indicator {
-    position: relative;
-    height: 5.5rem;
-    width: var(--stakeholderStatusWidth);
-    margin-top: -1.25rem;
-    color: var(--background1);
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    text-transform: capitalize;
-    text-align: center;
-    line-height: 1.4rem;
-  }
-
-  .inlineIndicator {
-    padding: 0 0.5rem;
-    color: var(--background1);
-    border-radius: 0.4rem;
-    height: 2.5rem;
-    display: inline-flex;
-    align-items: center;
-    font-size: 1.3rem;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-
-  .bottomTriangle {
-    position: absolute;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-left: calc(var(--stakeholderStatusWidth) / 2) solid transparent;
-    border-right: calc(var(--stakeholderStatusWidth) / 2) solid transparent;
-    border-bottom: 1rem solid var(--background1);
-  }
-
   a.hoverable:hover {
     text-decoration: none;
     opacity: 0.8;
@@ -90,13 +55,10 @@
 <a
   href={isDraft ? undefined : `/project/${$page.params.id}/reviews/${latestReviewId}`}
   on:click={isDraft ? () => false : undefined}
-  class={`${inline ? 'inlineIndicator' : 'indicator'} ${isDraft ? '' : 'hoverable'}`}
-  style={`
-    background-color: ${statuses[status].bgColor};
-    --stakeholderStatusWidth: ${statuses[status].width};
-  `}>
-  {statuses[status].label}
-  {#if !inline}
-    <div class="bottomTriangle" aria-hidden={true} />
-  {/if}
+  class={`${isDraft ? '' : 'hoverable'}`}>
+  <Ribbon
+    {inline}
+    label={statuses[status].label}
+    bgColor={statuses[status].bgColor}
+    width={statuses[status].width} />
 </a>

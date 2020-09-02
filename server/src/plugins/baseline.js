@@ -9,31 +9,39 @@ module.exports = fp(function (fastify, opts, done) {
     let reviews = await fastify.knex
       .from("stakeholderReview")
       .select("*")
-      .where({ project_id: projectId, status: "accept" });
-    // TODO: only get latest review for each entity
+      .where({ project_id: projectId, status: "accept" })
+      .andWhere("stakeholderReview.created_at",
+        "=",
+        fastify.knex.raw(
+          `(select max(created_at) from "stakeholderReview" as r where r."entityType"="stakeholderReview"."entityType" and COALESCE(r.entity_reqgroup_id,r.entity_file_id,r.entity_userclass_id)=COALESCE("stakeholderReview".entity_reqgroup_id,"stakeholderReview".entity_file_id,"stakeholderReview".entity_userclass_id))`
+        ))
 
     reviews = Promise.all(reviews.map(async r => {
       if (r.entityType === "reqgroup") {
-        const reqgroup = await fastify.getReqgroup(r.entity_reqgroup_id);
-        return { ...r, reqgroup };
+        let reqgroup = await fastify.knex
+          .from("reqgroup")
+          .select("*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id")
+          .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
+          .where("reqgroup.stakeholderReview_id", r.id)
+          .first();
+        reqgroup = await fastify.getReqgroup(reqgroup.id);
+        return { ...r, reviewedEntity: { ...reqgroup, latestReview: r } };
       } else if (r.entityType === "userclass") {
         const userclass = await fastify.knex
           .from("userclass")
           .select("*", "per_project_unique_id.readable_id as ppuid", "userclass.id as id")
           .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
-          .where("userclass.id", r.entity_userclass_id)
+          .where("userclass.stakeholderReview_id", r.id)
           .first();
-        const latestReview = await fastify.getLatestReview("userclass", userclass.id);
-        return { ...r, userclass: { ...userclass, latestReview } };
+        return { ...r, reviewedEntity: { ...userclass, latestReview: r } };
       } else { // file
         const file = await fastify.knex
           .from("file")
-          .select("*", "per_project_unique_id.readable_id as ppuid", "userclass.id as id")
+          .select("*", "per_project_unique_id.readable_id as ppuid", "file.id as id")
           .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
-          .where("file.id", r.entity_file_id)
+          .where("file.stakeholderReview_id", r.id)
           .first();
-        const latestReview = await fastify.getLatestReview("file", file.id);
-        return { ...r, file: { ...file, latestReview } };
+        return { ...r, reviewedEntity: { ...file, latestReview: r } };
       }
     }));
 

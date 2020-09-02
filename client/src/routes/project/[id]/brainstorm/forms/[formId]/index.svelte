@@ -15,6 +15,7 @@
   import AddBrainstormPromptModal from "../../../../../../components/AddBrainstormPromptModal.svelte";
   import EditQuestionnaireModal from "../../../../../../components/EditQuestionnaireModal.svelte";
   import BrainstormPrompt from "../../../../../../components/BrainstormPrompt.svelte";
+  import Ribbon from "../../../../../../components/Ribbon.svelte";
 
   export let questionnaire;
 
@@ -53,19 +54,23 @@
     align-items: center;
     padding-top: 0.5rem;
   }
-
   .formHeader h2 {
     margin-top: 1.5rem;
     margin-left: 1rem;
+    margin-right: 6rem;
   }
 </style>
 
 <section class="contentWrapper">
   <div class="formHeader">
-    <h2>
-      {#if questionnaire.is_draft}[Draft]{/if}
-      {questionnaire.description}
-    </h2>
+    <h2>{questionnaire.description}</h2>
+    {#if questionnaire.is_draft}
+      <Ribbon
+        label="Draft"
+        bgColor="var(--secondaryText)"
+        backdropColor="var(--backdrop)"
+        width="3.75rem" />
+    {/if}
   </div>
   {#if questionnaire.is_draft}
     <button on:click={addPrompt} class="button button-success">
