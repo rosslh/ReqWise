@@ -101,7 +101,7 @@
           <div class="iconWrapper">
             <FaRegEdit />
           </div>
-          Make draft
+          Convert to draft
         </button>
       {/if}
       {#if reqgroup.is_draft && scopes.includes('member')}

@@ -8,14 +8,17 @@
 
   const fileId = baselineSourceId || file.id;
 
-  $: showEditButtons = file.is_draft && !file.is_baseline;
+  $: showEditButtons =
+    file.is_draft && !file.is_baseline && scopes.includes("member");
 
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
 
   import { modalContent, modalProps } from "../stores.js";
   import { del } from "../api.js";
   import EditFileDetailsModal from "./EditFileDetailsModal.svelte";
   import DeleteFileModal from "./DeleteFileModal.svelte";
+  import MakeDraftModal from "./MakeDraftModal.svelte";
   import UploadFileModal from "./UploadFileModal.svelte";
   import StakeholderStatus from "./StakeholderStatus.svelte";
 
@@ -61,6 +64,17 @@
       $session.user && $session.user.jwt
     );
     await update();
+  };
+
+  const scopes = getContext("scopes");
+
+  const makeDraft = () => {
+    modalContent.set(MakeDraftModal);
+    modalProps.set({
+      entityId: fileId,
+      entityType: "file",
+      update,
+    });
   };
 </script>
 
@@ -265,6 +279,17 @@
         </div>
         Requirements
       </a>
+    {/if}
+    {#if !file.is_draft && !file.is_baseline && scopes.includes('member')}
+      <button
+        id="makeDraftButton"
+        on:click={makeDraft}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaRegEdit />
+        </div>
+        Convert to draft
+      </button>
     {/if}
     {#if showEditButtons}
       <button

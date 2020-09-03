@@ -13,7 +13,7 @@ module.exports = fp(function (fastify, opts, done) {
       .andWhere("stakeholderReview.created_at",
         "=",
         fastify.knex.raw(
-          `(select max(created_at) from "stakeholderReview" as r where r."entityType"="stakeholderReview"."entityType" and COALESCE(r.entity_reqgroup_id,r.entity_file_id,r.entity_userclass_id)=COALESCE("stakeholderReview".entity_reqgroup_id,"stakeholderReview".entity_file_id,"stakeholderReview".entity_userclass_id))`
+          `(select max(created_at) from "stakeholderReview" as r where r."entityType"="stakeholderReview"."entityType" and r.status='accept' and COALESCE(r.entity_reqgroup_id,r.entity_file_id,r.entity_userclass_id)=COALESCE("stakeholderReview".entity_reqgroup_id,"stakeholderReview".entity_file_id,"stakeholderReview".entity_userclass_id))`
         ))
 
     reviews = Promise.all(reviews.map(async r => {

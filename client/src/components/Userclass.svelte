@@ -8,12 +8,14 @@
   const userclassId = baselineSourceId || userclass.id;
 
   export let hideStakeholderStatus = false;
-  $: showEditButtons = userclass.is_draft && !userclass.is_baseline;
+  $: showEditButtons =
+    userclass.is_draft && !userclass.is_baseline && scopes.includes("member");
 
   import { modalContent, modalProps } from "../stores.js";
   import { get, del } from "../api.js";
   import DeleteUserclassModal from "./DeleteUserclassModal.svelte";
   import EditUserclassModal from "./EditUserclassModal.svelte";
+  import MakeDraftModal from "./MakeDraftModal.svelte";
   import AddProductChampionModal from "./AddProductChampionModal.svelte";
   import Skeleton from "./Skeleton.svelte";
   import ProductChampion from "./ProductChampion.svelte";
@@ -23,6 +25,7 @@
   import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
+  import { getContext } from "svelte";
   import { stores } from "@sapper/app";
   const { session } = stores();
 
@@ -81,6 +84,17 @@
       $session.user && $session.user.jwt
     );
     await update();
+  };
+
+  const scopes = getContext("scopes");
+
+  const makeDraft = () => {
+    modalContent.set(MakeDraftModal);
+    modalProps.set({
+      entityId: userclassId,
+      entityType: "userclass",
+      update,
+    });
   };
 </script>
 
@@ -289,6 +303,17 @@
           </div>
           Requirements
         </a>
+      {/if}
+      {#if !userclass.is_draft && !userclass.is_baseline && scopes.includes('member')}
+        <button
+          id="makeDraftButton"
+          on:click={makeDraft}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegEdit />
+          </div>
+          Convert to draft
+        </button>
       {/if}
       {#if showEditButtons}
         <button

@@ -1,5 +1,6 @@
 <script>
   import { stores } from "@sapper/app";
+  import normalizeUrl from "normalize-url";
 
   import { post, put } from "../api.js";
   import SubmitButton from "../components/SubmitButton.svelte";
@@ -14,6 +15,7 @@
   let name = linkedResource ? linkedResource.name : "";
   let description = linkedResource ? linkedResource.description : "";
   let url = linkedResource ? linkedResource.url : "";
+  $: normalizedUrl = url && normalizeUrl(url);
 
   $: addResource = async () => {
     if (linkedResource) {
@@ -22,7 +24,7 @@
         {
           name,
           description,
-          url
+          url: normalizedUrl,
         },
         $session.user && $session.user.jwt
       );
@@ -34,7 +36,7 @@
         {
           name,
           description,
-          url
+          url: normalizedUrl,
         },
         $session.user && $session.user.jwt
       );
@@ -45,6 +47,7 @@
 </script>
 
 <h3>Link an external resource</h3>
+{normalizedUrl}
 <form>
   <fieldset>
     <label for="name">Title</label>

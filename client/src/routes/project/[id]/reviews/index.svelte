@@ -49,6 +49,6 @@
 </section>
 <section class="contentWrapper">
   {#each searchResults as review (review.id)}
-    <StakeholderReview {review} />
+    <StakeholderReview {review} isPreview={true} />
   {/each}
 </section>

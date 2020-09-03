@@ -216,8 +216,9 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { type } = request.query;
       const reqgroups = await fastify.getReqgroups(request.params.projectId, type);
-      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
-      return reqgroups.filter(x => scopes.includes("member") || !x.is_draft);
+      // const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      return reqgroups;
+      // return reqgroups.filter(x => scopes.includes("member") || !x.is_draft);
     });
 
   const getProjectBaselinesSchema = {
@@ -286,8 +287,9 @@ module.exports = async function (fastify, opts) {
         };
       }));
 
-      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
-      return result.filter(x => scopes.includes("member") || !x.is_draft);
+      // const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      // return result.filter(x => scopes.includes("member") || !x.is_draft);
+      return result;
     }
   );
 
@@ -713,8 +715,9 @@ module.exports = async function (fastify, opts) {
         return { ...q, numPrompts, numResponses };
       }));
 
-      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
-      return result.filter(x => scopes.includes("member") || !x.is_draft);
+      // const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      // return result.filter(x => scopes.includes("member") || !x.is_draft);
+      return result;
     }
   );
 
@@ -791,8 +794,9 @@ module.exports = async function (fastify, opts) {
         return { ...userclass, latestReview };
       }));
 
-      const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
-      return result.filter(x => scopes.includes("member") || !x.is_draft);
+      // const scopes = await fastify.getScopes(request.user.id, request.params.projectId);
+      // return result.filter(x => scopes.includes("member") || !x.is_draft);
+      return result;
     }
   );
 

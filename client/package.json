@@ -58,6 +58,7 @@
     "fuse.js": "^6.4.1",
     "license-checker": "^25.0.1",
     "lodash": "^4.17.20",
+    "normalize-url": "^5.1.0",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
     "postcss": "^7.0.27",

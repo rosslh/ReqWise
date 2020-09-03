@@ -45,7 +45,7 @@
   <p>Pending reviews will be withdrawn.</p>
   <form>
     <SubmitButton className="button-caution" handler={makeDraft}>
-      Make draft
+      Convert to draft
     </SubmitButton>
   </form>
 {/if}
