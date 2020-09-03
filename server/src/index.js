@@ -4,6 +4,7 @@ const knex = require("knex");
 const path = require("path");
 const AutoLoad = require("fastify-autoload");
 const CORS = require("fastify-cors");
+const helmet = require('fastify-helmet')
 
 require("dotenv").config();
 
@@ -19,6 +20,11 @@ function fastifyKnexJS(fastify, opts, next) {
 
 module.exports = function (fastify, opts, next) {
   fastify.register(require('fastify-formbody'));
+
+  fastify.register(
+    helmet,
+    {}
+  );
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
