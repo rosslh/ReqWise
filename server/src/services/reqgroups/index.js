@@ -460,7 +460,7 @@ module.exports = async function (fastify, opts) {
         .join("per_project_unique_id", "per_project_unique_id.id", "brainstormPrompt.ppuid_id")
         .join("brainstormPrompt_reqgroup", "brainstormPrompt.id", "brainstormPrompt_reqgroup.brainstormPrompt_id")
         .where({ "brainstormPrompt_reqgroup.reqgroup_id": request.params.reqgroupId })
-        .orderByRaw("coalesce(updated_at,created_at) desc");
+        .orderByRaw("created_at desc");
       return await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
     });
 
