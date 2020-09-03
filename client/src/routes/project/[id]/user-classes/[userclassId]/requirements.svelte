@@ -1,14 +1,28 @@
 <script>
   import { stores } from "@sapper/app";
-  import { get } from "../../../../../api.js";
+  import { get } from "../../../../../api";
+  import { modalContent, modalProps } from "../../../../../stores";
+  import AddRequirementToUserclassModal from "../../../../../components/AddRequirementToUserclassModal.svelte";
 
   const { page, session } = stores();
-  const { userclassId } = $page.params;
+  const { userclassId, id } = $page.params;
+
+  const update = async () => {
+    requirements = get(
+      `/userclasses/${userclassId}/requirements`,
+      $session.user && $session.user.jwt
+    );
+  };
 
   let requirements = get(
     `/userclasses/${userclassId}/requirements`,
     $session.user && $session.user.jwt
   );
+
+  const addRequirement = () => {
+    modalContent.set(AddRequirementToUserclassModal);
+    modalProps.set({ projectId: id, userclassId, update });
+  };
 </script>
 
 <style>
@@ -18,7 +32,10 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Requirements linked to userclass</h2>
+  <h2>Requirements linked to user class</h2>
+  <button class="button button-success" on:click={addRequirement}>
+    Add requirement
+  </button>
 </section>
 {#await requirements}
   <!-- loading -->
@@ -31,7 +48,8 @@
             <a
               rel="prefetch"
               href={`/project/${req.project_id}/requirement/${req.id}`}>
-              #{req.ppuid} {req.description}
+              #{req.ppuid}
+              {req.description}
             </a>
           </li>
         {/each}

@@ -672,10 +672,14 @@ body {
   --itemHoverBG:  var(--backdrop);
   --itemIsActiveBG:  var(--themeColor);
   --itemIsActiveColor: var(--background1);
-  --multiClearBG:  var(--background2);
+  --multiClearBG:  var(--grey1);
   --multiClearHoverBG:  var(--background2);
   --multiItemActiveBG:  var(--background2);
   --multiItemBG:  var(--background2);
+  --multiItemActiveColor: var(--secondaryText);
+  --multiClearFill: var(--secondaryText);
+  --multiItemBG: var(--grey1);
+  --multiItemActiveBG: var(--grey2);
 }
 
 .panel {

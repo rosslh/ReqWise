@@ -221,6 +221,57 @@ module.exports = async function (fastify, opts) {
       // return reqgroups.filter(x => scopes.includes("member") || !x.is_draft);
     });
 
+  const getProjectRequirementsSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array", items: {
+          type: "object",
+          properties: {
+            id: { type: ["number", "string"] },
+            parent_requirement_id: { type: ["number", "string", "null"] },
+            reqgroup_id: { type: ["number", "string"] },
+            reqversion_id: { type: ["number", "string"] },
+            project_id: { type: ["number", "string"] },
+            account_id: { type: ["number", "string"] },
+            priority: { type: "string" },
+            status: { type: "string" },
+            description: { type: "string" },
+            created_at: { type: "string" },
+            updated_at: { type: "string" },
+            ppuid: { type: "number" },
+            authorName: { type: "string" },
+            updaterName: { type: "string" },
+            depth: { type: "number" }
+          }
+        }
+      },
+    },
+  };
+  fastify.get(
+    "/:projectId/requirements",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getProjectRequirementsSchema,
+    },
+    async function (request, reply) {
+      const requirements = [].concat(...(await fastify.getReqgroups(request.params.projectId)).map(rg => rg.requirements));
+      return requirements;
+    });
+
   const getProjectBaselinesSchema = {
     queryString: {},
     params: {

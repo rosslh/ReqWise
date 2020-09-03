@@ -179,6 +179,7 @@ module.exports = async function (fastify, opts) {
       )
     );
   };
+
   const getPromptRequirementsSchema = {
     queryString: {},
     params: {
