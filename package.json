@@ -32,12 +32,19 @@
     "testGui": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" testGui:client",
     "testGui:client": "cd client && npm run testGui"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run lint && npm run licenseChecker"
+    }
+  },
   "config": {
     "allowedLicenses": "MIT;BSD;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;WTFPL;CC-BY-3.0;CC-BY-4.0;CC0-1.0;Unlicense",
     "packageLicenseWhitelist": "reqwise-client@1.0.0;reqwise-server@1.0.0;shimport@1.0.1;svelte-select@3.11.1;buffers@0.1.1;event-stream@0.9.8;map-stream@0.1.0;png-js@0.1.1"
   },
   "devDependencies": {
     "cross-conf-env": "^1.1.2",
+    "husky": "^4.2.5",
     "npm-run-all": "^4.1.5",
     "start-server-and-test": "^1.11.3"
   },

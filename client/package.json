@@ -13,7 +13,7 @@
     "dev": "sapper dev",
     "export": "sapper export --legacy",
     "fb_start": "npm run shell",
-    "licenseChecker": "license-checker",
+    "licenseChecker": "license-checker --onlyunknown",
     "lint": "eslint src/**/*.svelte src/**/*.js",
     "logs": "firebase functions:log",
     "serve": "firebase emulators:start --only functions",
