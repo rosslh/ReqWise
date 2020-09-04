@@ -1,14 +1,13 @@
 import resolve from "rollup-plugin-node-resolve";
-import replace from "rollup-plugin-replace";
+import replace from "@rollup/plugin-replace";
 import commonjs from "rollup-plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import config from "sapper/config/rollup.js";
 import pkg from "./package.json";
 
 import getPreprocessor from "svelte-preprocess";
-import path from "path";
 import postcss from "rollup-plugin-postcss";
 
 const sapperEnv = require('sapper-environment');
@@ -127,7 +126,7 @@ export default {
       commonjs(),
       postcss({
         plugins: postcssPlugins(!dev),
-        extract: path.resolve(__dirname, "./static/global.css"),
+        extract: "static/global.css",
       }),
     ],
     external: Object.keys(pkg.dependencies).concat(

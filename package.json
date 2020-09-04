@@ -17,9 +17,9 @@
     "count-loc": "npm run count-loc:client && npm run count-loc:server",
     "count-loc:client": "cd client && npm run count-loc",
     "count-loc:server": "cd server && npm run count-loc",
-    "licenseChecker": "npm run licenseChecker:client && npm run licenseChecker:server",
-    "licenseChecker:client": "cd client && cross-conf-env npm run licenseChecker -- --onlyAllow=npm_package_config_allowedLicenses --excludePackages=npm_package_config_packageLicenseWhitelist",
-    "licenseChecker:server": "cd server && cross-conf-env npm run licenseChecker -- --onlyAllow=npm_package_config_allowedLicenses --excludePackages=npm_package_config_packageLicenseWhitelist",
+    "license-checker": "npm run license-checker:client && npm run license-checker:server",
+    "license-checker:client": "cd client && cross-conf-env npm run license-checker -- --onlyAllow=npm_package_config_allowedLicenses --excludePackages=npm_package_config_packageLicenseWhitelist",
+    "license-checker:server": "cd server && cross-conf-env npm run license-checker -- --onlyAllow=npm_package_config_allowedLicenses --excludePackages=npm_package_config_packageLicenseWhitelist",
     "lint": "npm run lint:client && npm run lint:server",
     "lint:client": "cd client && npm run lint",
     "lint:server": "cd server && npm run lint",
@@ -32,13 +32,13 @@
     "start:client": "cd client && npm run dev",
     "test": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" test:client",
     "test:client": "cd client && npm run test",
-    "test-gui": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" testGui:client",
-    "test-gui:client": "cd client && npm run testGui"
+    "test-gui": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" test-gui:client",
+    "test-gui:client": "cd client && npm run test-gui"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint-staged",
-      "pre-push": "npm run lint-staged && npm run licenseChecker"
+      "pre-push": "npm run lint-staged && npm run license-checker"
     }
   },
   "config": {

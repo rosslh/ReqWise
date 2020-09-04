@@ -34,7 +34,7 @@ jobs:
       - name: Check licenses
         working-directory: ./
         run: |
-          npm run licenseChecker
+          npm run license-checker
       - name: Lint code
         working-directory: ./
         run: |
