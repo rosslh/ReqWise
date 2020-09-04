@@ -14,7 +14,7 @@
     "count-loc": "cloc --vcs=git --exclude-dir=migrations,test --not-match-f=package-lock\\.json .",
     "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --options",
     "licenseChecker": "license-checker --onlyunknown",
-    "lint": "eslint **/*.js --fix",
+    "lint": "eslint src/**/*.js --fix",
     "seed": "knex migrate:latest --env=dev && knex seed:run --env=dev",
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112",
     "sqlProduction": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112,reqwise:us-central1:reqwise=tcp:1111",
