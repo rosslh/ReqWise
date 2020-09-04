@@ -5,22 +5,26 @@
   "description": "A beautiful sapper app",
   "license": "UNLICENSED",
   "scripts": {
+    "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
     "build": "sapper build --legacy",
     "clean": "rm -rf __sapper__/ && rm -f session-store.db",
-    "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
     "count-loc": "cloc --vcs=git --exclude-dir=static,.firebase --not-match-f=package-lock\\.json .",
     "deploy": "firebase deploy --only functions",
     "dev": "sapper dev",
     "export": "sapper export --legacy",
     "fb_start": "npm run shell",
     "licenseChecker": "license-checker --onlyunknown",
-    "lint": "eslint src/**/*.svelte src/**/*.js",
+    "lint": "eslint **/*.svelte src/**/*.js",
     "logs": "firebase functions:log",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "node __sapper__/build",
     "test": "cypress run",
     "testGui": "cypress open"
+  },
+  "lint-staged": {
+    "**/*.js": "eslint",
+    "**/*.svelte": "eslint"
   },
   "dependencies": {
     "@google-cloud/connect-firestore": "^1.0.6",
@@ -57,6 +61,7 @@
     "firebase-functions-test": "^0.2.0",
     "fuse.js": "^6.4.1",
     "license-checker": "^25.0.1",
+    "lint-staged": "^10.3.0",
     "lodash": "^4.17.20",
     "normalize-url": "^5.1.0",
     "nprogress": "^0.2.0",

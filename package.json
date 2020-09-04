@@ -23,19 +23,22 @@
     "lint": "npm run lint:client && npm run lint:server",
     "lint:client": "cd client && npm run lint",
     "lint:server": "cd server && npm run lint",
+    "lint-staged": "npm run lint-staged:client && npm run lint-staged:server",
+    "lint-staged:client": "cd client && npx lint-staged",
+    "lint-staged:server": "cd server && npx lint-staged",
     "seed": "cd server && npm run seed",
     "start": "run-p --race start:backend start:client",
     "start:backend": "cd server && npm run dev",
     "start:client": "cd client && npm run dev",
     "test": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" test:client",
     "test:client": "cd client && npm run test",
-    "testGui": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" testGui:client",
-    "testGui:client": "cd client && npm run testGui"
+    "test-gui": "npm run seed && server-test start \"http-get://localhost:3000|http-get://localhost:3001\" testGui:client",
+    "test-gui:client": "cd client && npm run testGui"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm run lint && npm run licenseChecker"
+      "pre-commit": "npm run lint-staged",
+      "pre-push": "npm run lint-staged && npm run licenseChecker"
     }
   },
   "config": {
