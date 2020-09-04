@@ -52,7 +52,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - uses: harmon758/postgresql-action@v1
+      - uses: harmon758/postgresql-action@0be19fa
         with:
           postgresql version: "11"
           postgresql db: "reqwise"
