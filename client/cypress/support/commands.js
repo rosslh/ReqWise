@@ -49,7 +49,7 @@ Cypress.Commands.add("goToRequirement", () => {
   cy.waitForSkeleton();
   cy.url().should('include', 'reqgroup/');
   cy.contains('h2', "View requirement group")
-  cy.get('button.commentIconWrapper').click();
+  cy.get('button[data-cy=commentIconWrapper]').click();
   cy.waitForPreload();
   cy.waitForSkeleton();
   cy.url().should('include', 'requirement/');

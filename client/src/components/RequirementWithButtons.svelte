@@ -83,6 +83,7 @@
     {/if}
     <div class="iconCell">
       <button
+        data-cy="commentIconWrapper"
         on:click|stopPropagation={() => viewRequirement()}
         class="buttonIconWrapper comment">
         <FaRegComment />
