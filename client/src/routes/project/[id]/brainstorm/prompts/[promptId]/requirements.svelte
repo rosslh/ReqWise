@@ -1,13 +1,12 @@
 <script>
   import { stores } from "@sapper/app";
-  import { get } from "../../../../../../api.js";
-
+  import { get } from "../../../../../../api";
   import AddRequirementToPromptModal from "../../../../../../components/AddRequirementToPromptModal.svelte";
+  import RequirementWithButtons from "../../../../../../components/RequirementWithButtons.svelte";
+  import { modalProps, modalContent } from "../../../../../../stores";
 
   const { page, session } = stores();
   const { promptId, id } = $page.params;
-
-  import { modalProps, modalContent } from "../../../../../../stores";
 
   const update = async () => {
     requirements = get(
@@ -34,7 +33,7 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Requirements linked to brainstorm prompt</h2>
+  <h2>Requirements linked to prompt</h2>
   <button class="button button-success" on:click={addRequirement}>
     Add requirement
   </button>
@@ -44,27 +43,24 @@
 {:then result}
   <section class="contentWrapper">
     {#if result.length}
-      <ul>
-        {#each result as req (req.id)}
-          <li>
-            {#if req.entityType === 'reqgroup'}
-              <a
-                rel="prefetch"
-                href={`/project/${req.project_id}/reqgroup/${req.id}`}>
-                #{req.ppuid}
-                {req.name} (requirement group)
-              </a>
-            {:else}
-              <a
-                rel="prefetch"
-                href={`/project/${req.project_id}/requirement/${req.id}`}>
-                #{req.ppuid}
-                {req.description} (requirement)
-              </a>
-            {/if}
-          </li>
-        {/each}
-      </ul>
+      {#each result as req (`${req.entityType}-${req.id}`)}
+        {#if req.entityType === 'requirement'}
+          <ul class="panel">
+            <RequirementWithButtons
+              {update}
+              unlinkId={promptId}
+              unlinkType="prompt"
+              requirement={req} />
+          </ul>
+        {:else}
+          <a
+            rel="prefetch"
+            href={`/project/${req.project_id}/reqgroup/${req.id}`}>
+            #{req.ppuid}
+            {req.name} (requirement group)
+          </a>
+        {/if}
+      {/each}
     {:else}
       <div class="secondary">No requirements linked</div>
     {/if}

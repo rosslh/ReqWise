@@ -2,7 +2,7 @@
   import { stores } from "@sapper/app";
   const { session } = stores();
   import { onMount, onDestroy, getContext } from "svelte";
-  import RequirementInGroup from "../components/RequirementInGroup.svelte";
+  import RequirementWithButtons from "../components/RequirementWithButtons.svelte";
   import ReqgroupSelectTools from "../components/ReqgroupSelectTools.svelte";
   import ReqgroupHeader from "../components/ReqgroupHeader.svelte";
   import ReqgroupStatusBar from "../components/ReqgroupStatusBar.svelte";
@@ -222,7 +222,7 @@
   {#if requirements && requirements.length}
     <ul class="reqWrapper" data-reqgroup={reqgroup.name}>
       {#each requirements as requirement, index}
-        <RequirementInGroup
+        <RequirementWithButtons
           is_draft={reqgroup.is_draft}
           is_baseline={reqgroup.is_baseline}
           isPrioritized={reqgroup.isPrioritized}

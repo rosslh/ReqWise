@@ -226,14 +226,33 @@ module.exports = async function (fastify, opts) {
       schema: getFileRequirementsSchema,
     },
     async function (request, reply) {
+      const selectColumns = [
+        "requirement.id",
+        "requirement.ppuid_id",
+        "requirement.parent_requirement_id",
+        "requirement.reqgroup_id",
+        "requirement.project_id",
+        "reqversion.id as reqversion_id",
+        "reqversion.account_id",
+        "reqversion.priority",
+        "reqversion.status",
+        "reqversion.description",
+        "reqversion.created_at",
+        "reqversion.updated_at",
+        "per_project_unique_id.readable_id as ppuid",
+        "account.name as authorName",
+        "updater.name as updaterName"
+      ];
       return await fastify.knex
         .from("requirement")
-        .select("requirement.*", "reqversion.*", "per_project_unique_id.readable_id as ppuid", "requirement.id as id") // id overwrite must be at end
+        .select(...selectColumns) // id overwrite must be at end
         .join("reqversion", getReqversion)
+        .join("account", "account.id", "reqversion.account_id")
+        .join("account as updater", "updater.id", "reqversion.updated_by")
         .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
         .join("file_requirement", "requirement.id", "file_requirement.requirement_id")
         .where({ "file_requirement.file_id": request.params.fileId })
-        .orderByRaw("coalesce(updated_at,created_at) desc");
+        .orderByRaw("coalesce(reqversion.updated_at,reqversion.created_at) desc");
     }
   );
 

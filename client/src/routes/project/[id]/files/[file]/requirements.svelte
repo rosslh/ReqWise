@@ -2,6 +2,7 @@
   import { stores } from "@sapper/app";
   import { get } from "../../../../../api";
   import AddRequirementToFileModal from "../../../../../components/AddRequirementToFileModal.svelte";
+  import RequirementWithButtons from "../../../../../components/RequirementWithButtons.svelte";
   import { modalProps, modalContent } from "../../../../../stores";
 
   const { page, session } = stores();
@@ -42,18 +43,15 @@
 {:then result}
   <section class="contentWrapper">
     {#if result.length}
-      <ul>
-        {#each result as req (req.id)}
-          <li>
-            <a
-              rel="prefetch"
-              href={`/project/${req.project_id}/requirement/${req.id}`}>
-              #{req.ppuid}
-              {req.description}
-            </a>
-          </li>
-        {/each}
-      </ul>
+      {#each result as req (req.id)}
+        <ul class="panel">
+          <RequirementWithButtons
+            {update}
+            unlinkId={fileId}
+            unlinkType="file"
+            requirement={req} />
+        </ul>
+      {/each}
     {:else}
       <div class="secondary">No requirements linked</div>
     {/if}
