@@ -1,6 +1,6 @@
-import resolve from "rollup-plugin-node-resolve";
+import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
-import commonjs from "rollup-plugin-commonjs";
+import commonjs from "@rollup/plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
 import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
@@ -8,7 +8,6 @@ import config from "sapper/config/rollup.js";
 import pkg from "./package.json";
 
 import getPreprocessor from "svelte-preprocess";
-import postcss from "rollup-plugin-postcss";
 
 const sapperEnv = require('sapper-environment');
 
@@ -21,27 +20,8 @@ const onwarn = (warning, onwarn) =>
   (warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
   onwarn(warning);
 
-const postcssPlugins = (purgecss = false) => {
-  return [
-    require("postcss-import")(),
-    require("postcss-url")(),
-    require("autoprefixer")(),
-    purgecss &&
-    require("@fullhuman/postcss-purgecss")({
-      content: ["./src/**/*.svelte", "./src/**/*.html"],
-      whitelist: ["nprogress", 'bar', 'peg', 'nprogress-custom-parent'], // progress bar is dynamically inserted
-      defaultExtractor: (content) => content.match(/[A-Za-z0-9-_:/]+/g) || [],
-    }),
-    !dev && require("cssnano")({ preset: "default" }),
-  ].filter(Boolean);
-};
-
 const preprocess = getPreprocessor({
-  transformers: {
-    postcss: {
-      plugins: postcssPlugins(),
-    },
-  },
+  postcss: true
 });
 
 const envVars = sapperEnv('REQWISE');
@@ -123,11 +103,7 @@ export default {
       resolve({
         dedupe: ["svelte"],
       }),
-      commonjs(),
-      postcss({
-        plugins: postcssPlugins(!dev),
-        extract: "static/global.css",
-      }),
+      commonjs()
     ],
     external: Object.keys(pkg.dependencies).concat(
       require("module").builtinModules ||
