@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "A web app monorepo",
-  "homepage": "https://github.com/rosslh/ReqWise#readme",
+  "homepage": "https://github.com/ReqWise/ReqWise#readme",
   "bugs": {
-    "url": "https://github.com/rosslh/ReqWise/issues"
+    "url": "https://github.com/ReqWise/ReqWise/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rosslh/ReqWise.git"
+    "url": "git+https://github.com/ReqWise/ReqWise.git"
   },
   "license": "UNLICENSED",
   "scripts": {
