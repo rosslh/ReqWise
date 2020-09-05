@@ -37,7 +37,7 @@
     "express-session": "^1.17.1",
     "firebase-admin": "^9.1.1",
     "firebase-functions": "^3.11.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "quill": "^1.3.7",
     "sapper-environment": "^1.0.1",
     "sirv": "^1.0.6",
