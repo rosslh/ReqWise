@@ -1,14 +1,28 @@
 <script>
   import { stores } from "@sapper/app";
-  import { get } from "../../../../../api.js";
+  import { get } from "../../../../../api";
+  import AddRequirementToFileModal from "../../../../../components/AddRequirementToFileModal.svelte";
+  import { modalProps, modalContent } from "../../../../../stores";
 
   const { page, session } = stores();
-  const { file } = $page.params;
+  const { file: fileId, id } = $page.params;
+
+  const update = async () => {
+    requirements = get(
+      `/files/${fileId}/requirements`,
+      $session.user && $session.user.jwt
+    );
+  };
 
   let requirements = get(
-    `/files/${file}/requirements`,
+    `/files/${fileId}/requirements`,
     $session.user && $session.user.jwt
   );
+
+  const addRequirement = () => {
+    modalContent.set(AddRequirementToFileModal);
+    modalProps.set({ projectId: id, fileId, update });
+  };
 </script>
 
 <style>
@@ -19,6 +33,9 @@
 
 <section class="contentWrapper">
   <h2>Requirements linked to file</h2>
+  <button class="button button-success" on:click={addRequirement}>
+    Add requirement
+  </button>
 </section>
 {#await requirements}
   <!-- loading -->
@@ -31,7 +48,8 @@
             <a
               rel="prefetch"
               href={`/project/${req.project_id}/requirement/${req.id}`}>
-              #{req.ppuid} {req.description}
+              #{req.ppuid}
+              {req.description}
             </a>
           </li>
         {/each}

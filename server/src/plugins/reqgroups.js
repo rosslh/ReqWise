@@ -31,7 +31,7 @@ module.exports = fp(function (fastify, opts, done) {
     return await fastify.knex.withRecursive('ancestors', (qb) => {
       qb.select(...selectColumns, fastify.knex.raw("0 as depth"), fastify.knex.raw("LPAD(per_project_unique_id.readable_id::text, 5, '0') as hierarchical_id")).from('requirement')
         .where('requirement.parent_requirement_id', null)
-        .andWhere("reqgroup_id", reqgroupId)
+        .where("reqgroup_id", reqgroupId)
         .join("reqversion", getReqversion)
         .join("account", "account.id", "reqversion.account_id")
         .join("account as updater", "updater.id", "reqversion.updated_by")
