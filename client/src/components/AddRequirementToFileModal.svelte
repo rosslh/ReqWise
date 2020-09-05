@@ -74,5 +74,5 @@
     <label for="details">Reason for linking</label>
     <input type="text" id="details" bind:value={details} />
   </fieldset>
-  <SubmitButton handler={addReqs}>Add reqs</SubmitButton>
+  <SubmitButton handler={addReqs}>Add requirements</SubmitButton>
 </form>

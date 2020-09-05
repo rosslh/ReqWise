@@ -3,12 +3,10 @@
   const { session } = stores();
 
   import { onMount, onDestroy } from "svelte";
-  import FaRegFileAlt from "svelte-icons/fa/FaRegFileAlt.svelte";
   import MdFolder from "svelte-icons/md/MdFolder.svelte";
   import MdSubdirectoryArrowLeft from "svelte-icons/md/MdSubdirectoryArrowLeft.svelte";
-  import IoMdPeople from "svelte-icons/io/IoMdPeople.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
-  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
 
   import { get, post, del, put, stream } from "../api.js";
   import Skeleton from "./Skeleton.svelte";
@@ -319,10 +317,7 @@
 <div class="requirementContainer">
   <div class="column">
     <h2>
-      View requirement
-      {#if loaded}
-        <span class="reqModalPpuid">#{ppuid}</span>
-      {/if}
+      View requirement {#if loaded}<span class="reqModalPpuid">#{ppuid}</span>{/if}
     </h2>
     {#await requirement}
       <!-- loading -->
@@ -343,8 +338,7 @@
           href={`/project/${project_id}/reqgroup/${reqgroup_id}`}>
           <span class="iconWrapper iconWrapper-padded">
             <MdFolder />
-          </span>
-          Requirement group #{reqgroup_ppuid}
+          </span> Requirement group #{reqgroup_ppuid}
         </a>
         {#if parent_requirement_id}
           <a
@@ -356,39 +350,17 @@
               <span class="rotate90">
                 <MdSubdirectoryArrowLeft />
               </span>
-            </span>
-            Parent Requirement #{parent_ppuid}
+            </span> Parent Requirement #{parent_ppuid}
           </a>
         {/if}
         <a
           rel="prefetch"
           on:click={close}
           class="button button-secondary button-small button-outline"
-          href={`/project/${project_id}/requirement/${id}/files`}>
+          href={`/project/${project_id}/requirement/${id}/linked`}>
           <span class="iconWrapper iconWrapper-padded">
-            <FaRegFileAlt />
-          </span>
-          Files
-        </a>
-        <a
-          rel="prefetch"
-          on:click={close}
-          class="button button-secondary button-small button-outline"
-          href={`/project/${project_id}/requirement/${id}/user-classes`}>
-          <span class="iconWrapper">
-            <IoMdPeople />
-          </span>
-          User classes
-        </a>
-        <a
-          rel="prefetch"
-          on:click={close}
-          class="button button-secondary button-small button-outline"
-          href={`/project/${project_id}/requirement/${id}/brainstorm`}>
-          <span class="iconWrapper">
-            <MdLightbulbOutline />
-          </span>
-          Brainstorming
+            <FaLink />
+          </span> Linked
         </a>
         <a
           rel="prefetch"
@@ -397,8 +369,7 @@
           href={`/project/${project_id}/requirement/${id}/history`}>
           <span class="iconWrapper">
             <MdHistory />
-          </span>
-          History
+          </span> History
         </a>
       </div>
     {:else}
@@ -438,9 +409,7 @@
         <div class="reqversionContent">
           {#if rationale}
             {rationale}
-          {:else}
-            <span class="noRationale">No rationale</span>
-          {/if}
+          {:else}<span class="noRationale">No rationale</span>{/if}
         </div>
         <!-- zero-width-space to preserve height if rationale is empty-->
       {/if}

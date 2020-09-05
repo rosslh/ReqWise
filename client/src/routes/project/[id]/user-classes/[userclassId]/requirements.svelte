@@ -1,8 +1,9 @@
 <script>
   import { stores } from "@sapper/app";
   import { get } from "../../../../../api";
-  import { modalContent, modalProps } from "../../../../../stores";
   import AddRequirementToUserclassModal from "../../../../../components/AddRequirementToUserclassModal.svelte";
+  import RequirementWithButtons from "../../../../../components/RequirementWithButtons.svelte";
+  import { modalProps, modalContent } from "../../../../../stores";
 
   const { page, session } = stores();
   const { userclassId, id } = $page.params;
@@ -32,7 +33,7 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Requirements linked to user class</h2>
+  <h2>Requirements linked to userclass</h2>
   <button class="button button-success" on:click={addRequirement}>
     Add requirement
   </button>
@@ -42,18 +43,15 @@
 {:then result}
   <section class="contentWrapper">
     {#if result.length}
-      <ul>
-        {#each result as req (req.id)}
-          <li>
-            <a
-              rel="prefetch"
-              href={`/project/${req.project_id}/requirement/${req.id}`}>
-              #{req.ppuid}
-              {req.description}
-            </a>
-          </li>
-        {/each}
-      </ul>
+      {#each result as req (req.id)}
+        <ul class="panel">
+          <RequirementWithButtons
+            {update}
+            unlinkId={userclassId}
+            unlinkType="userclass"
+            requirement={req} />
+        </ul>
+      {/each}
     {:else}
       <div class="secondary">No requirements linked</div>
     {/if}

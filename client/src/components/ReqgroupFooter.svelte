@@ -2,15 +2,16 @@
   import { getContext } from "svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
-  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { modalContent, modalProps } from "../stores.js";
   import AddRequirementModal from "./AddRequirementModal.svelte";
   import MakeDraftModal from "./MakeDraftModal.svelte";
+  import UnlinkReqgroupModal from "./UnlinkReqgroupModal.svelte";
 
   import DeleteFeatureModal from "../components/DeleteFeatureModal.svelte";
   import EditFeatureModal from "../components/EditFeatureModal.svelte";
+  import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
 
   export let updateReqs;
   export let updateReqgroup;
@@ -18,6 +19,9 @@
   export let reqgroup;
   export let reqgroupId;
   export let requirements;
+
+  export let unlinkId;
+  export let unlinkType;
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
@@ -39,6 +43,16 @@
   };
 
   const scopes = getContext("scopes");
+
+  const unlink = () => {
+    modalProps.set({
+      reqgroupId: reqgroup.id,
+      update,
+      unlinkId,
+      unlinkType,
+    });
+    modalContent.set(UnlinkReqgroupModal);
+  };
 </script>
 
 <style>
@@ -74,24 +88,27 @@
     <div />
   {/if}
   <div class="right">
-    <a
-      rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/stakeholders`}
-      class="button button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper iconWrapper-padded">
-        <FaUserTie />
-      </div>
-      Stakeholders
-    </a>
-    <a
-      rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/brainstorm`}
-      class="button button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <MdLightbulbOutline />
-      </div>
-      Brainstorming
-    </a>
+    {#if unlinkId}
+      <button
+        id="makeDraftButton"
+        on:click={unlink}
+        class="button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <FaUnlink />
+        </div>
+        Unlink
+      </button>
+    {:else}
+      <a
+        rel="prefetch"
+        href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/linked`}
+        class="button button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper iconWrapper-padded">
+          <FaLink />
+        </div>
+        Linked
+      </a>
+    {/if}
     {#if !reqgroup.is_baseline}
       {#if !reqgroup.is_draft && scopes.includes('member')}
         <button

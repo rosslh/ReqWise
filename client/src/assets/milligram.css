@@ -301,7 +301,7 @@ h4,
 h5,
 h6 {
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
   /* margin-top: 0; */
 }
 
@@ -309,27 +309,32 @@ h1 {
   /* font-size: 4.57rem; */
   font-size: 3.318rem;
   margin-top: 3.318rem;
+  margin-bottom: 1.659rem;
 }
 /* 1.2 */
 h2 {
   font-size: 2.765rem;
   margin-top: 2.765rem;
+  margin-bottom: 1.3825rem;
 }
 /*1*/
 h3 {
   font-size: 2.304rem;
   margin-top: 2.304rem;
+  margin-bottom: 1.152rem
 }
 /*.6*/
 h4 {
   font-size: 1.92rem;
   margin-top: 1.92rem;
+  margin-bottom: 0.96rem;
 }
 /*.2*/
 h5,
 h6 {
   font-size: 1.6rem;
   margin-top: 1.6rem;
+  margin-bottom: 0.8rem;
 }
 
 img {

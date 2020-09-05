@@ -1,8 +1,8 @@
 <script>
   export let update;
   export let prompt;
-  export let isDraft = false;
-  export let isOpen = true;
+  export let isDraft = prompt.is_draft;
+  export let isOpen = prompt.is_open;
   export let unlinkRequirement;
   export let unlinkReqgroup;
 
@@ -154,13 +154,13 @@
         {:else}
           <a
             rel="prefetch"
-            href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/requirements`}
+            href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/linked`}
             class="button button-outline button-small button-secondary
               button-clear">
             <div class="iconWrapper iconWrapper-padded">
               <FaLink />
             </div>
-            Requirements
+            Linked
           </a>
         {/if}
         {#if isDraft}

@@ -47,7 +47,6 @@
 </script>
 
 <h3>Link an external resource</h3>
-{normalizedUrl}
 <form>
   <fieldset>
     <label for="name">Title</label>

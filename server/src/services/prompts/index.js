@@ -198,30 +198,46 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.get(
-    "/:promptId/requirements",
+    "/:promptId/linked",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: getPromptRequirementsSchema,
     },
     async function (request, reply) {
+      const selectColumns = [
+        "requirement.*",
+        "reqversion.id as reqversion_id",
+        "reqversion.account_id",
+        "reqversion.priority",
+        "reqversion.status",
+        "reqversion.description",
+        "reqversion.created_at",
+        "reqversion.updated_at",
+        "per_project_unique_id.readable_id as ppuid",
+        "account.name as authorName",
+        "updater.name as updaterName"
+      ];
       const requirements = await fastify.knex
         .from("requirement")
-        .select("requirement.*", "reqversion.*", "per_project_unique_id.readable_id as ppuid", "requirement.id as id") // id overwrite must be at end
+        .select(...selectColumns) // id overwrite must be at end
         .select(fastify.knex.raw("'requirement' as \"entityType\""))
         .join("reqversion", getReqversion)
+        .join("account", "account.id", "reqversion.account_id")
+        .join("account as updater", "updater.id", "reqversion.updated_by")
         .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
         .join("brainstormPrompt_requirement", "requirement.id", "brainstormPrompt_requirement.requirement_id")
         .where({ "brainstormPrompt_requirement.brainstormPrompt_id": request.params.promptId })
-        .orderByRaw("coalesce(updated_at,created_at) desc");
+        .orderByRaw("coalesce(reqversion.updated_at,reqversion.created_at) desc");
 
-      const reqgroups = await fastify.knex
+      let reqgroups = await fastify.knex
         .from("reqgroup")
-        .select("reqgroup.*", "per_project_unique_id.readable_id as ppuid", "reqgroup.id as id") // id overwrite must be at end
+        .select("reqgroup.*", "reqgroup.id as id") // id overwrite must be at end
         .select(fastify.knex.raw("'reqgroup' as \"entityType\""))
-        .join("per_project_unique_id", "per_project_unique_id.id", "reqgroup.ppuid_id")
         .join("brainstormPrompt_reqgroup", "reqgroup.id", "brainstormPrompt_reqgroup.reqgroup_id")
         .where({ "brainstormPrompt_reqgroup.brainstormPrompt_id": request.params.promptId })
         .orderByRaw("coalesce(updated_at,created_at) desc");
+
+      reqgroups = await Promise.all(reqgroups.map(async rg => ({ ...rg, ...(await fastify.getReqgroup(rg.id)) })));
 
       return [...requirements, ...reqgroups].sort((a, b) => Number(a.ppuid) - Number(b.ppuid));
     }

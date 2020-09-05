@@ -19,22 +19,22 @@
 
   onMount(async () => {
     allReqs = await get(
-      `/projects/${projectId}/requirements`,
+      `/projects/${projectId}/reqgroups`,
       $session.user && $session.user.jwt
     );
     reqOptions = allReqs.map((f) => ({
       value: f.id,
-      label: `#${f.ppuid} ${f.description}`,
+      label: `#${f.ppuid} ${f.name}`,
     }));
     currentReqs = (
       await get(
         `/prompts/${promptId}/linked`,
         $session.user && $session.user.jwt
       )
-    ).filter((x) => x.entityType === "requirement");
+    ).filter((x) => x.entityType === "reqgroup");
     selectedReqOptions = currentReqs.map((req) => ({
       value: req.id,
-      label: `#${req.ppuid} ${req.description}`,
+      label: `#${req.ppuid} ${req.name}`,
     }));
   });
 
@@ -48,9 +48,9 @@
   $: addReqs = async () => {
     await Promise.all(
       reqsToAdd.map(
-        async (req_id) =>
+        async (id) =>
           await post(
-            `/requirements/${req_id}/prompts`,
+            `/reqgroups/${id}/prompts`,
             { prompt_id: promptId, details },
             $session.user && $session.user.jwt
           )
@@ -61,7 +61,7 @@
   };
 </script>
 
-<h2>Link requirements to prompt</h2>
+<h2>Link requirement groups to prompt</h2>
 <form>
   <fieldset>
     <Select
@@ -76,5 +76,5 @@
     <label for="details">Reason for linking</label>
     <input type="text" id="details" bind:value={details} />
   </fieldset>
-  <SubmitButton handler={addReqs}>Add requirements</SubmitButton>
+  <SubmitButton handler={addReqs}>Add reqgroups</SubmitButton>
 </form>
