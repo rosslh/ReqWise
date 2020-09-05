@@ -2,7 +2,9 @@
   import { stores } from "@sapper/app";
   import { get } from "../../../../../../api";
   import AddRequirementToPromptModal from "../../../../../../components/AddRequirementToPromptModal.svelte";
+  import AddReqgroupToPromptModal from "../../../../../../components/AddReqgroupToPromptModal.svelte";
   import RequirementWithButtons from "../../../../../../components/RequirementWithButtons.svelte";
+  import Reqgroup from "../../../../../../components/Reqgroup.svelte";
   import { modalProps, modalContent } from "../../../../../../stores";
 
   const { page, session } = stores();
@@ -10,18 +12,23 @@
 
   const update = async () => {
     requirements = get(
-      `/prompts/${promptId}/requirements`,
+      `/prompts/${promptId}/linked`,
       $session.user && $session.user.jwt
     );
   };
 
   let requirements = get(
-    `/prompts/${promptId}/requirements`,
+    `/prompts/${promptId}/linked`,
     $session.user && $session.user.jwt
   );
 
   const addRequirement = () => {
     modalContent.set(AddRequirementToPromptModal);
+    modalProps.set({ projectId: id, promptId, update });
+  };
+
+  const addReqgroup = () => {
+    modalContent.set(AddReqgroupToPromptModal);
     modalProps.set({ projectId: id, promptId, update });
   };
 </script>
@@ -36,6 +43,9 @@
   <h2>Requirements linked to prompt</h2>
   <button class="button button-success" on:click={addRequirement}>
     Add requirement
+  </button>
+  <button class="button button-success" on:click={addReqgroup}>
+    Add requirement group
   </button>
 </section>
 {#await requirements}
@@ -53,12 +63,11 @@
               requirement={req} />
           </ul>
         {:else}
-          <a
-            rel="prefetch"
-            href={`/project/${req.project_id}/reqgroup/${req.id}`}>
-            #{req.ppuid}
-            {req.name} (requirement group)
-          </a>
+          <Reqgroup
+            reqgroup={req}
+            {update}
+            unlinkId={promptId}
+            unlinkType="prompt" />
         {/if}
       {/each}
     {:else}

@@ -16,6 +16,9 @@
   export let hideStakeholderStatus = false;
   export let baselineSourceId;
 
+  export let unlinkId;
+  export let unlinkType;
+
   $: reqgroupId = baselineSourceId || reqgroup.id;
 
   const scopes = getContext("scopes");
@@ -243,5 +246,7 @@
     {updateReqs}
     {updateReqgroup}
     {update}
-    {requirements} />
+    {requirements}
+    {unlinkId}
+    {unlinkType} />
 </div>
