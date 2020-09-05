@@ -456,8 +456,9 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const prompts = await fastify.knex
         .from("brainstormPrompt")
-        .select("brainstormPrompt.*", "per_project_unique_id.readable_id as ppuid")
+        .select("brainstormPrompt.*", "brainstormForm.is_open as is_open", "brainstormForm.is_draft as is_draft", "brainstormForm.is_public as is_public", "per_project_unique_id.readable_id as ppuid")
         .join("per_project_unique_id", "per_project_unique_id.id", "brainstormPrompt.ppuid_id")
+        .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
         .join("brainstormPrompt_reqgroup", "brainstormPrompt.id", "brainstormPrompt_reqgroup.brainstormPrompt_id")
         .where({ "brainstormPrompt_reqgroup.reqgroup_id": request.params.reqgroupId })
         .orderByRaw("created_at desc");

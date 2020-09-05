@@ -63,6 +63,7 @@
 <style>
   .secondary {
     color: var(--secondaryText);
+    margin-bottom: 1.5rem;
   }
 </style>
 
@@ -70,7 +71,7 @@
   <h2>Items linked to requirement</h2>
 </section>
 <section class="contentWrapper">
-  <h3>Brainstorm prompts linked to requirement</h3>
+  <h3>Brainstorm prompts</h3>
   {#await prompts}
     <!-- loading -->
   {:then result}
@@ -87,7 +88,7 @@
   <button class="button button-success" on:click={addPrompt}>Add prompt</button>
 </section>
 <section class="contentWrapper">
-  <h3>Files linked to requirement</h3>
+  <h3>Files</h3>
   {#await files}
     <!-- loading -->
   {:then result}
@@ -104,7 +105,7 @@
   <button class="button button-success" on:click={addFile}>Add file</button>
 </section>
 <section class="contentWrapper">
-  <h3>User classes linked to requirement</h3>
+  <h3>User classes</h3>
   {#await userclasses}
     <!-- loading -->
   {:then result}

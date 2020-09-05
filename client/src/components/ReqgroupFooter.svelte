@@ -2,8 +2,7 @@
   import { getContext } from "svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
-  import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
-  import MdLightbulbOutline from "svelte-icons/md/MdLightbulbOutline.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { modalContent, modalProps } from "../stores.js";
   import AddRequirementModal from "./AddRequirementModal.svelte";
@@ -76,21 +75,12 @@
   <div class="right">
     <a
       rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/stakeholders`}
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/linked`}
       class="button button-outline button-small button-secondary button-clear">
       <div class="iconWrapper iconWrapper-padded">
-        <FaUserTie />
+        <FaLink />
       </div>
-      Stakeholders
-    </a>
-    <a
-      rel="prefetch"
-      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/brainstorm`}
-      class="button button-outline button-small button-secondary button-clear">
-      <div class="iconWrapper">
-        <MdLightbulbOutline />
-      </div>
-      Brainstorming
+      Linked
     </a>
     {#if !reqgroup.is_baseline}
       {#if !reqgroup.is_draft && scopes.includes('member')}

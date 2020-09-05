@@ -1,8 +1,8 @@
 <script>
   export let update;
   export let prompt;
-  export let isDraft = false;
-  export let isOpen = true;
+  export let isDraft = prompt.is_draft;
+  export let isOpen = prompt.is_open;
   export let unlinkRequirement;
   export let unlinkReqgroup;
 
