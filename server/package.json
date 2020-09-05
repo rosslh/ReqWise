@@ -31,7 +31,7 @@
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
     "fastify": "^3.3.0",
-    "fastify-autoload": "^3.0.8",
+    "fastify-autoload": "^3.0.9",
     "fastify-cli": "^2.2.0",
     "fastify-cors": "^4.1.0",
     "fastify-formbody": "^5.0.0",
