@@ -113,6 +113,20 @@ module.exports = async function (fastify, opts) {
     },
     async function (request, reply) {
       const { name, isPrioritized, is_draft } = request.body;
+
+      if (!is_draft) {
+        // approve all requirements
+        const reqgroup = await fastify.getReqgroup(request.params.reqgroupId);
+        await Promise.all(reqgroup.requirements.map(async r => {
+          await fastify
+            .knex("reqversion")
+            .where("id", r.reqversion_id)
+            .update({
+              status: "accepted"
+            })
+        }));
+      }
+
       const [{ id, project_id }] = await fastify
         .knex("reqgroup")
         .where("id", request.params.reqgroupId)
