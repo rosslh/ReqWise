@@ -17,7 +17,7 @@ module.exports = fp(function (fastify, opts, done) {
       .first();
   });
 
-  fastify.decorate("updateReviews", async function (entityType, entityId, userId) {
+  fastify.decorate("updateReviews", async function (entityType, entityId, request) {
     const { project_id, is_draft, name } = await fastify.knex.from(entityType).select("*").where("id", entityId).first();
 
     await fastify
@@ -43,7 +43,25 @@ module.exports = fp(function (fastify, opts, done) {
 
     await fastify.createBaseline(id);
 
-    await fastify.createAlert("create", "stakeholderReview", name, id, project_id, userId);
+    await fastify.createAlert("create", "stakeholderReview", name, id, project_id, request.user.id);
+
+    const { slackAccessToken: token } = await fastify.knex
+      .from("project")
+      .select("team.*", "project.*")
+      .join("team", "team.id", "project.team_id")
+      .where("project.id", project_id)
+      .first();
+    if (token) {
+      const channel = await fastify.slackGetChannelId(project_id);
+      await fastify.slack.chat.postMessage({
+        text: `${request.user.name} started a new review: <https://reqwise.com/project/${fastify.obfuscateId(request.params.projectId)}/reviews/${fastify.obfuscateId(id)}|${name}>.`,
+        token,
+        channel,
+        username: request.user.name,
+        icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+      });
+      return [id];
+    }
   });
 
   fastify.decorate("getReviewedEntity", async function (review_id) {

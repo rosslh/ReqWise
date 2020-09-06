@@ -198,7 +198,7 @@
             {notification.description}
           </a>
         {:else if !hasEntityId || notification.actionType === 'delete'}
-          <strong>{notification.description}</strong>
+          <strong>{notification.description || ''}</strong>
         {/if}
         {#if notification.newValue}
           to <strong>{normalizeString(notification.newValue)}</strong>

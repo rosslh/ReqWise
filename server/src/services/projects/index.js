@@ -398,7 +398,7 @@ module.exports = async function (fastify, opts) {
       const { name, type, isPrioritized } = request.body;
       const { projectId: project_id } = request.params;
 
-      const { slackAccessToken: token, id: projectId } = await fastify.knex
+      const { slackAccessToken: token } = await fastify.knex
         .from("project")
         .select("team.*", "project.*")
         .join("team", "team.id", "project.team_id")
@@ -423,9 +423,9 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       if (token) {
-        const channel = await fastify.slackGetChannelId(projectId);
+        const channel = await fastify.slackGetChannelId(request.params.projectId);
         await fastify.slack.chat.postMessage({
-          text: `${request.user.name} made a new ${getReqgroupType(type)}: <https://reqwise.com/projects/${fastify.obfuscateId(projectId)}|#${readable_id} - ${name}>.`,
+          text: `${request.user.name} created a new ${getReqgroupType(type)}: <https://reqwise.com/project/${fastify.obfuscateId(request.params.projectId)}/reqgroup/${fastify.obfuscateId(id)}|#${readable_id} - ${name}>.`,
           token,
           channel,
           username: request.user.name,
@@ -486,7 +486,7 @@ module.exports = async function (fastify, opts) {
         reply.code(400).send("Missing svg or file or url");
       }
       const { projectId: project_id } = request.params;
-      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+      const { id: ppuid_id, readable_id } = await fastify.getNewPpuid(project_id);
 
       let id;
 
@@ -543,7 +543,23 @@ module.exports = async function (fastify, opts) {
           .returning("id");
       }
       await fastify.createAlert("create", "file", name, id, project_id, request.user.id);
-      return [id];
+      const { slackAccessToken: token } = await fastify.knex
+        .from("project")
+        .select("team.*", "project.*")
+        .join("team", "team.id", "project.team_id")
+        .where("project.id", request.params.projectId)
+        .first();
+      if (token) {
+        const channel = await fastify.slackGetChannelId(request.params.projectId);
+        await fastify.slack.chat.postMessage({
+          text: `${request.user.name} created a new file: <https://reqwise.com/project/${fastify.obfuscateId(request.params.projectId)}/files/${fastify.obfuscateId(id)}|#${readable_id} - ${name}>.`,
+          token,
+          channel,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+        return [id];
+      }
     }
   );
 
@@ -653,7 +669,7 @@ module.exports = async function (fastify, opts) {
       const { name, description } = request.body;
       const { projectId: project_id } = request.params;
 
-      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+      const { id: ppuid_id, readable_id } = await fastify.getNewPpuid(project_id);
 
       const [id] = await fastify
         .knex("stakeholderGroup")
@@ -668,6 +684,25 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       await fastify.createAlert("create", "stakeholderGroup", name, id, project_id, request.user.id);
+
+      const { slackAccessToken: token } = await fastify.knex
+        .from("project")
+        .select("team.*", "project.*")
+        .join("team", "team.id", "project.team_id")
+        .where("project.id", request.params.projectId)
+        .first();
+      if (token) {
+        const channel = await fastify.slackGetChannelId(request.params.projectId);
+        await fastify.slack.chat.postMessage({
+          text: `${request.user.name} created a new stakeholder group: <https://reqwise.com/project/${fastify.obfuscateId(request.params.projectId)}/stakeholders/${fastify.obfuscateId(id)}|#${readable_id} - ${name}>.`,
+          token,
+          channel,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+        return [id];
+      }
+
       return [id];
     }
   );
@@ -722,6 +757,25 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       await fastify.createAlert("create", "questionnaire", title, id, project_id, request.user.id);
+
+      const { slackAccessToken: token } = await fastify.knex
+        .from("project")
+        .select("team.*", "project.*")
+        .join("team", "team.id", "project.team_id")
+        .where("project.id", request.params.projectId)
+        .first();
+      if (token) {
+        const channel = await fastify.slackGetChannelId(request.params.projectId);
+        await fastify.slack.chat.postMessage({
+          text: `${request.user.name} created a new questionnaire: <https://reqwise.com/project/${fastify.obfuscateId(request.params.projectId)}/brainstorm/forms/${fastify.obfuscateId(id)}|${title}>.`,
+          token,
+          channel,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+        return [id];
+      }
+
       return [fastify.obfuscateId(id)]; // used to redirect to questionnaire after creation
     }
   );
@@ -937,7 +991,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name, description, persona, importance, is_draft } = request.body;
       const { projectId: project_id } = request.params;
-      const { id: ppuid_id } = await fastify.getNewPpuid(project_id);
+      const { id: ppuid_id, readable_id } = await fastify.getNewPpuid(project_id);
 
       const [id] = await fastify
         .knex("userclass")
@@ -955,6 +1009,25 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       await fastify.createAlert("create", "userclass", name, id, project_id, request.user.id);
+
+      const { slackAccessToken: token } = await fastify.knex
+        .from("project")
+        .select("team.*", "project.*")
+        .join("team", "team.id", "project.team_id")
+        .where("project.id", request.params.projectId)
+        .first();
+      if (token) {
+        const channel = await fastify.slackGetChannelId(request.params.projectId);
+        await fastify.slack.chat.postMessage({
+          text: `${request.user.name} created a new user class: <https://reqwise.com/project/${fastify.obfuscateId(request.params.projectId)}/user-classes/${fastify.obfuscateId(id)}|#${readable_id} - ${name}>.`,
+          token,
+          channel,
+          username: request.user.name,
+          icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
+        });
+        return [id];
+      }
+
       return [id];
     }
   );

@@ -130,7 +130,8 @@ module.exports = async function (fastify, opts) {
             "account.imageName as authorImageName",
             "account.placeholderImage as authorPlaceholderImage"
           )
-          .join("account", "account.id", "=", "comment.account_id").where({
+          .leftJoin("account", "account.id", "=", "comment.account_id")
+          .where({
             "comment.reqversion_id": reqversionId
           })
           .where('comment.created_at', '>', new Date(timestamp - interval))

@@ -72,7 +72,7 @@
   </div>
   <div class="commentTextWrapper">
     <div>
-      {comment.authorName}
+      {comment.authorName || 'Slack User'}
       <time class="createdAt" datetime={comment.created_at}>
         {formatDatetime(comment.created_at)}
       </time>

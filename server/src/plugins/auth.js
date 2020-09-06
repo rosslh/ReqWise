@@ -54,7 +54,7 @@ module.exports = fp(async function (fastify, opts) {
         .where("email", jwtContent.email)
         .first();
       if (jwtContent.id === account.id) {
-        request.user = { ...jwtContent, imageName: account.imageName };
+        request.user = { ...jwtContent, imageName: account.imageName, name: account.name, email: account.email };
       } else {
         throw new Error("Email and ID do not match");
       }

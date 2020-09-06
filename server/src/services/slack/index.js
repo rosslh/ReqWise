@@ -56,7 +56,6 @@ module.exports = async (fastify, opts) => {
             plaintext: htmlToText.fromString(html),
             html,
             mrkdwn: event.text,
-            type: "comment",
           });
         } catch (e) {
           console.error(e);
@@ -228,7 +227,7 @@ module.exports = async (fastify, opts) => {
         if (token) {
           const channel = await fastify.slackGetChannelId(project_id);
           await fastify.slack.chat.postMessage({
-            text: `${author_name || data.user.name} made a new ${getReqgroupType(type)}:
+            text: `${author_name || data.user.name} created a new ${getReqgroupType(type)}:
             <https://reqwise.com/project/${fastify.obfuscateId(project_id)}|#${readable_id} - ${name}>.`,
             token,
             channel,

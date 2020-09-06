@@ -217,7 +217,7 @@ module.exports = async function (fastify, opts) {
         })
         .returning(["id", "name", "project_id"]);
 
-      await fastify.updateReviews("userclass", id, request.user.id);
+      await fastify.updateReviews("userclass", id, request);
       await fastify.createAlert("update", "userclass", userclassName, id, project_id, request.user.id);
       return [id];
     }

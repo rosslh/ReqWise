@@ -15,16 +15,20 @@
   let name = linkedResource ? linkedResource.name : "";
   let description = linkedResource ? linkedResource.description : "";
   let url = linkedResource ? linkedResource.url : "";
-  $: normalizedUrl = url && normalizeUrl(url);
 
   $: addResource = async () => {
+    try {
+      url = normalizeUrl(url);
+    } catch (e) {
+      /* pass */
+    }
     if (linkedResource) {
       await put(
         `/files/${linkedResource.id}`,
         {
           name,
           description,
-          url: normalizedUrl,
+          url,
         },
         $session.user && $session.user.jwt
       );
@@ -36,7 +40,7 @@
         {
           name,
           description,
-          url: normalizedUrl,
+          url,
         },
         $session.user && $session.user.jwt
       );

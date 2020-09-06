@@ -207,7 +207,7 @@ module.exports = async function (fastify, opts) {
           "account.placeholderImage as authorPlaceholderImage"
 
         )
-        .join("account", "account.id", "=", "comment.account_id")
+        .leftJoin("account", "account.id", "=", "comment.account_id")
         .where({
           reqversion_id: request.params.reqversionId,
         });
