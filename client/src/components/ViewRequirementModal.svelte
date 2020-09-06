@@ -3,6 +3,8 @@
   const { session } = stores();
 
   import { onMount, onDestroy } from "svelte";
+  import FaEdit from "svelte-icons/fa/FaEdit.svelte";
+  import FaTrashAlt from "svelte-icons/fa/FaTrashAlt.svelte";
   import MdFolder from "svelte-icons/md/MdFolder.svelte";
   import MdSubdirectoryArrowLeft from "svelte-icons/md/MdSubdirectoryArrowLeft.svelte";
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
@@ -312,6 +314,22 @@
     padding-top: 0.5rem;
     padding-bottom: 1.6rem;
   }
+
+  .twoCol {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .twoCol > * {
+    flex: 1 1 0;
+    min-width: 30rem;
+    padding: 0 1rem 1rem;
+    margin: 1rem;
+    background-color: var(--background2);
+    border-radius: 0.5rem;
+    border: 0.1rem solid var(--borderColor);
+  }
 </style>
 
 <div class="requirementContainer">
@@ -331,6 +349,24 @@
     {/await}
     {#if loaded}
       <div class="attachmentButtons">
+        {#if newStatus !== 'proposed' && newStatus !== 'modified'}
+          <a
+            rel="prefetch"
+            on:click={close}
+            href={`/project/${project_id}/requirement/${id}/edit`}
+            class="button button-caution button-small">
+            <span class="iconWrapper">
+              <FaEdit />
+            </span> Edit
+          </a>
+          <button
+            on:click={deleteRequirement}
+            class="button-danger button-small">
+            <span class="iconWrapper iconWrapper-padded">
+              <FaTrashAlt />
+            </span> Delete
+          </button>
+        {/if}
         <a
           rel="prefetch"
           class="button button-secondary button-small button-outline"
@@ -386,53 +422,65 @@
       {/if}
     </h4>
     <div class="panel latestRevisionPanel">
-      <h5>Description</h5>
-      {#if !loaded}
-        <Skeleton noPadding />
-      {:else}
-        <DescDiff {oldDescription} {newDescription} />
-      {/if}
-      {#if isPrioritized}
-        <h5>Priority</h5>
-        {#if loaded}
-          <div class="reqversionContent">
-            <SimpleDiff oldText={oldPriority} newText={newPriority} />
-          </div>
-        {:else}
-          <Skeleton noPadding />
-        {/if}
-      {/if}
-      <h5>Reason for change</h5>
-      {#if !loaded}
-        <Skeleton noPadding />
-      {:else}
-        <div class="reqversionContent">
-          {#if rationale}
-            {rationale}
-          {:else}<span class="noRationale">No rationale</span>{/if}
+      <div class="twoCol">
+        <div>
+          <h5>Description</h5>
+          {#if !loaded}
+            <Skeleton noPadding />
+          {:else}
+            <DescDiff {oldDescription} {newDescription} />
+          {/if}
         </div>
-        <!-- zero-width-space to preserve height if rationale is empty-->
-      {/if}
-      <h5>Proposer</h5>
-      {#if loaded}
-        <div class="authorInfo">
-          <div class="authorImageWrapper squircle">
-            {#if authorImageName}
-              <img
-                src={`https://storage.googleapis.com/user-file-storage/${authorImageName}`}
-                alt={authorName} />
-            {:else if authorPlaceholderImage}
-              {@html authorPlaceholderImage}
+        <div>
+          {#if isPrioritized}
+            <h5>Priority</h5>
+            {#if loaded}
+              <div class="reqversionContent">
+                <SimpleDiff oldText={oldPriority} newText={newPriority} />
+              </div>
+            {:else}
+              <Skeleton noPadding />
             {/if}
-          </div>
-          <span class="authorName">{authorName}</span>
-          <span class="authorEmail">&lt;{authorEmail}&gt;</span>
+          {/if}
         </div>
-      {:else}
-        <Skeleton noPadding />
-      {/if}
-      <h5>Actions</h5>
+      </div>
+      <div class="twoCol">
+        <div>
+          <h5>Proposer</h5>
+          {#if loaded}
+            <div class="authorInfo">
+              <div class="authorImageWrapper squircle">
+                {#if authorImageName}
+                  <img
+                    src={`https://storage.googleapis.com/user-file-storage/${authorImageName}`}
+                    alt={authorName} />
+                {:else if authorPlaceholderImage}
+                  {@html authorPlaceholderImage}
+                {/if}
+              </div>
+              <span class="authorName">{authorName}</span>
+              <span class="authorEmail">&lt;{authorEmail}&gt;</span>
+            </div>
+          {:else}
+            <Skeleton noPadding />
+          {/if}
+        </div>
+        <div>
+          <h5>Reason for change</h5>
+          {#if !loaded}
+            <Skeleton noPadding />
+          {:else}
+            <div class="reqversionContent">
+              {#if rationale}
+                {rationale}
+              {:else}<span class="noRationale">No rationale</span>{/if}
+            </div>
+            <!-- zero-width-space to preserve height if rationale is empty-->
+          {/if}
+        </div>
+      </div>
       {#if newStatus === 'proposed' || newStatus === 'modified'}
+        <h5>Actions</h5>
         <button
           on:click={acceptProposal}
           class="actionButton button-success button-small button-outline">
@@ -444,19 +492,6 @@
           }}
           class="actionButton button-danger button-small button-outline">
           Reject
-        </button>
-      {:else}
-        <a
-          rel="prefetch"
-          on:click={close}
-          href={`/project/${project_id}/requirement/${id}/edit`}
-          class="button actionButton button-caution button-small button-outline">
-          Edit requirement
-        </a>
-        <button
-          on:click={deleteRequirement}
-          class="actionButton button-danger button-small button-outline">
-          Delete
         </button>
       {/if}
     </div>

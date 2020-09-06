@@ -6,6 +6,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import { getContext } from "svelte";
   import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
+  import FaLink from "svelte-icons/fa/FaLink.svelte";
 
   export let requirement;
   export let update;
@@ -43,7 +44,7 @@
   li.requirement > div.iconCell {
     border: none;
 
-    button.buttonIconWrapper {
+    .buttonIconWrapper {
       background-color: var(--background1);
       border: 0.1rem solid var(--borderColor);
       border-radius: 50%;
@@ -61,10 +62,11 @@
     }
   }
 
-  button.buttonIconWrapper.comment {
+  .buttonIconWrapper.comment {
     padding: 0.75rem !important;
   }
-  button.buttonIconWrapper.unlink {
+  .buttonIconWrapper.unlink,
+  .buttonIconWrapper.link {
     padding: 0.9rem !important;
     margin-right: 0.5rem !important;
   }
@@ -79,6 +81,14 @@
           class="buttonIconWrapper unlink">
           <FaUnlink />
         </button>
+      </div>
+    {:else}
+      <div class="iconCell">
+        <a
+          href={`/project/${requirement.project_id}/requirement/${requirement.id}/linked`}
+          class="buttonIconWrapper button link">
+          <FaLink />
+        </a>
       </div>
     {/if}
     <div class="iconCell">
