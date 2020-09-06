@@ -133,7 +133,7 @@ module.exports = async function (fastify, opts) {
           })
           .returning("id"));
       }
-      await fastify.updateReviews("file", id);
+      await fastify.updateReviews("file", id, request.user.id);
       return [id];
     }
   );

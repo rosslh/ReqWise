@@ -92,7 +92,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { status, comment } = request.body;
 
-      await fastify
+      const [project_id] = await fastify
         .knex("stakeholderReview")
         .where("id", request.params.reviewId)
         .update({
@@ -100,7 +100,11 @@ module.exports = async function (fastify, opts) {
           comment,
           reviewedBy: request.user.id,
           completed_at: new Date(Date.now())
-        });
+        }).returning("project_id");
+
+      const entity = await fastify.getReviewedEntity(request.params.reviewId);
+
+      await fastify.createAlert("changeStatus", "stakeholderReview", entity.name, request.params.reviewId, project_id, request.user.id, status);
 
       return ["success"];
     }

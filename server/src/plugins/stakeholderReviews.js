@@ -17,8 +17,8 @@ module.exports = fp(function (fastify, opts, done) {
       .first();
   });
 
-  fastify.decorate("updateReviews", async function (entityType, entityId) {
-    const { project_id, is_draft } = await fastify.knex.from(entityType).select("*").where("id", entityId).first();
+  fastify.decorate("updateReviews", async function (entityType, entityId, userId) {
+    const { project_id, is_draft, name } = await fastify.knex.from(entityType).select("*").where("id", entityId).first();
 
     await fastify
       .knex("stakeholderReview")
@@ -42,6 +42,8 @@ module.exports = fp(function (fastify, opts, done) {
       }).returning("id");
 
     await fastify.createBaseline(id);
+
+    await fastify.createAlert("create", "stakeholderReview", name, id, project_id, userId);
   });
 
   fastify.decorate("getReviewedEntity", async function (review_id) {

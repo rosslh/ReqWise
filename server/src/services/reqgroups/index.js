@@ -139,7 +139,7 @@ module.exports = async function (fastify, opts) {
         })
         .returning(["id", "project_id"]);
 
-      await fastify.updateReviews("reqgroup", id);
+      await fastify.updateReviews("reqgroup", id, request.user.id);
       await fastify.createAlert("update", "reqgroup", name, id, project_id, request.user.id);
       return [id];
     }

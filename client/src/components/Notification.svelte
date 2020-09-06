@@ -5,13 +5,14 @@
   export let compact = false;
 
   import { format } from "date-fns";
+  import normalizeString from "lodash/lowerCase";
   import { put } from "../api.js";
   import { unreadAlerts } from "../stores.js";
   import { stores } from "@sapper/app";
 
   const { session } = stores();
 
-  const getActionString = actionType => {
+  const getActionString = (actionType) => {
     if (actionType === "create") {
       return "created a new";
     } else if (actionType === "delete") {
@@ -25,7 +26,7 @@
     }
   };
 
-  const getEntityString = entityType => {
+  const getEntityString = (entityType) => {
     if (entityType === "reqgroup") {
       return "requirement group";
     } else if (entityType === "stakeholderGroup") {
@@ -34,6 +35,8 @@
       return "user class";
     } else if (entityType === "reqversion") {
       return "requirement";
+    } else if (entityType === "stakeholderReview") {
+      return "review";
     } else {
       return entityType;
     }
@@ -52,19 +55,22 @@
       return `/project/${notification.project_id}/requirement/${notification.requirement_id}`;
     } else if (notification.entityType === "questionnaire") {
       return `/project/${notification.project_id}/brainstorm/forms/${notification.entity_brainstormForm_id}`;
+    } else if (notification.entityType === "stakeholderReview") {
+      return `/project/${notification.project_id}/reviews/${notification.entity_stakeholderReview_id}`;
     } else {
       return `/project/${notification.project_id}/files/${notification.entity_file_id}`;
     }
   };
 
-  const hasEntityId = () =>
+  $: hasEntityId =
     notification.entity_reqgroup_id ||
     notification.entity_stakeholderGroup_id ||
     notification.entity_userclass_id ||
     notification.entity_requirement_id ||
     (notification.entity_reqversion_id && notification.requirement_id) ||
     notification.entity_file_id ||
-    notification.entity_brainstormForm_id;
+    notification.entity_brainstormForm_id ||
+    notification.entity_stakeholderReview_id;
 
   const toggleRead = async () => {
     const is_read = !notification.is_read;
@@ -150,9 +156,7 @@
       <div class="left">
         <a rel="prefetch" href={`/team/${notification.team_id}`}>
           {notification.teamName}
-        </a>
-        /
-        <a rel="prefetch" href={`/project/${notification.project_id}`}>
+        </a> / <a rel="prefetch" href={`/project/${notification.project_id}`}>
           {notification.projectName}
         </a>
         <span class="sep">&bull;</span>
@@ -165,7 +169,7 @@
           <button
             on:click={toggleRead}
             class="button button-small button-outline button-clear
-            button-secondary">
+              button-secondary">
             {#if notification.is_read}Mark as unread{:else}Mark as read{/if}
           </button>
         </div>
@@ -189,16 +193,15 @@
           {getActionString(notification.actionType)}
           {getEntityString(notification.entityType)}
         </span>
-        {#if hasEntityId() && notification.description && notification.actionType !== 'delete'}
+        {#if hasEntityId && notification.description && notification.actionType !== 'delete'}
           <a rel="prefetch" class="entityLink" href={getHref()}>
             {notification.description}
           </a>
-        {:else if !hasEntityId() || notification.actionType === 'delete'}
+        {:else if !hasEntityId || notification.actionType === 'delete'}
           <strong>{notification.description}</strong>
         {/if}
         {#if notification.newValue}
-          to
-          <strong>{notification.newValue}</strong>
+          to <strong>{normalizeString(notification.newValue)}</strong>
         {/if}
       </div>
     </div>

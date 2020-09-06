@@ -18,6 +18,8 @@ module.exports = fp(function (fastify, opts, done) {
       entityId.entity_userclass_id = entity_id;
     } else if (entityType === "questionnaire") {
       entityId.entity_brainstormForm_id = entity_id;
+    } else if (entityType === "stakeholderReview") {
+      entityId.entity_stakeholderReview_id = entity_id;
     }
 
     const alert_id = (await fastify
