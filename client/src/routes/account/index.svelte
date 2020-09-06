@@ -102,7 +102,7 @@
 <div class="contentWrapper">
   {#if projects.length}
     <h2>Project collaboration</h2>
-    <div class="panel compact">
+    <div class="panel compact" data-cy="projectCollaboration">
       <table>
         <thead>
           <tr>
@@ -114,6 +114,7 @@
             <tr>
               <td>
                 <a
+                  data-cy="projectLink"
                   rel="prefetch"
                   class="projectLink"
                   href={`/project/${project.id}`}>

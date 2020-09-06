@@ -36,7 +36,10 @@
   <h3>Withdraw review</h3>
   <p>Reviewed item will be converted back into a draft.</p>
   <form>
-    <SubmitButton className="button-danger" handler={makeDraft}>
+    <SubmitButton
+      id="withdrawReviewButton"
+      className="button-danger"
+      handler={makeDraft}>
       Withdraw
     </SubmitButton>
   </form>
@@ -44,7 +47,10 @@
   <h3>Convert to draft</h3>
   <p>Pending reviews will be withdrawn.</p>
   <form>
-    <SubmitButton className="button-caution" handler={makeDraft}>
+    <SubmitButton
+      id="makeDraftButton"
+      className="button-caution"
+      handler={makeDraft}>
       Convert to draft
     </SubmitButton>
   </form>

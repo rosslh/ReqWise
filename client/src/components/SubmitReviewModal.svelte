@@ -51,7 +51,10 @@
 
 <h3>Submit review</h3>
 <form>
-  <textarea bind:value={comment} placeholder="Leave a comment" />
+  <textarea
+    data-cy="commentField"
+    bind:value={comment}
+    placeholder="Leave a comment" />
   <fieldset>
     <input
       bind:group={status}
@@ -60,8 +63,7 @@
       name="type"
       value="accept" />
     <label class="label-inline" for="accept">
-      Approve
-      <br />
+      Approve <br />
       <span class="secondary">
         Submit feedback and approve these requirements.
       </span>
@@ -75,12 +77,11 @@
       name="type"
       value="requestChanges" />
     <label class="label-inline" for="requestChanges">
-      Request changes
-      <br />
+      Request changes <br />
       <span class="secondary">
         Submit feedback that must be addressed before accepting.
       </span>
     </label>
   </fieldset>
-  <SubmitButton handler={submit}>Submit review</SubmitButton>
+  <SubmitButton id="submitButton" handler={submit}>Submit review</SubmitButton>
 </form>

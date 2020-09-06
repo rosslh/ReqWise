@@ -1,27 +1,30 @@
 import 'cypress-wait-until';
 
-Cypress.Commands.add("login", () => {
+Cypress.Commands.add("login", (email = "test.owner@reqwise.com", password = "1234") => {
   cy.clearCookie('__session');
+  cy.clearCookies();
   cy.reload();
   cy.waitForPreload();
   cy.url().should('include', '/login');
-  cy.wait(2000);
-  cy.get("#email").click().type('test.owner@reqwise.com');
-  cy.get("#pwd").click().type('1234');
+  cy.wait(1500);
+  cy.get("#email").click().type(email);
+  cy.get("#pwd").click().type(password);
   cy.get(".submitButton").click();
   cy.waitForSpinner();
   cy.waitForPreload();
   cy.url().should('not.include', 'login');
 });
 
-Cypress.Commands.add("goToProject", () => {
+Cypress.Commands.add("goToProject", (email = "test.owner@reqwise.com", password = "1234") => {
   cy.visit('/account')
-  cy.login();
-  cy.contains('a', "Test team (don't delete)").click();
-  cy.waitForPreload();
-  cy.waitForSkeleton();
-  cy.url().should('include', 'team/');
-  cy.contains("h1", "Test team (don't delete)");
+  cy.login(email, password);
+  if (!email.includes("stakeholder")) {
+    cy.contains('a', "Test team (don't delete)").click();
+    cy.waitForPreload();
+    cy.waitForSkeleton();
+    cy.url().should('include', 'team/');
+    cy.contains("h1", "Test team (don't delete)");
+  }
   cy.contains('a', "Test project (don't delete)").click();
   cy.waitForPreload();
   cy.waitForSkeleton();

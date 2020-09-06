@@ -206,11 +206,15 @@
     </div>
     {#if review.status === 'pending' && userIsReviewer}
       <div class="reviewChangesButtonWrapper">
-        <button on:click={reviewChanges}>Review changes</button>
+        <button data-cy="reviewChangesButton" on:click={reviewChanges}>Review
+          changes</button>
       </div>
     {:else if review.status === 'pending' && scopes.includes('member')}
       <div class="reviewChangesButtonWrapper">
-        <button class="button button-danger" on:click={withdrawReview}>
+        <button
+          data-cy="withdrawReviewButton"
+          class="button button-danger"
+          on:click={withdrawReview}>
           Withdraw review
         </button>
       </div>

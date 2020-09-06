@@ -112,6 +112,7 @@
     {#if !reqgroup.is_baseline}
       {#if !reqgroup.is_draft && scopes.includes('member')}
         <button
+          data-cy="makeDraftButton"
           id="makeDraftButton"
           on:click={makeDraft}
           class="button-outline button-small button-secondary button-clear">

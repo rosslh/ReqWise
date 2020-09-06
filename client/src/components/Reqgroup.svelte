@@ -212,6 +212,7 @@
 </style>
 
 <div
+  data-cy={reqgroup.name}
   class={`reqgroup ${draggingRequirement ? 'dragging' : ''}`}
   id={`reqgroup-${reqgroupId}`}>
   <ReqgroupHeader {reqgroupId} {reqgroup} {hideStakeholderStatus} />

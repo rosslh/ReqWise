@@ -33,6 +33,7 @@
 </style>
 
 <div
+  data-cy={label}
   style={`
   background-color: ${bgColor};
   --stakeholderStatusWidth: ${width};

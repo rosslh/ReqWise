@@ -182,6 +182,7 @@
             <td>
               <a
                 rel="prefetch"
+                data-cy="projectLink"
                 class="projectLink"
                 href={`/project/${project.id}/features`}>
                 {project.name}
@@ -308,9 +309,7 @@
                         style="margin: 0;"
                         on:click={() => deleteMember(member.id)}>
                         Remove member
-                      </button>
-                      &nbsp;
-                      {#if !member.isAdmin}
+                      </button> &nbsp; {#if !member.isAdmin}
                         <button
                           class="button-caution button-small button-outline"
                           style="margin: 0;"
@@ -361,7 +360,7 @@
                 <td>
                   <button
                     class="deleteInviteButton button-danger button-small
-                    button-outline"
+                      button-outline"
                     style="margin: 0;"
                     on:click={() => deleteInvite(invite.id)}>
                     Delete invite
