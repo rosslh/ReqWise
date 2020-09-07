@@ -108,16 +108,11 @@
     overflow: hidden;
   }
 
-  .description,
-  .persona,
-  .champions {
-    padding: 0 2rem;
-  }
-
   div.userclassHeader {
     padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
+    border-bottom: 0.1rem solid var(--borderColor);
   }
 
   div.userclassHeader h3 {
@@ -138,7 +133,10 @@
   .footer {
     display: flex;
     justify-content: space-between;
-    padding: 0 2rem 2rem;
+    align-items: center;
+    padding: 0 2rem;
+    height: 5rem;
+    border-top: 0.1rem solid var(--borderColor);
   }
   .footer button,
   .footer .button {
@@ -161,6 +159,12 @@
     margin-top: 1.8rem;
     margin-bottom: 0.6rem;
     font-size: 1.6rem;
+  }
+
+  .champions,
+  .twoCol {
+    background-color: var(--background2);
+    padding: 2rem 1.5rem;
   }
 
   .twoCol {
