@@ -17,7 +17,10 @@
   import FaLink from "svelte-icons/fa/FaLink.svelte";
   import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
   import { stores } from "@sapper/app";
+  import { getContext } from "svelte";
   const { session, page } = stores();
+
+  const scopes = getContext("scopes");
 
   const deletePrompt = () => {
     modalContent.set(DeletePromptModal);
@@ -141,38 +144,36 @@
       {/if}
     </div>
     <div class="right">
-      {#if $session.user && $session.user.jwt}
-        {#if unlinkRequirement || unlinkReqgroup}
-          <button
-            on:click={unlinkPrompt}
-            class="button-outline button-small button-secondary button-clear">
-            <div class="iconWrapper iconWrapper-padded">
-              <FaUnlink />
-            </div>
-            Unlink prompt
-          </button>
-        {:else}
-          <a
-            rel="prefetch"
-            href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/linked`}
-            class="button button-outline button-small button-secondary
-              button-clear">
-            <div class="iconWrapper iconWrapper-padded">
-              <FaLink />
-            </div>
-            Linked
-          </a>
-        {/if}
-        {#if isDraft}
-          <button
-            on:click={deletePrompt}
-            class="button-outline button-small button-secondary button-clear">
-            <div class="iconWrapper">
-              <FaRegTrashAlt />
-            </div>
-            Delete
-          </button>
-        {/if}
+      {#if scopes.includes('member') && (unlinkRequirement || unlinkReqgroup)}
+        <button
+          on:click={unlinkPrompt}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaUnlink />
+          </div>
+          Unlink prompt
+        </button>
+      {:else if !(unlinkRequirement || unlinkReqgroup)}
+        <a
+          rel="prefetch"
+          href={`/project/${$page.params.id}/brainstorm/prompts/${prompt.id}/linked`}
+          class="button button-outline button-small button-secondary
+            button-clear">
+          <div class="iconWrapper iconWrapper-padded">
+            <FaLink />
+          </div>
+          Linked
+        </a>
+      {/if}
+      {#if isDraft}
+        <button
+          on:click={deletePrompt}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegTrashAlt />
+          </div>
+          Delete
+        </button>
       {/if}
     </div>
   </div>

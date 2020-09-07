@@ -27,6 +27,7 @@
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { getContext } from "svelte";
   import { stores } from "@sapper/app";
+  import MdHistory from "svelte-icons/md/MdHistory.svelte";
   const { session } = stores();
 
   const deleteUserclass = () => {
@@ -283,6 +284,15 @@
       {/await}
     </div>
     <div class="right">
+      <a
+        rel="prefetch"
+        href={`/project/${projectId}/user-classes/${userclassId}/history`}
+        class="button button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <MdHistory />
+        </div>
+        History
+      </a>
       {#if unlinkRequirement}
         <button
           on:click={unlinkUserclass}

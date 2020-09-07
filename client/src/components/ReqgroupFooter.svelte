@@ -12,6 +12,7 @@
   import DeleteFeatureModal from "../components/DeleteFeatureModal.svelte";
   import EditFeatureModal from "../components/EditFeatureModal.svelte";
   import FaUnlink from "svelte-icons/fa/FaUnlink.svelte";
+  import MdHistory from "svelte-icons/md/MdHistory.svelte";
 
   export let updateReqs;
   export let updateReqgroup;
@@ -88,6 +89,15 @@
     <div />
   {/if}
   <div class="right">
+    <a
+      rel="prefetch"
+      href={`/project/${reqgroup.project_id}/reqgroup/${reqgroupId}/history`}
+      class="button button-outline button-small button-secondary button-clear">
+      <div class="iconWrapper">
+        <MdHistory />
+      </div>
+      History
+    </a>
     {#if unlinkId}
       <button
         id="makeDraftButton"
