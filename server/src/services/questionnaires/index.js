@@ -35,7 +35,7 @@ module.exports = async function (fastify, opts) {
         "brainstormForm_id": request.params.questionnaireId
       });
 
-      prompts = await Promise.all(prompts.map(p => fastify.getPromptDetails(p, request)));
+      prompts = await Promise.all(prompts.map(async p => await fastify.getPromptDetails(p, request)));
 
       return { ...questionnaire, prompts };
     }

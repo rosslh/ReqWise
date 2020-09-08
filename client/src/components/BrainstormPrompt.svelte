@@ -20,7 +20,7 @@
   import { getContext } from "svelte";
   const { session, page } = stores();
 
-  const scopes = getContext("scopes");
+  const scopes = getContext("scopes") || [];
 
   const deletePrompt = () => {
     modalContent.set(DeletePromptModal);
