@@ -21,7 +21,7 @@
   import FaUserTie from "svelte-icons/fa/FaUserTie.svelte";
   import FaSignature from "svelte-icons/fa/FaSignature.svelte";
   import FaEye from "svelte-icons/fa/FaEye.svelte";
-  // import FaCheckDouble from "svelte-icons/fa/FaCheckDouble.svelte";
+  import MdDashboard from "svelte-icons/md/MdDashboard.svelte";
 
   import Sidebar from "../../../components/Sidebar.svelte";
   import MobileMenu from "../../../components/MobileMenu.svelte";
@@ -109,6 +109,22 @@
 
   const menuLinks = [
     {
+      label: "Dashboard",
+      slug: "dashboard",
+      icon: MdDashboard,
+      newSection: "Project Details",
+    },
+    {
+      label: "Activity",
+      slug: "activity",
+      icon: MdHistory,
+    },
+    {
+      label: "Settings",
+      slug: "settings",
+      icon: IoIosSettings,
+    },
+    {
       label: "Brainstorm",
       slug: "brainstorm",
       icon: MdLightbulbOutline,
@@ -167,17 +183,6 @@
       label: "Requirements Baseline",
       slug: "baseline",
       icon: FaSignature,
-    },
-    {
-      label: "Activity",
-      slug: "activity",
-      icon: MdHistory,
-      newSection: "Project Details",
-    },
-    {
-      label: "Settings",
-      slug: "settings",
-      icon: IoIosSettings,
     },
   ];
 </script>

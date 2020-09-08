@@ -184,7 +184,7 @@
                 rel="prefetch"
                 data-cy="projectLink"
                 class="projectLink"
-                href={`/project/${project.id}/features`}>
+                href={`/project/${project.id}/dashboard`}>
                 {project.name}
               </a>
             </td>
