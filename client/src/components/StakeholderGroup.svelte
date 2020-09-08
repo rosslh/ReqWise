@@ -177,11 +177,11 @@
           rel="prefetch"
           href={`/project/${projectId}/stakeholders/group/${group.id}/reqgroups`}
           class="button button-outline button-small button-secondary
-          button-clear">
+            button-clear">
           <div class="iconWrapper iconWrapper-padded">
             <FaLink />
           </div>
-          Requirement groups
+          Linked
         </a>
       {/if}
       <button

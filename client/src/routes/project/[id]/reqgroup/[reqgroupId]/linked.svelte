@@ -1,6 +1,19 @@
+<script context="module">
+  export async function preload({ params }, { user }) {
+    if (user && user.jwt) {
+      const reqgroup = await get(
+        `/reqgroups/${params.reqgroupId}`,
+        user && user.jwt
+      );
+      return { reqgroupType: reqgroup.type };
+    }
+  }
+</script>
+
 <script>
   import { stores } from "@sapper/app";
   import { get } from "../../../../../api.js";
+  import { reqgroupTypeLabels } from "../../../../../utils.js";
   import BrainstormPrompt from "../../../../../components/BrainstormPrompt.svelte";
   import StakeholderGroup from "../../../../../components/StakeholderGroup.svelte";
   import AddStakeholderGroupToReqgroupModal from "../../../../../components/AddStakeholderGroupToReqgroupModal.svelte";
@@ -9,6 +22,8 @@
 
   const { page, session } = stores();
   const { reqgroupId, id } = $page.params;
+
+  export let reqgroupType;
 
   let stakeholderGroups = get(
     `/reqgroups/${reqgroupId}/stakeholders`,
@@ -34,12 +49,12 @@
 
   const addStakeholderGroup = () => {
     modalContent.set(AddStakeholderGroupToReqgroupModal);
-    modalProps.set({ projectId: id, reqgroupId, update });
+    modalProps.set({ projectId: id, reqgroupId, update, reqgroupType });
   };
 
   const addPrompt = () => {
     modalContent.set(AddPromptToReqgroupModal);
-    modalProps.set({ projectId: id, reqgroupId, update });
+    modalProps.set({ projectId: id, reqgroupId, update, reqgroupType });
   };
 </script>
 
@@ -51,7 +66,7 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Items linked to requirement group</h2>
+  <h2>Items linked to {reqgroupTypeLabels[reqgroupType]}</h2>
 </section>
 <section class="contentWrapper">
   <h3>Stakeholders</h3>

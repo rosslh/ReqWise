@@ -1,11 +1,13 @@
 <script>
-  import { del } from "../api.js";
+  import { del } from "../api";
+  import { reqgroupTypeLabels } from "../utils";
   import { stores } from "@sapper/app";
   const { session } = stores();
 
   export let unlinkId;
   export let unlinkType;
   export let reqgroupId;
+  export let reqgroupType;
   export let update;
   export let close;
 
@@ -24,5 +26,5 @@
 <style>
 </style>
 
-<h3>Unlink requirement group</h3>
+<h3>Unlink {reqgroupTypeLabels[reqgroupType]}</h3>
 <button class="button-caution" on:click={unlink}>Unlink</button>

@@ -18,7 +18,7 @@ describe('Features page', () => {
 
   it('can edit feature', () => {
     cy.get('#editReqgroupButton[data-reqgroup="New feature"]').click();
-    cy.contains('h3', "Update requirement group");
+    cy.contains('h3', "Update feature");
     cy.get('#desc').click().clear().type("Updated feature");
     cy.get('#updateReqgroupButton').click();
     cy.waitForSpinner();

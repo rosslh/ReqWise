@@ -51,7 +51,7 @@ Cypress.Commands.add("goToRequirement", () => {
   cy.waitForPreload();
   cy.waitForSkeleton();
   cy.url().should('include', 'reqgroup/');
-  cy.contains('h2', "View requirement group")
+  cy.contains('h2', "View feature")
   cy.get('button[data-cy=commentIconWrapper]').click();
   cy.waitForPreload();
   cy.waitForSkeleton();

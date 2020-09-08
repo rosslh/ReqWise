@@ -1,5 +1,16 @@
+<script context="module">
+  export async function preload({ params }, { user }) {
+    const reqgroup = await get(
+      `/reqgroups/${params.reqgroupId}`,
+      user && user.jwt
+    );
+    return { reqgroup };
+  }
+</script>
+
 <script>
   import { get } from "../../../../../api.js";
+  import { reqgroupTypeLabels } from "../../../../../utils.js";
   import { stores } from "@sapper/app";
 
   import Reqgroup from "../../../../../components/Reqgroup.svelte";
@@ -7,10 +18,7 @@
   const { page, session } = stores();
   const { reqgroupId } = $page.params;
 
-  let reqgroup = get(
-    `/reqgroups/${reqgroupId}`,
-    $session.user && $session.user.jwt
-  );
+  export let reqgroup;
 
   const update = async () => {
     reqgroup = await get(
@@ -30,18 +38,8 @@
 
 <section class="contentWrapper">
   <h2>
-    View requirement group
-    {#await reqgroup}
-      <!-- loading -->
-    {:then result}
-      <span class="reqgroupPpuid">#{result.ppuid}</span>
-    {/await}
+    View {reqgroupTypeLabels[reqgroup.type]}
+    <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h2>
-  {#await reqgroup}
-    <!-- loading -->
-  {:then result}
-    <Reqgroup reqgroup={result} {update} />
-  {:catch error}
-    <p style="color: var(--red)">{error.message}</p>
-  {/await}
+  <Reqgroup {reqgroup} {update} />
 </section>

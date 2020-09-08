@@ -4,9 +4,11 @@
   import { onMount } from "svelte";
   const { session } = stores();
   import { get, post } from "../api.js";
+  import { reqgroupTypeLabels } from "../utils.js";
   import SubmitButton from "./SubmitButton.svelte";
 
   export let projectId;
+  export let reqgroupType;
   export let reqgroupId;
   export let update;
   export let close;
@@ -22,9 +24,9 @@
       $session.user && $session.user.jwt
     );
 
-    stakeholderGroupOptions = allStakeholderGroups.map(f => ({
+    stakeholderGroupOptions = allStakeholderGroups.map((f) => ({
       value: f.id,
-      label: `#${f.ppuid} ${f.name}`
+      label: `#${f.ppuid} ${f.name}`,
     }));
 
     currentStakeholderGroups = await get(
@@ -32,23 +34,23 @@
       $session.user && $session.user.jwt
     );
 
-    selectedStakeholderGroupOptions = currentStakeholderGroups.map(f => ({
+    selectedStakeholderGroupOptions = currentStakeholderGroups.map((f) => ({
       value: f.id,
-      label: `#${f.ppuid} ${f.name}`
+      label: `#${f.ppuid} ${f.name}`,
     }));
   });
 
-  $: currentStakeholderGroupIds = currentStakeholderGroups.map(f => f.id);
+  $: currentStakeholderGroupIds = currentStakeholderGroups.map((f) => f.id);
   $: stakeholderGroupsToAdd = selectedStakeholderGroupOptions
     ? selectedStakeholderGroupOptions
-        .map(s => s.value)
-        .filter(id => !currentStakeholderGroupIds.includes(id))
+        .map((s) => s.value)
+        .filter((id) => !currentStakeholderGroupIds.includes(id))
     : [];
 
   $: addStakeholderGroups = async () => {
     await Promise.all(
       stakeholderGroupsToAdd.map(
-        async stakeholderGroup_id =>
+        async (stakeholderGroup_id) =>
           await post(
             `/reqgroups/${reqgroupId}/stakeholders`,
             { stakeholderGroup_id },
@@ -61,7 +63,7 @@
   };
 </script>
 
-<h2>Link stakeholder groups to requirement group</h2>
+<h2>Link stakeholder groups to {reqgroupTypeLabels[reqgroupType]}</h2>
 <form>
   <fieldset>
     <Select

@@ -10,7 +10,8 @@
   import MdHistory from "svelte-icons/md/MdHistory.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
 
-  import { get, post, del, put, stream } from "../api.js";
+  import { get, post, del, put, stream } from "../api";
+  import { reqgroupTypeLabels } from "../utils";
   import Skeleton from "./Skeleton.svelte";
   import Requirement from "./Requirement.svelte";
   import Comment from "./Comment.svelte";
@@ -374,7 +375,8 @@
           href={`/project/${project_id}/reqgroup/${reqgroup_id}`}>
           <span class="iconWrapper iconWrapper-padded">
             <MdFolder />
-          </span> Requirement group #{reqgroup_ppuid}
+          </span>
+          {reqgroupTypeLabels[requirement.reqgroupType]} #{reqgroup_ppuid}
         </a>
         {#if parent_requirement_id}
           <a

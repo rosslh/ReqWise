@@ -6,6 +6,7 @@
   export let isPreview = false;
 
   import { post, get } from "../api.js";
+  import { reqgroupTypeLabels } from "../utils.js";
   import { modalContent, modalProps } from "../stores.js";
 
   import StakeholderStatus from "./StakeholderStatus.svelte";
@@ -45,13 +46,7 @@
   };
 
   const getReqgroupType = (type) => {
-    if (type === "quality") {
-      return "quality attribute";
-    } else if (type === "business") {
-      return "business requirement group";
-    } else {
-      return type;
-    }
+    return reqgroupTypeLabels[type];
   };
 
   $: entityTypeLabel = (() => {

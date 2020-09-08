@@ -26,12 +26,21 @@
 
   const editReqgroup = () => {
     modalContent.set(EditFeatureModal);
-    modalProps.set({ reqgroupId: reqgroupId, updateReqgroup, reqgroup });
+    modalProps.set({
+      reqgroupId: reqgroupId,
+      updateReqgroup,
+      reqgroup,
+      reqgroupType: reqgroup.type,
+    });
   };
 
   const deleteReqgroup = () => {
     modalContent.set(DeleteFeatureModal);
-    modalProps.set({ reqgroupId: reqgroupId, update });
+    modalProps.set({
+      reqgroupId: reqgroupId,
+      update,
+      reqgroupType: reqgroup.type,
+    });
   };
 
   const makeDraft = () => {
@@ -51,6 +60,7 @@
       update,
       unlinkId,
       unlinkType,
+      reqgroupType: reqgroup.type,
     });
     modalContent.set(UnlinkReqgroupModal);
   };

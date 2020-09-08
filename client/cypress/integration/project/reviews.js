@@ -26,7 +26,7 @@ describe('Reviews', () => {
     cy.get('.reqgroup[data-cy="Draft feature"]').within(() => {
       cy.get('#editReqgroupButton').click();
     });
-    cy.contains('h3', "Update requirement group");
+    cy.contains('h3', "Update feature");
     cy.get('#isDraft').click();
     cy.get('#updateReqgroupButton').click();
     cy.waitForSpinner();

@@ -1,10 +1,12 @@
 <script>
   import { put } from "../api.js";
+  import { reqgroupTypeLabels } from "../utils.js";
   import { stores } from "@sapper/app";
   const { session } = stores();
   import SubmitButton from "../components/SubmitButton.svelte";
 
   export let reqgroupId;
+  export let reqgroupType;
   export let updateReqgroup;
   export let close;
 
@@ -32,7 +34,7 @@
   }
 </style>
 
-<h3>Update requirement group</h3>
+<h3>Update {reqgroupTypeLabels[reqgroupType]}</h3>
 <form>
   <fieldset>
     <label for="desc">Title</label>
@@ -52,8 +54,8 @@
   <fieldset>
     <input type="checkbox" id="isDraft" bind:checked={is_draft} />
     <label class="label-inline" for="isDraft">
-      Requirement group is a draft
-      <span class="secondary">(not ready for stakeholder review)</span>
+      {reqgroupTypeLabels[reqgroupType]} is a draft <span class="secondary">(not
+        ready for stakeholder review)</span>
     </label>
   </fieldset>
   <SubmitButton

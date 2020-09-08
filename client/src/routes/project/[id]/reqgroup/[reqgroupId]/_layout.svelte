@@ -12,6 +12,7 @@
 <script>
   import { stores } from "@sapper/app";
   const { page } = stores();
+  import { reqgroupTypeLabels } from "../../../../../utils";
   export let reqgroup;
 </script>
 
@@ -21,7 +22,7 @@
       <a
         rel="prefetch"
         href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
-        &larr;&nbsp;Go to requirement group
+        &larr;&nbsp;Go to {reqgroupTypeLabels[reqgroup.type]}
       </a>
     </div>
   </div>
