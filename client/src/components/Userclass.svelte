@@ -12,13 +12,10 @@
     userclass.is_draft && !userclass.is_baseline && scopes.includes("member");
 
   import { modalContent, modalProps } from "../stores.js";
-  import { get, del } from "../api.js";
+  import { del } from "../api.js";
   import DeleteUserclassModal from "./DeleteUserclassModal.svelte";
   import EditUserclassModal from "./EditUserclassModal.svelte";
   import MakeDraftModal from "./MakeDraftModal.svelte";
-  import AddProductChampionModal from "./AddProductChampionModal.svelte";
-  import Skeleton from "./Skeleton.svelte";
-  import ProductChampion from "./ProductChampion.svelte";
   import StakeholderStatus from "./StakeholderStatus.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
@@ -56,27 +53,6 @@
       default:
         return "indigo";
     }
-  };
-
-  let champions = get(
-    `/userclasses/${userclassId}/champions`,
-    $session.user && $session.user.jwt
-  );
-
-  const updateChampions = () => {
-    champions = get(
-      `/userclasses/${userclassId}/champions`,
-      $session.user && $session.user.jwt
-    );
-  };
-
-  const addChampion = () => {
-    modalContent.set(AddProductChampionModal);
-    modalProps.set({
-      update: updateChampions,
-      userclassId: userclassId,
-      projectId,
-    });
   };
 
   const unlinkUserclass = async () => {
@@ -161,13 +137,9 @@
     font-size: 1.6rem;
   }
 
-  .champions,
   .twoCol {
     background-color: var(--background2);
-    padding: 2rem 1.5rem;
-  }
-
-  .twoCol {
+    padding: 0 2rem 1.5rem;
     display: flex;
     flex-wrap: wrap;
   }
@@ -179,14 +151,6 @@
 
   .twoCol blockquote {
     margin-bottom: 0.5rem;
-  }
-
-  .championEmptyState {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 4rem;
-    margin-bottom: 2rem;
   }
 
   h3 a {
@@ -243,50 +207,8 @@
       </blockquote>
     </div>
   </div>
-  <div class="champions">
-    <h4>Product Champions</h4>
-    {#await champions}
-      <Skeleton rows={2} />
-    {:then result}
-      {#if showEditButtons && !result.length}
-        <div class="championEmptyState">
-          <button
-            class="button button-small button-outline"
-            on:click={addChampion}>
-            add product champion
-          </button>
-        </div>
-      {/if}
-      <table>
-        <tbody>
-          {#each result as champion}
-            <ProductChampion
-              {champion}
-              {userclassId}
-              update={updateChampions} />
-          {/each}
-        </tbody>
-      </table>
-    {:catch error}
-      <section class="contentWrapper">
-        <p style="color: var(--red)">{error.message}</p>
-      </section>
-    {/await}
-  </div>
   <div class="footer">
-    <div class="left">
-      {#await champions}
-        <Skeleton rows={2} />
-      {:then result}
-        {#if result.length}
-          <button
-            class="button button-success button-small button-outline"
-            on:click={addChampion}>
-            add champion
-          </button>
-        {/if}
-      {/await}
-    </div>
+    <div class="left" />
     <div class="right">
       <a
         rel="prefetch"
