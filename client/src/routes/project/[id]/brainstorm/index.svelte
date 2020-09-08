@@ -8,7 +8,7 @@
 
   const { page, session } = stores();
 
-  $: newQuestionnaire = () => {
+  const newQuestionnaire = () => {
     modalContent.set(NewQuestionnaireModal);
     modalProps.set({ projectId: $page.params.id });
   };
@@ -64,7 +64,7 @@
         {#if !result.length}No published questionnaires{/if}
       </ul>
     {:else}
-      <div class="secondary">No questionnaires yet</div>
+      <div class="secondary">No published questionnaires</div>
     {/if}
   {/await}
 </section>

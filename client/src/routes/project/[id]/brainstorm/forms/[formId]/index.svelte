@@ -61,6 +61,13 @@
   }
 </style>
 
+<div class="contentWrapper">
+  <div class="backLink">
+    <a rel="prefetch" href={`/project/${questionnaire.project_id}/brainstorm`}>
+      &larr;&nbsp;View all questionnaires
+    </a>
+  </div>
+</div>
 <section class="contentWrapper">
   <div class="formHeader">
     <h2>{questionnaire.description}</h2>
