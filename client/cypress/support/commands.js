@@ -30,6 +30,11 @@ Cypress.Commands.add("goToProject", (email = "test.owner@reqwise.com", password 
   cy.waitForSkeleton();
   cy.url().should('include', 'project/');
   cy.contains('h1', "Test project")
+  cy.contains('a', "Features").click();
+  cy.waitForPreload();
+  cy.waitForSkeleton();
+  cy.url().should('include', '/features');
+  cy.contains('h2', "Features")
 });
 
 Cypress.Commands.add("goToRequirement", () => {
@@ -47,6 +52,11 @@ Cypress.Commands.add("goToRequirement", () => {
   cy.waitForSkeleton();
   cy.url().should('include', 'project/');
   cy.contains('h1', "Test project")
+  cy.contains('a', "Features").click();
+  cy.waitForPreload();
+  cy.waitForSkeleton();
+  cy.url().should('include', '/features');
+  cy.contains('h2', "Features")
   cy.contains('a', "Test feature").click();
   cy.waitForPreload();
   cy.waitForSkeleton();
