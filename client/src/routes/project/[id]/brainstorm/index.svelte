@@ -42,7 +42,10 @@
     to requirements.
   </p>
   {#if scopes.includes('member')}
-    <button on:click={newQuestionnaire} class="button button-success">
+    <button
+      data-cy="newQuestionnaire"
+      on:click={newQuestionnaire}
+      class="button button-success">
       Create questionnaire
     </button>
     <a

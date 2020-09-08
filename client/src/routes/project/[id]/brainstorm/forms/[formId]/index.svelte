@@ -80,7 +80,10 @@
     {/if}
   </div>
   {#if questionnaire.is_draft}
-    <button on:click={addPrompt} class="button button-success">
+    <button
+      data-cy="addPrompt"
+      on:click={addPrompt}
+      class="button button-success">
       Add prompt
     </button>
   {/if}

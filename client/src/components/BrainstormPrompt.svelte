@@ -167,6 +167,7 @@
       {/if}
       {#if isDraft}
         <button
+          data-cy="deletePrompt"
           on:click={deletePrompt}
           class="button-outline button-small button-secondary button-clear">
           <div class="iconWrapper">

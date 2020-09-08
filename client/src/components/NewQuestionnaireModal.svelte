@@ -29,6 +29,8 @@
     <input type="text" id="title" bind:value={title} />
   </fieldset>
   <fieldset>
-    <SubmitButton handler={submitNewQuestionnaire}>Create</SubmitButton>
+    <SubmitButton id="submitQuestionnaire" handler={submitNewQuestionnaire}>
+      Create
+    </SubmitButton>
   </fieldset>
 </form>

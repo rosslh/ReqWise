@@ -148,7 +148,9 @@
       </div>
     {/if}
     <fieldset>
-      <SubmitButton handler={submitNewQuestionnaire}>Create</SubmitButton>
+      <SubmitButton id="createPromptButton" handler={submitNewQuestionnaire}>
+        Create
+      </SubmitButton>
     </fieldset>
   </form>
 </div>

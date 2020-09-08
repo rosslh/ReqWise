@@ -64,10 +64,9 @@ body {
 
 .panelHeader {
   background-color: var(--background2);
-  margin: -1.25rem -1.5rem 1.25rem;
-  padding: 1.25rem 1.5rem;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
+  border-bottom: .1rem solid var(--borderColor);
 }
 
 .squircle {

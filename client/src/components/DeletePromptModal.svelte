@@ -7,6 +7,8 @@
   export let update;
   export let close;
 
+  import SubmitButton from "./SubmitButton.svelte";
+
   $: deletePrompt = async () => {
     await del(`/prompts/${prompt.id}`, $session.user && $session.user.jwt);
     await update();
@@ -15,9 +17,13 @@
 </script>
 
 <style>
-
 </style>
 
 <h3>Delete questionnaire prompt</h3>
 <p>This action cannot be undone.</p>
-<button class="button-danger" on:click={deletePrompt}>Delete</button>
+<SubmitButton
+  id="confirmDeletePrompt"
+  className="button-danger"
+  handler={deletePrompt}>
+  Delete
+</SubmitButton>
