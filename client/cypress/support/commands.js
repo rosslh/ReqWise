@@ -19,17 +19,17 @@ Cypress.Commands.add("goToProject", (email = "test.owner@reqwise.com", password 
   cy.visit('/account')
   cy.login(email, password);
   if (!email.includes("stakeholder")) {
-    cy.contains('a', "Test team (don't delete)").click();
+    cy.contains('a', "Test team").click();
     cy.waitForPreload();
     cy.waitForSkeleton();
     cy.url().should('include', 'team/');
-    cy.contains("h1", "Test team (don't delete)");
+    cy.contains("h1", "Test team");
   }
-  cy.contains('a', "Test project (don't delete)").click();
+  cy.contains('a', "Test project").click();
   cy.waitForPreload();
   cy.waitForSkeleton();
   cy.url().should('include', 'project/');
-  cy.contains('h1', "Test project (don't delete)")
+  cy.contains('h1', "Test project")
 });
 
 Cypress.Commands.add("goToRequirement", () => {
@@ -37,17 +37,17 @@ Cypress.Commands.add("goToRequirement", () => {
   cy.login();
   cy.waitForPreload();
   cy.waitForSkeleton();
-  cy.contains('a', "Test team (don't delete)").click();
+  cy.contains('a', "Test team").click();
   cy.waitForPreload();
   cy.waitForSkeleton();
   cy.url().should('include', 'team/');
-  cy.contains("h1", "Test team (don't delete)");
-  cy.contains('a', "Test project (don't delete)").click();
+  cy.contains("h1", "Test team");
+  cy.contains('a', "Test project").click();
   cy.waitForPreload();
   cy.waitForSkeleton();
   cy.url().should('include', 'project/');
-  cy.contains('h1', "Test project (don't delete)")
-  cy.contains('a', "Test feature (don't delete)").click();
+  cy.contains('h1', "Test project")
+  cy.contains('a', "Test feature").click();
   cy.waitForPreload();
   cy.waitForSkeleton();
   cy.url().should('include', 'reqgroup/');

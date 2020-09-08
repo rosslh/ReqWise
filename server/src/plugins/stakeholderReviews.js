@@ -17,6 +17,15 @@ module.exports = fp(function (fastify, opts, done) {
       .first();
   });
 
+  fastify.decorate("getReviewForBaseline", async function (baselineType, baselineId) {
+    return await fastify.knex
+      .from(baselineType)
+      .select("stakeholderReview.*")
+      .join("stakeholderReview", "stakeholderReview.id", `${baselineType}.stakeholderReview_id`)
+      .where(`${baselineType}.id`, baselineId)
+      .first();
+  });
+
   fastify.decorate("updateReviews", async function (entityType, entityId, request) {
     const { project_id, is_draft, name } = await fastify.knex.from(entityType).select("*").where("id", entityId).first();
 

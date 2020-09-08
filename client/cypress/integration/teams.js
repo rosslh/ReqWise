@@ -11,7 +11,7 @@ describe('Account page', () => {
     });
 
     it('has the correct content', () => {
-        cy.contains('a', "Test team (don't delete)");
+        cy.contains('a', "Test team");
     });
 
     it('can create team', () => {

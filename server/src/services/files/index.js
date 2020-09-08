@@ -35,8 +35,50 @@ module.exports = async function (fastify, opts) {
           "file.id": request.params.fileId,
         })
         .first();
-      const latestReview = await fastify.getLatestReview("reqgroup", request.params.fileId);
+      const latestReview = await fastify.getLatestReview("file", request.params.fileId);
       return { ...file, latestReview };
+    }
+  );
+
+  const getFileHistorySchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        fileId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:fileId/history",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getFileHistorySchema,
+    },
+    async function (request, reply) {
+      let files = await fastify.knex
+        .from("file")
+        .select("file.*", "stakeholderReview.created_at", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "file.ppuid_id")
+        .join("stakeholderReview", "stakeholderReview.id", "file.stakeholderReview_id")
+        .where({
+          "file.is_baseline": true,
+          "stakeholderReview.entity_file_id": request.params.fileId
+        })
+        .orderBy("stakeholderReview.created_at", "desc")
+
+      return files = await Promise.all(files.map(async file => {
+        const latestReview = await fastify.getReviewForBaseline("file", file.id);
+        return { ...file, latestReview };
+      }));
     }
   );
 

@@ -53,7 +53,7 @@
   }
 </style>
 
-<h3>Update userclass details</h3>
+<h3>Update user class details</h3>
 <form>
   <fieldset>
     <label for="name">Name</label>

@@ -8,7 +8,7 @@ describe('Project page', () => {
     });
 
     it('has the correct <h1>', () => {
-        cy.contains('h1', "Test project (don't delete)");
+        cy.contains('h1', "Test project");
     });
 
     it('redirects correctly', () => {
