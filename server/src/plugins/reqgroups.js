@@ -82,7 +82,13 @@ module.exports = fp(function (fastify, opts, done) {
       .first();
 
     const requirements = await fastify.getRequirements(reqgroupId);
-    const latestReview = await fastify.getLatestReview("reqgroup", reqgroupId);
+    let latestReview;
+    if (reqgroup.is_baseline) {
+      latestReview = await fastify.getReviewForBaseline("reqgroup", reqgroupId);
+    }
+    else {
+      latestReview = await fastify.getLatestReview("reqgroup", reqgroupId);
+    }
 
     return {
       ...reqgroup,

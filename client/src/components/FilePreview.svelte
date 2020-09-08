@@ -29,6 +29,7 @@
   import MdEdit from "svelte-icons/md/MdEdit.svelte";
   import MdFileDownload from "svelte-icons/md/MdFileDownload.svelte";
   import MdCloudUpload from "svelte-icons/md/MdCloudUpload.svelte";
+  import MdHistory from "svelte-icons/md/MdHistory.svelte";
 
   const { session } = stores();
 
@@ -93,12 +94,12 @@
     max-height: 30rem;
     width: 100%;
     background-color: var(--background2);
-    /* border-bottom: 0.1rem solid var(--borderColor); */
     padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-bottom: 0.1rem solid var(--borderColor);
   }
 
   :global(.diagramWrapper svg) {
@@ -260,6 +261,15 @@
     <p>{file.description}</p>
   </div>
   <div class="footer">
+    <a
+      rel="prefetch"
+      href={`/project/${projectId}/files/${fileId}/history`}
+      class="button button-outline button-small button-secondary button-clear">
+      <div class="iconWrapper">
+        <MdHistory />
+      </div>
+      History
+    </a>
     {#if unlinkRequirement}
       <button
         on:click={unlinkFile}

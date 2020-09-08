@@ -34,6 +34,48 @@ module.exports = async function (fastify, opts) {
     }
   );
 
+  const getUserclassHistorySchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userclassId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:userclassId/history",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getUserclassHistorySchema,
+    },
+    async function (request, reply) {
+      let userclasses = await fastify.knex
+        .from("userclass")
+        .select("userclass.*", "stakeholderReview.created_at", "per_project_unique_id.readable_id as ppuid")
+        .join("per_project_unique_id", "per_project_unique_id.id", "userclass.ppuid_id")
+        .join("stakeholderReview", "stakeholderReview.id", "userclass.stakeholderReview_id")
+        .where({
+          "userclass.is_baseline": true,
+          "stakeholderReview.entity_userclass_id": request.params.userclassId
+        })
+        .orderBy("stakeholderReview.created_at", "desc")
+
+      return userclasses = await Promise.all(userclasses.map(async userclass => {
+        const latestReview = await fastify.getReviewForBaseline("userclass", userclass.id);
+        return { ...userclass, latestReview };
+      }));
+    }
+  );
+
   const getUserclassChampions = {
     queryString: {},
     params: {

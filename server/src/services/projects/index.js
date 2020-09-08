@@ -558,8 +558,8 @@ module.exports = async function (fastify, opts) {
           username: request.user.name,
           icon_url: request.user.imageName && `https://storage.googleapis.com/user-file-storage/${request.user.imageName}`
         });
-        return [id];
       }
+      return [id];
     }
   );
 

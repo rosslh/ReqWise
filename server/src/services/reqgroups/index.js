@@ -522,4 +522,91 @@ module.exports = async function (fastify, opts) {
         .returning("id");
     }
   );
+
+  const getReqgroupHistorySchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        reqgroupId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "number" },
+            project_id: { type: "number" },
+            name: { type: "string" },
+            description: { type: "string" },
+            ppuid: { type: "number" },
+            type: { type: "string" },
+            isDeletable: { type: "boolean" },
+            isMaxOneRequirement: { type: "boolean" },
+            isPrioritized: { type: "boolean" },
+            is_draft: { type: "boolean" },
+            is_baseline: { type: "boolean" },
+            latestReview: {
+              type: "object",
+              properties: {
+                status: { type: "string" },
+                id: { type: ["number", "string"] },
+              }
+            },
+            requirements: {
+              type: "array", items: {
+                type: "object",
+                properties: {
+                  id: { type: ["number", "string"] },
+                  parent_requirement_id: { type: ["number", "string", "null"] },
+                  reqgroup_id: { type: ["number", "string"] },
+                  reqversion_id: { type: ["number", "string"] },
+                  project_id: { type: ["number", "string"] },
+                  account_id: { type: ["number", "string"] },
+                  priority: { type: "string" },
+                  status: { type: "string" },
+                  description: { type: "string" },
+                  created_at: { type: "string" },
+                  updated_at: { type: "string" },
+                  ppuid: { type: "number" },
+                  authorName: { type: "string" },
+                  updaterName: { type: "string" },
+                  depth: { type: "number" }
+                }
+              }
+            }
+          },
+        },
+      },
+    },
+  };
+  fastify.get(
+    "/:reqgroupId/history",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getReqgroupHistorySchema,
+    },
+    async function (request, reply) {
+      let reqgroups = await fastify.knex
+        .from("reqgroup")
+        .select("reqgroup.*", "stakeholderReview.created_at")
+        .join("stakeholderReview", "stakeholderReview.id", "reqgroup.stakeholderReview_id")
+        .where({
+          "reqgroup.is_baseline": true,
+          "stakeholderReview.entity_reqgroup_id": request.params.reqgroupId
+        })
+        .orderBy("stakeholderReview.created_at", "desc")
+
+      return reqgroups = await Promise.all(reqgroups.map(async rg => await fastify.getReqgroup(rg.id)));
+    }
+  );
 };

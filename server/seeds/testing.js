@@ -63,7 +63,7 @@ exports.seed = async function (knex) {
     await knex('team').insert([
       {
         // id: 1,
-        name: "Test team (don't delete)"
+        name: "Test team"
       }
     ]);
 
@@ -85,7 +85,7 @@ exports.seed = async function (knex) {
     await knex('project').insert([
       {
         // id: 1,
-        name: "Test project (don't delete)",
+        name: "Test project",
         team_id: 1,
         created_by: 1
       }
@@ -113,7 +113,7 @@ exports.seed = async function (knex) {
       {
         // id: 1,
         project_id: 1,
-        name: "Test feature (don't delete)",
+        name: "Test feature",
         ppuid_id: 1,
         type: "feature",
         created_by: 1
@@ -136,7 +136,7 @@ exports.seed = async function (knex) {
         updated_by: 1,
         status: "proposed",
         priority: "medium",
-        description: "Test requirement (don't delete)",
+        description: "Test requirement",
       }
     ]);
 

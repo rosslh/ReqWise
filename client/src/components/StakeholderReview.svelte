@@ -94,6 +94,7 @@
     justify-content: space-between;
     background-color: var(--background1);
     margin-bottom: 0;
+    border-bottom: 0.1rem solid var(--borderColor);
   }
 
   .panelHeader h3 {

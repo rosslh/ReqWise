@@ -27,6 +27,7 @@
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
   import { getContext } from "svelte";
   import { stores } from "@sapper/app";
+  import MdHistory from "svelte-icons/md/MdHistory.svelte";
   const { session } = stores();
 
   const deleteUserclass = () => {
@@ -107,16 +108,11 @@
     overflow: hidden;
   }
 
-  .description,
-  .persona,
-  .champions {
-    padding: 0 2rem;
-  }
-
   div.userclassHeader {
     padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
+    border-bottom: 0.1rem solid var(--borderColor);
   }
 
   div.userclassHeader h3 {
@@ -137,7 +133,10 @@
   .footer {
     display: flex;
     justify-content: space-between;
-    padding: 0 2rem 2rem;
+    align-items: center;
+    padding: 0 2rem;
+    height: 5rem;
+    border-top: 0.1rem solid var(--borderColor);
   }
   .footer button,
   .footer .button {
@@ -160,6 +159,12 @@
     margin-top: 1.8rem;
     margin-bottom: 0.6rem;
     font-size: 1.6rem;
+  }
+
+  .champions,
+  .twoCol {
+    background-color: var(--background2);
+    padding: 2rem 1.5rem;
   }
 
   .twoCol {
@@ -283,6 +288,15 @@
       {/await}
     </div>
     <div class="right">
+      <a
+        rel="prefetch"
+        href={`/project/${projectId}/user-classes/${userclassId}/history`}
+        class="button button-outline button-small button-secondary button-clear">
+        <div class="iconWrapper">
+          <MdHistory />
+        </div>
+        History
+      </a>
       {#if unlinkRequirement}
         <button
           on:click={unlinkUserclass}
