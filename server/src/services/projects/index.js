@@ -290,7 +290,7 @@ module.exports = async function (fastify, opts) {
     response: {}
   };
   fastify.get(
-    "/:projectId/baselines",
+    "/:projectId/baseline",
     {
       preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getProjectBaselinesSchema,
@@ -1260,6 +1260,44 @@ module.exports = async function (fastify, opts) {
       }));
 
       return reviews;
+    }
+  );
+
+  const postProjectBaselineExportSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/:projectId/baseline-export",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postProjectBaselineExportSchema,
+    },
+    async function (request, reply) {
+      const baseline = await fastify.getBaselined(request.params.projectId);
+
+      console.log(baseline);
+
+      // const data = {};
+
+      // TODO:
+      // get baselined reqgroups + requirements/reqversions
+      // get baselined files
+      // get baselined user classes
+      return ["success"];
     }
   );
 };
