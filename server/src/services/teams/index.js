@@ -1050,15 +1050,15 @@ module.exports = async function (fastify, opts) {
       const { projectId } = request.body;
       const templateSourceId = fastify.deobfuscateId(projectId);
       const project = await fastify.knex.from("project").select("*").where({ id: templateSourceId }).first();
-      const reqgroups = await fastify.knex.from("reqgroup").select("*").where({ project_id: templateSourceId });
+      const reqgroups = await fastify.knex.from("reqgroup").select("*").where({ project_id: templateSourceId, is_baseline: false });
       let requirements = await fastify.knex.from("requirement").select("*").where({ project_id: templateSourceId });
       requirements = await Promise.all(requirements.map(async req => {
         const reqversions = await fastify.knex.from("reqversion").select("*").where({ requirement_id: req.id });
         return { ...req, reqversions };
       }));
-      const userclasses = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
+      const userclasses = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId, is_baseline: false });
       const stakeholderGroups = await fastify.knex.from("stakeholderGroup").select("*").where({ project_id: templateSourceId });
-      const files = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId });
+      const files = await fastify.knex.from("userclass").select("*").where({ project_id: templateSourceId, is_baseline: false });
       const questionnaires = await fastify.knex.from("brainstormForm").select("*").where({ project_id: templateSourceId });
       const prompts = await fastify.knex.from("brainstormPrompt").select("brainstormPrompt.*")
         .join("brainstormForm", "brainstormForm.id", "brainstormPrompt.brainstormForm_id")
