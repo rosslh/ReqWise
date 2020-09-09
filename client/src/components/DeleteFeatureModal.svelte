@@ -20,7 +20,7 @@
 </style>
 
 <h3>Delete {reqgroupTypeLabels[reqgroupType]}</h3>
-<p>Its requirements will also be deleted.</p>
+<p>Any associated reviews and requirements will also be deleted.</p>
 <button
   id="confirmReqgroupDelete"
   class="button-danger"
