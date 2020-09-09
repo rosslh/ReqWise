@@ -5,6 +5,7 @@
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import { stores } from "@sapper/app";
   import { del } from "../api.js";
+  import UserScopesFlair from "./UserScopesFlair.svelte";
 
   const { session } = stores();
 
@@ -44,10 +45,14 @@
     max-height: 100%;
     max-width: 100%;
   }
+
+  .authorName {
+    padding-right: 0.5rem;
+  }
   .createdAt {
     color: var(--secondaryText);
     font-size: 1.4rem;
-    margin-left: 1rem;
+    padding-left: 1rem;
   }
 
   .deleteWrapper {
@@ -72,7 +77,8 @@
   </div>
   <div class="commentTextWrapper">
     <div>
-      {comment.authorName || 'Slack User'}
+      <span class="authorName">{comment.authorName || 'Slack User'}</span>
+      <UserScopesFlair scopes={comment.authorScopes} />
       <time class="createdAt" datetime={comment.created_at}>
         {formatDatetime(comment.created_at)}
       </time>

@@ -139,7 +139,7 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:reqversionId/history",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getStatusHistorySchema,
     },
     async function (request, reply) {
@@ -180,6 +180,7 @@ module.exports = async function (fastify, opts) {
             authorEmail: { type: "string" },
             authorImageName: { type: "string" },
             authorPlaceholderImage: { type: "string" },
+            authorScopes: { type: "array", items: { type: "string" } },
             quillDelta: { type: "string" },
             plaintext: { type: "string" },
             html: { type: "string" },
@@ -193,11 +194,18 @@ module.exports = async function (fastify, opts) {
   fastify.get(
     "/:reqversionId/comments",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: getCommentsSchema,
     },
     async function (request, reply) {
-      return await fastify.knex
+
+      const { project_id: projectId } = await fastify.knex.from("reqversion")
+        .select("project_id")
+        .join("requirement", "requirement.id", "reqversion.requirement_id")
+        .where("reqversion.id", request.params.reqversionId)
+        .first();
+
+      let responses = await fastify.knex
         .from("comment")
         .select(
           "comment.*",
@@ -205,12 +213,18 @@ module.exports = async function (fastify, opts) {
           "account.email as authorEmail",
           "account.imageName as authorImageName",
           "account.placeholderImage as authorPlaceholderImage"
-
         )
         .leftJoin("account", "account.id", "=", "comment.account_id")
         .where({
           reqversion_id: request.params.reqversionId,
         });
+
+      responses = await Promise.all(responses.map(async response => {
+        const authorScopes = await fastify.getScopes(response.account_id, projectId);
+        return { ...response, authorScopes };
+      }));
+
+      return responses;
     }
   );
   const postCommentSchema = {
@@ -247,7 +261,7 @@ module.exports = async function (fastify, opts) {
   fastify.post(
     "/:reqversionId/comments",
     {
-      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
       schema: postCommentSchema,
     },
     async function (request, reply) {

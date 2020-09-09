@@ -35,7 +35,7 @@ module.exports = async function (fastify, opts) {
         .where("stakeholderReview.id", request.params.reviewId)
         .first();
 
-      const responses = await fastify.knex
+      let responses = await fastify.knex
         .from("comment")
         .select(
           "comment.*",
@@ -46,6 +46,11 @@ module.exports = async function (fastify, opts) {
         )
         .join("account", "account.id", "=", "comment.account_id")
         .where("comment.stakeholderReview_id", request.params.reviewId);
+
+      responses = await Promise.all(responses.map(async response => {
+        const authorScopes = await fastify.getScopes(response.account_id, review.project_id);
+        return { ...response, authorScopes };
+      }));
 
       const reviewedEntity = await fastify.getReviewedEntity(request.params.reviewId);
       const stakeholders = await fastify.getReviewStakeholders(request.params.reviewId);

@@ -14,6 +14,17 @@ module.exports = async function (fastify, opts) {
       })
   ).length;
 
+  const userIsStakeholderByProject = async (userId, projectId) => !!(
+    await fastify.knex
+      .from("project")
+      .join("stakeholder_project", "stakeholder_project.project_id", "project.id")
+      .select("stakeholder_project.id")
+      .where({
+        "project.id": projectId,
+        "stakeholder_project.account_id": userId
+      })
+  ).length;
+
   const userIsMemberByReqversion = async (userId, reqversionId) => !!(
     await fastify.knex
       .from("reqversion")
@@ -28,6 +39,18 @@ module.exports = async function (fastify, opts) {
       })
   ).length;
 
+  const userIsStakeholderByReqversion = async (userId, reqversionId) => !!(
+    await fastify.knex
+      .from("reqversion")
+      .join("requirement", "requirement.id", "reqversion.requirement_id")
+      .join("stakeholder_project", "stakeholder_project.project_id", "requirement.project_id")
+      .select("stakeholder_project.id")
+      .where({
+        "reqversion.id": reqversionId,
+        "stakeholder_project.account_id": userId
+      })
+  ).length;
+
   fastify.io.on('connection', async (socket) => {
     console.log('user connected');
 
@@ -37,9 +60,13 @@ module.exports = async function (fastify, opts) {
 
       const projectId = fastify.deobfuscateId(data.projectId);
 
-      if (!(await userIsMemberByProject(user.id, projectId))) {
+      const isStakeholder = await userIsStakeholderByProject(user.id, projectId);
+      const isMember = await userIsMemberByProject(user.id, projectId);
+
+      if (!isMember && !isStakeholder) {
         console.log("Unauthorized socket.io access");
         socket.disconnect();
+        return;
       }
 
       const interval = 6000;
@@ -112,16 +139,26 @@ module.exports = async function (fastify, opts) {
       let timestamp = Date.now();
       const user = fastify.jwt.verify(jwt);
       const reqversionId = fastify.deobfuscateId(data.reqversionId);
+      const { project_id: projectId } = await fastify.knex.from("reqversion")
+        .select("project_id")
+        .join("requirement", "requirement.id", "reqversion.requirement_id")
+        .where("reqversion.id", reqversionId)
+        .first();
 
-      if (!(await userIsMemberByReqversion(user.id, reqversionId))) {
+
+      const isStakeholder = await userIsStakeholderByReqversion(user.id, projectId);
+      const isMember = await userIsMemberByReqversion(user.id, reqversionId);
+
+      if (!isMember && !isStakeholder) {
         console.log("Unauthorized socket.io access");
         socket.disconnect();
+        return;
       }
 
       const interval = 2500;
       while (true) { // eslint-disable-line no-constant-condition
         await sleep(interval);
-        const newComments = (await fastify.knex
+        let newComments = (await fastify.knex
           .from("comment")
           .select(
             "comment.*",
@@ -136,6 +173,11 @@ module.exports = async function (fastify, opts) {
           })
           .where('comment.created_at', '>', new Date(timestamp - interval))
         ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
+
+        newComments = await Promise.all(newComments.map(async comment => {
+          const authorScopes = await fastify.getScopes(comment.account_id, projectId);
+          return { ...comment, authorScopes };
+        }));
 
         if (newComments.length) {
           socket.emit('message', fastify.obfuscateIdsInJson(JSON.stringify(
