@@ -56,17 +56,20 @@ body {
 
 .panel {
   background-color: var(--background1);
-  padding: 1.25rem 1.5rem;
-  margin: 0 0 1.5rem;
+  padding: 1.25rem 1.5rem; /* careful changing this */
+  margin: 0 0 1.5rem; /* careful changing this */
   box-shadow: var(--boxShadow);
   border-radius: 0.5rem;
 }
 
 .panelHeader {
   background-color: var(--background2);
+  margin: -1.25rem -1.5rem 1.25rem; /* careful changing this */
+  padding: 1.25rem 1.5rem; /* careful changing this */
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
   border-bottom: .1rem solid var(--borderColor);
+
 }
 
 .squircle {

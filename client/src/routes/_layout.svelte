@@ -4,6 +4,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import Modal from "../components/Modal.svelte";
   import Nav from "../components/Nav.svelte";
+  import Stylesheet from "../components/Stylesheet.svelte";
   import { stream } from "../api.js";
   import { unreadAlerts } from "../stores.js";
   import { onMount, onDestroy } from "svelte";
@@ -109,6 +110,9 @@
     <link rel="stylesheet" href="system-theme.css" />
   {/if}
 </svelte:head>
+
+<Stylesheet />
+
 {#if $modalContent}
   <Modal let:close>
     <svelte:component this={$modalContent} {...$modalProps} {close} />
