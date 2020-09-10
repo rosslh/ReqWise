@@ -1,6 +1,8 @@
 module.exports = async function (fastify, opts) {
   const { Storage } = require('@google-cloud/storage');
   const { v4: uuidv4 } = require('uuid');
+  const { Parser } = require('json2csv');
+  const JSZip = require("jszip")
   const storage = new Storage();
 
   const getProjectSchema = {
@@ -1281,7 +1283,7 @@ module.exports = async function (fastify, opts) {
     response: {},
   };
   fastify.post(
-    "/:projectId/baseline-export",
+    "/:projectId/baseline-snapshots",
     {
       preValidation: [fastify.authenticate, fastify.isTeamMember],
       schema: postProjectBaselineExportSchema,
@@ -1289,15 +1291,151 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const baseline = await fastify.getBaselined(request.params.projectId);
 
-      console.log(baseline);
+      const reqgroups = [];
+      let requirements = [];
+      const files = [];
+      const file_diagrams = [];
+      const userclasses = [];
 
-      // const data = {};
+      for (const review of baseline) {
+        const item = review.reviewedEntity;
+        if (review.entityType === "reqgroup") {
+          const id = item.readable_id;
+          reqgroups.push({
+            name: item.name,
+            description: item.description,
+            type: item.type,
+            id
+          });
+          const newRequirements = item.requirements.map(r => ({
+            id: r.ppuid,
+            reqgroup_id: id,
+            priority: r.priority,
+            status: r.status,
+            description: r.description,
+            depth: 0,
+            hierarchical_id: r.hierarchical_id
+          }));
+          requirements = [...requirements, ...newRequirements];
+        } else if (review.entityType === "file") {
+          files.push({
+            id: item.ppuid,
+            name: item.name,
+            description: item.description,
+            ...(item.fileName && { file_url: `https://storage.googleapis.com/user-file-storage/${item.fileName}` }),
+            type: item.type,
+            external_url: item.url,
+          });
+          if (item.svg) {
+            file_diagrams.push({
+              name: item.name,
+              svg: item.svg
+            });
+          }
+        } else if (review.entityType === "userclass") {
+          userclasses.push({
+            id: item.ppuid,
+            name: item.name,
+            description: item.description,
+            persona: item.persona,
+            importance: item.importance
+          });
+        }
+      }
 
-      // TODO:
-      // get baselined reqgroups + requirements/reqversions
-      // get baselined files
-      // get baselined user classes
+      const reqgroupParser = new Parser({
+        fields: ["id", "type", "name", "description"]
+      });
+      const reqgroupCsv = reqgroupParser.parse(reqgroups);
+
+      const parserOptions = {
+        excelStrings: false,
+        delimiter: "|"
+      };
+
+      const requirementParser = new Parser({
+        fields: [
+          "hierarchical_id",
+          "id",
+          "reqgroup_id",
+          "priority",
+          "status",
+          "description",
+          "depth",
+        ],
+        ...parserOptions
+      });
+
+      const requirementCsv = requirementParser.parse(requirements);
+
+      const fileParser = new Parser({
+        fields: ["id", "type", "name", "description", "external_url", "file_url"],
+        ...parserOptions
+      });
+      const fileCsv = fileParser.parse(files);
+
+      const userclassParser = new Parser({
+        fields: ["id", "name", "description", "persona", "importance"],
+        ...parserOptions
+      });
+      const userclassCsv = userclassParser.parse(userclasses);
+
+      const zip = new JSZip();
+
+      zip.file('reqgroups.csv', reqgroupCsv);
+      zip.file('requirements.csv', requirementCsv);
+      zip.file('files.csv', fileCsv);
+      zip.file('userclasses.csv', userclassCsv);
+
+      file_diagrams.forEach(({ svg, name }, i) => {
+        zip.file(`${name}.svg`, svg);
+      });
+
+      const content = await zip.generateAsync({ type: 'nodebuffer' });
+
+      const uploadedFileName = `${uuidv4()}-baseline.zip`;
+      const gcloudFile = await storage.bucket('user-file-storage').file(uploadedFileName);
+      await gcloudFile.save(content);
+      await gcloudFile.makePublic();
+
+      await fastify.knex("baselineSnapshot").insert({
+        project_id: request.params.projectId,
+        fileName: uploadedFileName
+      })
+
       return ["success"];
+    }
+  );
+
+  const getProjectBaselineSnapshotsSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        projectId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:projectId/baseline-snapshots",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: getProjectBaselineSnapshotsSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("baselineSnapshot")
+        .select("*")
+        .where({ project_id: request.params.projectId })
+        .orderBy("created_at", "desc");
     }
   );
 };

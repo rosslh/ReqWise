@@ -6,26 +6,50 @@
         `/projects/${params.id}/baseline`,
         user && user.jwt
       );
-      return { reviews };
+      const snapshots = await get(
+        `/projects/${params.id}/baseline-snapshots`,
+        user && user.jwt
+      );
+      return { reviews, snapshots };
     }
   }
 </script>
 
 <script>
   export let reviews;
+  export let snapshots;
   import Reqgroup from "../../../../components/Reqgroup.svelte";
   import Userclass from "../../../../components/Userclass.svelte";
   import FilePreview from "../../../../components/FilePreview.svelte";
+  import Select from "svelte-select";
   import { stores } from "@sapper/app";
+  import { format } from "date-fns";
   const { page, session } = stores();
 
   const exportBaseline = async () => {
     await post(
-      `/projects/${$page.params.id}/baseline-export`,
+      `/projects/${$page.params.id}/baseline-snapshots`,
       {},
       $session.user && $session.user.jwt
     );
-    alert("exporting");
+    selectedSnapshotOption = undefined;
+    snapshots = await get(
+      `/projects/${$page.params.id}/baseline-snapshots`,
+      $session.user && $session.user.jwt
+    );
+  };
+
+  $: snapshotOptions = snapshots.map((x) => ({
+    label: format(new Date(x.created_at), "yyyy-MM-dd, h:mm a"),
+    value: x.fileName,
+  }));
+  let selectedSnapshotOption;
+
+  const downloadSnapshot = () => {
+    window.open(
+      `https://storage.googleapis.com/user-file-storage/${selectedSnapshotOption.value}`
+    );
+    selectedSnapshotOption = undefined;
   };
 </script>
 
@@ -33,6 +57,17 @@
   .secondary {
     color: var(--secondaryText);
     text-align: center;
+  }
+
+  .inputWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+  }
+  .inputWrapper button,
+  .inputWrapper fieldset {
+    margin: 0 !important;
   }
 </style>
 
@@ -43,7 +78,22 @@
     approved set of requirements. A new baseline is automatically created when a
     stakeholder approves a requirement group, file, or userclass.
   </p>
-  <button on:click={exportBaseline}>Export requirements baseline</button>
+  <div class="inputWrapper">
+    <button on:click={exportBaseline}>Create snapshot</button>
+    <fieldset class="snapshotWrapper inline">
+      <label for="viewSnapshot">Download snapshot</label>
+      <div class="selectWrapper">
+        <Select
+          inputAttributes={{ id: 'viewSnapshot' }}
+          isClearable={true}
+          isSearchable={false}
+          isMulti={false}
+          on:select={downloadSnapshot}
+          items={snapshotOptions}
+          bind:selectedValue={selectedSnapshotOption} />
+      </div>
+    </fieldset>
+  </div>
 </section>
 <section class="contentWrapper">
   {#each reviews as review}
