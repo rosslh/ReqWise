@@ -51,7 +51,10 @@
   <script src="/__/firebase/7.19.1/firebase-analytics.js"></script>
 
   <script>
-    const analytics = firebase.analytics();
+    let analytics;
+    try {
+      analytics = firebase.analytics();
+    } catch (e) { }
   </script>
 </body>
 
