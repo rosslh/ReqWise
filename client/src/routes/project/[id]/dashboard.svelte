@@ -73,14 +73,27 @@
       );
 
       const reviewCounts = [
-        "pending",
-        "accept",
-        "requestChanges",
-        "withdrawn",
-      ].map((status) => ({
+        {
+          href: `${projectUrl}/reviews?filter-reviewStatus=pending`,
+          status: "pending",
+        },
+        {
+          href: `${projectUrl}/reviews?filter-reviewStatus=accept`,
+          status: "accept",
+        },
+        {
+          href: `${projectUrl}/reviews?filter-reviewStatus=requestChanges`,
+          status: "requestChanges",
+        },
+        {
+          href: `${projectUrl}/reviews?filter-reviewStatus=withdrawn`,
+          status: "withdrawn",
+        },
+      ].map(({ status, href }) => ({
         label: reviewStatusLabels[status].label,
         count: reviews.filter((x) => x.status === status).length,
         color: reviewStatusLabels[status].color,
+        href: href,
       }));
 
       return { itemCounts, reviewCounts };
@@ -91,29 +104,6 @@
 <script>
   export let itemCounts;
   export let reviewCounts;
-
-  // const reviewCounts = [
-  //   {
-  //     label: "Pending",
-  //     count: 19,
-  //     color: "var(--indigo)",
-  //   },
-  //   {
-  //     label: "Rejected",
-  //     count: 3,
-  //     color: "var(--red)",
-  //   },
-  //   {
-  //     label: "Accepted",
-  //     count: 2,
-  //     color: "var(--green)",
-  //   },
-  //   {
-  //     label: "Withdrawn",
-  //     count: 4,
-  //     color: "var(--secondaryText)",
-  //   },
-  // ];
 </script>
 
 <style>
@@ -176,10 +166,12 @@
     </div>
     <div class="panel dashboardPanel">
       <h3>Reviews</h3>
-      {#each reviewCounts as { count, label, color }}
+      {#each reviewCounts as { count, label, color, href }}
         <li>
-          <span class="counterNumber" style={`color: ${color}`}>{count}</span>
-          <span class="counterLabel">{label}</span>
+          <a rel="prefetch" class="itemCount" {href}>
+            <span class="counterNumber" style={`color: ${color}`}>{count}</span>
+            <span class="counterLabel">{label}</span>
+          </a>
         </li>
       {/each}
     </div>

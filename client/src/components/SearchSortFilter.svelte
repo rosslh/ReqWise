@@ -2,6 +2,12 @@
   import getProp from "lodash/get";
   import Fuse from "fuse.js";
   import Select from "svelte-select";
+  import { stores } from "@sapper/app";
+  import { onMount, tick } from "svelte";
+  import queryString from "query-string";
+  import camelCase from "lodash/camelCase";
+
+  const { page } = stores();
 
   export let list;
   export let searchKeys = [];
@@ -11,6 +17,66 @@
 
   let selectedSort = "recent";
   let searchQuery = "";
+
+  $: {
+    if (
+      typeof window !== "undefined" &&
+      (filters.length || searchQuery || selectedSort)
+    ) {
+      updateQueryString();
+      searchSortFilter();
+    }
+  }
+
+  const updateParamsFromQueryString = () => {
+    console.log("updating filters from query string");
+    // search
+    if ($page.query.q) {
+      searchQuery = $page.query.q;
+    }
+    // sort
+    if ($page.query.sort) {
+      selectedSort = $page.query.sort;
+    }
+    // filter
+    filters.forEach((filter) => {
+      const queryString = $page.query[`filter-${camelCase(filter.label)}`];
+      if (!filter.selectedOption && queryString) {
+        filter.selectedOption = filter.options.find(
+          (x) => x.value === queryString
+        );
+      }
+    });
+  };
+
+  onMount(updateParamsFromQueryString);
+
+  const updateQueryString = () => {
+    // add missing query strings
+    console.log("updating query string from filters");
+    const queryStrings = queryString.parse(location.search);
+    const oldQueryStrings = { ...queryStrings };
+    queryStrings.sort = selectedSort;
+
+    if (searchQuery) {
+      queryStrings.q = searchQuery;
+    } else {
+      delete queryStrings.q;
+    }
+
+    const activeFilters = filters.filter((f) => f.selectedOption);
+    activeFilters.forEach((filter) => {
+      queryStrings[`filter-${camelCase(filter.label)}`] =
+        filter.selectedOption.value;
+    });
+
+    const newUrl = `${$page.path}?${queryString.stringify(queryStrings)}`;
+    const oldUrl = `${$page.path}?${queryString.stringify(oldQueryStrings)}`;
+
+    if (newUrl !== oldUrl) {
+      history.replaceState(null, "", newUrl);
+    }
+  };
 
   const options = {
     // isCaseSensitive: false,
@@ -26,14 +92,16 @@
     keys: searchKeys,
   };
 
-  $: fuse = new Fuse(list, options);
-
   export let filters = [];
 
-  $: {
+  const searchSortFilter = () => {
+    const fuse = new Fuse(list, options);
+    // search
     searchResults = searchQuery
       ? fuse.search(searchQuery).map((x) => x.item)
       : [...list];
+
+    // sort
     if (selectedSort === "recent") {
       searchResults = searchResults.sort(
         (a, b) => new Date(b[sortKeyRecent]) - new Date(a[sortKeyRecent])
@@ -44,6 +112,7 @@
       );
     }
 
+    // filter
     filters.forEach((filter) => {
       if (filter.selectedOption) {
         searchResults = searchResults.filter((result) =>
@@ -51,7 +120,22 @@
         );
       }
     });
-  }
+  };
+
+  const clearFilter = async (filter) => {
+    delete filter.selectedOption;
+
+    const queryStrings = queryString.parse(location.search);
+    delete queryStrings[`filter-${camelCase(filter.label)}`];
+
+    const newUrl = `${$page.path}?${queryString.stringify(queryStrings)}`;
+
+    history.replaceState(null, "", newUrl);
+
+    await tick();
+
+    updateParamsFromQueryString();
+  };
 </script>
 
 <style>
@@ -86,12 +170,7 @@
 <div class="ssfWrapper panel">
   <div class="searchField">
     <label for="searchString">Search</label>
-    <input
-      id="searchString"
-      type="text"
-      on:input={(e) => {
-        searchQuery = e.target.value;
-      }} />
+    <input id="searchString" type="text" bind:value={searchQuery} />
   </div>
   <div class="sortField">
     <label for="sort">Sort</label>
@@ -119,6 +198,7 @@
         inputAttributes={{ id: filter.label }}
         isClearable={true}
         items={filter.options}
+        on:clear={async () => await clearFilter(filter)}
         bind:selectedValue={filter.selectedOption} />
     </div>
   {/each}
