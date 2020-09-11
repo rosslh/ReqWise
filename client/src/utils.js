@@ -8,8 +8,36 @@ export const toBase64 = file =>
 
 export const validateFileSize = file => file.size / 1024 / 1024 <= 1.5; // 1.5 MB
 
-export const reqgroupTypeLabels = {
-  "business": "business requirement group",
-  "feature": "feature",
-  "quality": "quality attribute"
+export const reqgroupTypeLabels = (plural = false) => ({
+  "business": plural ? "business requirement groups" : "business requirement group",
+  "feature": plural ? "features" : "feature",
+  "quality": plural ? "quality attributes" : "quality attribute"
+});
+
+export const reviewStatusLabels = {
+  draft: {
+    color: "var(--secondaryText)",
+    label: "Draft",
+    minWidth: "3.75rem",
+  },
+  pending: {
+    color: "var(--indigo)",
+    label: "Pending",
+    minWidth: "5rem",
+  },
+  accept: {
+    color: "var(--green)",
+    label: "Accepted",
+    minWidth: "6rem",
+  },
+  requestChanges: {
+    color: "var(--red)",
+    label: "Changes Requested",
+    minWidth: "7rem",
+  },
+  withdrawn: {
+    color: "var(--secondaryText)",
+    label: "Withdrawn",
+    minWidth: "7rem",
+  },
 };

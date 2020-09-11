@@ -4,40 +4,14 @@
   export let inline = false;
   export let latestReviewId;
 
+  import { reviewStatusLabels } from "../utils";
+
   import { stores } from "@sapper/app";
   const { page } = stores();
 
   import Ribbon from "./Ribbon.svelte";
 
   $: status = isDraft ? "draft" : latestReviewStatus;
-
-  const statuses = {
-    draft: {
-      bgColor: "var(--secondaryText)",
-      label: "Draft",
-      width: "3.75rem",
-    },
-    pending: {
-      bgColor: "var(--indigo)",
-      label: "Pending",
-      width: "5rem",
-    },
-    accept: {
-      bgColor: "var(--green)",
-      label: "Accepted",
-      width: "6rem",
-    },
-    requestChanges: {
-      bgColor: "var(--red)",
-      label: "Changes Requested",
-      width: "7rem",
-    },
-    withdrawn: {
-      bgColor: "var(--secondaryText)",
-      label: "Withdrawn",
-      width: "7rem",
-    },
-  };
 </script>
 
 <style>
@@ -58,7 +32,7 @@
   class={`${isDraft ? '' : 'hoverable'}`}>
   <Ribbon
     {inline}
-    label={statuses[status].label}
-    bgColor={statuses[status].bgColor}
-    width={statuses[status].width} />
+    label={reviewStatusLabels[status].label}
+    bgColor={reviewStatusLabels[status].color}
+    width={reviewStatusLabels[status].minWidth} />
 </a>

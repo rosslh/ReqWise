@@ -19,7 +19,7 @@
 <style>
 </style>
 
-<h3>Delete {reqgroupTypeLabels[reqgroupType]}</h3>
+<h3>Delete {reqgroupTypeLabels()[reqgroupType]}</h3>
 <p>Any associated reviews and requirements will also be deleted.</p>
 <button
   id="confirmReqgroupDelete"

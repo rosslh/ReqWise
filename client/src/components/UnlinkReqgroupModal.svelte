@@ -26,5 +26,5 @@
 <style>
 </style>
 
-<h3>Unlink {reqgroupTypeLabels[reqgroupType]}</h3>
+<h3>Unlink {reqgroupTypeLabels()[reqgroupType]}</h3>
 <button class="button-caution" on:click={unlink}>Unlink</button>

@@ -38,7 +38,7 @@
 
 <section class="contentWrapper">
   <h2>
-    View {reqgroupTypeLabels[reqgroup.type]}
+    View {reqgroupTypeLabels()[reqgroup.type]}
     <span class="reqgroupPpuid">#{reqgroup.ppuid}</span>
   </h2>
   <Reqgroup {reqgroup} {update} />

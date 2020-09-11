@@ -22,7 +22,7 @@
       <a
         rel="prefetch"
         href={`/project/${reqgroup.project_id}/reqgroup/${reqgroup.id}`}>
-        &larr;&nbsp;Go to {reqgroupTypeLabels[reqgroup.type]}
+        &larr;&nbsp;Go to {reqgroupTypeLabels()[reqgroup.type]}
       </a>
     </div>
   </div>

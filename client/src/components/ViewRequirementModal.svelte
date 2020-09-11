@@ -376,7 +376,7 @@
           <span class="iconWrapper iconWrapper-padded">
             <MdFolder />
           </span>
-          {reqgroupTypeLabels[requirement.reqgroupType]} #{reqgroup_ppuid}
+          {reqgroupTypeLabels()[requirement.reqgroupType]} #{reqgroup_ppuid}
         </a>
         {#if parent_requirement_id}
           <a

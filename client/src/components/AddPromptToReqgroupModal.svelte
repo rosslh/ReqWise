@@ -63,7 +63,7 @@
   };
 </script>
 
-<h2>Link prompts to {reqgroupTypeLabels[reqgroupType]}</h2>
+<h2>Link prompts to {reqgroupTypeLabels()[reqgroupType]}</h2>
 <form>
   <fieldset>
     <Select

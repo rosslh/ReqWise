@@ -39,7 +39,7 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>{capitalize(reqgroupTypeLabels[currentVersion.type])} history</h2>
+  <h2>{capitalize(reqgroupTypeLabels()[currentVersion.type])} history</h2>
 </section>
 <section class="contentWrapper">
   <h3>Latest version</h3>

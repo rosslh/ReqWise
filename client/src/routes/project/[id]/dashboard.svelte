@@ -1,53 +1,119 @@
-<script>
-  const itemCounts = [
-    {
-      label: "Requirements",
-      count: 19,
-    },
-    {
-      label: "Features",
-      count: 3,
-    },
-    {
-      label: "Business requirement groups",
-      count: 2,
-    },
-    {
-      label: "Quality attributes",
-      count: 4,
-    },
-    {
-      label: "Files",
-      count: 3,
-    },
-    {
-      label: "User classes",
-      count: 5,
-    },
-  ];
+<script context="module">
+  import { reqgroupTypeLabels, reviewStatusLabels } from "../../../utils";
+  import { get } from "../../../api";
+  import capitalize from "lodash/capitalize";
 
-  const reviewCounts = [
-    {
-      label: "Pending",
-      count: 19,
-      color: "var(--indigo)",
-    },
-    {
-      label: "Rejected",
-      count: 3,
-      color: "var(--red)",
-    },
-    {
-      label: "Accepted",
-      count: 2,
-      color: "var(--green)",
-    },
-    {
-      label: "Withdrawn",
-      count: 4,
-      color: "var(--secondaryText)",
-    },
-  ];
+  export async function preload({ params }, { user }) {
+    if (user && user.jwt) {
+      const itemCounts = [];
+
+      // requirements
+
+      const numRequirements = (
+        await get(`/projects/${params.id}/requirements`, user && user.jwt)
+      ).length;
+
+      itemCounts.push({
+        label: numRequirements === 1 ? "Requirement" : "Requirements",
+        count: numRequirements,
+      });
+
+      const projectUrl = `/project/${params.id}`;
+
+      // reqgroups
+      const reqgroups = await get(
+        `/projects/${params.id}/reqgroups`,
+        user && user.jwt
+      );
+
+      ["business", "feature", "quality"].forEach((type) => {
+        const count = reqgroups.filter((x) => x.type === type).length;
+        let href;
+        if (type === "business") {
+          href = `${projectUrl}/business-requirements`;
+        } else if (type === "feature") {
+          href = `${projectUrl}/features`;
+        } else {
+          href = `${projectUrl}/quality-attributes`;
+        }
+        itemCounts.push({
+          label: capitalize(reqgroupTypeLabels(count !== 1)[type]),
+          count,
+          href,
+        });
+      });
+
+      // Files
+
+      const numFiles = (
+        await get(`/projects/${params.id}/files`, user && user.jwt)
+      ).length;
+
+      itemCounts.push({
+        label: numFiles === 1 ? "File" : "Files",
+        count: numFiles,
+        href: `${projectUrl}/files`,
+      });
+
+      // Userclasses
+
+      const numUserclasses = (
+        await get(`/projects/${params.id}/userclasses`, user && user.jwt)
+      ).length;
+
+      itemCounts.push({
+        label: numUserclasses === 1 ? "User class" : "User classes",
+        count: numUserclasses,
+        href: `${projectUrl}/user-classes`,
+      });
+
+      const reviews = await get(
+        `/projects/${params.id}/reviews`,
+        user && user.jwt
+      );
+
+      const reviewCounts = [
+        "pending",
+        "accept",
+        "requestChanges",
+        "withdrawn",
+      ].map((status) => ({
+        label: reviewStatusLabels[status].label,
+        count: reviews.filter((x) => x.status === status).length,
+        color: reviewStatusLabels[status].color,
+      }));
+
+      return { itemCounts, reviewCounts };
+    }
+  }
+</script>
+
+<script>
+  export let itemCounts;
+  export let reviewCounts;
+
+  // const reviewCounts = [
+  //   {
+  //     label: "Pending",
+  //     count: 19,
+  //     color: "var(--indigo)",
+  //   },
+  //   {
+  //     label: "Rejected",
+  //     count: 3,
+  //     color: "var(--red)",
+  //   },
+  //   {
+  //     label: "Accepted",
+  //     count: 2,
+  //     color: "var(--green)",
+  //   },
+  //   {
+  //     label: "Withdrawn",
+  //     count: 4,
+  //     color: "var(--secondaryText)",
+  //   },
+  // ];
 </script>
 
 <style>
@@ -82,6 +148,10 @@
   .dashboardPanel h3 {
     margin-top: 0;
   }
+
+  a.itemCount {
+    color: var(--normalText);
+  }
 </style>
 
 <section class="contentWrapper">
@@ -89,10 +159,17 @@
   <div class="dashboardWrapper">
     <div class="panel dashboardPanel">
       <ul>
-        {#each itemCounts as { count, label }}
+        {#each itemCounts as { count, label, href }}
           <li>
-            <span class="counterNumber">{count}</span>
-            <span class="counterLabel">{label}</span>
+            {#if href}
+              <a rel="prefetch" class="itemCount" {href}>
+                <span class="counterNumber">{count}</span>
+                <span class="counterLabel">{label}</span>
+              </a>
+            {:else}
+              <span class="counterNumber">{count}</span>
+              <span class="counterLabel">{label}</span>
+            {/if}
           </li>
         {/each}
       </ul>
@@ -106,7 +183,9 @@
         </li>
       {/each}
     </div>
-    <div class="panel dashboardPanel" />
+    <div class="panel dashboardPanel">
+      <h3>Activity</h3>
+    </div>
     <div class="panel dashboardPanel" />
   </div>
 </section>

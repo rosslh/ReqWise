@@ -46,7 +46,7 @@
   };
 
   const getReqgroupType = (type) => {
-    return reqgroupTypeLabels[type];
+    return reqgroupTypeLabels()[type];
   };
 
   $: entityTypeLabel = (() => {

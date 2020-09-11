@@ -66,7 +66,7 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Items linked to {reqgroupTypeLabels[reqgroupType]}</h2>
+  <h2>Items linked to {reqgroupTypeLabels()[reqgroupType]}</h2>
 </section>
 <section class="contentWrapper">
   <h3>Stakeholders</h3>

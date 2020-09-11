@@ -35,7 +35,7 @@
   }
 </style>
 
-<h3>Update {reqgroupTypeLabels[reqgroupType]}</h3>
+<h3>Update {reqgroupTypeLabels()[reqgroupType]}</h3>
 <form>
   <fieldset>
     <label for="desc">Title</label>
@@ -55,7 +55,7 @@
   <fieldset>
     <input type="checkbox" id="isDraft" bind:checked={is_draft} />
     <label class="label-inline" for="isDraft">
-      {capitalize(reqgroupTypeLabels[reqgroupType])} is a draft <span
+      {capitalize(reqgroupTypeLabels()[reqgroupType])} is a draft <span
         class="secondary">(not ready for stakeholder review)</span>
     </label>
   </fieldset>
