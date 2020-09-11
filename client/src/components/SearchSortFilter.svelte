@@ -94,7 +94,7 @@
 
   export let filters = [];
 
-  const searchSortFilter = () => {
+  $: searchSortFilter = () => {
     const fuse = new Fuse(list, options);
     // search
     searchResults = searchQuery
