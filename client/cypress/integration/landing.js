@@ -12,8 +12,8 @@ describe('Landing page', () => {
     cy.url().should('include', 'login');
   });
 
-  it('can navigate to signup', () => {
-    cy.get('#signupLink').click();
-    cy.url().should('include', 'sign-up');
-  });
+  // it('can navigate to signup', () => {
+  //   cy.get('#signupLink').click();
+  //   cy.url().should('include', 'sign-up');
+  // });
 });
