@@ -54,16 +54,44 @@
 
   div.sloganSection .twoColumns {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin: 0 -2rem;
+    margin: 0 -1.5rem;
+    padding: 3rem 0;
+  }
+
+  @media (max-width: 749px) {
+    div.sloganSection .twoColumns > * {
+      width: 100% !important;
+    }
+
+    div.exampleReview {
+      padding: 0.75rem;
+      margin: 0.75rem 0;
+      font-size: 1.4rem;
+    }
+
+    .reviewIcon {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
   }
 
   div.sloganSection .twoColumns > * {
     width: 50%;
     min-width: 30rem;
-    padding: 0 2rem;
+    padding: 1.5rem;
+  }
+
+  div.secondColumn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  :global(div.secondColumn > *) {
+    flex-grow: 1;
   }
 
   p.slogan {
@@ -86,7 +114,7 @@
     border: 0.1rem solid var(--borderColor);
     background: var(--background2);
     font-weight: 500;
-    font-size: 1.7rem;
+    font-size: 1.6rem;
   }
 
   .reviewIcon {
@@ -110,33 +138,36 @@
   <title>ReqWise | Requirements Management</title>
 </svelte:head>
 <div class="sloganSection">
-  <div class="contentWrapper twoColumns">
-    <div class="firstColumn">
-      <p class="slogan">
-        An easier way for digital agencies<br /> to understand their customer's needs.
-      </p>
-      <p class="subtitle">
-        ReqWise allows teams to gather information about stakeholder needs,
-        propose software requirements and designs, and seek approval from
-        stakeholders.
-      </p>
-    </div>
-    <div class="secondColumn">
-      <BrowserUi>
-        {#each visibleReviews as { message, icon, fgColor, bgColor }}
-          <div class="exampleReview" in:fade>
-            <div class="message">{message}</div>
-            <div
-              class="reviewIcon"
-              style={`
+  <div class="contentWrapper">
+    <div class="twoColumns">
+      <div class="firstColumn">
+        <p class="slogan">
+          An easier way for digital agencies to understand their customer's
+          needs.
+        </p>
+        <p class="subtitle">
+          ReqWise allows teams to gather information about stakeholder needs,
+          propose software requirements and designs, and seek approval from
+          stakeholders.
+        </p>
+      </div>
+      <div class="secondColumn">
+        <BrowserUi>
+          {#each visibleReviews as { message, icon, fgColor, bgColor }}
+            <div class="exampleReview" in:fade>
+              <div class="message">{message}</div>
+              <div
+                class="reviewIcon"
+                style={`
               color: ${fgColor};
               background-color: ${bgColor};
             `}>
-              <svelte:component this={icon} />
+                <svelte:component this={icon} />
+              </div>
             </div>
-          </div>
-        {/each}
-      </BrowserUi>
+          {/each}
+        </BrowserUi>
+      </div>
     </div>
   </div>
 </div>

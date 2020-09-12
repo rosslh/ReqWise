@@ -3,19 +3,40 @@
     perspective: 80rem;
     margin: 3rem 0;
     color: var(--normalText) !important;
+    max-width: 45rem;
   }
   .browserUi {
     border: 0.1rem solid var(--borderColor);
     border-radius: 0.5rem;
     overflow: hidden;
-    padding: 1.5rem;
     background-color: var(--background1);
-    width: 44.444rem;
-    height: 25rem;
+    min-width: 40rem;
+    width: 100%;
+    padding: 0;
+    padding-top: max(
+      56.25%,
+      18rem
+    ) !important; /* maintains 16:9 aspect ratio */
+    height: 0;
     transform: rotateY(-20deg) scale(0.95);
     box-shadow: 0.2rem 0.1rem 0.6rem 0 rgba(0, 0, 0, 0.1);
     transition: 0.2s ease;
     user-select: none;
+    position: relative;
+  }
+
+  .browserUiContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .slotContent {
+    overflow-y: scroll;
+    padding: 0 1.5rem;
+    height: calc(100% - 1.75rem);
   }
 
   .browserUi:hover {
@@ -23,13 +44,20 @@
     box-shadow: var(--boxShadow);
   }
 
+  @media (max-width: 749px) {
+    .browserUi {
+      transform: unset !important;
+      box-shadow: var(--boxShadow) !important;
+      min-width: 25rem;
+    }
+  }
+
   .browserHeader {
     background-color: #eee;
-    margin: -1.5rem -1.5rem 0;
-    padding: 0.75rem;
+    padding: 0 0.75rem;
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    height: 1.75rem;
   }
 
   .browserWrapper .browserButton {
@@ -55,11 +83,15 @@
 
 <div class="browserWrapper">
   <div class="browserUi">
-    <div class="browserHeader">
-      <div class="browserButton close" />
-      <div class="browserButton minimize" />
-      <div class="browserButton maximize" />
+    <div class="browserUiContent">
+      <div class="browserHeader">
+        <div class="browserButton close" />
+        <div class="browserButton minimize" />
+        <div class="browserButton maximize" />
+      </div>
+      <div class="slotContent">
+        <slot />
+      </div>
     </div>
-    <slot />
   </div>
 </div>

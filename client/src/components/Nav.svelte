@@ -174,7 +174,7 @@
       </button>
     {/if}
     <div class="logoWrapper">
-      {#if !$media.small}
+      {#if !$media.small || !$session.user}
         <a rel="prefetch" class="logoWrapper" href=".">
           {#if $session.user && $session.user.theme === 'dark'}
             <img src="logo-white.png" alt="ReqWise" />
