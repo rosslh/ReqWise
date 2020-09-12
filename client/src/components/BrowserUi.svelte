@@ -34,7 +34,7 @@
   }
 
   .slotContent {
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 0 1.5rem;
     height: calc(100% - 1.75rem);
   }
