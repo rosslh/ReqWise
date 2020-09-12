@@ -2,21 +2,30 @@
   .browserWrapper {
     perspective: 80rem;
     margin: 3rem 0;
+    color: var(--normalText) !important;
   }
   .browserUi {
     border: 0.1rem solid var(--borderColor);
     border-radius: 0.5rem;
     overflow: hidden;
-    padding: 0.5rem;
+    padding: 1.5rem;
     background-color: var(--background1);
     width: 44.444rem;
     height: 25rem;
-    transform: rotateY(-20deg) scale(0.9);
+    transform: rotateY(-20deg) scale(0.95);
+    box-shadow: 0.2rem 0.1rem 0.6rem 0 rgba(0, 0, 0, 0.1);
+    transition: 0.2s ease;
+    user-select: none;
+  }
+
+  .browserUi:hover {
+    transform: unset !important;
+    box-shadow: var(--boxShadow);
   }
 
   .browserHeader {
     background-color: #eee;
-    margin: -0.5rem -0.5rem 0;
+    margin: -1.5rem -1.5rem 0;
     padding: 0.75rem;
     display: flex;
     align-items: center;

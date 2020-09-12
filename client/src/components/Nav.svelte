@@ -156,9 +156,9 @@
     border: 0.1rem solid var(--borderColor);
   }
 
-  #signupLink {
+  /* #signupLink {
     margin-right: 1rem;
-  }
+  } */
 </style>
 
 <nav>
@@ -185,9 +185,7 @@
                 media="(prefers-color-scheme: dark)" />
               <img src="logo.png" alt="ReqWise" />
             </picture>
-          {:else}
-            <img src="logo.png" alt="ReqWise" />
-          {/if}
+          {:else}<img src="logo.png" alt="ReqWise" />{/if}
         </a>
       {/if}
     </div>
@@ -205,7 +203,7 @@
     {/if}
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
-        <a rel="prefetch" id="signupLink" href="/sign-up/invite">Sign Up</a>
+        <!-- <a rel="prefetch" id="signupLink" href="/sign-up/invite">Sign Up</a> -->
 
         <a rel="prefetch" id="loginLink" href="/login">Login</a>
       {:else}
