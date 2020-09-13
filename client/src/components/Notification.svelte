@@ -3,6 +3,7 @@
   export let update;
   export let context = null;
   export let compact = false;
+  export let bgColor;
 
   import { format } from "date-fns";
   import normalizeString from "lodash/lowerCase";
@@ -148,9 +149,13 @@
   .top a {
     color: var(--secondaryText);
   }
+
+  .bottomRight {
+    margin-left: 0.5rem;
+  }
 </style>
 
-<div class="panel">
+<div class="panel" style={bgColor ? `background-color: ${bgColor}` : ''}>
   {#if !compact}
     <div class="top panelHeader">
       <div class="left">

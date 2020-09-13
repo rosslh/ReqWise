@@ -1,6 +1,7 @@
 <script context="module">
   import { reqgroupTypeLabels, reviewStatusLabels } from "../../../utils";
   import { get } from "../../../api";
+  import Notification from "../../../components/Notification.svelte";
   import capitalize from "lodash/capitalize";
 
   export async function preload({ params }, { user }) {
@@ -96,7 +97,20 @@
         href: href,
       }));
 
-      return { itemCounts, reviewCounts };
+      const maxNotifications = 4;
+
+      const notifications = await get(
+        `/projects/${params.id}/activity`,
+        user && user.jwt
+      );
+
+      return {
+        itemCounts,
+        reviewCounts,
+        moreNotifications: notifications.length > maxNotifications,
+        notifications: notifications.slice(0, maxNotifications),
+        params,
+      };
     }
   }
 </script>
@@ -104,6 +118,9 @@
 <script>
   export let itemCounts;
   export let reviewCounts;
+  export let notifications;
+  export let params;
+  export let moreNotifications;
 </script>
 
 <style>
@@ -113,7 +130,7 @@
     margin: 0 -2rem;
   }
   .dashboardPanel {
-    min-width: calc(50% - 4rem);
+    width: calc(50% - 4rem);
     margin: 2rem;
     min-height: 7rem;
   }
@@ -141,6 +158,11 @@
 
   a.itemCount {
     color: var(--normalText);
+  }
+
+  a.activityLink {
+    text-align: center;
+    display: block;
   }
 </style>
 
@@ -177,6 +199,21 @@
     </div>
     <div class="panel dashboardPanel">
       <h3>Activity</h3>
+      {#each notifications as notification}
+        <Notification
+          {notification}
+          compact
+          context="dashboard"
+          bgColor="var(--background2)" />
+      {/each}
+      {#if moreNotifications}
+        <a
+          class="activityLink"
+          rel="prefetch"
+          href={`/project/${params.id}/activity`}>
+          View all activity
+        </a>
+      {/if}
     </div>
     <div class="panel dashboardPanel" />
   </div>
