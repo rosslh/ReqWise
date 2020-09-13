@@ -44,7 +44,7 @@
     box-shadow: var(--boxShadow);
   }
 
-  @media (max-width: 749px) {
+  @media (max-width: 799px) {
     .browserUi {
       transform: unset !important;
       box-shadow: var(--boxShadow) !important;
