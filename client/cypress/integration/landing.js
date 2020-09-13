@@ -4,7 +4,7 @@ describe('Landing page', () => {
   });
 
   it('has the correct slogan', () => {
-    cy.contains('p', "An easier way for digital agencies to understand their customer's needs.")
+    cy.contains('h1', "An easier way for digital agencies to understand their customer's needs.")
   });
 
   it('can navigate to login', () => {
