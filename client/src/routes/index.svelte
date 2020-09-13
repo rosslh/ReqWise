@@ -36,7 +36,7 @@
     reviews.forEach((review, i) => {
       setTimeout(() => {
         visibleReviews = [...visibleReviews, review];
-      }, i * 1500);
+      }, (i + 1) * 1000);
     });
   });
 
