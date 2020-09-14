@@ -1,6 +1,11 @@
 describe('Features page', () => {
   before(() => {
     cy.goToProject();
+    cy.contains('a', "Features").click();
+    cy.waitForPreload();
+    cy.waitForSkeleton();
+    cy.url().should('include', '/features');
+    cy.contains('h2', "Features")
   });
 
   beforeEach(() => {

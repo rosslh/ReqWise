@@ -44,12 +44,12 @@
     margin-top: 3rem;
   }
 
-  .loginWrapper .createAccountContent {
+  /* .loginWrapper .createAccountContent {
     text-align: center;
-  }
+  } */
 
-  .loginWrapper .loginContent,
-  .loginWrapper .createAccountContent {
+  .loginWrapper .loginContent {
+    /* , .loginWrapper .createAccountContent { */
     box-shadow: var(--boxShadow);
     border-radius: 0.5rem;
     padding: 1.75rem;
@@ -102,9 +102,9 @@
     <SubmitButton handler={submit}>Sign in</SubmitButton>
   </form>
 </div>
-<div class="contentWrapper loginWrapper">
+<!-- <div class="contentWrapper loginWrapper">
   <div class="createAccountContent">
     New to ReqWise?
     <a rel="prefetch" href="/sign-up/invite">Create an account.</a>
   </div>
-</div>
+</div> -->

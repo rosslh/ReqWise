@@ -1,6 +1,15 @@
 describe('Reviews', () => {
+  const goToFeatures = () => {
+    cy.contains('a', "Features").click();
+    cy.waitForPreload();
+    cy.waitForSkeleton();
+    cy.url().should('include', '/features');
+    cy.contains('h2', "Features")
+  };
+
   before(() => {
     cy.goToProject();
+    goToFeatures();
   });
 
   beforeEach(() => {
@@ -44,6 +53,7 @@ describe('Reviews', () => {
     cy.get('button#withdrawReviewButton').click();
     cy.waitForSpinner();
     cy.goToProject();
+    goToFeatures();
     cy.get('.ribbon[data-cy="Pending"]').should("not.exist");
   });
 
@@ -55,6 +65,7 @@ describe('Reviews', () => {
 
   it('can accept review', () => {
     cy.goToProject('test.stakeholder@reqwise.com', '1234');
+    goToFeatures();
     cy.get('.ribbon[data-cy="Pending"]').click();
     cy.waitForPreload();
     cy.get('button[data-cy="reviewChangesButton"]').click();
@@ -63,6 +74,7 @@ describe('Reviews', () => {
     cy.get("#submitButton").click();
     cy.waitForSpinner();
     cy.goToProject('test.owner@reqwise.com', '1234'); // login as owner to delete
+    goToFeatures();
     cy.get('.ribbon[data-cy="Pending"]').should("not.exist");
     cy.get('.ribbon[data-cy="Accepted"]').should("exist");
   });

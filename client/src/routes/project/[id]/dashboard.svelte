@@ -145,7 +145,6 @@
   li {
     list-style: none;
     font-weight: 600;
-    font-size: 1.8rem;
   }
 
   li .counterNumber {
@@ -153,7 +152,7 @@
     min-width: 3rem;
     text-align: left;
     display: inline-block;
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .dashboardPanel h3 {
@@ -167,6 +166,13 @@
   a.activityLink {
     text-align: center;
     display: block;
+  }
+
+  .secondary {
+    color: var(--secondaryText);
+    text-align: center;
+    display: block;
+    margin: 2rem 0 1rem;
   }
 </style>
 
@@ -224,6 +230,8 @@
           href={`/project/${params.id}/activity`}>
           View all activity
         </a>
+      {:else if !notifications.length}
+        <span class="secondary"> No recent activity </span>
       {/if}
     </div>
   </div>
