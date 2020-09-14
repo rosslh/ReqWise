@@ -135,6 +135,10 @@
     min-height: 7rem;
   }
 
+  .dashboardPanel.wide {
+    width: calc(100% - 4rem);
+  }
+
   ul {
     margin-bottom: 0;
   }
@@ -153,7 +157,7 @@
   }
 
   .dashboardPanel h3 {
-    margin-top: 0;
+    margin: 0;
   }
 
   a.itemCount {
@@ -170,6 +174,9 @@
   <h2>Project dashboard</h2>
   <div class="dashboardWrapper">
     <div class="panel dashboardPanel">
+      <div class="panelHeader">
+        <h3>Summary</h3>
+      </div>
       <ul>
         {#each itemCounts as { count, label, href }}
           <li>
@@ -187,7 +194,9 @@
       </ul>
     </div>
     <div class="panel dashboardPanel">
-      <h3>Reviews</h3>
+      <div class="panelHeader">
+        <h3>Reviews</h3>
+      </div>
       {#each reviewCounts as { count, label, color, href }}
         <li>
           <a rel="prefetch" class="itemCount" {href}>
@@ -197,8 +206,10 @@
         </li>
       {/each}
     </div>
-    <div class="panel dashboardPanel">
-      <h3>Activity</h3>
+    <div class="panel dashboardPanel wide">
+      <div class="panelHeader">
+        <h3>Activity</h3>
+      </div>
       {#each notifications as notification}
         <Notification
           {notification}
@@ -215,6 +226,5 @@
         </a>
       {/if}
     </div>
-    <div class="panel dashboardPanel" />
   </div>
 </section>

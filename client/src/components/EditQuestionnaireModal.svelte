@@ -15,7 +15,12 @@
   const updateQuestionnaire = async () => {
     await put(
       `/questionnaires/${questionnaire.id}`,
-      { description, is_draft: isDraft, is_public: isPublic, is_open: isOpen },
+      {
+        description,
+        is_draft: isDraft,
+        is_public: isPublic,
+        is_open: !isClosed,
+      },
       $session.user && $session.user.jwt
     );
     await update();
@@ -24,12 +29,25 @@
 
   let isDraft = questionnaire.is_draft;
   let isPublic = questionnaire.is_public;
-  let isOpen = questionnaire.is_open;
+  let isClosed = !questionnaire.is_open;
 </script>
 
 <style>
-  .secondary {
+  .draftInput label,
+  .closedInput label,
+  .publicInput label {
+    font-weight: 500 !important;
+  }
+  .draftInput {
     color: var(--secondaryText);
+  }
+
+  .publicInput {
+    color: var(--orange);
+  }
+
+  .closedInput {
+    color: var(--red);
   }
 </style>
 
@@ -39,24 +57,19 @@
     <label for="description">Description</label>
     <input type="text" id="description" bind:value={description} />
   </fieldset>
-  <fieldset>
+  <fieldset class="draftInput">
     <input type="checkbox" id="isDraft" bind:checked={isDraft} />
     <label class="label-inline" for="isDraft">Questionnaire is a draft</label>
   </fieldset>
-  <fieldset>
+  <fieldset class="publicInput">
     <input type="checkbox" id="isPublic" bind:checked={isPublic} />
     <label class="label-inline" for="isPublic">
       Questionnaire is publically viewable outside of your team
     </label>
   </fieldset>
-  <fieldset>
-    <input type="checkbox" id="isOpen" bind:checked={isOpen} />
-    <label class="label-inline" for="isOpen">
-      Questionnaire is open to responses
-      <span class="secondary">
-        {#if isDraft}(once published){/if}
-      </span>
-    </label>
+  <fieldset class="closedInput">
+    <input type="checkbox" id="isClosed" bind:checked={isClosed} />
+    <label class="label-inline" for="isClosed"> Questionnaire is closed </label>
   </fieldset>
   <fieldset>
     <SubmitButton handler={updateQuestionnaire}>Save</SubmitButton>

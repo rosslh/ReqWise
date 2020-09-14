@@ -1,10 +1,20 @@
 <script context="module">
   export async function preload(page, session) {
-    const questionnaire = await get(
-      `/questionnaires/${page.params.formId}`,
-      session.user && session.user.jwt
-    );
-    return { questionnaire };
+    if (session && session.user) {
+      const questionnaire = await get(
+        `/questionnaires/${page.params.formId}`,
+        session.user && session.user.jwt
+      );
+      if (!questionnaire.is_public) {
+        return this.redirect(
+          302,
+          `/project/${questionnaire.project_id}/brainstorm/forms/${page.params.formId}`
+        );
+      }
+      return { questionnaire };
+    } else {
+      return this.redirect(302, `/account`);
+    }
   }
 </script>
 
@@ -34,11 +44,20 @@
   };
 </script>
 
+<style>
+  .shareLink {
+    color: var(--normalText);
+  }
+</style>
+
 <svelte:head>
   <title>{questionnaire.description} - ReqWise</title>
 </svelte:head>
 <section class="contentWrapper">
   <h1>{questionnaire.description}</h1>
+  <p class="panel">
+    Shareable link: <a class="shareLink" target="_blank" rel="noopener" href={`https://reqwise.com${$page.path}`}><code>{`https://reqwise.com${$page.path}`}</code></a>
+  </p>
 </section>
 <section class="contentWrapper">
   {#each prompts as prompt (prompt.id)}
