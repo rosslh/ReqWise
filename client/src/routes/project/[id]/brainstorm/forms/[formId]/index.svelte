@@ -88,6 +88,7 @@
     </button>
   {/if}
   <button
+    data-cy="questionnaireSettings"
     on:click={showSettingsModal}
     class="button button-secondary button-outline">
     Settings

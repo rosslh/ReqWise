@@ -141,7 +141,7 @@
   }
 </style>
 
-<div class="barWrapper">
+<div data-cy="textResponse" class="barWrapper">
   <div class="responseValue">"{response.textResponse}"</div>
   <div class="react">
     <button
@@ -164,9 +164,7 @@
   <div class="respondent">
     {#if response.respondentName}
       {response.respondentName}
-    {:else}
-      <em>Anonymous</em>
-    {/if}
+    {:else}<em>Anonymous</em>{/if}
   </div>
   <div class="responseSelected">
     {#if response.selectedByYou}

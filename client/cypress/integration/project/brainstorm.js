@@ -30,6 +30,32 @@ describe('Features page', () => {
     cy.contains("h3", "New prompt");
   });
 
+  it('can publish questionnaire', () => {
+    cy.get('[data-cy="questionnaireSettings"]').click();
+    cy.contains('h3', "Questionnaire settings");
+    cy.get('input#isDraft').click();
+    cy.get('#saveQuestionnaire').click();
+    cy.waitForSpinner();
+    cy.get(".ribbon").should("not.exist");
+  });
+
+  it('can respond to questionnaire', () => {
+    cy.get('[data-cy="toggleViewResponses"]').click();
+    cy.get('input#responseText').click().type("New response");
+    cy.get('#submitResponse').click();
+    cy.waitForSpinner();
+    cy.contains('[data-cy="textResponse"]', "New response");
+  });
+
+  it('can turn questionnaire into draft', () => {
+    cy.get('[data-cy="questionnaireSettings"]').click();
+    cy.contains('h3', "Questionnaire settings");
+    cy.get('input#isDraft').click();
+    cy.get('#saveQuestionnaire').click();
+    cy.waitForSpinner();
+    cy.contains(".ribbon", "Draft");
+  });
+
   it('can delete prompt', () => {
     cy.get('[data-cy="deletePrompt"]').click();
     cy.contains('h3', "Delete questionnaire prompt");

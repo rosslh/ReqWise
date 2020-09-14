@@ -72,6 +72,8 @@
     <label class="label-inline" for="isClosed"> Questionnaire is closed </label>
   </fieldset>
   <fieldset>
-    <SubmitButton handler={updateQuestionnaire}>Save</SubmitButton>
+    <SubmitButton id="saveQuestionnaire" handler={updateQuestionnaire}>
+      Save
+    </SubmitButton>
   </fieldset>
 </form>

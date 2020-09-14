@@ -173,7 +173,10 @@
       </ul>
     </fieldset>
   {/if}
-  <SubmitButton disabled={isDraft || !isOpen} handler={submit}>
+  <SubmitButton
+    id="submitResponse"
+    disabled={isDraft || !isOpen}
+    handler={submit}>
     Submit
   </SubmitButton>
 </form>

@@ -137,6 +137,7 @@
     <div class="left">
       {#if !viewResponses || !prompt.yourResponse}
         <button
+          data-cy="toggleViewResponses"
           class="button button-secondary button-small button-outline"
           on:click={toggleView}>
           {#if viewResponses}Add response{:else}View responses{/if}
