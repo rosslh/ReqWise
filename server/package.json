@@ -37,7 +37,7 @@
     "fastify-formbody": "^5.0.0",
     "fastify-helmet": "^5.0.1",
     "fastify-jwt": "^2.1.3",
-    "fastify-plugin": "^2.3.3",
+    "fastify-plugin": "^2.3.4",
     "fuse.js": "^6.4.1",
     "generate-avatar": "^1.4.4",
     "hashids": "^2.2.1",
