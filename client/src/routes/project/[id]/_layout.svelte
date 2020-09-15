@@ -184,7 +184,9 @@
       slug: "baseline",
       icon: FaSignature,
     },
-  ];
+  ].filter(
+    (item) => project.scopes.includes("admin") || item.slug !== "settings"
+  );
 </script>
 
 <style>

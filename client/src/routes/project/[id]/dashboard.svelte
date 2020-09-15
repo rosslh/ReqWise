@@ -135,6 +135,12 @@
     min-height: 7rem;
   }
 
+  @media (max-width: 860px) {
+    .dashboardPanel {
+      width: calc(100% - 4rem) !important;
+    }
+  }
+
   .dashboardPanel.wide {
     width: calc(100% - 4rem);
   }
