@@ -13,7 +13,14 @@
       }
       return { questionnaire };
     } else {
-      return this.redirect(302, `/account`);
+      try {
+        const questionnaire = await get(
+          `/questionnaires/${page.params.formId}`
+        );
+        return { questionnaire };
+      } catch (e) {
+        return this.redirect(302, `/account`);
+      }
     }
   }
 </script>
@@ -58,8 +65,6 @@
   <p class="panel">
     Shareable link: <a class="shareLink" target="_blank" rel="noopener" href={`https://reqwise.com${$page.path}`}><code>{`https://reqwise.com${$page.path}`}</code></a>
   </p>
-</section>
-<section class="contentWrapper">
   {#each prompts as prompt (prompt.id)}
     <BrainstormPrompt
       {prompt}

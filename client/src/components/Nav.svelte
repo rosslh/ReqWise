@@ -53,12 +53,27 @@
     max-width: unset;
     position: relative;
   }
-  a.logoWrapper {
+  a.logoLink {
     display: inline-block;
     height: 3rem;
   }
 
-  a.logoWrapper img {
+  div.logoWrapper {
+    position: relative;
+  }
+
+  div.logoWrapper span.betaLabel {
+    position: absolute;
+    top: 0;
+    right: -1.75rem;
+    color: var(--secondaryText);
+    text-transform: uppercase;
+    font-size: 1rem;
+    user-select: none;
+    font-weight: 500;
+  }
+
+  a.logoLink img {
     max-height: 100%;
     max-width: 100%;
   }
@@ -129,7 +144,7 @@
     background-color: var(--background2);
   }
 
-  .logoWrapper {
+  .logoLink {
     display: flex;
     align-items: center;
     padding: 0 0.5rem;
@@ -175,7 +190,7 @@
     {/if}
     <div class="logoWrapper">
       {#if !$media.small || !$session.user}
-        <a rel="prefetch" class="logoWrapper" href=".">
+        <a rel="prefetch" class="logoLink" href=".">
           {#if $session.user && $session.user.theme === 'dark'}
             <img src="logo-white.png" alt="ReqWise" />
           {:else if $session.user && $session.user.theme === 'system'}
@@ -187,6 +202,7 @@
             </picture>
           {:else}<img src="logo.png" alt="ReqWise" />{/if}
         </a>
+        <span class="betaLabel"> Beta </span>
       {/if}
     </div>
     {#if $page.path.includes('/project/')}

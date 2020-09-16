@@ -19,7 +19,7 @@
     ) !important; /* maintains 16:9 aspect ratio */
     height: 0;
     transform: rotateY(-20deg) scale(0.95);
-    box-shadow: 0.2rem 0.1rem 0.6rem 0 rgba(0, 0, 0, 0.1);
+    box-shadow: var(--boxShadowLarge);
     transition: 0.2s ease;
     user-select: none;
     position: relative;

@@ -257,9 +257,11 @@
         latestReviewId={file.latestReview && file.latestReview.id} />
     {/if}
   </div>
-  <div class="textContent">
-    <p>{file.description}</p>
-  </div>
+  {#if file.description}
+    <div class="textContent">
+      <p>{file.description}</p>
+    </div>
+  {/if}
   <div class="footer">
     <a
       rel="prefetch"

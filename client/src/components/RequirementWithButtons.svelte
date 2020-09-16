@@ -38,6 +38,8 @@
     });
     modalContent.set(UnlinkRequirementModal);
   };
+
+  const canEdit = is_draft && !is_baseline && scopes.includes("member");
 </script>
 
 <style lang="scss">
@@ -73,8 +75,8 @@
 </style>
 
 <Requirement {...$$props}>
-  {#if is_draft && !is_baseline && scopes.includes('member')}
-    {#if unlinkId}
+  {#if unlinkId}
+    {#if canEdit}
       <div class="iconCell">
         <button
           on:click|stopPropagation={() => unlink()}
@@ -82,15 +84,17 @@
           <FaUnlink />
         </button>
       </div>
-    {:else}
-      <div class="iconCell">
-        <a
-          href={`/project/${requirement.project_id}/requirement/${requirement.id}/linked`}
-          class="buttonIconWrapper button link">
-          <FaLink />
-        </a>
-      </div>
     {/if}
+  {:else}
+    <div class="iconCell">
+      <a
+        href={`/project/${requirement.project_id}/requirement/${requirement.id}/linked`}
+        class="buttonIconWrapper button link">
+        <FaLink />
+      </a>
+    </div>
+  {/if}
+  {#if canEdit}
     <div class="iconCell">
       <button
         data-cy="commentIconWrapper"

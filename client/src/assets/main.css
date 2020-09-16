@@ -10,6 +10,7 @@
   --secondaryText: #4A5568;
   --borderColor: #d7dfe8;
   --boxShadow: 0 0.2rem 0.6rem 0 rgba(0,0,0,0.1);
+  --boxShadowLarge: 0 5rem 10rem -2rem rgba(50, 50, 93, 0.25), 0 3rem 6rem -3rem rgba(0, 0, 0, 0.3);
 
   --themeColor: #38a169;
 
