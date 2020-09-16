@@ -5,25 +5,25 @@
     {
       title: "Brainstorm Ideas with Questionnaires",
       subtitle:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Gather information with questionnaires and link them to requirements and designs.",
       slug: "brainstorm",
     },
     {
       title: "Organize and Prioritize Requirements",
       subtitle:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Arrange stakeholders' needs into requirements and sub-requirements. Prioritize the most important ones.",
       slug: "organize",
     },
     {
       title: "Attach Designs, Files, and Diagrams",
       subtitle:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Draw diagrams with the built-in editor or upload files and designs from your computer.",
       slug: "documents",
     },
     {
       title: "Receive Feedback and Approval from Clients",
       subtitle:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Stakeholders can review requirements and designs to make sure that you build what they want.",
       slug: "reviews",
     },
   ];
@@ -101,7 +101,7 @@
       <div class="textColumn">
         <h2 class="featureTitle">{title}</h2>
         <p class="subtitle">{subtitle}</p>
-        <a href="/sign-up/invite" class="button button-small">Try now for free</a>
+        <button disabled class="button button-small">Coming soon</button>
       </div>
       <div
         class="imageColumn"

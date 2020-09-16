@@ -44,9 +44,9 @@
     margin-top: 3rem;
   }
 
-  .loginWrapper .createAccountContent {
+  /* .loginWrapper .createAccountContent {
     text-align: center;
-  }
+  } */
 
   .loginWrapper .loginContent {
     /* , .loginWrapper .createAccountContent { */
@@ -102,8 +102,8 @@
     <SubmitButton handler={submit}>Sign in</SubmitButton>
   </form>
 </div>
-<div class="contentWrapper loginWrapper">
+<!-- <div class="contentWrapper loginWrapper">
   <div class="createAccountContent">
     New to ReqWise? <a rel="prefetch" href="/sign-up/invite">Create an account.</a>
   </div>
-</div>
+</div> -->
