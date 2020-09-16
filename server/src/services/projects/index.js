@@ -941,7 +941,7 @@ module.exports = async function (fastify, opts) {
         .from("alert")
         .limit(limit)
         .offset(offset)
-        .select("alert.*", "team.name as teamName", "project.name as projectName", "project.team_id as team_id", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
+        .select("alert.*", "team.name as teamName", "project.name as projectName", "project.team_id as team_id", "account.name as authorName", "account.imageName as authorImageName", "account.placeholderImage as authorPlaceholderImage", "alert.id as id")
         .join("account", "alert.created_by", "account.id")
         .join("project", "project.id", "alert.project_id")
         .join("team", "team.id", "project.team_id")

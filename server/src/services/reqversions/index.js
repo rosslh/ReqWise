@@ -145,7 +145,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       return await fastify.knex
         .from("alert")
-        .select("alert.*", "account.name as authorName", "account.imageName as authorImageName", "alert.id as id")
+        .select("alert.*", "account.name as authorName", "account.imageName as authorImageName", "account.placeholderImage as authorPlaceholderImage", "alert.id as id")
         .join("account", "alert.created_by", "account.id")
         .where({ "alert.entity_reqversion_id": request.params.reqversionId })
         .orderBy("created_at", "desc");
