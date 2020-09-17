@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.2
       - name: add env variables to app.yaml
-        run: 'printf "\nenv_variables:\n  KNEXMODE: \"production\"\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  DB_NAME: \"$DB_NAME\"\n  DB_USERNAME: \"$DB_USERNAME\"\n  DB_PASS: \"$DB_PASS\"\n  DB_HOST: \"$DB_HOST\"\n  DB_PORT: $DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
+        run: 'printf "\nenv_variables:\n  KNEXMODE: \"production\"\n  REQWISE_SLACK_CLIENT_ID: \"$REQWISE_SLACK_CLIENT_ID\"\n  REQWISE_SLACK_CLIENT_SECRET: \"$REQWISE_SLACK_CLIENT_SECRET\"\n  SENDGRID_API_KEY: \"$SENDGRID_API_KEY\"\n  REQWISE_SLACK_SCOPES: \"$REQWISE_SLACK_SCOPES\"\n  DB_NAME: \"$DB_NAME\"\n  DB_USERNAME: \"$DB_USERNAME\"\n  DB_PASS: \"$DB_PASS\"\n  DB_HOST: \"$DB_HOST\"\n  DB_PORT: $DB_PORT\n  JWT_KEY: \"$JWT_KEY\"\n  HASHID_KEY: \"$HASHID_KEY\"\n" >> app.yaml'
         shell: bash
         env:
           DB_NAME: ${{secrets.DB_NAME}}
@@ -60,6 +60,7 @@ jobs:
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
           REQWISE_SLACK_CLIENT_SECRET: ${{secrets.REQWISE_SLACK_CLIENT_SECRET}}
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
+          SENDGRID_API_KEY: ${{secrets.SENDGRID_API_KEY}}
       - name: Initialize Google Cloud SDK
         uses: rosslh/deploy-gae-action@master
         with:

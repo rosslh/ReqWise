@@ -10,24 +10,15 @@ const { v4: uuidv4 } = require('uuid');
 const Mustache = require("mustache");
 const path = require("path");
 const fs = require("fs");
+const sendgrid = require('nodemailer-sendgrid');
 const storage = new Storage();
 
 const getEmailTemplate = (templateName) => path.resolve(__dirname, "../../email-templates", `${templateName}.html`);
 
 module.exports = async (fastify, opts) => {
-  // Generate test SMTP service account from ethereal.email
-  const testEmailAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: testEmailAccount.user, // generated ethereal user
-      pass: testEmailAccount.pass, // generated ethereal password
-    },
-  });
+  const transporter = nodemailer.createTransport(sendgrid({
+    apiKey: process.env.SENDGRID_API_KEY
+  }));
 
   const postUserSchema = {
     body: {
@@ -72,8 +63,8 @@ module.exports = async (fastify, opts) => {
       verification_token
     )}&email=${encodeURIComponent(email)}`;
 
-    const info = await transporter.sendMail({
-      from: `"ReqWise" <${testEmailAccount.user}>`, // sender address
+    await transporter.sendMail({
+      from: `"ReqWise" <noreply@reqwise.com>`, // sender address
       to: email, // comma separated list of receivers
       subject: "Please verify your email address for ReqWise", // Subject line
       text: `Thank you for signing up. Click the following link to access your ReqWise account: ${href}`, // plain text body
@@ -84,8 +75,6 @@ module.exports = async (fastify, opts) => {
         }
       )
     });
-
-    request.log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 
     return userId[0];
   });
@@ -364,8 +353,8 @@ module.exports = async (fastify, opts) => {
       )}&email=${encodeURIComponent(email)}`;
 
 
-      const info = await transporter.sendMail({
-        from: `"ReqWise" <${testEmailAccount.user}>`, // sender address
+      await transporter.sendMail({
+        from: `"ReqWise" <noreply@reqwise.com>`, // sender address
         to: email, // comma separated list of receivers
         subject: "Reset your password", // Subject line
         text: `You told us you forgot your password. If you really did, click here to choose a new one: ${href}`, // plain text body
@@ -376,8 +365,6 @@ module.exports = async (fastify, opts) => {
           }
         ), // html body
       });
-
-      request.log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 
       return user;
     }
