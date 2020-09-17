@@ -7,7 +7,12 @@ const { generateFromString } = require('generate-avatar');
 const sharp = require("sharp");
 const { Storage } = require('@google-cloud/storage');
 const { v4: uuidv4 } = require('uuid');
+const Mustache = require("mustache");
+const path = require("path");
+const fs = require("fs");
 const storage = new Storage();
+
+const getEmailTemplate = (templateName) => path.resolve(__dirname, "../../email-templates", `${templateName}.html`);
 
 module.exports = async (fastify, opts) => {
   // Generate test SMTP service account from ethereal.email
@@ -63,18 +68,21 @@ module.exports = async (fastify, opts) => {
       })
       .returning("id");
 
+    const href = `https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
+      verification_token
+    )}&email=${encodeURIComponent(email)}`;
+
     const info = await transporter.sendMail({
       from: `"ReqWise" <${testEmailAccount.user}>`, // sender address
       to: email, // comma separated list of receivers
-      subject: "Verify your email address", // Subject line
-      text: `Follow this link to verify your account: https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
-        verification_token
-      )}&email=${encodeURIComponent(email)}`, // plain text body
-      html: `<a href='https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
-        verification_token
-      )}&email=${encodeURIComponent(
-        email
-      )}'>Follow this link to verify your account</a>.`, // html body
+      subject: "Please verify your email address for ReqWise", // Subject line
+      text: `Thank you for signing up. Click the following link to access your ReqWise account: ${href}`, // plain text body
+      html: Mustache.render(
+        fs.readFileSync(getEmailTemplate("sign-up")).toString(),
+        {
+          href
+        }
+      )
     });
 
     request.log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
@@ -351,18 +359,22 @@ module.exports = async (fastify, opts) => {
         .where("email", email)
         .returning(["name", "email"]);
 
+      const href = `https://reqwise.com/reset/complete?token=${encodeURIComponent(
+        verification_token
+      )}&email=${encodeURIComponent(email)}`;
+
+
       const info = await transporter.sendMail({
         from: `"ReqWise" <${testEmailAccount.user}>`, // sender address
         to: email, // comma separated list of receivers
-        subject: "Password reset request", // Subject line
-        text: `Follow this link to reset your ReqWise password: https://reqwise.com/reset/complete?token=${encodeURIComponent(
-          verification_token
-        )}&email=${encodeURIComponent(email)}`, // plain text body
-        html: `<a href='https://reqwise.com/reset/complete?token=${encodeURIComponent(
-          verification_token
-        )}&email=${encodeURIComponent(
-          email
-        )}'>Follow this link to reset your ReqWise password</a>.`, // html body
+        subject: "Reset your password", // Subject line
+        text: `You told us you forgot your password. If you really did, click here to choose a new one: ${href}`, // plain text body
+        html: Mustache.render(
+          fs.readFileSync(getEmailTemplate("reset")).toString(),
+          {
+            href
+          }
+        ), // html body
       });
 
       request.log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);

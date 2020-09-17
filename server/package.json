@@ -12,7 +12,7 @@
   "scripts": {
     "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
     "count-loc": "cloc --vcs=git --exclude-dir=migrations,test --not-match-f=package-lock\\.json .",
-    "dev": "fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --options",
+    "dev": "mjml ./src/email-templates/*.mjml --config.minify -o ./src/email-templates && fastify start -l info -P -w src/index.js --port 3001 --body-limit 2097152 --options",
     "license-checker": "license-checker --onlyunknown",
     "lint": "eslint src/**/*.js --fix",
     "seed": "knex migrate:latest --env=dev && knex seed:run --env=dev",
@@ -47,6 +47,8 @@
     "jszip": "^3.5.0",
     "knex": "^0.21.5",
     "make-promises-safe": "^5.0.0",
+    "mjml": "^4.6.3",
+    "mustache": "^4.0.1",
     "nodemailer": "^6.4.11",
     "pg": "^8.3.3",
     "quill-delta-to-html": "^0.12.0",
