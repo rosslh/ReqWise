@@ -3,8 +3,12 @@ describe('Landing page', () => {
     cy.visit('/')
   });
 
-  it('has the correct slogan', () => {
-    cy.contains('h1', "An easier way for digital agencies to understand their customer's needs.")
+  it('has the correct headings', () => {
+    cy.contains('h1', "An easier way for digital agencies to understand their customer's needs.");
+    cy.contains('h2', "Brainstorm ideas with questionnaires");
+    cy.contains('h2', "Organize and prioritize requirements");
+    cy.contains('h2', "Attach designs and files");
+    cy.contains('h2', "Receive feedback and approval from clients");
   });
 
   it('can navigate to login', () => {
@@ -12,8 +16,8 @@ describe('Landing page', () => {
     cy.url().should('include', 'login');
   });
 
-  // it('can navigate to signup', () => {
-  //   cy.get('#signupLink').click();
-  //   cy.url().should('include', 'sign-up');
-  // });
+  it('can navigate to signup', () => {
+    cy.get('#signupLink').click();
+    cy.url().should('include', 'sign-up');
+  });
 });
