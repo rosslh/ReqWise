@@ -87,6 +87,9 @@
   }
 </style>
 
+<svelte:head>
+  <title>ReqWise Features</title>
+</svelte:head>
 <CurveyHeading>
   <h1>Features</h1>
 </CurveyHeading>
@@ -101,7 +104,8 @@
       <div class="textColumn">
         <h2 class="featureTitle">{title}</h2>
         <p class="subtitle">{subtitle}</p>
-        <button disabled class="button button-small">Coming soon</button>
+        <a href="/sign-up/invite" rel="prefetch" class="button button-small">Try
+          now for free</a>
       </div>
       <div
         class="imageColumn"

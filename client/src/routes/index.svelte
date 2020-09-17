@@ -197,7 +197,7 @@
 </style>
 
 <svelte:head>
-  <title>ReqWise | Requirements Management</title>
+  <title>ReqWise | Understand your client's needs</title>
 </svelte:head>
 <div class="sloganSection">
   <CurveyHeading minHeight="40rem">

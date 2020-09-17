@@ -48,7 +48,7 @@
   <title>Reset password - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper loginWrapper">
-  <h1>Request password reset</h1>
+  <h1>Reset password</h1>
   <form class="loginContent">
     <fieldset>
       <label for="email">Email</label>
