@@ -45,7 +45,7 @@ module.exports = async (fastify, opts) => {
       const account = await fastify.knex
         .from("account")
         .select("password_hash", "name", "id", "is_verified", "theme", "imageName")
-        .where("email", email)
+        .where("email", email.toLowerCase())
         .first();
 
       if (!account.is_verified) {
@@ -54,7 +54,7 @@ module.exports = async (fastify, opts) => {
       }
 
       if (bcrypt.compareSync(password, account.password_hash)) {
-        const jwtContent = { email, name: account.name, id: account.id, imageName: account.imageName };
+        const jwtContent = { email: email.toLowerCase(), name: account.name, id: account.id, imageName: account.imageName };
         return {
           token: fastify.jwt.sign(jwtContent),
           userId: fastify.obfuscateId(account.id),

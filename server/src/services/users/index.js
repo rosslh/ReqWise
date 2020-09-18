@@ -1,25 +1,14 @@
 "use strict";
 
-const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
-const { v4: generateUuid } = require("uuid");
+const { randomBytes } = require('crypto');
 const { generateFromString } = require('generate-avatar');
 const sharp = require("sharp");
 const { Storage } = require('@google-cloud/storage');
 const { v4: uuidv4 } = require('uuid');
-const Mustache = require("mustache");
-const path = require("path");
-const fs = require("fs");
-const sendgrid = require('nodemailer-sendgrid');
 const storage = new Storage();
 
-const getEmailTemplate = (templateName) => path.resolve(__dirname, "../../email-templates", `${templateName}.html`);
-
 module.exports = async (fastify, opts) => {
-  const transporter = nodemailer.createTransport(sendgrid({
-    apiKey: process.env.SENDGRID_API_KEY
-  }));
-
   const postUserSchema = {
     body: {
       type: "object",
@@ -47,12 +36,12 @@ module.exports = async (fastify, opts) => {
   };
   fastify.post("/", { schema: postUserSchema }, async (request, reply) => {
     const { email } = request.body;
-    const verification_token = generateUuid();
+    const verification_token = randomBytes(32).toString('hex');
     const placeholderImage = generateFromString(email);
     const userId = await fastify
       .knex("account")
       .insert({
-        email,
+        email: email.toLowerCase(),
         verification_token,
         is_verified: false,
         placeholderImage
@@ -61,20 +50,15 @@ module.exports = async (fastify, opts) => {
 
     const href = `https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
       verification_token
-    )}&email=${encodeURIComponent(email)}`;
+    )}&email=${encodeURIComponent(email.toLowerCase())}`;
 
-    await transporter.sendMail({
-      from: `"ReqWise" <noreply@reqwise.com>`, // sender address
-      to: email, // comma separated list of receivers
-      subject: "Please verify your email address for ReqWise", // Subject line
-      text: `Thank you for signing up. Click the following link to access your ReqWise account: ${href}`, // plain text body
-      html: Mustache.render(
-        fs.readFileSync(getEmailTemplate("sign-up")).toString(),
-        {
-          href
-        }
-      )
-    });
+    await fastify.sendEmail(
+      email,
+      `Thank you for signing up. Click the following link to access your ReqWise account: ${href}`,
+      "Please verify your email address for ReqWise",
+      'sign-up',
+      { href }
+    );
 
     return userId[0];
   });
@@ -128,7 +112,7 @@ module.exports = async (fastify, opts) => {
       const { verification_token } = await fastify
         .knex("account")
         .select("verification_token", "email")
-        .where("email", email)
+        .where("email", email.toLowerCase())
         .first();
       if (token === verification_token) {
         return (
@@ -140,7 +124,7 @@ module.exports = async (fastify, opts) => {
               verification_token: null, // don't allow reseting with original token
               password_hash: bcrypt.hashSync(password, 10),
             })
-            .where("email", email)
+            .where("email", email.toLowerCase())
             .returning(["name", "email", "theme"])
         )[0];
       } else {
@@ -339,32 +323,26 @@ module.exports = async (fastify, opts) => {
       // Set new verification token
       // Send new email
       const { email } = request.params;
-      const verification_token = generateUuid();
+      const verification_token = randomBytes(32).toString('hex');
       const user = await fastify
         .knex("account")
         .update({
           verification_token,
         })
-        .where("email", email)
+        .where("email", email.toLowerCase())
         .returning(["name", "email"]);
 
       const href = `https://reqwise.com/reset/complete?token=${encodeURIComponent(
         verification_token
-      )}&email=${encodeURIComponent(email)}`;
+      )}&email=${encodeURIComponent(email.toLowerCase())}`;
 
-
-      await transporter.sendMail({
-        from: `"ReqWise" <noreply@reqwise.com>`, // sender address
-        to: email, // comma separated list of receivers
-        subject: "Reset your password", // Subject line
-        text: `You told us you forgot your password. If you really did, click here to choose a new one: ${href}`, // plain text body
-        html: Mustache.render(
-          fs.readFileSync(getEmailTemplate("reset")).toString(),
-          {
-            href
-          }
-        ), // html body
-      });
+      await fastify.sendEmail(
+        email,
+        `You told us you forgot your password. If you really did, click here to choose a new one: ${href}`,
+        "Reset your password",
+        'reset',
+        { href },
+      );
 
       return user;
     }
@@ -584,7 +562,7 @@ module.exports = async (fastify, opts) => {
           "inviter.name as inviterName",
           "team.name as teamName"
         )
-        .where("teamInvite.inviteeEmail", request.user.email)
+        .where("teamInvite.inviteeEmail", request.user.email.toLowerCase())
         .join("account as inviter", "inviter.id", "=", "teamInvite.inviter_id")
         .join("team", "team.id", "=", "teamInvite.team_id");
 
@@ -596,7 +574,7 @@ module.exports = async (fastify, opts) => {
           "team.name as teamName",
           "project.name as projectName"
         )
-        .where("stakeholderInvite.inviteeEmail", request.user.email)
+        .where("stakeholderInvite.inviteeEmail", request.user.email.toLowerCase())
         .join("account as inviter", "inviter.id", "=", "stakeholderInvite.inviter_id")
         .join("project", "project.id", "=", "stakeholderInvite.project_id")
         .join("team", "team.id", "=", "project.team_id");
@@ -804,7 +782,7 @@ module.exports = async (fastify, opts) => {
         .select("*")
         .where({
           id: request.params.inviteId,
-          inviteeEmail: request.user.email,
+          inviteeEmail: request.user.email.toLowerCase(),
         })
         .first();
 
@@ -861,7 +839,7 @@ module.exports = async (fastify, opts) => {
         .select("*")
         .where({
           id: request.params.inviteId,
-          inviteeEmail: request.user.email,
+          inviteeEmail: request.user.email.toLowerCase(),
         })
         .first();
 

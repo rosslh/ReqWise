@@ -10,7 +10,7 @@ module.exports = fp(async function (fastify, opts) {
     const account = await fastify.knex
       .from("account")
       .select("id", "imageName")
-      .where("email", jwtContent.email)
+      .where("email", jwtContent.email && jwtContent.email.toLowerCase())
       .first();
     if (jwtContent.id === account.id) {
       request.user = { ...jwtContent, imageName: account.imageName };
@@ -51,10 +51,10 @@ module.exports = fp(async function (fastify, opts) {
       const account = await fastify.knex
         .from("account")
         .select("id", "imageName")
-        .where("email", jwtContent.email)
+        .where("email", jwtContent.email && jwtContent.email.toLowerCase())
         .first();
       if (jwtContent.id === account.id) {
-        request.user = { ...jwtContent, imageName: account.imageName, name: account.name, email: account.email };
+        request.user = { ...jwtContent, imageName: account.imageName, name: account.name, email: account.email && account.email.toLowerCase() };
       } else {
         throw new Error("Email and ID do not match");
       }

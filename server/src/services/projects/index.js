@@ -2,6 +2,8 @@ module.exports = async function (fastify, opts) {
   const { Storage } = require('@google-cloud/storage');
   const { v4: uuidv4 } = require('uuid');
   const { Parser } = require('json2csv');
+  const { randomBytes } = require('crypto');
+  const { generateFromString } = require('generate-avatar');
   const JSZip = require("jszip")
   const storage = new Storage();
 
@@ -1164,6 +1166,60 @@ module.exports = async function (fastify, opts) {
         })
         .returning("id");
 
+      const accountAlreadyExists = (
+        await fastify.knex
+          .from("account")
+          .select("account.id")
+          .where({
+            email: inviteeEmail.toLowerCase(),
+          })
+      ).length;
+
+      const { name: projectName } = await fastify.knex
+        .from("project")
+        .select("*")
+        .where({
+          id: request.params.projectId
+        })
+        .first();
+
+      if (accountAlreadyExists) {
+        const href = `https://reqwise.com/login?redirect=%2Faccount`;
+
+        await fastify.sendEmail(
+          inviteeEmail,
+          `You are invited to collaborate on "${projectName}" as a stakeholder. Sign in to get started: ${href}`,
+          "You are invited to collaborate on a project",
+          'stakeholder-invite-existing-user',
+          { href, projectName }
+        );
+      }
+      else {
+        const verification_token = randomBytes(32).toString('hex');
+        const placeholderImage = generateFromString(inviteeEmail);
+        await fastify
+          .knex("account")
+          .insert({
+            email: inviteeEmail.toLowerCase(),
+            verification_token,
+            is_verified: false,
+            placeholderImage
+          })
+          .returning("id");
+
+        const href = `https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
+          verification_token
+        )}&email=${encodeURIComponent(inviteeEmail)}`;
+
+
+        await fastify.sendEmail(
+          inviteeEmail,
+          `You are invited to collaborate on "${projectName}" as a stakeholder. Create an account to get started: ${href}`,
+          "You are invited to collaborate on a project",
+          'stakeholder-invite-new-user',
+          { href, projectName }
+        );
+      }
       return ["success"];
     }
   );
