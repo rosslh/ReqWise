@@ -1,7 +1,7 @@
 "use strict";
 
 const bcrypt = require("bcrypt");
-const { v4: generateUuid } = require("uuid");
+const { randomBytes } = require('crypto');
 const { generateFromString } = require('generate-avatar');
 const sharp = require("sharp");
 const { Storage } = require('@google-cloud/storage');
@@ -36,12 +36,12 @@ module.exports = async (fastify, opts) => {
   };
   fastify.post("/", { schema: postUserSchema }, async (request, reply) => {
     const { email } = request.body;
-    const verification_token = generateUuid();
+    const verification_token = randomBytes(32).toString('hex');
     const placeholderImage = generateFromString(email);
     const userId = await fastify
       .knex("account")
       .insert({
-        email,
+        email: email.toLowerCase(),
         verification_token,
         is_verified: false,
         placeholderImage
@@ -50,7 +50,7 @@ module.exports = async (fastify, opts) => {
 
     const href = `https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
       verification_token
-    )}&email=${encodeURIComponent(email)}`;
+    )}&email=${encodeURIComponent(email.toLowerCase())}`;
 
     await fastify.sendEmail(
       email,
@@ -112,7 +112,7 @@ module.exports = async (fastify, opts) => {
       const { verification_token } = await fastify
         .knex("account")
         .select("verification_token", "email")
-        .where("email", email)
+        .where("email", email.toLowerCase())
         .first();
       if (token === verification_token) {
         return (
@@ -124,7 +124,7 @@ module.exports = async (fastify, opts) => {
               verification_token: null, // don't allow reseting with original token
               password_hash: bcrypt.hashSync(password, 10),
             })
-            .where("email", email)
+            .where("email", email.toLowerCase())
             .returning(["name", "email", "theme"])
         )[0];
       } else {
@@ -323,18 +323,18 @@ module.exports = async (fastify, opts) => {
       // Set new verification token
       // Send new email
       const { email } = request.params;
-      const verification_token = generateUuid();
+      const verification_token = randomBytes(32).toString('hex');
       const user = await fastify
         .knex("account")
         .update({
           verification_token,
         })
-        .where("email", email)
+        .where("email", email.toLowerCase())
         .returning(["name", "email"]);
 
       const href = `https://reqwise.com/reset/complete?token=${encodeURIComponent(
         verification_token
-      )}&email=${encodeURIComponent(email)}`;
+      )}&email=${encodeURIComponent(email.toLowerCase())}`;
 
       await fastify.sendEmail(
         email,
@@ -562,7 +562,7 @@ module.exports = async (fastify, opts) => {
           "inviter.name as inviterName",
           "team.name as teamName"
         )
-        .where("teamInvite.inviteeEmail", request.user.email)
+        .where("teamInvite.inviteeEmail", request.user.email.toLowerCase())
         .join("account as inviter", "inviter.id", "=", "teamInvite.inviter_id")
         .join("team", "team.id", "=", "teamInvite.team_id");
 
@@ -574,7 +574,7 @@ module.exports = async (fastify, opts) => {
           "team.name as teamName",
           "project.name as projectName"
         )
-        .where("stakeholderInvite.inviteeEmail", request.user.email)
+        .where("stakeholderInvite.inviteeEmail", request.user.email.toLowerCase())
         .join("account as inviter", "inviter.id", "=", "stakeholderInvite.inviter_id")
         .join("project", "project.id", "=", "stakeholderInvite.project_id")
         .join("team", "team.id", "=", "project.team_id");
@@ -782,7 +782,7 @@ module.exports = async (fastify, opts) => {
         .select("*")
         .where({
           id: request.params.inviteId,
-          inviteeEmail: request.user.email,
+          inviteeEmail: request.user.email.toLowerCase(),
         })
         .first();
 
@@ -839,7 +839,7 @@ module.exports = async (fastify, opts) => {
         .select("*")
         .where({
           id: request.params.inviteId,
-          inviteeEmail: request.user.email,
+          inviteeEmail: request.user.email.toLowerCase(),
         })
         .first();
 

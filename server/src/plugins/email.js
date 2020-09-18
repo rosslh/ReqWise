@@ -15,7 +15,7 @@ module.exports = fp(function (fastify, opts, done) {
   fastify.decorate("sendEmail", async function (toEmail, plaintext, subject, templateName, vars) {
     await transporter.sendMail({
       from: `"ReqWise" <noreply@reqwise.com>`, // sender address
-      to: toEmail, // comma separated list of receivers
+      to: toEmail.toLowerCase(), // comma separated list of receivers
       subject, // Subject line
       text: plaintext, // plain text body
       html: Mustache.render(
