@@ -1,25 +1,14 @@
 "use strict";
 
-const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const { v4: generateUuid } = require("uuid");
 const { generateFromString } = require('generate-avatar');
 const sharp = require("sharp");
 const { Storage } = require('@google-cloud/storage');
 const { v4: uuidv4 } = require('uuid');
-const Mustache = require("mustache");
-const path = require("path");
-const fs = require("fs");
-const sendgrid = require('nodemailer-sendgrid');
 const storage = new Storage();
 
-const getEmailTemplate = (templateName) => path.resolve(__dirname, "../../email-templates", `${templateName}.html`);
-
 module.exports = async (fastify, opts) => {
-  const transporter = nodemailer.createTransport(sendgrid({
-    apiKey: process.env.SENDGRID_API_KEY
-  }));
-
   const postUserSchema = {
     body: {
       type: "object",
@@ -63,18 +52,13 @@ module.exports = async (fastify, opts) => {
       verification_token
     )}&email=${encodeURIComponent(email)}`;
 
-    await transporter.sendMail({
-      from: `"ReqWise" <noreply@reqwise.com>`, // sender address
-      to: email, // comma separated list of receivers
-      subject: "Please verify your email address for ReqWise", // Subject line
-      text: `Thank you for signing up. Click the following link to access your ReqWise account: ${href}`, // plain text body
-      html: Mustache.render(
-        fs.readFileSync(getEmailTemplate("sign-up")).toString(),
-        {
-          href
-        }
-      )
-    });
+    await fastify.sendEmail(
+      email,
+      `Thank you for signing up. Click the following link to access your ReqWise account: ${href}`,
+      "Please verify your email address for ReqWise",
+      'sign-up',
+      { href }
+    );
 
     return userId[0];
   });
@@ -352,19 +336,13 @@ module.exports = async (fastify, opts) => {
         verification_token
       )}&email=${encodeURIComponent(email)}`;
 
-
-      await transporter.sendMail({
-        from: `"ReqWise" <noreply@reqwise.com>`, // sender address
-        to: email, // comma separated list of receivers
-        subject: "Reset your password", // Subject line
-        text: `You told us you forgot your password. If you really did, click here to choose a new one: ${href}`, // plain text body
-        html: Mustache.render(
-          fs.readFileSync(getEmailTemplate("reset")).toString(),
-          {
-            href
-          }
-        ), // html body
-      });
+      await fastify.sendEmail(
+        email,
+        `You told us you forgot your password. If you really did, click here to choose a new one: ${href}`,
+        "Reset your password",
+        'reset',
+        { href },
+      );
 
       return user;
     }

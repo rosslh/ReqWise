@@ -19,8 +19,7 @@
       }
 
       .text-link {
-        color:
-          #5e6ebf
+        color: #5e6ebf;
       }
 
       .footer-link {
