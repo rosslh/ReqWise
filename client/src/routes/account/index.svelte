@@ -57,7 +57,6 @@
         },
         $session.user.jwt
       );
-      await update();
     } else {
       await post(
         `/users/${$session.user.id}/teams`,
@@ -67,6 +66,7 @@
         $session.user.jwt
       );
     }
+    await update();
   };
 
   const deleteInvite = async (inviteId, projectName) => {

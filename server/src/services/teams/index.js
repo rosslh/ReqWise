@@ -1,5 +1,7 @@
 const rp = require('request-promise');
 const atob = require('atob');
+const { randomBytes } = require('crypto');
+const { generateFromString } = require('generate-avatar');
 
 module.exports = async function (fastify, opts) {
   const postTeamSchema = {
@@ -434,7 +436,8 @@ module.exports = async function (fastify, opts) {
       schema: postTeamInviteSchema,
     },
     async function (request, reply) {
-      const { inviteeEmail, isAdmin } = request.body;
+      let { inviteeEmail, isAdmin } = request.body;
+      inviteeEmail = inviteeEmail.toLowerCase();
 
       const memberAlreadyExists = (
         await fastify.knex
@@ -473,6 +476,61 @@ module.exports = async function (fastify, opts) {
           team_id: request.params.teamId,
         })
         .returning("id");
+
+      const accountAlreadyExists = (
+        await fastify.knex
+          .from("account")
+          .select("account.id")
+          .where({
+            email: inviteeEmail
+          })
+      ).length;
+
+      const { name: teamName } = await fastify.knex
+        .from("team")
+        .select(
+          "*"
+        )
+        .where("team.id", request.params.teamId)
+        .first();
+
+      if (accountAlreadyExists) {
+        const href = `https://reqwise.com/login?redirect=%2Faccount`;
+
+        await fastify.sendEmail(
+          inviteeEmail,
+          `You are invited to collaborate on "${teamName}" as a team member. Sign in to get started: ${href}`,
+          "You are invited to be a team member",
+          'team-invite-existing-user',
+          { href, teamName }
+        );
+      }
+      else {
+        const verification_token = randomBytes(32).toString('hex');
+        const placeholderImage = generateFromString(inviteeEmail);
+        await fastify
+          .knex("account")
+          .insert({
+            email: inviteeEmail.toLowerCase(),
+            verification_token,
+            is_verified: false,
+            placeholderImage
+          })
+          .returning("id");
+
+        const href = `https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
+          verification_token
+        )}&email=${encodeURIComponent(inviteeEmail)}`;
+
+
+        await fastify.sendEmail(
+          inviteeEmail,
+          `You are invited to collaborate on "${teamName}" as a team member. Create an account to get started: ${href}`,
+          "You are invited to be a team member",
+          'team-invite-new-user',
+          { href, teamName }
+        );
+      }
 
       return ["success"];
     }

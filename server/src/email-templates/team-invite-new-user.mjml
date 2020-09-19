@@ -1,7 +1,7 @@
 <mjml>
   <mj-head>
-    <mj-title>You are invited to collaborate on a project</mj-title>
-    <mj-preview>You are invited to collaborate on "{{projectName}}" as a stakeholder. Create an account to get started.</mj-preview>
+    <mj-title>You are invited to be a team member</mj-title>
+    <mj-preview>You are invited to collaborate on "{{teamName}}" as a team member. Create an account to get started.</mj-preview>
     <mj-attributes>
       <mj-all font-family="'Public Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
       <mj-text font-weight="400" font-size="16px" color="#2D3748" line-height="24px" font-family="'Public Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
@@ -44,10 +44,10 @@
       <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
         <mj-column width="100%">
           <mj-text color="#2D3748" font-weight="bold" font-size="20px">
-            You are invited to collaborate on a project
+            You are invited to be a team member
           </mj-text>
           <mj-text color="#2D3748" padding-top="20px" padding-bottom="20px" font-size="16px">
-            You are invited to collaborate on "{{projectName}}" as a stakeholder. Create an account to get started.
+            You are invited to collaborate on "{{teamName}}" as a team member. Create an account to get started.
           </mj-text>
           <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href={{href}}>
             Create Account
@@ -60,7 +60,7 @@
       <mj-section>
         <mj-column width="100%" padding="0">
           <mj-text color="#4A5568" font-size="12px" align="center" line-height="16px">
-            You are receiving this email because you were invited to collaborate on a ReqWise project. If you do not want to register, you can safely ignore this email. </mj-text>
+            You are receiving this email because you were invited as a member of a ReqWise team. If you do not want to register, you can safely ignore this email. </mj-text>
           <mj-text color="#4A5568" font-size="12px" align="center" line-height="16px">
             &copy; ReqWise, All Rights Reserved.
           </mj-text>

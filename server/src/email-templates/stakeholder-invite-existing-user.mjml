@@ -60,7 +60,7 @@
       <mj-section>
         <mj-column width="100%" padding="0">
           <mj-text color="#4A5568" font-size="12px" align="center" line-height="16px">
-            You are receiving this email because you were invited to collaborate on a ReqWise project. If you do not want to register, you can safely ignore this email. </mj-text>
+            You are receiving this email because you were invited to collaborate on a ReqWise project. If you do not want to collaborate on the project, you can safely ignore this email. </mj-text>
           <mj-text color="#4A5568" font-size="12px" align="center" line-height="16px">
             &copy; ReqWise, All Rights Reserved.
           </mj-text>
