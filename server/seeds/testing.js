@@ -20,6 +20,8 @@ exports.seed = async function (knex) {
     'project',
     'projectTemplate',
     'account_team',
+    "teamInvite",
+    "stakeholderInvite",
     'account',
     'slackUser',
     'team',
