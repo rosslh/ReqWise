@@ -49,7 +49,7 @@
     "jszip": "^3.5.0",
     "knex": "^0.21.5",
     "make-promises-safe": "^5.0.0",
-    "mjml": "^4.6.3",
+    "mjml": "^4.7.0",
     "mustache": "^4.0.1",
     "nodemailer": "^6.4.11",
     "nodemailer-sendgrid": "^1.0.3",
