@@ -48,7 +48,7 @@
     modalProps.set({ questionnaire, update });
   };
 
-  $: shareModal = () => {
+  $: shareQuestionnaire = () => {
     modalContent.set(ShareQuestionnaireModal);
     modalProps.set({ questionnaire, update });
   };
@@ -101,13 +101,15 @@
   </button>
   {#if !questionnaire.is_draft}
     <button
-      on:click={shareModal}
+      data-cy="shareQuestionnaire"
+      on:click={shareQuestionnaire}
       class="button button-secondary button-outline">
       Share
     </button>
   {/if}
   {#if questionnaire.is_public}
     <a
+      data-cy="viewPublic"
       rel="prefetch"
       href={`/public-form/${$page.params.formId}`}
       class="button button-secondary button-outline">

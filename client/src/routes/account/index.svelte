@@ -132,7 +132,8 @@
                 <td>
                   <a
                     rel="prefetch"
-                    href={`/public-form/${request.brainstormForm_id}`}>
+                    href={`/public-form/${request.brainstormForm_id}`}
+                    data-cy="feedbackRequest">
                     {request.description}</a>
                 </td>
                 <td class="feedbackType">{request.type}</td>

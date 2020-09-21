@@ -506,7 +506,7 @@ module.exports = async function (fastify, opts) {
         );
       }
       else {
-        const verification_token = randomBytes(32).toString('hex');
+        const verification_token = process.env.NODE_ENV === "dev" ? "dev" : randomBytes(32).toString('hex');
         const placeholderImage = generateFromString(inviteeEmail);
         await fastify
           .knex("account")

@@ -59,7 +59,7 @@
   <title>{questionnaire.description} - ReqWise</title>
 </svelte:head>
 <section class="contentWrapper">
-  <h1>{questionnaire.description}</h1>
+  <h1 data-cy="questionnaireTitle">{questionnaire.description}</h1>
   {#if questionnaire.is_public}
     <p class="panel">
       Shareable link: <a class="shareLink" target="_blank" rel="noopener" href={`https://reqwise.com${$page.path}`}><code>{`https://reqwise.com${$page.path}`}</code></a>

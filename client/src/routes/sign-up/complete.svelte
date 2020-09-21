@@ -91,6 +91,6 @@
         type="password"
         id="pwd" />
     </fieldset>
-    <SubmitButton handler={submit}>Submit</SubmitButton>
+    <SubmitButton id="completeSignup" handler={submit}>Submit</SubmitButton>
   </form>
 </div>

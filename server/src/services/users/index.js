@@ -36,7 +36,7 @@ module.exports = async (fastify, opts) => {
   };
   fastify.post("/", { schema: postUserSchema }, async (request, reply) => {
     const { email } = request.body;
-    const verification_token = randomBytes(32).toString('hex');
+    const verification_token = process.env.NODE_ENV === "dev" ? "dev" : randomBytes(32).toString('hex');
     const placeholderImage = generateFromString(email);
     const userId = await fastify
       .knex("account")
@@ -323,7 +323,7 @@ module.exports = async (fastify, opts) => {
       // Set new verification token
       // Send new email
       const { email } = request.params;
-      const verification_token = randomBytes(32).toString('hex');
+      const verification_token = process.env.NODE_ENV === "dev" ? "dev" : randomBytes(32).toString('hex');
       const user = await fastify
         .knex("account")
         .update({

@@ -4,6 +4,7 @@ Cypress.Commands.add("login", (email = "test.owner@reqwise.com", password = "123
   cy.clearCookie('__session');
   cy.clearCookies();
   cy.reload();
+  cy.visit('/login');
   cy.waitForPreload();
   cy.url().should('include', '/login');
   cy.wait(750);
@@ -13,6 +14,28 @@ Cypress.Commands.add("login", (email = "test.owner@reqwise.com", password = "123
   cy.waitForSpinner();
   cy.waitForPreload();
   cy.url().should('not.include', 'login');
+});
+
+Cypress.Commands.add("signUp", (email, password) => {
+  cy.clearCookie('__session');
+  cy.clearCookies();
+  cy.reload();
+  cy.waitForPreload();
+  cy.visit('/sign-up/invite')
+  cy.url().should('include', '/sign-up/invite');
+  cy.wait(750);
+  cy.get("#email").click().type(email);
+  cy.get(".submitButton").click();
+  cy.waitForSpinner();
+  cy.visit(`/sign-up/complete?token=dev&email=test.new%40reqwise.com`);
+  cy.url().should('include', '/sign-up/complete');
+  cy.wait(750);
+
+  cy.get("#name").click().type("New Test Account");
+  cy.get("#pwd").click().type("1234");
+  cy.get("#completeSignup").click();
+  cy.waitForSpinner();
+  cy.url().should("include", "/account");
 });
 
 Cypress.Commands.add("goToProject", (email = "test.owner@reqwise.com", password = "1234") => {
