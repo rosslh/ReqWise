@@ -33,6 +33,11 @@
     $session.user && $session.user.jwt
   );
 
+  let feedbackRequests = get(
+    `/users/${$session.user.id}/feedback-requests`,
+    $session.user && $session.user.jwt
+  );
+
   const update = async () => {
     teams = await get(
       `/users/${$session.user.id}/teams`,
@@ -44,6 +49,10 @@
     );
     invites = await get(
       `/users/${$session.user.id}/invites`,
+      $session.user && $session.user.jwt
+    );
+    feedbackRequests = get(
+      `/users/${$session.user.id}/feedback-requests`,
       $session.user && $session.user.jwt
     );
   };
@@ -94,12 +103,46 @@
   .membership {
     color: var(--secondaryText);
   }
+
+  td.feedbackType {
+    text-transform: capitalize;
+  }
 </style>
 
 <svelte:head>
   <title>Account - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
+  {#await feedbackRequests}
+    <!-- loading -->
+  {:then result}
+    {#if result.length}
+      <h2>Feedback requested</h2>
+      <div class="panel compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Feedback type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each result as request (request.id)}
+              <tr>
+                <td>
+                  <a
+                    rel="prefetch"
+                    href={`/public-form/${request.brainstormForm_id}`}>
+                    {request.description}</a>
+                </td>
+                <td class="feedbackType">{request.type}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  {/await}
   {#if projects.length}
     <h2>Project collaboration</h2>
     <div class="panel compact" data-cy="projectCollaboration">

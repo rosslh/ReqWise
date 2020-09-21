@@ -15,6 +15,7 @@ exports.up = function (knex) {
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
       table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.unique(["inviteeEmail", "brainstormForm_id"]);
     })
   ]);
 };

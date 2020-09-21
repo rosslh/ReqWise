@@ -468,6 +468,47 @@ module.exports = async (fastify, opts) => {
     }
   );
 
+  const getFeedbackRequestsSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        userId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: {
+          type: "string",
+        },
+      },
+      required: ["Authorization"],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:userId/feedback-requests",
+    {
+      preValidation: [fastify.authenticate, fastify.isCorrectUser],
+      schema: getFeedbackRequestsSchema,
+    },
+    async function (request, reply) {
+      return await fastify
+        .knex("brainstormInvite")
+        .select(
+          "*",
+          "brainstormForm.id as brainstormForm_id",
+          fastify.knex.raw("'questionnaire' as type")
+        )
+        .where({
+          "inviteeEmail": request.user.email.toLowerCase(),
+          is_open: true
+        })
+        .join("brainstormForm", "brainstormForm.id", "=", "brainstormInvite.brainstormForm_id");
+    }
+  );
+
   const getProjectsSchema = {
     queryString: {},
     params: {
