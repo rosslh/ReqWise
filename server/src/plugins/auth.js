@@ -42,6 +42,14 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const hasBrainstormInvite = async (request, reply, formId) => {
+    const { email } = request.user;
+    const invites = await fastify.knex.from("brainstormInvite").select("*").where("brainstormForm_id", formId);
+    if (!invites.some(i => i.inviteeEmail.toLowerCase() === email.toLowerCase())) {
+      throw new Error("Missing brainstorm invite");
+    }
+  };
+
   fastify.decorate("allowAnonIfPublic", async function (request, reply) {
     const { brainstormForm_id: formId } = await getFormId(request.params);
     const { is_public: isPublic } = await fastify.knex.from("brainstormForm").select("is_public").where({ id: formId }).first();
@@ -50,7 +58,7 @@ module.exports = fp(async function (fastify, opts) {
       const jwtContent = await request.jwtVerify();
       const account = await fastify.knex
         .from("account")
-        .select("id", "imageName")
+        .select("*")
         .where("email", jwtContent.email && jwtContent.email.toLowerCase())
         .first();
       if (jwtContent.id === account.id) {
@@ -68,6 +76,17 @@ module.exports = fp(async function (fastify, opts) {
       }
     } else {
       await verify();
+      try {
+        await authenticateRoute(request, reply, false, true);
+      }
+      catch (e) {
+        try {
+          await hasBrainstormInvite(request, reply, formId)
+        } catch (e) {
+          reply.code(403);
+          reply.send("Questionnaire access denied");
+        }
+      }
     }
   });
 
@@ -493,6 +512,23 @@ module.exports = fp(async function (fastify, opts) {
     }
   };
 
+  const isProjectStakeholderByQuestionnaireId = async (request, reply) => {
+    const association = (
+      await fastify.knex
+        .from("brainstormForm")
+        .join("project", "project.id", "brainstormForm.project_id")
+        .join("stakeholder_project", "stakeholder_project.project_id", "project.id")
+        .select("stakeholder_project.id")
+        .where({
+          "brainstormForm.id": request.params.questionnaireId,
+          "stakeholder_project.account_id": request.user.id
+        })
+    ).length;
+    if (!association) {
+      throw new Error(`Not a project stakeholder`);
+    }
+  };
+
   const isTeamMemberByPromptId = async (
     request,
     reply,
@@ -672,7 +708,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "requirementId", memberHandler: isTeamMemberByRequirementId, stakeholderHandler: isProjectStakeholderByRequirementId },
       { param: "reqversionId", memberHandler: isTeamMemberByReqversionId, stakeholderHandler: isProjectStakeholderByReqversionId },
       { param: "commentId", memberHandler: isTeamMemberByCommentId, stakeholderHandler: isProjectStakeholderByCommentId },
-      { param: "questionnaireId", memberHandler: isTeamMemberByQuestionnaireId },
+      { param: "questionnaireId", memberHandler: isTeamMemberByQuestionnaireId, stakeholderHandler: isProjectStakeholderByQuestionnaireId },
       { param: "promptId", memberHandler: isTeamMemberByPromptId },
       { param: "responseId", memberHandler: isTeamMemberByResponseId },
       { param: "reactionId", memberHandler: isTeamMemberByReactionId },
@@ -680,7 +716,7 @@ module.exports = fp(async function (fastify, opts) {
       { param: "externalStakeholderId", memberHandler: isTeamMemberByExternalStakeholderId },
       { param: "reviewId", memberHandler: isTeamMemberByReviewId, stakeholderHandler: isProjectStakeholderByReviewId },
     ];
-    const method = methods.find(x => request.params[x.param])
+    const method = methods.find(x => request.params[x.param]);
     if (!method) {
       throw new Error("Could not authenticate using URL parameters");
     }

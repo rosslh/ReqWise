@@ -14,6 +14,7 @@ module.exports = fp(function (fastify, opts, done) {
 
   fastify.decorate("sendEmail", async function (toEmail, plaintext, subject, templateName, vars) {
     if (process.env.NODE_ENV === "dev") {
+      console.log(plaintext);
       return;
     }
     await transporter.sendMail({

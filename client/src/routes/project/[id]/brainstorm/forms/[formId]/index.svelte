@@ -14,6 +14,7 @@
   import { modalContent, modalProps } from "../../../../../../stores.js";
   import AddBrainstormPromptModal from "../../../../../../components/AddBrainstormPromptModal.svelte";
   import EditQuestionnaireModal from "../../../../../../components/EditQuestionnaireModal.svelte";
+  import ShareQuestionnaireModal from "../../../../../../components/ShareQuestionnaireModal.svelte";
   import BrainstormPrompt from "../../../../../../components/BrainstormPrompt.svelte";
   import Ribbon from "../../../../../../components/Ribbon.svelte";
 
@@ -44,6 +45,11 @@
 
   $: showSettingsModal = () => {
     modalContent.set(EditQuestionnaireModal);
+    modalProps.set({ questionnaire, update });
+  };
+
+  $: shareModal = () => {
+    modalContent.set(ShareQuestionnaireModal);
     modalProps.set({ questionnaire, update });
   };
 </script>
@@ -93,6 +99,13 @@
     class="button button-secondary button-outline">
     Settings
   </button>
+  {#if !questionnaire.is_draft}
+    <button
+      on:click={shareModal}
+      class="button button-secondary button-outline">
+      Share
+    </button>
+  {/if}
   {#if questionnaire.is_public}
     <a
       rel="prefetch"

@@ -1,3 +1,6 @@
+const { randomBytes } = require('crypto');
+const { generateFromString } = require('generate-avatar');
+
 module.exports = async function (fastify, opts) {
   const getQuestionnaireSchema = {
     queryString: {},
@@ -166,6 +169,113 @@ module.exports = async function (fastify, opts) {
         .returning("id");
 
       return { description };
+    }
+  );
+
+  const postInviteSchema = {
+    body: {
+      type: "object",
+      required: ["inviteeEmail"],
+      properties: {
+        inviteeEmail: { type: "string" },
+      }
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        questionnaireId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Content-Type"],
+    },
+    response: {},
+  };
+  fastify.post(
+    "/:questionnaireId/invites",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamMember],
+      schema: postInviteSchema,
+    },
+    async function (request, reply) {
+      let { inviteeEmail } = request.body;
+      const { questionnaireId } = request.params;
+
+      inviteeEmail = inviteeEmail.toLowerCase();
+
+      await fastify
+        .knex("brainstormInvite")
+        .insert({
+          inviteeEmail,
+          inviter_id: request.user.id,
+          brainstormForm_id: questionnaireId
+        })
+        .returning("id");
+
+      const accountAlreadyExists = (
+        await fastify.knex
+          .from("account")
+          .select("account.id")
+          .where({
+            email: inviteeEmail
+          })
+      ).length;
+
+      const { project_id } = await fastify.knex.from("brainstormForm").select("*").where({ id: questionnaireId }).first();
+
+      const href = `https://reqwise.com/login?redirect=%2Fpublic-form%2F${fastify.obfuscateId(questionnaireId)}`;
+
+      if (accountAlreadyExists) {
+        await fastify.sendEmail(
+          inviteeEmail,
+          `You are invited to respond to a questionnaire. Sign in to get started: ${href}`,
+          "You are invited to respond to a questionnaire",
+          'brainstorm-invite-existing-user',
+          { href }
+        );
+      }
+      else {
+        const verification_token = randomBytes(32).toString('hex');
+        const placeholderImage = generateFromString(inviteeEmail);
+        await fastify
+          .knex("account")
+          .insert({
+            email: inviteeEmail.toLowerCase(),
+            verification_token,
+            is_verified: false,
+            placeholderImage
+          })
+          .returning("id");
+
+        const href = `https://reqwise.com/sign-up/complete?token=${encodeURIComponent(
+          verification_token
+        )}&email=${encodeURIComponent(inviteeEmail)}`;
+
+
+        await fastify.sendEmail(
+          inviteeEmail,
+          `You are invited to respond to a questionnaire. Create an account to get started: ${href}`,
+          "You are invited to respond to a questionnaire",
+          'brainstorm-invite-new-user',
+          { href }
+        );
+      }
+
+      await fastify
+        .knex("stakeholderInvite")
+        .insert({
+          inviteeEmail,
+          inviter_id: request.user.id,
+          project_id
+        });
+
+      return ["success"]
     }
   );
 };

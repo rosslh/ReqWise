@@ -1,25 +1,23 @@
 <script context="module">
   export async function preload(page, session) {
     if (session && session.user) {
-      const questionnaire = await get(
-        `/questionnaires/${page.params.formId}`,
-        session.user && session.user.jwt
-      );
-      if (!questionnaire.is_public) {
-        return this.redirect(
-          302,
-          `/project/${questionnaire.project_id}/brainstorm/forms/${page.params.formId}`
+      try {
+        const questionnaire = await get(
+          `/questionnaires/${page.params.formId}`,
+          session.user && session.user.jwt
         );
+        return { questionnaire }; // Logged in and access granted
+      } catch (e) {
+        return this.redirect(302, `/account`); // Logged in but no access
       }
-      return { questionnaire };
     } else {
       try {
         const questionnaire = await get(
           `/questionnaires/${page.params.formId}`
         );
-        return { questionnaire };
+        return { questionnaire }; // anonymous and form is public
       } catch (e) {
-        return this.redirect(302, `/account`);
+        return this.redirect(302, `/account`); // anonymous and private form
       }
     }
   }
@@ -62,9 +60,11 @@
 </svelte:head>
 <section class="contentWrapper">
   <h1>{questionnaire.description}</h1>
-  <p class="panel">
-    Shareable link: <a class="shareLink" target="_blank" rel="noopener" href={`https://reqwise.com${$page.path}`}><code>{`https://reqwise.com${$page.path}`}</code></a>
-  </p>
+  {#if questionnaire.is_public}
+    <p class="panel">
+      Shareable link: <a class="shareLink" target="_blank" rel="noopener" href={`https://reqwise.com${$page.path}`}><code>{`https://reqwise.com${$page.path}`}</code></a>
+    </p>
+  {/if}
   {#each prompts as prompt (prompt.id)}
     <BrainstormPrompt
       {prompt}

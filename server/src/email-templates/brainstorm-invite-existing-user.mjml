@@ -1,0 +1,72 @@
+<mjml>
+  <mj-head>
+    <mj-title>You are invited to respond to a questionnaire</mj-title>
+    <mj-preview>You are invited to collaborate on "{{projectName}}" as a stakeholder. Sign in to get started.</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="'Public Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#2D3748" line-height="24px" font-family="'Public Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+    </mj-attributes>
+    <mj-style inline="inline">
+      .shadow {
+        -webkit-box-shadow: 0 0.2rem 0.6rem 0 rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 0.2rem 0.6rem 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0.2rem 0.6rem 0 rgba(0, 0, 0, 0.1);
+      }
+
+      .body-section {
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .text-link {
+        color:
+          #5e6ebf
+      }
+
+      .footer-link {
+        color: #888888
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#EDF2F7" width="600px">
+    <mj-section full-width="full-width" css-class="shadow" background-color="white" padding="5px">
+      <mj-column width="100%">
+        <mj-image src="https://reqwise.com/logo.png" alt="" align="center" width="120px" />
+      </mj-column>
+    </mj-section>
+    <mj-wrapper>
+      <mj-section padding="0">
+        <mj-column width="100%">
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section shadow">
+      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
+        <mj-column width="100%">
+          <mj-text color="#2D3748" font-weight="bold" font-size="20px">
+            You are invited to respond to a questionnaire
+          </mj-text>
+          <mj-text color="#2D3748" padding-top="20px" padding-bottom="20px" font-size="16px">
+            You are invited to respond to a questionnaire on ReqWise. Sign in to get started.
+          </mj-text>
+          <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href={{href}}>
+            Sign In
+          </mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <mj-wrapper full-width="full-width">
+      <mj-section>
+        <mj-column width="100%" padding="0">
+          <mj-text color="#4A5568" font-size="12px" align="center" line-height="16px">
+            You are receiving this email because you were invited to respond to a questionnaire. If you do not want to respond, you can safely ignore this email. </mj-text>
+          <mj-text color="#4A5568" font-size="12px" align="center" line-height="16px">
+            &copy; ReqWise, All Rights Reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+  </mj-body>
+</mjml>
