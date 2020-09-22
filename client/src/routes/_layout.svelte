@@ -7,7 +7,9 @@
   import Stylesheet from "../components/Stylesheet.svelte";
   import { stream } from "../api.js";
   import { unreadAlerts } from "../stores.js";
+  import { startProductTour } from "../tour.js";
   import { onMount, onDestroy } from "svelte";
+  import "driver.js/dist/driver.min.css";
 
   const { session, preloading } = stores();
   NProgress.configure({
@@ -44,9 +46,16 @@
     );
   };
 
-  onMount(() => async () => {
+  onMount(() => {
     if ($session.user && $session.user.jwt) {
       startStream();
+    }
+    if (
+      typeof window !== "undefined" &&
+      $session.user &&
+      !$session.user.doneTour
+    ) {
+      startProductTour();
     }
   });
 
