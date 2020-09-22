@@ -10,6 +10,7 @@
   let team_id = null;
   let slackChannel = "";
   let projectName = "";
+  let slackTeamId;
 
   onMount(async () => {
     await update();
@@ -18,6 +19,11 @@
   const update = async () => {
     ({ team_id, slackChannelName: slackChannel, name: projectName } = await get(
       `/projects/${id}`,
+      $session.user && $session.user.jwt
+    ));
+
+    ({ slackTeamId } = await get(
+      `/teams/${team_id}`,
       $session.user && $session.user.jwt
     ));
   };
@@ -90,24 +96,26 @@
         <SubmitButton handler={changeProjectName}>Save</SubmitButton>
       </form>
     </div>
-    <h3>Slack</h3>
-    <div class="panel">
-      <form>
-        <fieldset>
-          <label for="slackChannel">Slack channel name</label>
-          <input
-            bind:value={slackChannel}
-            id="slackChannel"
-            pattern={'^[a-z0-9][a-z0-9_-]{1,79}$'}
-            type="text" />
-          <div class="warning">
-            Careful! The channel cannot have the same name as your Slack
-            workspace.
-          </div>
-        </fieldset>
-        <SubmitButton handler={changeSlackChannel}>Save</SubmitButton>
-      </form>
-    </div>
+    {#if slackTeamId}
+      <h3>Slack</h3>
+      <div class="panel">
+        <form>
+          <fieldset>
+            <label for="slackChannel">Slack channel name</label>
+            <input
+              bind:value={slackChannel}
+              id="slackChannel"
+              pattern={'^[a-z0-9][a-z0-9_-]{1,79}$'}
+              type="text" />
+            <div class="warning">
+              Careful! The channel cannot have the same name as your Slack
+              workspace.
+            </div>
+          </fieldset>
+          <SubmitButton handler={changeSlackChannel}>Save</SubmitButton>
+        </form>
+      </div>
+    {/if}
     <h3>Danger zone</h3>
     <button on:click={deleteProject} class="button-danger">
       Delete project

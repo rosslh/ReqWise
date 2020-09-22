@@ -88,6 +88,7 @@ module.exports = async function (fastify, opts) {
           name: { type: "string" },
           description: { type: "string" },
           isAdmin: { type: "boolean" },
+          slackTeamId: { type: "string" }
         },
         required: ["id", "name", "description", "isAdmin"],
       },
@@ -107,6 +108,7 @@ module.exports = async function (fastify, opts) {
           "team.description as description",
           "account_team.isAdmin as isAdmin",
           "team.id as id",
+          "team.slackTeamId as slackTeamId"
         )
         .where("team.id", request.params.teamId)
         .join("account_team", {
@@ -1080,6 +1082,40 @@ module.exports = async function (fastify, opts) {
       )[0];
     }
   );
+
+  const deleteTeamSlackSchema = {
+    body: {},
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        teamId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+        "Content-Type": { type: "string" },
+      },
+      required: ["Authorization", "Content-Type"],
+    },
+    response: {},
+  };
+
+  fastify.delete(
+    "/:teamId/slack",
+    {
+      preValidation: [fastify.authenticate, fastify.isTeamAdmin],
+      schema: deleteTeamSlackSchema,
+    },
+    async function (request, reply) {
+      await fastify
+        .knex("team")
+        .update({ slackTeamName: null, slackTeamId: null, slackAccessToken: null, slackBotUserId: null })
+        .where("id", request.params.teamId);
+      return ["success"];
+    });
 
   const postProjectTemplatesSchema = {
     queryString: {},

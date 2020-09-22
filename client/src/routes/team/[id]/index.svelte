@@ -8,9 +8,18 @@
       `/teams/${params.id}/projects`,
       user && user.jwt
     );
-    const { name, description, isAdmin } = team;
+    const { name, description, isAdmin, slackTeamId } = team;
     const title = name;
-    return { name, title, description, isAdmin, id: params.id, user, projects };
+    return {
+      name,
+      title,
+      description,
+      isAdmin,
+      id: params.id,
+      user,
+      projects,
+      slackTeamId,
+    };
   }
 </script>
 
@@ -39,6 +48,7 @@
   export let description = "";
   export let isAdmin = false;
   export let title = "";
+  export let slackTeamId;
 
   export let projects;
 
@@ -52,7 +62,7 @@
 
   const update = async () => {
     get(`/teams/${id}`, user && user.jwt).then((r) => {
-      ({ name, description, isAdmin } = r);
+      ({ name, description, isAdmin, slackTeamId } = r);
       title = name;
     });
     get(`/teams/${id}/projects`, user && user.jwt).then((r) => {
@@ -123,6 +133,11 @@
   const deleteTemplate = async (template) => {
     modalContent.set(DeleteTemplateModal);
     modalProps.set({ update, template });
+  };
+
+  const disableSlackIntegration = async () => {
+    await del(`/teams/${id}/slack`, $session.user && $session.user.jwt);
+    await update();
   };
 </script>
 
@@ -391,16 +406,24 @@
   {#if isAdmin}
     <h2>Integrations</h2>
     <div class="panel compact">
-      <a
-        href={`https://slack.com/oauth/v2/authorize?redirect_uri=${encodeURIComponent(`https://reqwise.com/team/${id}/slack/confirm`)}&scope=${process.env.REQWISE_SLACK_SCOPES}&client_id=${process.env.REQWISE_SLACK_CLIENT_ID}`}>
-        <img
-          alt="Add to Slack"
-          height="40"
-          width="139"
-          src="https://platform.slack-edge.com/img/add_to_slack.png"
-          srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x,
+      {#if !slackTeamId}
+        <a
+          href={`https://slack.com/oauth/v2/authorize?redirect_uri=${encodeURIComponent(`https://reqwise.com/team/${id}/slack/confirm`)}&scope=${process.env.REQWISE_SLACK_SCOPES}&client_id=${process.env.REQWISE_SLACK_CLIENT_ID}`}>
+          <img
+            alt="Add to Slack"
+            height="40"
+            width="139"
+            src="https://platform.slack-edge.com/img/add_to_slack.png"
+            srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x,
           https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-      </a>
+        </a>
+      {:else}
+        <button
+          on:click={disableSlackIntegration}
+          class="button button-danger button-outline">
+          Remove Slack
+        </button>
+      {/if}
     </div>
     <h2>Danger Zone</h2>
     <div class="panel compact">
