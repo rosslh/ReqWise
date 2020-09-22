@@ -79,7 +79,9 @@
         {/await}
       </fieldset>
       <fieldset>
-        <SubmitButton id="saveQuestionnaire" handler={inviteUserFromDropdown}>
+        <SubmitButton
+          id="saveQuestionnaireDropdown"
+          handler={inviteUserFromDropdown}>
           Send email invite
         </SubmitButton>
       </fieldset>
@@ -129,6 +131,7 @@
   {/await}
 {/if}
 <button
+  data-cy="toggleShowForm"
   class="button button-outline button-secondary"
   on:click={() => {
     addNewStakeholder = !addNewStakeholder;

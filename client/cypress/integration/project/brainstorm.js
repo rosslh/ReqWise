@@ -1,4 +1,4 @@
-describe('Features page', () => {
+describe('Brainstorm page', () => {
   before(() => {
     cy.goToProject();
     cy.contains('a', "Brainstorm").click();
@@ -84,7 +84,8 @@ describe('Features page', () => {
 
   it('can share with existing user', () => {
     cy.get('button[data-cy="shareQuestionnaire"]').click();
-    cy.contains("h3", "Share questionnaire");
+    cy.contains("h3", "Share with Stakeholder");
+    cy.get('button[data-cy="toggleShowForm"]').click();
     cy.get("#inviteeEmail").click().type("test.stakeholder@reqwise.com"); // test.stakeholder account already exists (see seed script)
     cy.get("#saveQuestionnaire").click();
     cy.waitForSpinner();
@@ -94,7 +95,8 @@ describe('Features page', () => {
   it('can share with new user', () => {
     goToQuestionnaireAsOwner();
     cy.get('button[data-cy="shareQuestionnaire"]').click();
-    cy.contains("h3", "Share questionnaire");
+    cy.contains("h3", "Share with Stakeholder");
+    cy.get('button[data-cy="toggleShowForm"]').click();
     cy.get("#inviteeEmail").click().type("test.new@reqwise.com"); // test.new doesn't exist yet (see seed script)
     cy.get("#saveQuestionnaire").click();
     cy.waitForSpinner();
@@ -163,7 +165,7 @@ describe('Features page', () => {
     cy.get('input#isPublic').click();
     cy.get('#saveQuestionnaire').click();
     cy.waitForSpinner();
-    cy.contains('[data-cy="viewPublic"]', "View public questionnaire");
+    cy.contains('[data-cy="viewPublic"]', "View public");
   });
 
   it('anonymous user can see public questionnaire', () => {

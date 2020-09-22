@@ -1,4 +1,4 @@
-describe('Features page', () => {
+describe('Project features page', () => {
   before(() => {
     cy.goToProject();
     cy.contains('a', "Features").click();
