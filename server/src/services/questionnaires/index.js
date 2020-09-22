@@ -301,4 +301,37 @@ module.exports = async function (fastify, opts) {
       return ["success"]
     }
   );
+
+  const getQuestionnaireInvitesSchema = {
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        questionnaireId: { type: "number" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: [],
+    },
+    response: {},
+  };
+  fastify.get(
+    "/:questionnaireId/invites",
+    {
+      preValidation: [fastify.allowAnonIfPublic],
+      schema: getQuestionnaireInvitesSchema,
+    },
+    async function (request, reply) {
+      return await fastify.knex
+        .from("brainstormInvite")
+        .select("*")
+        .where({
+          "brainstormForm_id": request.params.questionnaireId
+        });
+    }
+  );
 };
