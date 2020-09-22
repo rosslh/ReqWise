@@ -16,6 +16,7 @@
   import DeleteUserclassModal from "./DeleteUserclassModal.svelte";
   import EditUserclassModal from "./EditUserclassModal.svelte";
   import MakeDraftModal from "./MakeDraftModal.svelte";
+  import UndraftModal from "./UndraftModal.svelte";
   import StakeholderStatus from "./StakeholderStatus.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
@@ -73,6 +74,15 @@
       update,
     });
   };
+
+  const undraft = () => {
+    modalContent.set(UndraftModal);
+    modalProps.set({
+      entityId: userclassId,
+      entityType: "userclass",
+      update,
+    });
+  };
 </script>
 
 <style>
@@ -104,6 +114,7 @@
 
   div.userclassHeader .right {
     display: flex;
+    align-items: center;
   }
 
   .footer {
@@ -240,16 +251,28 @@
           Requirements
         </a>
       {/if}
-      {#if !userclass.is_draft && !userclass.is_baseline && scopes.includes('member')}
-        <button
-          id="makeDraftButton"
-          on:click={makeDraft}
-          class="button-outline button-small button-secondary button-clear">
-          <div class="iconWrapper">
-            <FaRegEdit />
-          </div>
-          Convert to draft
-        </button>
+      {#if !userclass.is_baseline && scopes.includes('member')}
+        {#if !userclass.is_draft}
+          <button
+            id="makeDraftButton"
+            on:click={makeDraft}
+            class="button-outline button-small button-secondary button-clear">
+            <div class="iconWrapper">
+              <FaRegEdit />
+            </div>
+            Convert to draft
+          </button>
+        {:else}
+          <button
+            id="undraftButton"
+            on:click={undraft}
+            class="button-outline button-small button-secondary button-clear">
+            <div class="iconWrapper">
+              <FaRegEdit />
+            </div>
+            Undraft
+          </button>
+        {/if}
       {/if}
       {#if showEditButtons}
         <button

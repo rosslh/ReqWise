@@ -9,7 +9,7 @@
   export let update;
   export let file;
 
-  let { name, description, id, url, is_draft } = file;
+  let { name, description, id, url } = file;
 
   $: save = async () => {
     await put(
@@ -18,7 +18,6 @@
         name,
         description,
         url,
-        is_draft,
       },
       $session.user && $session.user.jwt
     );
@@ -37,12 +36,6 @@
   })();
 </script>
 
-<style>
-  .secondary {
-    color: var(--secondaryText);
-  }
-</style>
-
 <h3>Update {filetype} details</h3>
 <form>
   <fieldset>
@@ -59,12 +52,5 @@
       <input type="url" id="url" bind:value={url} />
     </fieldset>
   {/if}
-  <fieldset>
-    <input type="checkbox" id="isDraft" bind:checked={is_draft} />
-    <label class="label-inline" for="isDraft">
-      File is a draft
-      <span class="secondary">(not ready for stakeholder review)</span>
-    </label>
-  </fieldset>
   <SubmitButton className="button-caution" handler={save}>Save</SubmitButton>
 </form>

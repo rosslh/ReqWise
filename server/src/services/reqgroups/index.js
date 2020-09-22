@@ -114,7 +114,7 @@ module.exports = async function (fastify, opts) {
     async function (request, reply) {
       const { name, isPrioritized, is_draft } = request.body;
 
-      if (!is_draft) {
+      if (typeof is_draft !== "undefined" && !is_draft) {
         // approve all requirements
         const reqgroup = await fastify.getReqgroup(request.params.reqgroupId);
         await Promise.all(reqgroup.requirements.map(async r => {

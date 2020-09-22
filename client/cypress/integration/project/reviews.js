@@ -33,11 +33,10 @@ describe('Reviews', () => {
 
   const undraft = () => {
     cy.get('.reqgroup[data-cy="Draft feature"]').within(() => {
-      cy.get('#editReqgroupButton').click();
+      cy.get('[data-cy="undraftButton"]').click();
     });
-    cy.contains('h3', "Update feature");
-    cy.get('#isDraft').click();
-    cy.get('#updateReqgroupButton').click();
+    cy.contains('h3', "Undraft");
+    cy.get('#undraftButton').click();
     cy.waitForSpinner();
     cy.get('.ribbon[data-cy="Pending"]').should("exist");
   };

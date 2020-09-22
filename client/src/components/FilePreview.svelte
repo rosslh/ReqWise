@@ -19,6 +19,7 @@
   import EditFileDetailsModal from "./EditFileDetailsModal.svelte";
   import DeleteFileModal from "./DeleteFileModal.svelte";
   import MakeDraftModal from "./MakeDraftModal.svelte";
+  import UndraftModal from "./UndraftModal.svelte";
   import UploadFileModal from "./UploadFileModal.svelte";
   import StakeholderStatus from "./StakeholderStatus.svelte";
 
@@ -71,6 +72,15 @@
 
   const makeDraft = () => {
     modalContent.set(MakeDraftModal);
+    modalProps.set({
+      entityId: fileId,
+      entityType: "file",
+      update,
+    });
+  };
+
+  const undraft = () => {
+    modalContent.set(UndraftModal);
     modalProps.set({
       entityId: fileId,
       entityType: "file",
@@ -292,16 +302,28 @@
         Requirements
       </a>
     {/if}
-    {#if !file.is_draft && !file.is_baseline && scopes.includes('member')}
-      <button
-        id="makeDraftButton"
-        on:click={makeDraft}
-        class="button-outline button-small button-secondary button-clear">
-        <div class="iconWrapper">
-          <FaRegEdit />
-        </div>
-        Convert to draft
-      </button>
+    {#if !file.is_baseline && scopes.includes('member')}
+      {#if !file.is_draft}
+        <button
+          id="makeDraftButton"
+          on:click={makeDraft}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegEdit />
+          </div>
+          Convert to draft
+        </button>
+      {:else}
+        <button
+          id="makeDraftButton"
+          on:click={undraft}
+          class="button-outline button-small button-secondary button-clear">
+          <div class="iconWrapper">
+            <FaRegEdit />
+          </div>
+          Undraft
+        </button>
+      {/if}
     {/if}
     {#if showEditButtons}
       <button

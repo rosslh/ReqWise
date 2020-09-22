@@ -12,7 +12,7 @@
   export let update;
   export let userclass;
 
-  let { name, description, id, persona, importance, is_draft } = userclass;
+  let { name, description, id, persona, importance } = userclass;
 
   const importanceOptions = [
     "favored",
@@ -31,7 +31,6 @@
         description,
         persona,
         importance: newImportance.value,
-        is_draft,
       },
       $session.user && $session.user.jwt
     );
@@ -82,13 +81,6 @@
       isCreatable={true}
       items={importanceOptions}
       bind:selectedValue={newImportance} />
-  </fieldset>
-  <fieldset>
-    <input type="checkbox" id="isDraft" bind:checked={is_draft} />
-    <label class="label-inline" for="isDraft">
-      User class is a draft <span class="secondary">(not ready for stakeholder
-        review)</span>
-    </label>
   </fieldset>
   <SubmitButton className="button-caution" handler={save}>Save</SubmitButton>
 </form>

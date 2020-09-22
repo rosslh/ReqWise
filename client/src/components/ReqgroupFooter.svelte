@@ -7,6 +7,7 @@
   import { modalContent, modalProps } from "../stores.js";
   import AddRequirementModal from "./AddRequirementModal.svelte";
   import MakeDraftModal from "./MakeDraftModal.svelte";
+  import UndraftModal from "./UndraftModal.svelte";
   import UnlinkReqgroupModal from "./UnlinkReqgroupModal.svelte";
 
   import DeleteFeatureModal from "../components/DeleteFeatureModal.svelte";
@@ -45,6 +46,15 @@
 
   const makeDraft = () => {
     modalContent.set(MakeDraftModal);
+    modalProps.set({
+      entityId: reqgroupId,
+      entityType: "reqgroup",
+      update: updateReqgroup,
+    });
+  };
+
+  const undraft = () => {
+    modalContent.set(UndraftModal);
     modalProps.set({
       entityId: reqgroupId,
       entityType: "reqgroup",
@@ -130,17 +140,30 @@
       </a>
     {/if}
     {#if !reqgroup.is_baseline}
-      {#if !reqgroup.is_draft && scopes.includes('member')}
-        <button
-          data-cy="makeDraftButton"
-          id="makeDraftButton"
-          on:click={makeDraft}
-          class="button-outline button-small button-secondary button-clear">
-          <div class="iconWrapper">
-            <FaRegEdit />
-          </div>
-          Convert to draft
-        </button>
+      {#if scopes.includes('member')}
+        {#if !reqgroup.is_draft}
+          <button
+            data-cy="makeDraftButton"
+            id="makeDraftButton"
+            on:click={makeDraft}
+            class="button-outline button-small button-secondary button-clear">
+            <div class="iconWrapper">
+              <FaRegEdit />
+            </div>
+            Convert to draft
+          </button>
+        {:else}
+          <button
+            data-cy="undraftButton"
+            id="undraftButton"
+            on:click={undraft}
+            class="button-outline button-small button-secondary button-clear">
+            <div class="iconWrapper">
+              <FaRegEdit />
+            </div>
+            Undraft
+          </button>
+        {/if}
       {/if}
       {#if reqgroup.is_draft && scopes.includes('member')}
         <button
