@@ -267,13 +267,36 @@ module.exports = async function (fastify, opts) {
         );
       }
 
-      await fastify
-        .knex("stakeholderInvite")
-        .insert({
-          inviteeEmail,
-          inviter_id: request.user.id,
-          project_id
-        });
+      const alreadyInvitedAsStakeholder = (
+        await fastify.knex
+          .from("stakeholderInvite")
+          .select("stakeholderInvite.id")
+          .where({
+            inviteeEmail,
+            project_id
+          })
+      ).length;
+
+      const alreadyStakeholder = (
+        await fastify.knex
+          .from("stakeholder_project")
+          .select("stakeholder_project.id")
+          .join("account", "account.id", "stakeholder_project.account_id")
+          .where({
+            "account.email": inviteeEmail,
+            project_id
+          })
+      ).length;
+
+      if (!alreadyStakeholder && !alreadyInvitedAsStakeholder) {
+        await fastify
+          .knex("stakeholderInvite")
+          .insert({
+            inviteeEmail,
+            inviter_id: request.user.id,
+            project_id
+          });
+      }
 
       return ["success"]
     }

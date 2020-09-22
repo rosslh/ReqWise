@@ -17,6 +17,8 @@
   import ShareQuestionnaireModal from "../../../../../../components/ShareQuestionnaireModal.svelte";
   import BrainstormPrompt from "../../../../../../components/BrainstormPrompt.svelte";
   import Ribbon from "../../../../../../components/Ribbon.svelte";
+  import IoIosShareAlt from "svelte-icons/io/IoIosShareAlt.svelte";
+  import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
 
   export let questionnaire;
 
@@ -65,6 +67,15 @@
     margin-left: 1rem;
     margin-right: 6rem;
   }
+
+  .buttonsWrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .buttonsWrapper .button ~ .button {
+    margin-left: 0.25rem;
+  }
 </style>
 
 <div class="contentWrapper">
@@ -85,37 +96,43 @@
         width="3.75rem" />
     {/if}
   </div>
-  {#if questionnaire.is_draft}
+  <div class="buttonsWrapper">
+    {#if questionnaire.is_draft}
+      <button
+        data-cy="addPrompt"
+        on:click={addPrompt}
+        class="button button-success">
+        Add prompt
+      </button>
+    {/if}
     <button
-      data-cy="addPrompt"
-      on:click={addPrompt}
-      class="button button-success">
-      Add prompt
-    </button>
-  {/if}
-  <button
-    data-cy="questionnaireSettings"
-    on:click={showSettingsModal}
-    class="button button-secondary button-outline">
-    Settings
-  </button>
-  {#if !questionnaire.is_draft}
-    <button
-      data-cy="shareQuestionnaire"
-      on:click={shareQuestionnaire}
+      data-cy="questionnaireSettings"
+      on:click={showSettingsModal}
       class="button button-secondary button-outline">
-      Share
+      <span class="iconWrapper">
+        <IoIosSettings />
+      </span> Settings
     </button>
-  {/if}
-  {#if questionnaire.is_public}
-    <a
-      data-cy="viewPublic"
-      rel="prefetch"
-      href={`/public-form/${$page.params.formId}`}
-      class="button button-secondary button-outline">
-      View public questionnaire
-    </a>
-  {/if}
+    {#if !questionnaire.is_draft}
+      <button
+        data-cy="shareQuestionnaire"
+        on:click={shareQuestionnaire}
+        class="button button-secondary button-outline">
+        <span class="iconWrapper">
+          <IoIosShareAlt />
+        </span> Share
+      </button>
+    {/if}
+    {#if questionnaire.is_public}
+      <a
+        data-cy="viewPublic"
+        rel="prefetch"
+        href={`/public-form/${$page.params.formId}`}
+        class="button button-secondary button-outline">
+        View public
+      </a>
+    {/if}
+  </div>
 </section>
 <section class="contentWrapper">
   {#each prompts as prompt (prompt.id)}
