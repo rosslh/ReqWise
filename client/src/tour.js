@@ -1,27 +1,20 @@
-export const showTourStage = (introjs) => {
-  const stages = [
-    {
-      urlRegex: /\/team\/.*/,
-      steps: teamPage
-    },
-    {
-      urlRegex: /\/project\/.*/,
-      steps: projectPage
-    },
-  ];
+export const showTourStage = (introjs, stage) => {
+  const stages = {
+    "project": projectSteps,
+    "team": teamSteps
+  }
 
-  const stage = stages.find(s => s.urlRegex.test(location.pathname));
+  const steps = stages[stage];
 
-  if (stage) {
-    introjs.setOptions({ steps: stage.steps, showStepNumbers: false });
+  if (steps) {
+    introjs.setOptions({ steps, showStepNumbers: false });
     introjs.start();
   }
 
 }
 
-const teamPage = [
+const teamSteps = [
   {
-    element: '[data-introjs="teamHeading"]',
     intro: 'This is your team. A team can have multiple projects ongoing.',
     position: 'bottom'
   },
@@ -37,9 +30,8 @@ const teamPage = [
   },
 ];
 
-const projectPage = [
+const projectSteps = [
   {
-    element: '[data-introjs="projectDashboardHeader"]',
     intro: 'This is Your Project. You can create questionnaires, define requirements, upload designs, and receive feedback.',
     position: 'bottom'
   },

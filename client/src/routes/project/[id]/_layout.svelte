@@ -35,6 +35,7 @@
     media,
   } from "../../../stores.js";
   import { stream } from "../../../api.js";
+  import { showTourStage } from "../../../tour.js";
 
   export let project;
 
@@ -72,9 +73,19 @@
     }
   };
 
-  onMount(() => async () => {
+  onMount(() => {
     if ($session.user && $session.user.jwt) {
       startStream();
+    }
+    if (
+      typeof window !== "undefined" &&
+      $session.user &&
+      !$session.user.doneProjectTour
+    ) {
+      import("intro.js").then(({ default: Intro }) => {
+        const introjs = Intro();
+        showTourStage(introjs, "project");
+      });
     }
   });
 

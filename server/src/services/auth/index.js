@@ -28,7 +28,8 @@ module.exports = async (fastify, opts) => {
           userId: { type: "string" },
           theme: { type: "string" },
           imageName: { type: "string" },
-          doneTour: { type: "boolean" }
+          doneProjectTour: { type: "boolean" },
+          doneTeamTour: { type: "boolean" },
         },
       },
       401: {
@@ -45,7 +46,7 @@ module.exports = async (fastify, opts) => {
       const { email, password } = request.body;
       const account = await fastify.knex
         .from("account")
-        .select("password_hash", "name", "id", "is_verified", "theme", "imageName", "doneTour")
+        .select("password_hash", "name", "id", "is_verified", "theme", "imageName", "doneProjectTour", "doneTeamTour")
         .where("email", email.toLowerCase())
         .first();
 
@@ -55,13 +56,14 @@ module.exports = async (fastify, opts) => {
       }
 
       if (bcrypt.compareSync(password, account.password_hash)) {
-        const jwtContent = { email: email.toLowerCase(), name: account.name, id: account.id, imageName: account.imageName, doneTour: account.doneTour };
+        const jwtContent = { email: email.toLowerCase(), name: account.name, id: account.id, imageName: account.imageName, doneProjectTour: account.doneProjectTour, doneTeamTour: account.doneTeamTour };
         return {
           token: fastify.jwt.sign(jwtContent),
           userId: fastify.obfuscateId(account.id),
           theme: account.theme,
           imageName: account.imageName,
-          doneTour: account.doneTour
+          doneProjectTour: account.doneProjectTour,
+          doneTeamTour: account.doneTeamTour,
         };
       } else {
         reply.code(401);

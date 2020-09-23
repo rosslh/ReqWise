@@ -27,10 +27,12 @@
   import { stores, goto } from "@sapper/app";
   import { format } from "date-fns";
   import FileSaver from "file-saver";
+  import { onMount } from "svelte";
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
 
   import { modalContent, modalProps } from "../../../stores.js";
   import { get, del, post } from "../../../api.js";
+  import { showTourStage } from "../../../tour.js";
   const { session } = stores();
 
   import AddProjectModal from "../../../components/AddProjectModal.svelte";
@@ -139,6 +141,19 @@
     await del(`/teams/${id}/slack`, $session.user && $session.user.jwt);
     await update();
   };
+
+  onMount(() => {
+    if (
+      typeof window !== "undefined" &&
+      $session.user &&
+      !$session.user.doneTeamTour
+    ) {
+      import("intro.js").then(({ default: Intro }) => {
+        const introjs = Intro();
+        showTourStage(introjs, "team");
+      });
+    }
+  });
 </script>
 
 <style>
