@@ -87,6 +87,26 @@
       update,
     });
   };
+
+  let isCollapsed = true;
+
+  const toggleCollapsed = () => {
+    isCollapsed = !isCollapsed;
+  };
+
+  let imageElement;
+  let imageHeight = 300;
+  $: {
+    if (isCollapsed) {
+      imageHeight = 300;
+    } else if (imageElement) {
+      imageHeight = imageElement.naturalHeight;
+    }
+  }
+
+  const fileUrl = `https://storage.googleapis.com/user-file-storage/${file.fileName}`;
+
+  $: showCollapseButton = imageElement && imageElement.naturalHeight > 300;
 </script>
 
 <style>
@@ -100,21 +120,29 @@
 
   .diagramWrapper {
     position: relative;
-    min-height: 15rem;
-    max-height: 30rem;
+    height: auto;
+    min-height: 300px;
     width: 100%;
     background-color: var(--background2);
-    padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     border-bottom: 0.1rem solid var(--borderColor);
+    transition: 0.2s ease;
   }
 
   :global(.diagramWrapper svg) {
-    max-height: 30rem;
+    /* max-height: 300px; */
     max-width: 100%;
+  }
+
+  .diagramWrapper button.collapseButton {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1 !important;
   }
 
   .textContent {
@@ -181,8 +209,8 @@
   }
 
   div.diagramWrapper img.uploadedImage {
-    max-height: inherit;
-    max-width: inherit;
+    /* max-height: inherit; */
+    max-width: 100%;
   }
 
   h3 a {
@@ -196,7 +224,12 @@
 </style>
 
 <div class="filePreview">
-  <div class="diagramWrapper">
+  <div
+    class="diagramWrapper"
+    style={file.type === 'upload' && isImageFile(file.fileName) ? `
+      max-height: ${imageHeight}px;
+      ${showCollapseButton ? 'align-items: flex-start' : ''};
+    ` : ''}>
     {#if file.type === 'diagram'}
       <div class="fileButtonWrapper">
         {#if showEditButtons}
@@ -218,11 +251,7 @@
       </a>
     {:else}
       <div class="fileButtonWrapper">
-        <a
-          title="Download"
-          href={`https://storage.googleapis.com/user-file-storage/${file.fileName}`}
-          download
-          class="button fileButton">
+        <a title="Download" href={fileUrl} download class="button fileButton">
           <div class="fileIconWrapper">
             <MdFileDownload />
           </div>
@@ -240,16 +269,28 @@
       </div>
       {#if isImageFile(file.fileName)}
         <img
+          bind:this={imageElement}
           class="uploadedImage"
-          src={`https://storage.googleapis.com/user-file-storage/${file.fileName}`}
+          src={fileUrl}
           alt={file.name} />
+        {#if showCollapseButton}
+          {#if isCollapsed}
+            <button
+              on:click={toggleCollapsed}
+              class="collapseButton button button-small button-secondary">
+              Show full image
+            </button>
+          {/if}
+          {#if !isCollapsed}
+            <button
+              on:click={toggleCollapsed}
+              class="collapseButton button button-small button-secondary">
+              Hide
+            </button>
+          {/if}
+        {/if}
       {:else}
-        <a
-          target="_blank"
-          rel="noopener"
-          href={`https://storage.googleapis.com/user-file-storage/${file.fileName}`}>
-          View file
-        </a>
+        <a target="_blank" rel="noopener" href={fileUrl}> View file </a>
       {/if}
     {/if}
   </div>

@@ -8,14 +8,14 @@
   let iframeOptions = { title: title || "Diagram Editor", frameborder: 0 };
 
   const editor =
-    "https://www.draw.io/?embed=1&ui=min&spin=1&proto=json&configure=1";
+    "https://embed.diagrams.net/?embed=1&ui=min&spin=1&proto=json&configure=1";
 
   const edit = () => {
     const close = () => {
       window.removeEventListener("message", receive);
     };
 
-    const receive = async evt => {
+    const receive = async (evt) => {
       if (evt.data.length > 0) {
         const msg = JSON.parse(evt.data);
 
@@ -28,8 +28,8 @@
             JSON.stringify({
               action: "configure",
               config: {
-                defaultFonts: ["Humor Sans", "Helvetica", "Times New Roman"]
-              }
+                defaultFonts: ["Humor Sans", "Helvetica", "Times New Roman"],
+              },
             }),
             "*"
           );
@@ -52,7 +52,7 @@
               action: "export",
               format: "xmlsvg",
               xml: msg.xml,
-              spin: "Updating page"
+              spin: "Updating page",
             }),
             "*"
           );

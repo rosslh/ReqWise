@@ -43,7 +43,7 @@
 </script>
 
 <style lang="scss">
-  li.requirement > div.iconCell {
+  :global(li.requirement > div.iconCell) {
     border: none;
 
     .buttonIconWrapper {
