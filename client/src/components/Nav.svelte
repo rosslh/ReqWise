@@ -176,7 +176,7 @@
   }
 </style>
 
-<nav data-driver="navbar">
+<nav data-introjs="navbar">
   <div class="contentWrapper">
     {#if $page.path.includes('/project/')}
       <button

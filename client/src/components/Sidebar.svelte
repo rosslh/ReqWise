@@ -80,6 +80,7 @@
         <div class="separator">{item.newSection}</div>
       {/if}
       <a
+        data-introjs={`sidebar-${item.slug}`}
         rel="prefetch"
         href={`/project/${id}/${item.slug}`}
         class={`${tab === item.slug ? 'selected' : ''}`}>

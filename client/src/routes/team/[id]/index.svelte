@@ -172,7 +172,7 @@
   <title>{name} - ReqWise</title>
 </svelte:head>
 <div class="contentWrapper">
-  <div class="headingWrapper">
+  <div class="headingWrapper" data-introjs="teamHeading">
     <h1>{title}</h1>
     <button
       id="settingsButton"
@@ -183,42 +183,44 @@
       </span>
     </button>
   </div>
-  <h2>Projects</h2>
-  <div class="panel compact">
-    <table class="compact">
-      <thead>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each projects as project (project.id)}
+  <div data-introjs="projectWrapper">
+    <h2>Projects</h2>
+    <div class="panel compact">
+      <table class="compact">
+        <thead>
           <tr>
-            <td>
-              <a
-                rel="prefetch"
-                data-cy="projectLink"
-                class="projectLink"
-                href={`/project/${project.id}/dashboard`}>
-                {project.name}
-              </a>
-            </td>
+            <th>Name</th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-    {#if isAdmin}
-      <div>
-        <button
-          class="button-create"
-          on:click={() => {
-            modalContent.set(AddProjectModal);
-            modalProps.set({ id, update });
-          }}>
-          Create project
-        </button>
-      </div>
-    {/if}
+        </thead>
+        <tbody>
+          {#each projects as project (project.id)}
+            <tr>
+              <td>
+                <a
+                  rel="prefetch"
+                  data-cy="projectLink"
+                  class="projectLink"
+                  href={`/project/${project.id}/dashboard`}>
+                  {project.name}
+                </a>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+      {#if isAdmin}
+        <div>
+          <button
+            class="button-create"
+            on:click={() => {
+              modalContent.set(AddProjectModal);
+              modalProps.set({ id, update });
+            }}>
+            Create project
+          </button>
+        </div>
+      {/if}
+    </div>
   </div>
   <h2>Project templates</h2>
   <div class="panel compact">
@@ -351,57 +353,59 @@
       <p style="color: var(--red)">{error.message}</p>
     {/await}
   </div>
-  <h3>Invites</h3>
-  <div class="panel compact">
-    {#await invites}
-      <Skeleton rows={3} />
-    {:then result}
-      <table class="compact">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Is admin</th>
-            {#if isAdmin}
-              <th />
-            {/if}
-          </tr>
-        </thead>
-        <tbody>
-          {#each result as invite (invite.id)}
-            <tr class="inviteeRow">
-              <td class="inviteeEmail">{invite.inviteeEmail}</td>
-              <td>{invite.isAdmin}</td>
+  <div data-introjs="inviteWrapper">
+    <h3>Invites</h3>
+    <div class="panel compact">
+      {#await invites}
+        <Skeleton rows={3} />
+      {:then result}
+        <table class="compact">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Is admin</th>
               {#if isAdmin}
-                <td>
-                  <button
-                    class="deleteInviteButton button-danger button-small
-                      button-outline"
-                    style="margin: 0;"
-                    on:click={() => deleteInvite(invite.id)}>
-                    Delete invite
-                  </button>
-                </td>
+                <th />
               {/if}
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    {:catch error}
-      <p style="color: var(--red)">{error.message}</p>
-    {/await}
-    {#if isAdmin}
-      <div>
-        <button
-          id="inviteMemberButton"
-          on:click={() => {
-            modalContent.set(InviteTeamMemberModal);
-            modalProps.set({ id, update });
-          }}
-          class="button-create">
-          Invite member
-        </button>
-      </div>
-    {/if}
+          </thead>
+          <tbody>
+            {#each result as invite (invite.id)}
+              <tr class="inviteeRow">
+                <td class="inviteeEmail">{invite.inviteeEmail}</td>
+                <td>{invite.isAdmin}</td>
+                {#if isAdmin}
+                  <td>
+                    <button
+                      class="deleteInviteButton button-danger button-small
+                        button-outline"
+                      style="margin: 0;"
+                      on:click={() => deleteInvite(invite.id)}>
+                      Delete invite
+                    </button>
+                  </td>
+                {/if}
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {:catch error}
+        <p style="color: var(--red)">{error.message}</p>
+      {/await}
+      {#if isAdmin}
+        <div>
+          <button
+            id="inviteMemberButton"
+            on:click={() => {
+              modalContent.set(InviteTeamMemberModal);
+              modalProps.set({ id, update });
+            }}
+            class="button-create">
+            Invite member
+          </button>
+        </div>
+      {/if}
+    </div>
   </div>
   {#if isAdmin}
     <h2>Integrations</h2>

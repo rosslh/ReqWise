@@ -7,11 +7,11 @@
   import Stylesheet from "../components/Stylesheet.svelte";
   import { stream } from "../api.js";
   import { unreadAlerts } from "../stores.js";
-  import { startProductTour } from "../tour.js";
+  import { showTourStage } from "../tour.js";
   import { onMount, onDestroy } from "svelte";
-  import "driver.js/dist/driver.min.css";
-
+  import "intro.js/introjs.css";
   const { session, preloading } = stores();
+
   NProgress.configure({
     minimum: 0.25,
     trickleSpeed: 120,
@@ -50,12 +50,11 @@
     if ($session.user && $session.user.jwt) {
       startStream();
     }
-    if (
-      typeof window !== "undefined" &&
-      $session.user &&
-      !$session.user.doneTour
-    ) {
-      startProductTour();
+    if (typeof window !== "undefined") {
+      import("intro.js").then(({ default: Intro }) => {
+        const introjs = Intro();
+        showTourStage(introjs);
+      });
     }
   });
 
@@ -99,7 +98,7 @@
     font-size: 1.4rem;
   }
 
-  div.environmentBanner:hover {
+  /* div.environmentBanner:hover {
     opacity: 0;
   }
 
@@ -109,7 +108,7 @@
 
   div.environmentBanner.dev {
     background-color: var(--red);
-  }
+  } */
 </style>
 
 <svelte:head>
