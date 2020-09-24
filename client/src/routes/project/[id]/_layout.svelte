@@ -1,5 +1,5 @@
 <script context="module">
-  import { get } from "../../../api.js";
+  import { get, put } from "../../../api.js";
   export async function preload({ params, path }, { user }) {
     if (!user) {
       return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
@@ -26,7 +26,7 @@
   import Sidebar from "../../../components/Sidebar.svelte";
   import MobileMenu from "../../../components/MobileMenu.svelte";
   import { onMount, onDestroy, setContext } from "svelte";
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   import {
     menuHidden,
     reqgroupsToUpdate,
@@ -73,6 +73,27 @@
     }
   };
 
+  const completeProjectTour = async () => {
+    await put(
+      `/users/${$session.user.id}/settings`,
+      {
+        doneProjectTour: true,
+      },
+      $session.user && $session.user.jwt
+    );
+
+    const result = await fetch("auth/updateSettings", {
+      method: "PUT",
+      credentials: "include",
+      body: JSON.stringify({ doneProjectTour: true }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((r) => r.json());
+    $session.user = { ...$session.user, ...result };
+    goto($page.path, { replaceState: true });
+  };
+
   onMount(() => {
     if ($session.user && $session.user.jwt) {
       startStream();
@@ -80,11 +101,12 @@
     if (
       typeof window !== "undefined" &&
       $session.user &&
-      !$session.user.doneProjectTour
+      !$session.user.doneProjectTour &&
+      project.scopes.includes("member")
     ) {
       import("intro.js").then(({ default: Intro }) => {
         const introjs = Intro();
-        showTourStage(introjs, "project", () => alert("done"));
+        showTourStage(introjs, "project", completeProjectTour);
       });
     }
   });

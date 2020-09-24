@@ -32,6 +32,8 @@
       id: data.userId,
       theme: data.theme,
       imageName: data.imageName,
+      doneTeamTour: data.doneTeamTour,
+      doneProjectTour: data.doneProjectTour,
     };
 
     if ($page.query.redirect) {

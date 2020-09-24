@@ -121,7 +121,7 @@ module.exports = async (fastify, opts) => {
             .update({
               name,
               is_verified: true,
-              verification_token: null, // don't allow reseting with original token
+              verification_token: null, // don't allow resetting with original token
               password_hash: bcrypt.hashSync(password, 10),
             })
             .where("email", email.toLowerCase())
@@ -142,6 +142,8 @@ module.exports = async (fastify, opts) => {
         theme: { type: "string" },
         file: { type: "string" },
         fileName: { type: "string" },
+        doneProjectTour: { type: "boolean" },
+        doneTeamTour: { type: "boolean" },
       },
     },
     queryString: {},
@@ -168,7 +170,9 @@ module.exports = async (fastify, opts) => {
           email: { type: "string" },
           theme: { type: "string" },
           file: { type: "string" },
-          fileName: { type: "string" }
+          fileName: { type: "string" },
+          doneProjectTour: { type: "boolean" },
+          doneTeamTour: { type: "boolean" },
         },
       },
     },
@@ -180,7 +184,7 @@ module.exports = async (fastify, opts) => {
       preValidation: [fastify.authenticate, fastify.isCorrectUser],
     },
     async function (request, reply) {
-      const { name, theme, file, fileName } = request.body;
+      const { name, theme, file, fileName, doneProjectTour, doneTeamTour } = request.body;
 
       let uploadedFileName;
 
@@ -233,10 +237,12 @@ module.exports = async (fastify, opts) => {
           .update({
             name,
             theme,
-            imageName: uploadedFileName
+            imageName: uploadedFileName,
+            doneProjectTour,
+            doneTeamTour
           })
           .where("id", request.user.id)
-          .returning(["name", "email", "theme", "imageName", "placeholderImage"])
+          .returning(["name", "email", "theme", "imageName", "placeholderImage", "doneProjectTour", "doneTeamTour"])
       )[0];
     }
   );

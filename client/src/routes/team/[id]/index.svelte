@@ -31,9 +31,9 @@
   import IoIosSettings from "svelte-icons/io/IoIosSettings.svelte";
 
   import { modalContent, modalProps } from "../../../stores.js";
-  import { get, del, post } from "../../../api.js";
+  import { get, del, post, put } from "../../../api.js";
   import { showTourStage } from "../../../tour.js";
-  const { session } = stores();
+  const { session, page } = stores();
 
   import AddProjectModal from "../../../components/AddProjectModal.svelte";
   import AddProjectTemplateModal from "../../../components/AddProjectTemplateModal.svelte";
@@ -142,6 +142,27 @@
     await update();
   };
 
+  const completeTeamTour = async () => {
+    await put(
+      `/users/${$session.user.id}/settings`,
+      {
+        doneTeamTour: true,
+      },
+      $session.user && $session.user.jwt
+    );
+
+    const result = await fetch("auth/updateSettings", {
+      method: "PUT",
+      credentials: "include",
+      body: JSON.stringify({ doneTeamTour: true }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((r) => r.json());
+    $session.user = { ...$session.user, ...result };
+    goto($page.path, { replaceState: true });
+  };
+
   onMount(() => {
     if (
       typeof window !== "undefined" &&
@@ -150,7 +171,7 @@
     ) {
       import("intro.js").then(({ default: Intro }) => {
         const introjs = Intro();
-        showTourStage(introjs, "team", () => alert("done"));
+        showTourStage(introjs, "team", completeTeamTour);
       });
     }
   });
