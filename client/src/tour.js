@@ -1,4 +1,4 @@
-export const showTourStage = (introjs, stage) => {
+export const showTourStage = (introjs, stage, callback) => {
   const stages = {
     "project": projectSteps,
     "team": teamSteps
@@ -9,6 +9,7 @@ export const showTourStage = (introjs, stage) => {
   if (steps) {
     introjs.setOptions({ steps, showStepNumbers: false });
     introjs.start();
+    introjs.oncomplete(callback);
   }
 
 }

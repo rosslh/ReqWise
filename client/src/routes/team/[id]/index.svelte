@@ -150,7 +150,7 @@
     ) {
       import("intro.js").then(({ default: Intro }) => {
         const introjs = Intro();
-        showTourStage(introjs, "team");
+        showTourStage(introjs, "team", () => alert("done"));
       });
     }
   });

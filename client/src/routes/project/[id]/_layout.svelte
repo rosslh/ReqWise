@@ -84,7 +84,7 @@
     ) {
       import("intro.js").then(({ default: Intro }) => {
         const introjs = Intro();
-        showTourStage(introjs, "project");
+        showTourStage(introjs, "project", () => alert("done"));
       });
     }
   });
