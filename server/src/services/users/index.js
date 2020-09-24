@@ -274,6 +274,8 @@ module.exports = async (fastify, opts) => {
           theme: { type: "string" },
           placeholderImage: { type: "string" },
           imageName: { type: "string" },
+          doneProjectTour: { type: "boolean" },
+          doneTeamTour: { type: "boolean" },
         },
       },
     },
@@ -288,7 +290,7 @@ module.exports = async (fastify, opts) => {
     async function (request, reply) {
       return await fastify
         .knex("account")
-        .select("name", "email", "theme", "placeholderImage", "imageName")
+        .select("name", "email", "theme", "placeholderImage", "imageName", "doneProjectTour", "doneTeamTour")
         .where("id", request.params.userId)
         .first();
     }

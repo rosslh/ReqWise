@@ -19,8 +19,20 @@ html body {
     background-color: var(--background1);
   }
 
-  .introjs-arrow {
+  .introjs-arrow[class^='top'], .introjs-arrow[class*=' top']{
+    border-bottom-color: var(--background1) !important;
+  }
+
+  .introjs-arrow[class^='right'], .introjs-arrow[class*=' right']{
+    border-left-color: var(--background1) !important;
+  }
+
+  .introjs-arrow[class^='bottom'], .introjs-arrow[class*=' bottom']{
     border-top-color: var(--background1) !important;
+  }
+
+  .introjs-arrow[class^='left'], .introjs-arrow[class*=' left']{
+    border-right-color: var(--background1) !important;
   }
 
   .introjs-helperLayer {

@@ -37,7 +37,7 @@
   $: currentImage = user.imageName;
 
   const refetchSettings = async () => {
-    const { imageName } = await get(
+    const { imageName, doneProjectTour, doneTeamTour } = await get(
       `/users/${$session.user.id}`,
       $session.user && $session.user.jwt
     );
@@ -45,17 +45,24 @@
     fetch("auth/updateSettings", {
       method: "PUT",
       credentials: "include",
-      body: JSON.stringify({ theme: theme.value, imageName }),
+      body: JSON.stringify({
+        theme: theme.value,
+        imageName,
+        doneProjectTour,
+        doneTeamTour,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((r) => r.json())
-      .then(({ imageName }) => {
+      .then(({ imageName, doneProjectTour, doneTeamTour }) => {
         $session.user = {
           ...$session.user,
           theme: theme.value,
           imageName,
+          doneProjectTour,
+          doneTeamTour,
         };
         goto("/account/settings", { replaceState: true });
       });
