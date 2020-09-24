@@ -9,7 +9,7 @@ module.exports = {
     !dev &&
     require("@fullhuman/postcss-purgecss")({
       content: ["./src/**/*.svelte", "./src/**/*.html"],
-      whitelist: ["nprogress", 'bar', 'peg', 'nprogress-custom-parent'], // progress bar is dynamically inserted
+      whitelist: ["nprogress", 'bar', 'peg', 'nprogress-custom-parent', 'introjs-tooltip', 'introjs-helperLayer', 'introjs-arrow', '.introjs-donebutton'], // dynamically inserted content
       defaultExtractor: (content) => content.match(/[A-Za-z0-9-_:/]+/g) || [],
     }),
     !dev && require("cssnano")({ preset: "default" }),

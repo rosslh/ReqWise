@@ -321,3 +321,11 @@ del {
 }
 
 /* End loading bar styles */
+
+/* Start intro.js styles */
+
+.introjs-donebutton {
+  color: #333 !important;
+}
+
+/* End intro.js styles */

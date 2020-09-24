@@ -14,4 +14,16 @@ html body {
     --secondaryText: #CBD5E0;
     --borderColor: #596579;
   }
+
+  .introjs-tooltip {
+    background-color: var(--background1);
+  }
+
+  .introjs-arrow {
+    border-top-color: var(--background1) !important;
+  }
+
+  .introjs-helperLayer {
+    background-color: var(--background2);
+  }
 }
