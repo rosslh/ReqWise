@@ -93,7 +93,7 @@
     "text-diff": "^1.0.1"
   },
   "optionalDependencies": {
-    "cypress": "^5.1.0",
+    "cypress": "^5.2.0",
     "cypress-wait-until": "^1.7.1"
   },
   "engines": {
