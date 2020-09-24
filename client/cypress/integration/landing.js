@@ -12,12 +12,12 @@ describe('Landing page', () => {
   });
 
   it('can navigate to login', () => {
-    cy.get('#loginLink').click();
+    cy.get('[data-cy="loginLink"]').click();
     cy.url().should('include', 'login');
   });
 
   it('can navigate to signup', () => {
-    cy.get('#signupLink').click();
+    cy.get('[data-cy="signupLink"]').click();
     cy.url().should('include', 'sign-up');
   });
 });

@@ -171,11 +171,11 @@
     border: 0.1rem solid var(--borderColor);
   }
 
-  #navLink {
+  .navLink {
     color: var(--normalText);
     font-weight: 500;
   }
-  #navLink:not(:last-child) {
+  .navLink:not(:last-child) {
     margin-right: 4rem;
   }
 </style>
@@ -223,13 +223,21 @@
     {/if}
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
-        <a rel="prefetch" id="navLink" href="/features">Features</a>
+        <a rel="prefetch" class="navLink" href="/features">Features</a>
 
-        <a rel="prefetch" id="navLink" href="/blog">Blog</a>
+        <a rel="prefetch" class="navLink" href="/blog">Blog</a>
 
-        <a rel="prefetch" id="navLink" href="/sign-up/invite">Sign Up</a>
+        <a
+          rel="prefetch"
+          data-cy="signupLink"
+          class="navLink"
+          href="/sign-up/invite">Sign Up</a>
 
-        <a rel="prefetch" id="navLink" href="/login">Login</a>
+        <a
+          rel="prefetch"
+          data-cy="loginLink"
+          class="navLink"
+          href="/login">Login</a>
       {:else}
         <a
           id="notificationButton"
