@@ -171,8 +171,12 @@
     border: 0.1rem solid var(--borderColor);
   }
 
-  #signupLink {
-    margin-right: 1rem;
+  #navLink {
+    color: var(--normalText);
+    font-weight: 500;
+  }
+  #navLink:not(:last-child) {
+    margin-right: 4rem;
   }
 </style>
 
@@ -219,9 +223,13 @@
     {/if}
     <div class="right">
       {#if !$session.user || !$session.user.jwt}
-        <a rel="prefetch" id="signupLink" href="/sign-up/invite">Sign Up</a>
+        <a rel="prefetch" id="navLink" href="/features">Features</a>
 
-        <a rel="prefetch" id="loginLink" href="/login">Login</a>
+        <a rel="prefetch" id="navLink" href="/blog">Blog</a>
+
+        <a rel="prefetch" id="navLink" href="/sign-up/invite">Sign Up</a>
+
+        <a rel="prefetch" id="navLink" href="/login">Login</a>
       {:else}
         <a
           id="notificationButton"
