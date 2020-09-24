@@ -1,5 +1,5 @@
 <script context="module">
-  import { get } from "../../../api.js";
+  import { get, put } from "../../../api.js";
   export async function preload({ params, path }, { user }) {
     if (!user) {
       return this.redirect(302, `/login?redirect=${encodeURIComponent(path)}`);
@@ -26,7 +26,7 @@
   import Sidebar from "../../../components/Sidebar.svelte";
   import MobileMenu from "../../../components/MobileMenu.svelte";
   import { onMount, onDestroy, setContext } from "svelte";
-  import { stores } from "@sapper/app";
+  import { stores, goto } from "@sapper/app";
   import {
     menuHidden,
     reqgroupsToUpdate,
@@ -35,6 +35,7 @@
     media,
   } from "../../../stores.js";
   import { stream } from "../../../api.js";
+  import { showTourStage } from "../../../tour.js";
 
   export let project;
 
@@ -72,9 +73,41 @@
     }
   };
 
-  onMount(() => async () => {
+  const completeProjectTour = async () => {
+    await put(
+      `/users/${$session.user.id}/settings`,
+      {
+        doneProjectTour: true,
+      },
+      $session.user && $session.user.jwt
+    );
+
+    const result = await fetch("auth/updateSettings", {
+      method: "PUT",
+      credentials: "include",
+      body: JSON.stringify({ doneProjectTour: true }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((r) => r.json());
+    $session.user = { ...$session.user, ...result };
+    goto($page.path, { replaceState: true });
+  };
+
+  onMount(() => {
     if ($session.user && $session.user.jwt) {
       startStream();
+    }
+    if (
+      typeof window !== "undefined" &&
+      $session.user &&
+      !$session.user.doneProjectTour &&
+      project.scopes.includes("member")
+    ) {
+      import("intro.js").then(({ default: Intro }) => {
+        const introjs = Intro();
+        showTourStage(introjs, "project", completeProjectTour);
+      });
     }
   });
 
@@ -190,6 +223,11 @@
 </script>
 
 <style>
+  div.pageContent,
+  div.menuContent {
+    margin-top: 5rem;
+  }
+
   div.pageContent {
     overflow-y: scroll;
     background-color: var(--backdrop);
@@ -198,23 +236,24 @@
     transition: width 0.2s ease;
   }
 
+  #projectColumnWrapper {
+    display: flex;
+    height: 100%;
+    margin-top: -5rem; /* account for navbar */
+    margin-bottom: -6rem;
+  }
+
   @media (min-width: 750px) {
     div.pageContent {
       width: calc(100% - var(--sidebarWidth));
-      position: fixed;
-      top: 5rem; /* nav height */
-      right: 0;
-      bottom: 0;
+      height: calc(100vh - 5rem);
     }
     div.menuHidden div.pageContent {
       width: 100%;
     }
 
     div.menuContent {
-      position: fixed;
-      top: 5rem; /* nav height */
-      left: 0;
-      bottom: 0;
+      height: calc(100vh - 5rem);
       width: var(--sidebarWidth);
       /* border-right: 0.1rem solid var(--borderColor); */
       transition: transform 0.2s ease;
@@ -242,15 +281,17 @@
 <svelte:head>
   <title>{project.name} - ReqWise</title>
 </svelte:head>
-<div class={$menuHidden ? 'menuHidden' : 'sidebarVisible'}>
-  <div class="pageContent">
-    <slot />
-  </div>
+<div
+  id="projectColumnWrapper"
+  class={$menuHidden ? 'menuHidden' : 'sidebarVisible'}>
   <div class="menuContent">
     {#if !$media.small}
       <Sidebar {tab} {id} name={project.name} {menuLinks} />
     {:else if !$menuHidden}
       <MobileMenu {tab} {id} name={project.name} {menuLinks} />
     {/if}
+  </div>
+  <div class="pageContent">
+    <slot />
   </div>
 </div>

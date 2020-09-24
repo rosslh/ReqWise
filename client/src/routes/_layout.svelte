@@ -8,8 +8,9 @@
   import { stream } from "../api.js";
   import { unreadAlerts } from "../stores.js";
   import { onMount, onDestroy } from "svelte";
-
+  import "intro.js/introjs.css";
   const { session, preloading } = stores();
+
   NProgress.configure({
     minimum: 0.25,
     trickleSpeed: 120,
@@ -44,7 +45,7 @@
     );
   };
 
-  onMount(() => async () => {
+  onMount(() => {
     if ($session.user && $session.user.jwt) {
       startStream();
     }

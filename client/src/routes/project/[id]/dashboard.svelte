@@ -183,7 +183,7 @@
 </style>
 
 <section class="contentWrapper">
-  <h2>Project dashboard</h2>
+  <h2 data-introjs="projectDashboardHeader">Project dashboard</h2>
   <div class="dashboardWrapper">
     <div class="panel dashboardPanel">
       <div class="panelHeader">

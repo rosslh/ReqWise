@@ -40,6 +40,8 @@ exports.seed = async function (knex) {
       password_hash: "$2b$10$DAfKfLLJ9ci5a/QP4DHWBO6aaW0yXgl7tYDbkwXY31.S1yeCV0.yW",
       name: "Team Owner",
       is_verified: true,
+      doneTeamTour: true,
+      doneProjectTour: true,
       email: "test.owner@reqwise.com",
       placeholderImage: '<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect id="bg" width="300" height="300" fill="rgb(60,141,181)" /><path d="m 150 673 Q 130 170 -373 150 Q 130 130 150 -373 Q 170 130 673 150 Q 170 170 150 673 z" fill="rgb(61,77,186)" /><path d="m 150 359 Q 300 0 -59 150 Q 300 300 150 -59 Q 0 300 359 150 Q 0 0 150 359 z" fill="rgb(194,178,69)" /><path d="m 150 204 Q 85 215 96 150 Q 85 85 150 96 Q 215 85 204 150 Q 215 215 150 204 z" fill="rgb(195,114,74)" /></svg>'
     },
@@ -48,6 +50,8 @@ exports.seed = async function (knex) {
       password_hash: "$2b$10$DAfKfLLJ9ci5a/QP4DHWBO6aaW0yXgl7tYDbkwXY31.S1yeCV0.yW",
       name: "Team Member",
       is_verified: true,
+      doneTeamTour: true,
+      doneProjectTour: true,
       email: "test.member@reqwise.com",
       placeholderImage: '<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect id="bg" width="300" height="300" fill="rgb(60,141,181)" /><path d="m 150 673 Q 130 170 -373 150 Q 130 130 150 -373 Q 170 130 673 150 Q 170 170 150 673 z" fill="rgb(61,77,186)" /><path d="m 150 359 Q 300 0 -59 150 Q 300 300 150 -59 Q 0 300 359 150 Q 0 0 150 359 z" fill="rgb(194,178,69)" /><path d="m 150 204 Q 85 215 96 150 Q 85 85 150 96 Q 215 85 204 150 Q 215 215 150 204 z" fill="rgb(195,114,74)" /></svg>'
     },
@@ -56,6 +60,8 @@ exports.seed = async function (knex) {
       password_hash: "$2b$10$DAfKfLLJ9ci5a/QP4DHWBO6aaW0yXgl7tYDbkwXY31.S1yeCV0.yW",
       name: "External Stakeholder",
       is_verified: true,
+      doneTeamTour: true,
+      doneProjectTour: true,
       email: "test.stakeholder@reqwise.com",
       placeholderImage: '<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><rect id="bg" width="300" height="300" fill="rgb(60,141,181)" /><path d="m 150 673 Q 130 170 -373 150 Q 130 130 150 -373 Q 170 130 673 150 Q 170 170 150 673 z" fill="rgb(61,77,186)" /><path d="m 150 359 Q 300 0 -59 150 Q 300 300 150 -59 Q 0 300 359 150 Q 0 0 150 359 z" fill="rgb(194,178,69)" /><path d="m 150 204 Q 85 215 96 150 Q 85 85 150 96 Q 215 85 204 150 Q 215 215 150 204 z" fill="rgb(195,114,74)" /></svg>'
     },
