@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import timeline from "./data.json";
+const showdown = require('showdown');
+const converter = new showdown.Converter();
 
 const contents = Object.entries(timeline)
   .map(([fileName, post]) => {
@@ -7,7 +9,7 @@ const contents = Object.entries(timeline)
       title: post.title,
       slug: fileName,
       date: format(new Date(post.date.slice(0, 10)), 'MMMM d, yyyy'),
-      content: post.content,
+      content: converter.makeHtml(post.content),
       author: post.author,
       blurb: post.blurb
     };

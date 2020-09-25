@@ -26,9 +26,27 @@
     margin-bottom: 1rem;
   }
 
+  :global(article.blogPost h2) {
+    font-size: 1.8rem;
+  }
+
+  :global(article.blogPost img) {
+    box-shadow: var(--boxShadow);
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+  }
+
+  :global(article.blogPost .imageCaption) {
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--secondaryText);
+    margin-top: -1rem;
+  }
+
   .contentWrapper {
     padding-top: 2rem;
-    max-width: 80rem;
+    max-width: 85rem;
   }
 
   .subtitle {
@@ -48,7 +66,7 @@
 </svelte:head>
 <div class="contentWrapper mainContent">
   <a href="/blog" rel="prefetch"> &larr; Back to blog </a>
-  <article class="panel">
+  <article class="panel blogPost">
     <h1 class="postTitle">{post.title}</h1>
     <div class="subtitle">
       {post.author}
