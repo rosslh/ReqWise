@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import timeline from "./data.json";
-const showdown = require('showdown');
+import showdown from "showdown";
 const converter = new showdown.Converter();
 
 const posts = Object.entries(timeline)

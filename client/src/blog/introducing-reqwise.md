@@ -13,12 +13,12 @@ If you work in a digital agency or as a freelancer, you have probably faced simi
 
 ##Feature overview
 
+![ReqWise screenshot](https://reqwise.com/features/organize.png "ReqWise screenshot")
+<p class="imageCaption">Organizing requirements in ReqWise</p>
+
 The first feature ReqWise offers is **questionnaires**, where you can ask your stakeholders questions to get an idea for what you're supposed to build. Questionnaires can be used to supplement time-consuming meetings.
 
 ReqWise's next feature is **organizing requirements**. Arrange stakeholders' needs into requirements and sub-requirements. Prioritize the most important ones.
-
-![ReqWise screenshot](https://reqwise.com/features/organize.png "ReqWise screenshot")
-<p class="imageCaption">Organizing requirements in ReqWise</p>
 
 ReqWise isn't limited to text-based requirements. Upload **files and designs** from your computer or draw diagrams with the built-in editor.
 
