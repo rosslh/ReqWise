@@ -4,7 +4,7 @@ describe('Landing page', () => {
   });
 
   it('has the correct headings', () => {
-    cy.contains('h1', "An easier way for digital agencies to understand their customer's needs.");
+    cy.contains('h1', "An easier way for digital agencies to understand their clients' needs.");
     cy.contains('h2', "Brainstorm ideas with questionnaires");
     cy.contains('h2', "Organize and prioritize requirements");
     cy.contains('h2', "Attach designs and files");
