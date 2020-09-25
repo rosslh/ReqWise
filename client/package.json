@@ -84,7 +84,7 @@
     "sapper": "^0.28.4",
     "sass": "^1.26.10",
     "slugify": "^1.4.5",
-    "svelte": "^3.26.0",
+    "svelte": "^3.27.0",
     "svelte-icons": "^2.1.0",
     "svelte-media": "0.0.3",
     "svelte-preprocess": "^4.3.0",
