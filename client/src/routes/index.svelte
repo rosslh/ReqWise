@@ -197,15 +197,14 @@
 </style>
 
 <svelte:head>
-  <title>ReqWise | Understand your client's needs</title>
+  <title>ReqWise | Understand your clients' needs</title>
 </svelte:head>
 <div class="sloganSection">
   <CurveyHeading minHeight="40rem">
     <div class="twoColumns">
       <div class="firstColumn">
         <h1 class="slogan">
-          An easier way for digital agencies to understand their customer's
-          needs.
+          An easier way for digital agencies to understand their clients' needs.
         </h1>
         <p class="subtitle">
           ReqWise allows teams to gather information about stakeholder needs,

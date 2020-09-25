@@ -44,6 +44,7 @@
 
 <svelte:head>
   <link rel="canonical" href="https://reqwise.com/blog/{post.slug}" />
+  <title>ReqWise | {post.title}</title>
 </svelte:head>
 <div class="contentWrapper mainContent">
   <a href="/blog" rel="prefetch"> &larr; Back to blog </a>

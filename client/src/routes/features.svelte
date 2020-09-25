@@ -5,7 +5,7 @@
     {
       title: "Brainstorm Ideas with Questionnaires",
       subtitle:
-        "Gather information with questionnaires and link them to requirements and designs.",
+        "Gather information with questionnaires and link responses to requirements and designs.",
       slug: "brainstorm",
     },
     {

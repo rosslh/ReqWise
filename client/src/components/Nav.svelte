@@ -117,6 +117,14 @@
     align-items: center;
   }
 
+  div.right.unauthed {
+    justify-content: space-between;
+    flex-grow: 1;
+    max-width: 30rem;
+    margin-left: 1rem;
+    font-size: 1.4rem;
+  }
+
   div.right > * {
     display: inline-block;
     margin-right: 0.5rem;
@@ -174,9 +182,7 @@
   .navLink {
     color: var(--normalText);
     font-weight: 500;
-  }
-  .navLink:not(:last-child) {
-    margin-right: 4rem;
+    margin-left: 1rem;
   }
 </style>
 
@@ -221,7 +227,8 @@
           placeholder="Search project" />
       </form>
     {/if}
-    <div class="right">
+    <div
+      class={`right ${!$session.user || !$session.user.jwt ? 'unauthed' : ''}`}>
       {#if !$session.user || !$session.user.jwt}
         <a rel="prefetch" class="navLink" href="/features">Features</a>
 
@@ -231,7 +238,7 @@
           rel="prefetch"
           data-cy="signupLink"
           class="navLink"
-          href="/sign-up/invite">Sign Up</a>
+          href="/sign-up/invite">Sign&nbsp;Up</a>
 
         <a
           rel="prefetch"

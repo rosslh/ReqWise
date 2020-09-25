@@ -31,11 +31,16 @@
     font-weight: 400;
     font-size: 1.8rem;
     margin-top: 4rem;
+    color: var(--secondaryText);
+  }
+
+  .bullet {
+    padding: 0 1rem;
   }
 </style>
 
 <svelte:head>
-  <title>ReqWise Features</title>
+  <title>ReqWise Blog</title>
 </svelte:head>
 <CurveyHeading>
   <h1>Blog</h1>
