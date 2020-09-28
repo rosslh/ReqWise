@@ -49,7 +49,7 @@
           <mj-text color="#2D3748" padding-top="20px" padding-bottom="20px" font-size="16px">
             You are invited to collaborate on "{{teamName}}" as a team member. Sign in to get started.
           </mj-text>
-          <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href={{href}}>
+          <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{href}}" rel="nofollow">
             Sign In
           </mj-button>
         </mj-column>

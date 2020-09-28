@@ -48,7 +48,7 @@
           <mj-text color="#2D3748" padding-top="20px" padding-bottom="20px" font-size="16px">
             You told us you forgot your password. If you really did, click here to choose a new one:
           </mj-text>
-          <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href={{href}}>
+          <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{href}}" rel="nofollow">
             Choose a New Password
           </mj-button>
           <mj-text color="#2D3748" padding-top="20px" padding-bottom="20px" font-size="16px">
