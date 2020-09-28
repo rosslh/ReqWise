@@ -61,7 +61,7 @@
   }
 </style>
 
-<Helmet title={`ReqWise | ${post.title}`} description={post.blurb} />
+<Helmet title={post.title} description={post.blurb} />
 <div class="contentWrapper mainContent">
   <a href="/blog" rel="prefetch"> &larr; Back to blog </a>
   <article class="panel blogPost">
