@@ -285,7 +285,10 @@ th:last-child {
 }
 
 b,
-strong,
+strong {
+  font-weight: 700 !important;
+}
+
 th {
   font-weight: 600 !important;
 }
