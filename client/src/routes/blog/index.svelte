@@ -10,6 +10,7 @@
 
 <script>
   import CurveyHeading from "../../components/CurveyHeading.svelte";
+  import Helmet from "../../components/Helmet.svelte";
   export let posts;
 </script>
 
@@ -42,6 +43,7 @@
 <svelte:head>
   <title>ReqWise Blog</title>
 </svelte:head>
+<Helmet title="ReqWise Blog" />
 <CurveyHeading>
   <h1>Blog</h1>
 </CurveyHeading>

@@ -1,6 +1,7 @@
 <script>
   import BrowserUi from "../components/BrowserUi.svelte";
   import CurveyHeading from "../components/CurveyHeading.svelte";
+  import Helmet from "../components/Helmet.svelte";
   import { fade } from "svelte/transition";
   import { onMount } from "svelte";
   import FaCheck from "svelte-icons/fa/FaCheck.svelte";
@@ -196,9 +197,7 @@
   }
 </style>
 
-<svelte:head>
-  <title>ReqWise | Understand your clients' needs</title>
-</svelte:head>
+<Helmet title="ReqWise | Understand your clients' needs." />
 <div class="sloganSection">
   <CurveyHeading minHeight="40rem">
     <div class="twoColumns">

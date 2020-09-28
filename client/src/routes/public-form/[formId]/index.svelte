@@ -27,6 +27,7 @@
   import { get } from "../../../api.js";
   import { stores } from "@sapper/app";
   import BrainstormPrompt from "../../../components/BrainstormPrompt.svelte";
+  import Helmet from "../../../components/Helmet.svelte";
 
   export let questionnaire;
 
@@ -55,9 +56,9 @@
   }
 </style>
 
-<svelte:head>
-  <title>{questionnaire.description} - ReqWise</title>
-</svelte:head>
+<Helmet
+  title={`ReqWise Questionnaire`}
+  description={questionnaire.description} />
 <section class="contentWrapper">
   <h1 data-cy="questionnaireTitle">{questionnaire.description}</h1>
   {#if questionnaire.is_public}

@@ -1,5 +1,6 @@
 <script>
   import CurveyHeading from "../components/CurveyHeading.svelte";
+  import Helmet from "../components/Helmet.svelte";
 
   const features = [
     {
@@ -87,9 +88,7 @@
   }
 </style>
 
-<svelte:head>
-  <title>ReqWise Features</title>
-</svelte:head>
+<Helmet title="ReqWise Features" />
 <CurveyHeading>
   <h1>Features</h1>
 </CurveyHeading>

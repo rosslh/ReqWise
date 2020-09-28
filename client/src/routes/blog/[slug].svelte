@@ -12,6 +12,7 @@
 </script>
 
 <script>
+  import Helmet from "../../components/Helmet.svelte";
   export let post;
 </script>
 
@@ -60,10 +61,7 @@
   }
 </style>
 
-<svelte:head>
-  <link rel="canonical" href="https://reqwise.com/blog/{post.slug}" />
-  <title>ReqWise | {post.title}</title>
-</svelte:head>
+<Helmet title={`ReqWise | ${post.title}`} description={post.blurb} />
 <div class="contentWrapper mainContent">
   <a href="/blog" rel="prefetch"> &larr; Back to blog </a>
   <article class="panel blogPost">

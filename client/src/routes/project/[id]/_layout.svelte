@@ -24,6 +24,7 @@
   import MdDashboard from "svelte-icons/md/MdDashboard.svelte";
 
   import Sidebar from "../../../components/Sidebar.svelte";
+  import Helmet from "../../../components/Helmet.svelte";
   import MobileMenu from "../../../components/MobileMenu.svelte";
   import { onMount, onDestroy, setContext } from "svelte";
   import { stores, goto } from "@sapper/app";
@@ -278,9 +279,7 @@
   }
 </style>
 
-<svelte:head>
-  <title>{project.name} - ReqWise</title>
-</svelte:head>
+<Helmet title={`${project.name} - ReqWise`} description="A ReqWise project" />
 <div
   id="projectColumnWrapper"
   class={$menuHidden ? 'menuHidden' : 'sidebarVisible'}>

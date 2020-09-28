@@ -6,4 +6,9 @@
   }
 </script>
 
+<script>
+  import Helmet from "../../components/Helmet.svelte";
+</script>
+
+<Helmet title="Sign Up - ReqWise" />
 <slot />

@@ -11,6 +11,7 @@
   const { session, page } = stores();
 
   import SubmitButton from "../components/SubmitButton.svelte";
+  import Helmet from "../components/Helmet.svelte";
 
   let email = "";
   let password = "";
@@ -88,9 +89,7 @@
   }
 </style>
 
-<svelte:head>
-  <title>Login - ReqWise</title>
-</svelte:head>
+<Helmet title="Login - ReqWise" />
 <div class="contentWrapper loginWrapper">
   <h1>Sign in to ReqWise</h1>
   <form class="loginContent">
