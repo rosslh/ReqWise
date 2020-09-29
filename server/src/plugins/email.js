@@ -13,10 +13,10 @@ module.exports = fp(function (fastify, opts, done) {
   const getEmailTemplate = (templateName) => path.resolve(__dirname, "../email-templates", `${templateName}.html`);
 
   fastify.decorate("sendEmail", async function (toEmail, plaintext, subject, templateName, vars) {
-    if (process.env.NODE_ENV === "dev") {
-      console.log(plaintext);
-      return;
-    }
+    // if (process.env.NODE_ENV === "dev") {
+    //   console.log(plaintext);
+    //   return;
+    // }
     await transporter.sendMail({
       from: `"ReqWise" <noreply@reqwise.com>`, // sender address
       to: toEmail.toLowerCase(), // comma separated list of receivers
