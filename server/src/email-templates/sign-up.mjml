@@ -61,7 +61,7 @@
             Button not working? Go to this webpage:
           </mj-text>
           <mj-text padding-bottom='0' align="center" color="#4A5568" font-size="14px">
-            <a style="color: #2D3748; font-weight: bold;" href="{{href}}" target="_blank" rel="nofollow">
+            <a style="color: #2D3748; font-weight: bold; word-break: break-all;" href="{{href}}" target="_blank" rel="nofollow">
               {{href}}
             </a>
           </mj-text>
