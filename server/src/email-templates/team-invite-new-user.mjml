@@ -19,12 +19,11 @@
       }
 
       .text-link {
-        color:
-          #5e6ebf
-      }
-
-      .footer-link {
-        color: #888888
+        background-color: #38a169;
+        padding: .75rem;
+        border-radius: .5rem;
+        color: white;
+        text-decoration: none;
       }
     </mj-style>
   </mj-head>
@@ -49,9 +48,11 @@
           <mj-text color="#2D3748" padding-top="20px" padding-bottom="20px" font-size="16px">
             You are invited to collaborate on "{{teamName}}" as a team member. Create an account to get started.
           </mj-text>
-          <mj-button background-color="#38a169" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{href}}" rel="nofollow">
-            Create Account
-          </mj-button>
+          <mj-text align="center" font-size="17px" font-weight="bold">
+            <a class="text-link" href="{{href}}" rel="nofollow">
+              Create Account
+            </a>
+          </mj-text>
         </mj-column>
       </mj-section>
     </mj-wrapper>
