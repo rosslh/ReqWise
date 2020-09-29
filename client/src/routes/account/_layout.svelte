@@ -87,7 +87,7 @@
 <div>
   <div class="userColumnLeft">
     <div class="profileImageWrapper squircle">
-      {#if $session.user.imageName}
+      {#if $session.user && $session.user.imageName}
         <img
           src={`https://storage.googleapis.com/user-file-storage/${$session.user.imageName}`}
           alt={user.name} />

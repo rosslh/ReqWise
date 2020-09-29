@@ -88,7 +88,7 @@
     </div>
   </div>
   <div class="deleteWrapper">
-    {#if comment.account_id === $session.user.id}
+    {#if $session.user && comment.account_id === $session.user.id}
       <button
         on:click={deleteComment}
         class="button button-small button-outline button-clear button-secondary">

@@ -28,6 +28,10 @@
 
     const data = await r.json();
 
+    if (!data.token) {
+      throw new Error("Invalid credentials logging in");
+    }
+
     $session.user = {
       jwt: data.token,
       id: data.userId,
@@ -113,6 +117,7 @@
 </div>
 <div class="contentWrapper loginWrapper">
   <div class="createAccountContent">
-    New to ReqWise? <a rel="prefetch" href="/sign-up/invite">Create an account.</a>
+    New to ReqWise?
+    <a rel="prefetch" href="/sign-up/invite">Create an account.</a>
   </div>
 </div>

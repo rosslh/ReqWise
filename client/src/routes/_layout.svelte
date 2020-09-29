@@ -35,19 +35,33 @@
     if (closeStream) {
       closeStream();
     }
-    closeStream = stream(
-      "getUserAlertStatus",
-      {},
-      $session.user.jwt,
-      (event) => {
-        $unreadAlerts = JSON.parse(event).unreadAlerts;
-      }
-    );
+    if ($session.user) {
+      closeStream = stream(
+        "getUserAlertStatus",
+        {},
+        $session.user.jwt,
+        (event) => {
+          $unreadAlerts = JSON.parse(event).unreadAlerts;
+        }
+      );
+    }
   };
 
   onMount(() => {
     if ($session.user && $session.user.jwt) {
       startStream();
+    }
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "dev") {
+      Promise.all([import("@sentry/browser"), import("@sentry/tracing")]).then(
+        ([Sentry, { Integrations }]) => {
+          Sentry.init({
+            dsn:
+              "https://a1588bd76c9549a494c2497f65a21cc2@o224467.ingest.sentry.io/5445360",
+            integrations: [new Integrations.BrowserTracing()],
+            tracesSampleRate: 1.0,
+          });
+        }
+      );
     }
   });
 

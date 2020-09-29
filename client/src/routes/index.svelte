@@ -219,9 +219,9 @@
               <div
                 class="reviewIcon"
                 style={`
-              color: ${fgColor};
-              background-color: ${bgColor};
-            `}>
+                  color: ${fgColor};
+                  background-color: ${bgColor};
+                `}>
                 <svelte:component this={icon} />
               </div>
             </div>

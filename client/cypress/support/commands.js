@@ -16,23 +16,17 @@ Cypress.Commands.add("login", (email = "test.owner@reqwise.com", password = "123
   cy.url().should('not.include', 'login');
 });
 
-Cypress.Commands.add("signUp", (email, password) => {
+Cypress.Commands.add("completeSignUp", (email, password) => {
   cy.clearCookie('__session');
   cy.clearCookies();
   cy.reload();
   cy.waitForPreload();
-  cy.visit('/sign-up/invite')
-  cy.url().should('include', '/sign-up/invite');
-  cy.wait(750);
-  cy.get("#email").click().type(email);
-  cy.get(".submitButton").click();
-  cy.waitForSpinner();
-  cy.visit(`/sign-up/complete?token=dev&email=test.new%40reqwise.com`);
+  cy.visit(`/sign-up/complete?token=dev&email=${encodeURIComponent(email)}`);
   cy.url().should('include', '/sign-up/complete');
   cy.wait(750);
 
   cy.get("#name").click().type("New Test Account");
-  cy.get("#pwd").click().type("1234");
+  cy.get("#pwd").click().type(password);
   cy.get("#completeSignup").click();
   cy.waitForSpinner();
   cy.url().should("include", "/account");

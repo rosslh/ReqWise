@@ -228,8 +228,8 @@
       </form>
     {/if}
     <div
-      class={`right ${!$session.user || !$session.user.jwt ? 'unauthed' : ''}`}>
-      {#if !$session.user || !$session.user.jwt}
+      class={`right ${$session.user && $session.user.jwt ? '' : 'unauthed'}`}>
+      {#if !($session.user && $session.user.jwt)}
         <a rel="prefetch" class="navLink" href="/features">Features</a>
 
         <a rel="prefetch" class="navLink" href="/blog">Blog</a>

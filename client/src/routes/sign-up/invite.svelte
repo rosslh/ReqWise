@@ -10,6 +10,7 @@
       alert("Please check your email to finish signing up");
     } catch {
       alert("Error. Please try again later.");
+      throw new Error("Error signing up");
     }
   };
 </script>

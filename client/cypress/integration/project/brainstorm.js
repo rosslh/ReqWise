@@ -100,7 +100,7 @@ describe('Brainstorm page', () => {
     cy.get("#inviteeEmail").click().type("test.new@reqwise.com"); // test.new doesn't exist yet (see seed script)
     cy.get("#saveQuestionnaire").click();
     cy.waitForSpinner();
-    cy.signUp("test.new@reqwise.com", "1234");
+    cy.completeSignUp("test.new@reqwise.com", "1234");
     goToQuestionnaireAsStakeholder("test.new@reqwise.com", "1234");
   });
 

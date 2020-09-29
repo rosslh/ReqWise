@@ -68,6 +68,7 @@
   const scopes = getContext("scopes");
 
   $: userIsReviewer =
+    $session.user &&
     scopes.includes("stakeholder") &&
     (!review.stakeholders.length ||
       review.stakeholders.includes($session.user.id));
@@ -161,7 +162,9 @@
           rel="prefetch"
           href={`/project/${review.project_id}/reviews/${review.id}`}>
           {#if isPreview}
-            Reviewing {entityTypeLabel}: <span class="previewEntityName">{review.reviewedEntity.name}</span>
+            Reviewing
+            {entityTypeLabel}:
+            <span class="previewEntityName">{review.reviewedEntity.name}</span>
           {:else}Reviewing {entityTypeLabel}{/if}
         </a>
       </h3>
@@ -176,7 +179,9 @@
   </div>
   {#if isPreview}
     <div class="preview">
-      {format(new Date(review.created_at), 'h:mm a, MMMM d, yyyy')} &bull; {review.responses.length}
+      {format(new Date(review.created_at), 'h:mm a, MMMM d, yyyy')}
+      &bull;
+      {review.responses.length}
       {review.responses.length === 1 ? 'response' : 'responses'}
     </div>
   {:else}

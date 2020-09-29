@@ -12,6 +12,7 @@
       );
     } catch {
       alert("Error. Please try again later.");
+      throw new Error("Error signing up");
     }
   };
 </script>

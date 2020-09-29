@@ -353,7 +353,7 @@
               <td>{member.email}</td>
               <td>{member.isAdmin}</td>
               <td>{member.isOwner}</td>
-              {#if isAdmin}
+              {#if $session.user && isAdmin}
                 <td class="userActions">
                   {#if member.id !== $session.user.id}
                     {#if !member.isOwner}
@@ -362,7 +362,9 @@
                         style="margin: 0;"
                         on:click={() => deleteMember(member.id)}>
                         Remove member
-                      </button> &nbsp; {#if !member.isAdmin}
+                      </button>
+                      &nbsp;
+                      {#if !member.isAdmin}
                         <button
                           class="button-caution button-small button-outline"
                           style="margin: 0;"
