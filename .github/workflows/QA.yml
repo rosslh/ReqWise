@@ -73,7 +73,7 @@ jobs:
         run: |
           npm ci
       - name: Seed database and run tests
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v2
         with:
           timeout_minutes: 20
           max_attempts: 2
