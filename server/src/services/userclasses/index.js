@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const getUserclassSchema = {
     queryString: {},
@@ -67,7 +69,7 @@ module.exports = async function (fastify, opts) {
           "userclass.is_baseline": true,
           "stakeholderReview.entity_userclass_id": request.params.userclassId
         })
-        .orderBy("stakeholderReview.created_at", "desc")
+        .orderBy("stakeholderReview.created_at", "desc");
 
       return userclasses = await Promise.all(userclasses.map(async userclass => {
         const latestReview = await fastify.getReviewForBaseline("userclass", userclass.id);

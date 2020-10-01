@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const getReqgroupSchema = {
     queryString: {},
@@ -123,7 +125,7 @@ module.exports = async function (fastify, opts) {
             .where("id", r.reqversion_id)
             .update({
               status: "accepted"
-            })
+            });
         }));
       }
 
@@ -193,7 +195,7 @@ module.exports = async function (fastify, opts) {
         return ["success"];
       }
       else {
-        reply.code(400).send("Cannot delete this reqgroup.")
+        reply.code(400).send("Cannot delete this reqgroup.");
       }
     }
   );
@@ -362,7 +364,7 @@ module.exports = async function (fastify, opts) {
         return requirement_id;
       }
       else {
-        reply.code(400).send("Maximum number of requirements exceeded.")
+        reply.code(400).send("Maximum number of requirements exceeded.");
       }
     }
   );
@@ -604,7 +606,7 @@ module.exports = async function (fastify, opts) {
           "reqgroup.is_baseline": true,
           "stakeholderReview.entity_reqgroup_id": request.params.reqgroupId
         })
-        .orderBy("stakeholderReview.created_at", "desc")
+        .orderBy("stakeholderReview.created_at", "desc");
 
       return reqgroups = await Promise.all(reqgroups.map(async rg => await fastify.getReqgroup(rg.id)));
     }

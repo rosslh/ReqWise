@@ -1,3 +1,5 @@
+"use-strict";
+
 const rp = require('request-promise');
 const atob = require('atob');
 const { randomBytes } = require('crypto');
@@ -346,7 +348,7 @@ module.exports = async function (fastify, opts) {
           })
           .returning("id");
       }
-      return ["Owner must be admin"]
+      return ["Owner must be admin"];
     }
   );
 
@@ -885,7 +887,7 @@ module.exports = async function (fastify, opts) {
               updated_by: request.user.id
             })
             .returning("id");
-        }))
+        }));
       }));
 
       // fix requirement recursive references

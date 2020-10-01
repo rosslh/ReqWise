@@ -1,3 +1,5 @@
+"use-strict";
+
 const fp = require("fastify-plugin");
 const Hashids = require("hashids/cjs");
 
@@ -18,7 +20,7 @@ module.exports = fp(function (fastify, opts, done) {
         return `"${$1}id":"${fastify.obfuscateId($2)}"`;
       })
       : payload;
-  })
+  });
 
   done();
 });

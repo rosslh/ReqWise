@@ -1,3 +1,5 @@
+"use-strict";
+
 const { randomBytes } = require('crypto');
 const { generateFromString } = require('generate-avatar');
 
@@ -298,7 +300,7 @@ module.exports = async function (fastify, opts) {
           });
       }
 
-      return ["success"]
+      return ["success"];
     }
   );
 

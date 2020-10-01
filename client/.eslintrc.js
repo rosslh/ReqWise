@@ -32,7 +32,8 @@ module.exports = {
       {
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "semi": ["error", "always"]
   },
   "settings": {
     "svelte3/ignore-styles": () => true

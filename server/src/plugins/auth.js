@@ -1,3 +1,5 @@
+"use-strict";
+
 const fp = require("fastify-plugin");
 
 module.exports = fp(async function (fastify, opts) {
@@ -81,7 +83,7 @@ module.exports = fp(async function (fastify, opts) {
       }
       catch (e) {
         try {
-          await hasBrainstormInvite(request, reply, formId)
+          await hasBrainstormInvite(request, reply, formId);
         } catch (e) {
           reply.code(403);
           reply.send("Questionnaire access denied");

@@ -1,3 +1,5 @@
+"use-strict";
+
 const fp = require("fastify-plugin");
 const { WebClient } = require('@slack/web-api');
 const payloads = require("../slackPayloads");

@@ -59,8 +59,8 @@ export const stream = (eventName, data, token, callback) => {
   }
   const socket = io(host);
   socket.on("message", callback);
-  socket.on("reconnecting", () => { console.log("Stream ended. Restarting."); })
-  socket.emit(eventName, { jwt: token, data })
+  socket.on("reconnecting", () => { console.log("Stream ended. Restarting."); });
+  socket.emit(eventName, { jwt: token, data });
 
-  return function () { socket.close() };
-}
+  return socket.close;
+};

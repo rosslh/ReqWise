@@ -1,10 +1,12 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const { Storage } = require('@google-cloud/storage');
   const { v4: uuidv4 } = require('uuid');
   const { Parser } = require('json2csv');
   const { randomBytes } = require('crypto');
   const { generateFromString } = require('generate-avatar');
-  const JSZip = require("jszip")
+  const JSZip = require("jszip");
   const storage = new Storage();
 
   const getProjectSchema = {
@@ -358,7 +360,7 @@ module.exports = async function (fastify, opts) {
     } else {
       return type;
     }
-  }
+  };
 
   const postReqgroupSchema = {
     body: {
@@ -1457,7 +1459,7 @@ module.exports = async function (fastify, opts) {
       await fastify.knex("baselineSnapshot").insert({
         project_id: request.params.projectId,
         fileName: uploadedFileName
-      })
+      });
 
       return ["success"];
     }

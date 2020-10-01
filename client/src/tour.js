@@ -2,7 +2,7 @@ export const showTourStage = (introjs, stage, callback) => {
   const stages = {
     "project": projectSteps,
     "team": teamSteps
-  }
+  };
 
   const steps = stages[stage];
 
@@ -12,7 +12,7 @@ export const showTourStage = (introjs, stage, callback) => {
     introjs.oncomplete(callback);
   }
 
-}
+};
 
 const teamSteps = [
   {
@@ -58,4 +58,4 @@ const projectSteps = [
     description: 'Stakeholders can give their approval or request changes.',
     position: 'right',
   },
-]
+];

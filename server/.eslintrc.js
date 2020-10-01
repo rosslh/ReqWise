@@ -22,6 +22,7 @@ module.exports = {
         "args": "none"
       }
     ],
-    "editorconfig/editorconfig": "error"
+    "editorconfig/editorconfig": "error",
+    "semi": ["error", "always"]
   },
 };

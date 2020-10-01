@@ -1,3 +1,5 @@
+"use-strict";
+
 const fp = require("fastify-plugin");
 const { Storage } = require('@google-cloud/storage');
 const { v4: uuidv4 } = require('uuid');
@@ -14,7 +16,7 @@ module.exports = fp(function (fastify, opts, done) {
         "=",
         fastify.knex.raw(
           `(select max(created_at) from "stakeholderReview" as r where r."entityType"="stakeholderReview"."entityType" and r.status='accept' and COALESCE(r.entity_reqgroup_id,r.entity_file_id,r.entity_userclass_id)=COALESCE("stakeholderReview".entity_reqgroup_id,"stakeholderReview".entity_file_id,"stakeholderReview".entity_userclass_id))`
-        ))
+        ));
 
     reviews = Promise.all(reviews.map(async r => {
       if (r.entityType === "reqgroup") {
@@ -99,7 +101,7 @@ module.exports = fp(function (fastify, opts, done) {
               requirement_id
             })
             .returning("id");
-        }))
+        }));
       }));
 
       // fix requirement recursive references

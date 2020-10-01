@@ -1,10 +1,12 @@
+"use-strict";
+
 const { dev, qa, production } = require("../knexfile");
 const fastifyPlugin = require("fastify-plugin");
 const knex = require("knex");
 const path = require("path");
 const AutoLoad = require("fastify-autoload");
 const CORS = require("fastify-cors");
-const helmet = require('fastify-helmet')
+const helmet = require('fastify-helmet');
 
 require("dotenv").config();
 
@@ -25,6 +27,20 @@ module.exports = function (fastify, opts, next) {
     helmet,
     {}
   );
+
+  // if(process.env.NODE_ENV !== "dev") {
+  fastify.register(
+    require("fastify-sentry"),
+    {
+      dsn:
+        "https://a1588bd76c9549a494c2497f65a21cc2@o224467.ingest.sentry.io/5445360",
+      environment: "server"
+    },
+    err => {
+      if (err) throw err;
+    }
+  );
+  // }
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
@@ -65,4 +81,4 @@ module.exports = function (fastify, opts, next) {
 
 module.exports.options = {
   trustProxy: true
-}
+};

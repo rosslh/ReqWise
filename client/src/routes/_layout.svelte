@@ -62,6 +62,7 @@
               "https://a1588bd76c9549a494c2497f65a21cc2@o224467.ingest.sentry.io/5445360",
             integrations: [new Integrations.BrowserTracing()],
             tracesSampleRate: 1.0,
+            environment: "client",
           });
         }
       );

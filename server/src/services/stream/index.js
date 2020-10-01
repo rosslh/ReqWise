@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const sleep = ms => new Promise((resolve) => {
     setTimeout(resolve, ms);

@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const { Storage } = require('@google-cloud/storage');
   const { v4: uuidv4 } = require('uuid');
@@ -73,7 +75,7 @@ module.exports = async function (fastify, opts) {
           "file.is_baseline": true,
           "stakeholderReview.entity_file_id": request.params.fileId
         })
-        .orderBy("stakeholderReview.created_at", "desc")
+        .orderBy("stakeholderReview.created_at", "desc");
 
       return files = await Promise.all(files.map(async file => {
         const latestReview = await fastify.getReviewForBaseline("file", file.id);

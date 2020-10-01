@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const deleteCommentSchema = {
     queryString: {},
@@ -36,4 +38,4 @@ module.exports = async function (fastify, opts) {
       return ["success"];
     }
   );
-}
+};

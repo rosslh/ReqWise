@@ -10,7 +10,7 @@ module.exports = fp(async (fastify, opts) => {
     // of handlers.
 
     // TODO: evaluate performance impact of moving this to preSerialization
-    const newPayload = fastify.obfuscateIdsInJson(payload)
+    const newPayload = fastify.obfuscateIdsInJson(payload);
     done(null, newPayload);
   });
 });

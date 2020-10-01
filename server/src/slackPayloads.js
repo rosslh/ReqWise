@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = {
   help: () => {
     return {
@@ -311,4 +313,4 @@ module.exports = {
       icon_url: author_imageName && `https://storage.googleapis.com/user-file-storage/${author_imageName}`
     };
   }
-}
+};

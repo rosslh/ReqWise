@@ -1,3 +1,5 @@
+"use-strict";
+
 const fp = require("fastify-plugin");
 
 module.exports = fp(function (fastify, opts, done) {
@@ -41,8 +43,8 @@ module.exports = fp(function (fastify, opts, done) {
             .join("per_project_unique_id", "per_project_unique_id.id", "requirement.ppuid_id")
             .join('ancestors', 'ancestors.id', 'requirement.parent_requirement_id').join("reqversion", getReqversion)
             .join("account", "account.id", "reqversion.account_id")
-            .join("account as updater", "updater.id", "reqversion.updated_by")
-        })
+            .join("account as updater", "updater.id", "reqversion.updated_by");
+        });
     }).select('*').from('ancestors').orderBy('hierarchical_id');
   });
 

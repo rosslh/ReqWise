@@ -1,3 +1,5 @@
+"use-strict";
+
 const Fuse = require('fuse.js');
 
 module.exports = async function (fastify, opts) {

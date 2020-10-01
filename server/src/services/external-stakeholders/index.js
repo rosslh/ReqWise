@@ -1,3 +1,5 @@
+"use-strict";
+
 module.exports = async function (fastify, opts) {
   const deleteExternalStakeholderSchema = {
     queryString: {},
@@ -42,4 +44,4 @@ module.exports = async function (fastify, opts) {
       return ["success"];
     }
   );
-}
+};

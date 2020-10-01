@@ -1,3 +1,5 @@
+"use-strict";
+
 const QuillDeltaToHtmlConverter = require("quill-delta-to-html")
   .QuillDeltaToHtmlConverter;
 const htmlToMrkdwn = require("html-to-mrkdwn");
