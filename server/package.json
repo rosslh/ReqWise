@@ -48,7 +48,7 @@
     "html-to-text": "^5.1.1",
     "json2csv": "^5.0.1",
     "jszip": "^3.5.0",
-    "knex": "^0.21.5",
+    "knex": "^0.21.6",
     "make-promises-safe": "^5.0.0",
     "mjml": "^4.7.1",
     "mustache": "^4.0.1",
