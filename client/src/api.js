@@ -62,5 +62,5 @@ export const stream = (eventName, data, token, callback) => {
   socket.on("reconnecting", () => { console.log("Stream ended. Restarting."); });
   socket.emit(eventName, { jwt: token, data });
 
-  return socket.close;
+  return function () { socket.close(); }; // this syntax is required for "this" to be defined
 };
