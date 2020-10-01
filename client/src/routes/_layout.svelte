@@ -51,7 +51,10 @@
     if ($session.user && $session.user.jwt) {
       startStream();
     }
-    if (typeof window !== "undefined" && process.env.NODE_ENV !== "dev") {
+    if (
+      typeof window !== "undefined" &&
+      process.env.NODE_ENV !== "development"
+    ) {
       Promise.all([import("@sentry/browser"), import("@sentry/tracing")]).then(
         ([Sentry, { Integrations }]) => {
           Sentry.init({
