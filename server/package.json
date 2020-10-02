@@ -43,7 +43,7 @@
     "fastify-plugin": "^2.3.3",
     "fastify-sentry": "^1.4.0",
     "fuse.js": "^6.4.1",
-    "generate-avatar": "^1.4.4",
+    "generate-avatar": "^1.4.5",
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",
     "html-to-text": "^5.1.1",
