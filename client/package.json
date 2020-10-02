@@ -73,7 +73,7 @@
     "lint-staged": "^10.3.0",
     "lodash": "^4.17.20",
     "markdown-to-json": "^0.5.4",
-    "normalize-url": "^5.1.0",
+    "normalize-url": "^5.2.1",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
     "postcss": "^8.1.1",
