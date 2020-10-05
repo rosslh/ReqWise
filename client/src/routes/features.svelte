@@ -125,6 +125,7 @@
       `}>
         <img
           src={`features/${slug}.png`}
+          loading="lazy"
           alt={title}
           style={`
           ${i % 2 ? 'transform: rotateY(10deg);' : 'transform: rotateY(-10deg);'}
