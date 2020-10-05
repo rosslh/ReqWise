@@ -16,6 +16,12 @@
       slug: "organize",
     },
     {
+      title: "Collaborate Across Timezones and Geographies",
+      subtitle:
+        "Work on requirements and designs with team members working remotely",
+      slug: "remote",
+    },
+    {
       title: "Attach Designs, Files, and Diagrams",
       subtitle:
         "Draw diagrams with the built-in editor or upload files and designs from your computer.",
@@ -26,6 +32,12 @@
       subtitle:
         "Stakeholders can review requirements and designs to make sure that you build what they want.",
       slug: "reviews",
+    },
+    {
+      title: "Integrate with Slack",
+      subtitle:
+        "Receive updates, propose requirements, and give feedback directly through Slack.",
+      slug: "slack",
     },
   ];
 </script>

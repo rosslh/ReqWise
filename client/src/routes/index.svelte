@@ -9,7 +9,9 @@
   import FaLightbulb from "svelte-icons/fa/FaLightbulb.svelte";
   import GoChecklist from "svelte-icons/go/GoChecklist.svelte";
   import FaFileAlt from "svelte-icons/fa/FaFileAlt.svelte";
+  import FaGlobeAmericas from "svelte-icons/fa/FaGlobeAmericas.svelte";
   import FaEye from "svelte-icons/fa/FaEye.svelte";
+  import FaSlack from "svelte-icons/fa/FaSlack.svelte";
 
   let visibleReviews = [];
 
@@ -49,6 +51,11 @@
       icon: FaLightbulb,
     },
     {
+      label: "Collaborate with your team remotely",
+      href: "/features#remote",
+      icon: FaGlobeAmericas,
+    },
+    {
       label: "Organize and prioritize requirements",
       href: "/features#organize",
       icon: GoChecklist,
@@ -62,6 +69,11 @@
       label: "Receive feedback and approval from clients",
       href: "/features#reviews",
       icon: FaEye,
+    },
+    {
+      label: "Integrate with Slack",
+      href: "/features#slack",
+      icon: FaSlack,
     },
   ];
 </script>
