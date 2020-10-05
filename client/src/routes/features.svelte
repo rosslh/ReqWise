@@ -123,13 +123,14 @@
         style={`
         flex-direction: ${i % 2 ? 'row-reverse' : 'row'};
       `}>
-        <img
-          src={`features/${slug}.png`}
-          loading="lazy"
-          alt={title}
+        <picture
           style={`
-          ${i % 2 ? 'transform: rotateY(10deg);' : 'transform: rotateY(-10deg);'}
-          `} />
+        ${i % 2 ? 'transform: scale(0.9) rotateY(10deg);' : 'transform: scale(0.9) rotateY(-10deg);'}
+        `}>
+          <source srcset="features/{slug}.webp" type="image/webp" />
+          <source srcset={`features/${slug}.png`} type="image/png" />
+          <img src={`features/${slug}.png`} loading="lazy" alt={title} />
+        </picture>
       </div>
     </div>
   {/each}
