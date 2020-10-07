@@ -8,7 +8,8 @@ const contents = Object.entries(timeline)
     return {
       title: post.title,
       slug: fileName,
-      date: format(new Date(post.date.slice(0, 10)), 'MMMM d, yyyy'),
+      date: post.date.slice(0, 10),
+      prettyDate: format(new Date(post.date.slice(0, 10)), 'MMMM d, yyyy'),
       content: converter.makeHtml(post.content),
       author: post.author,
       blurb: post.blurb

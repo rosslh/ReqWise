@@ -61,7 +61,11 @@
   }
 </style>
 
-<Helmet title={post.title} description={post.blurb} />
+<Helmet
+  title={post.title}
+  description={post.blurb}
+  author={post.author}
+  date={post.date} />
 <div class="contentWrapper mainContent">
   <a href="/blog" rel="prefetch"> &larr; Back to blog </a>
   <article class="panel blogPost">
@@ -69,7 +73,7 @@
     <div class="subtitle">
       {post.author}
       <span class="bullet">&bull;</span>
-      {post.date}
+      <time datetime={post.date}>{post.prettyDate}</time>
     </div>
 
     <div class="content">

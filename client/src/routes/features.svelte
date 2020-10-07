@@ -78,7 +78,7 @@
       justify-content: center !important;
     }
 
-    .feature .imageColumn img {
+    .feature .imageColumn picture {
       transform: unset !important;
     }
   }

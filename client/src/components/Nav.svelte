@@ -212,7 +212,7 @@
             </picture>
           {:else}<img src="logo.png" alt="ReqWise" />{/if}
         </a>
-        <span class="betaLabel"> Beta </span>
+        {#if !$media.small}<span class="betaLabel">Beta</span>{/if}
       {/if}
     </div>
     {#if $page.path.includes('/project/')}

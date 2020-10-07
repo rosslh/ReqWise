@@ -49,8 +49,9 @@
 </CurveyHeading>
 <section class="contentWrapper postsSection">
   <h2 class="postsHeading">
-    Latest post <span class="bullet">&bull;</span>
-    {posts[0].date}
+    Latest post
+    <span class="bullet">&bull;</span>
+    {posts[0].prettyDate}
   </h2>
   <div class="panel post">
     <h3 class="postTitle">
