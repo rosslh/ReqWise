@@ -10,7 +10,7 @@
     "//": "NOTE: cloc is GPL-2.0 and must be installed locally",
     "count-loc": "cloc --vcs=git --exclude-dir=static,.firebase --not-match-f=package-lock\\.json .",
     "deploy": "firebase deploy --only functions",
-    "dev": "sapper dev",
+    "dev": "npm run gen-blog && sapper dev",
     "export": "sapper export --legacy",
     "fb_start": "npm run shell",
     "gen-blog": "cd src/blog && npx m2j . --content -o ../routes/blog/data.json",

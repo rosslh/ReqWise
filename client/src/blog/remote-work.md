@@ -5,7 +5,9 @@ blurb: How ReqWise enables remote and outsourced work
 author: Ross Hill
 ---
 
-In my <a href="/blog/introducing-reqwise">last blog post</a>, I highlighted some of ReqWise's features that help your team collaborate with clients to understand their needs. Questionnaires and reviews allow you to work with clients across timezones and geographies. Equally important, however, is collaboration within your team. Remote design and development work is becoming increasingly common among digital and creative agencies. ReqWise makes remote work easier by getting you out of your inbox and serving as a single source of truth for your team. ReqWise also integrates with Slack, so you can receive updates, propose requirements, and give feedback directly through your Slack workspace.
+In my <a href="/blog/introducing-reqwise">last blog post</a>, I highlighted some of ReqWise's features that help your team collaborate with clients across timezones and geographies. With ReqWise, you can gather information about stakeholder needs, propose software requirements and designs, and seek approval from stakeholders.
+
+Equally important is collaboration within your team. Remote design and development work is becoming increasingly common among digital and creative agencies. ReqWise makes remote work easier by getting you out of your inbox and serving as a single source of truth for your team. ReqWise also integrates with Slack, so you can receive updates, propose requirements, and give feedback directly through your Slack workspace.
 
 **ReqWise is your team's single source of truth**. Collaborating on requirements and designs for a software project can be messy, and is often done over email with spreadsheets or text documents. ReqWise gets you out of your inbox and consolidates all of the project details in one place. Your ReqWise project is live-updating, so it always reflects the latest project requirements and designs. De-clutter your inbox by giving feedback on requirements from within ReqWise instead of over email.
 
