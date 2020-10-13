@@ -35,7 +35,7 @@
       selectedByYou:
         prompt.yourResponse && prompt.yourResponse.numericResponse === x.value,
     }))
-    .filter((z) => z.count || numericRange.length <= 15);
+    .filter((z) => z.count || numericRange.length <= 6);
 </script>
 
 <style>
@@ -49,9 +49,14 @@
 
 {#if responses.length}
   {responses.length}
-  {#if responses.length > 1}responses{:else}response{/if} received. {#if prompt.responseType === 'number'}
+  {#if responses.length > 1}responses{:else}response{/if}
+  received.
+  {#if prompt.responseType === 'number'}
     <span class="secondary">
-      Average: {avg}. Maximum: {Math.max(...values)}. Minimum: {Math.min(...values)}.
+      Average:
+      {avg}. Maximum:
+      {Math.max(...values)}. Minimum:
+      {Math.min(...values)}.
     </span>
   {/if}
 {:else}No responses yet{/if}

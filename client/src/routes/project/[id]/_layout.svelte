@@ -165,8 +165,8 @@
       newSection: "Requirement Elicitation",
     },
     {
-      label: "Business Requirements",
-      slug: "business-requirements",
+      label: "Business Considerations",
+      slug: "business-considerations",
       icon: FaBriefcase,
       newSection: "Requirements",
       extraPadding: true,

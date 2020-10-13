@@ -31,7 +31,7 @@
         const count = reqgroups.filter((x) => x.type === type).length;
         let href;
         if (type === "business") {
-          href = `${projectUrl}/business-requirements`;
+          href = `${projectUrl}/business-considerations`;
         } else if (type === "feature") {
           href = `${projectUrl}/features`;
         } else {

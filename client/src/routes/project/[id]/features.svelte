@@ -59,11 +59,11 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>Features</h2>
+  <h2>Features and Functional Requirements</h2>
   <p class="infoBlurb">
-    A feature is a group of related requirements that allows the user to satisfy
-    a high-level objective or need. <br /> Requirements tend to be more granular,
-    and are written with implementation in mind.
+    A feature is a group of related functional requirements that allows the user
+    to satisfy a high-level objective or need. Functional requirements tend to
+    be more granular, and are written with implementation in mind.
   </p>
   {#if scopes.includes('member')}
     <AddFeature {update} {id} />

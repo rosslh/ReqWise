@@ -67,14 +67,14 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>Business Requirements</h2>
+  <h2>Business Considerations</h2>
   <p class="infoBlurb">
-    Business requirements describe the reason behind a project and what
+    Business considerations describe the reason behind a project and what
     objectives of the organization will be fulfilled by undertaking the project.
   </p>
   {#if scopes.includes('member')}
     <button id="addReqGroupButton" on:click={showAddBrModal}>
-      Add requirement group
+      Add business consideration
     </button>
   {/if}
 </section>
