@@ -30,7 +30,7 @@
   "dependencies": {
     "@google-cloud/connect-firestore": "^1.0.6",
     "@google-cloud/firestore": "^4.4.0",
-    "@sentry/browser": "^5.24.2",
+    "@sentry/browser": "^5.26.0",
     "@sentry/tracing": "^5.24.2",
     "@shopify/draggable": "^1.0.0-beta.8",
     "body-parser": "^1.19.0",
