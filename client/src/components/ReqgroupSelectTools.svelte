@@ -4,14 +4,14 @@
   import ChangePriorityModal from "./ChangePriorityModal.svelte";
   import DeleteRequirementsModal from "./DeleteRequirementsModal.svelte";
   import FaRegEdit from "svelte-icons/fa/FaRegEdit.svelte";
-  import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
+  // import FaExchangeAlt from "svelte-icons/fa/FaExchangeAlt.svelte";
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
 
   export let selectedReqs;
   export let update;
   export let isPrioritized;
 
-  const moveToReqgroup = async newReqgroupId => newReqgroupId;
+  // const moveToReqgroup = async (newReqgroupId) => newReqgroupId;
 
   const changeStatus = async () => {
     modalContent.set(ChangeStatusModal);
@@ -69,17 +69,18 @@
 {#if selectedReqs.length}
   <div class="selectTools">
     <div class="selectToolsLabel">
-      {selectedReqs.length} requirement{selectedReqs.length === 1 ? '' : 's'}:
+      {selectedReqs.length}
+      requirement{selectedReqs.length === 1 ? '' : 's'}:
     </div>
     <div class="buttons">
-      <button
+      <!-- <button
         on:click={moveToReqgroup}
         class="button-small button-outline button-clear button-secondary">
         <div class="iconWrapper rotate90">
           <FaExchangeAlt />
         </div>
         Move to feature
-      </button>
+      </button> -->
       <button
         id="changeRequirementStatusButton"
         on:click={changeStatus}
