@@ -59,7 +59,7 @@
 </script>
 
 <section class="contentWrapper">
-  <h2>Features and Functional Requirements</h2>
+  <h2>Features</h2>
   <p class="infoBlurb">
     A feature is a group of related functional requirements that allows the user
     to satisfy a high-level objective or need. Functional requirements tend to

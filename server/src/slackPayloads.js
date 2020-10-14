@@ -22,7 +22,7 @@ module.exports = {
           "type": "section",
           "text": {
             "type": "mrkdwn",
-            "text": "Create a business requirement group: `/reqwise new br`"
+            "text": "Create a business consideration: `/reqwise new br`"
           }
         },
         {
@@ -82,7 +82,7 @@ module.exports = {
               }, {
                 text: {
                   type: "plain_text",
-                  text: "Business requirement group"
+                  text: "business consideration"
                 },
                 value: "business"
               }, {

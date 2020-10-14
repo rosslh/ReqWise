@@ -356,7 +356,7 @@ module.exports = async function (fastify, opts) {
     if (type === "quality") {
       return "quality attribute";
     } else if (type === "business") {
-      return "business requirement group";
+      return "business consideration";
     } else {
       return type;
     }

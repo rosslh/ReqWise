@@ -9,7 +9,7 @@ export const toBase64 = file =>
 export const validateFileSize = file => file.size / 1024 / 1024 <= 1.5; // 1.5 MB
 
 export const reqgroupTypeLabels = (plural = false) => ({
-  "business": plural ? "business requirement groups" : "business requirement group",
+  "business": plural ? "business considerations" : "business consideration",
   "feature": plural ? "features" : "feature",
   "quality": plural ? "quality attributes" : "quality attribute"
 });

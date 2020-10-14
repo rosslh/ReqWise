@@ -204,7 +204,7 @@
       label: "Stakeholders",
       slug: "stakeholders",
       icon: FaUserTie,
-      newSection: "Stakeholder Sign-Off",
+      newSection: "Sign-Off",
       extraPadding: true,
     },
     {

@@ -167,6 +167,11 @@
 
   a.itemCount {
     color: var(--normalText);
+    text-decoration: none !important;
+  }
+
+  a.itemCount span.counterLabel {
+    text-decoration: underline;
   }
 
   a.activityLink {
