@@ -1,7 +1,7 @@
 describe('Brainstorm page', () => {
   before(() => {
     cy.goToProject();
-    cy.contains('a', "Brainstorm").click();
+    cy.contains('a', "Questionnaires").click();
     cy.waitForPreload();
     cy.waitForSkeleton();
     cy.url().should('include', '/brainstorm');
@@ -10,7 +10,7 @@ describe('Brainstorm page', () => {
 
   const goToQuestionnaireAsOwner = () => {
     cy.goToProject("test.owner@reqwise.com", "1234");
-    cy.contains('a', "Brainstorm").click();
+    cy.contains('a', "Questionnaires").click();
     cy.waitForPreload();
     cy.waitForSkeleton();
     cy.url().should('include', '/brainstorm');
