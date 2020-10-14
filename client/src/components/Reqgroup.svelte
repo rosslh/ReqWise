@@ -202,6 +202,16 @@
     position: relative;
   }
 
+  ul.reqWrapper::-webkit-scrollbar {
+    -webkit-appearance: none;
+    height: 7px;
+  }
+  ul.reqWrapper::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
   div.noReqs {
     text-align: center;
     margin-top: 2rem;

@@ -159,10 +159,10 @@
       icon: IoIosSettings,
     },
     {
-      label: "Brainstorm",
+      label: "Questionnaires",
       slug: "brainstorm",
       icon: MdLightbulbOutline,
-      newSection: "Requirement Elicitation",
+      newSection: "Brainstorm",
     },
     {
       label: "Business Considerations",
