@@ -38,11 +38,13 @@
   };
 
   const updateReqgroup = async () => {
-    // reqgroup = await get(
-    //   `/reqgroups/${reqgroupId}`,
-    //   $session.user && $session.user.jwt
-    // );
+    requirements = [];
+    reqgroup = await get(
+      `/reqgroups/${reqgroupId}`,
+      $session.user && $session.user.jwt
+    );
     await update();
+    await updateReqs();
   };
 
   let selectedReqs = [];
@@ -61,13 +63,14 @@
     }
   };
 
-  $: updateFromStream =
+  $: {
     $reqgroupsToUpdate.includes(reqgroupId) &&
-    (() => {
-      updateReqgroup();
-      updateReqs();
-      $reqgroupsToUpdate = $reqgroupsToUpdate.filter((x) => x != reqgroupId);
-    })();
+      (() => {
+        updateReqgroup();
+        updateReqs();
+        $reqgroupsToUpdate = $reqgroupsToUpdate.filter((x) => x != reqgroupId);
+      })();
+  }
 
   $: getIllegalParents = (req) => {
     const illegalParents = [];
