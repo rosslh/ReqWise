@@ -1,6 +1,6 @@
 ---
 title: "Work Together from Anywhere, with ReqWise "
-date: 2020-10-07
+date: 2020-10-16
 blurb: How ReqWise enables remote and outsourced work
 author: Ross Hill
 ---

@@ -106,7 +106,14 @@
 
   const fileUrl = `https://storage.googleapis.com/user-file-storage/${file.fileName}`;
 
-  $: showCollapseButton = imageElement && imageElement.naturalHeight > 300;
+  let showCollapseButton = false;
+
+  const handleImageLoad = () => {
+    showCollapseButton =
+      imageElement && imageElement.naturalHeight
+        ? imageElement.naturalHeight > 300
+        : true;
+  };
 </script>
 
 <style>
@@ -270,6 +277,7 @@
       {#if isImageFile(file.fileName)}
         <img
           bind:this={imageElement}
+          on:load={handleImageLoad}
           class="uploadedImage"
           src={fileUrl}
           alt={file.name} />
