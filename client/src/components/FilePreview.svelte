@@ -1,10 +1,13 @@
 <script>
   export let update;
   export let file;
+  export let comments;
   export let projectId;
   export let unlinkRequirement;
   export let hideStakeholderStatus = false;
   export let baselineSourceId;
+
+  export let showComments = false;
 
   const fileId = baselineSourceId || file.id;
 
@@ -12,16 +15,18 @@
     file.is_draft && !file.is_baseline && scopes.includes("member");
 
   import { stores } from "@sapper/app";
-  import { getContext } from "svelte";
+  import { getContext, onMount, onDestroy } from "svelte";
 
   import { modalContent, modalProps } from "../stores.js";
-  import { del } from "../api.js";
+  import { stream, del, post } from "../api.js";
   import EditFileDetailsModal from "./EditFileDetailsModal.svelte";
   import DeleteFileModal from "./DeleteFileModal.svelte";
   import MakeDraftModal from "./MakeDraftModal.svelte";
   import UndraftModal from "./UndraftModal.svelte";
   import UploadFileModal from "./UploadFileModal.svelte";
   import StakeholderStatus from "./StakeholderStatus.svelte";
+  import Comment from "./Comment.svelte";
+  import CommentEditor from "./CommentEditor.svelte";
 
   import FaRegTrashAlt from "svelte-icons/fa/FaRegTrashAlt.svelte";
   import FaLink from "svelte-icons/fa/FaLink.svelte";
@@ -114,6 +119,69 @@
         ? imageElement.naturalHeight > 300
         : true;
   };
+
+  let quillDelta;
+  let plaintextComment = "";
+
+  $: postComment = async () => {
+    await post(
+      `/files/${fileId}/comments`,
+      {
+        plaintext: plaintextComment,
+        quillDelta: JSON.stringify(quillDelta),
+        type: "comment",
+      },
+      $session.user && $session.user.jwt
+    );
+  };
+
+  const getUnique = (list) =>
+    Array.from(new Set(list.map((a) => a.id))).map((id) => {
+      return list.find((a) => a.id === id);
+    });
+
+  let closeStream;
+
+  $: startStream = function () {
+    if (closeStream) {
+      closeStream();
+    }
+    if (fileId) {
+      closeStream = stream(
+        "getFileCommentNotifications",
+        { fileId },
+        $session.user.jwt,
+        (event) => {
+          const data = JSON.parse(event);
+          comments = getUnique([...comments, ...data]);
+          // scrollToBottom();
+        }
+      );
+    }
+  };
+
+  $: {
+    if (
+      typeof window !== "undefined" &&
+      !closeStream &&
+      $session.user &&
+      $session.user.jwt
+    ) {
+      startStream();
+    }
+  }
+
+  onDestroy(function () {
+    if (closeStream) {
+      closeStream();
+    }
+  });
+
+  onMount(async () => {
+    if ($session.user && $session.user.jwt) {
+      startStream();
+    }
+  });
 </script>
 
 <style>
@@ -169,6 +237,10 @@
   .heading h3 {
     margin-top: 0;
     font-size: 1.8rem;
+  }
+
+  h4 {
+    font-size: 1.6rem;
   }
 
   .footer {
@@ -227,6 +299,17 @@
 
   h3 a:hover {
     text-decoration: underline;
+  }
+
+  .commentsWrapper {
+    padding: 0 2rem 2rem;
+  }
+
+  .commentsWrapper .secondary {
+    color: var(--secondaryText);
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 1rem 0;
   }
 </style>
 
@@ -393,4 +476,19 @@
       </button>
     {/if}
   </div>
+  {#if showComments}
+    <div class="commentsWrapper">
+      <h4>Comments</h4>
+      {#each comments as comment}
+        <Comment {comment} {update} />
+      {/each}
+      {#if !comments.length}
+        <div class="secondary">No responses yet</div>
+      {/if}
+      <CommentEditor
+        {postComment}
+        bind:quillDelta
+        bind:plaintext={plaintextComment} />
+    </div>
+  {/if}
 </div>

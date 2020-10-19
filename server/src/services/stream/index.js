@@ -41,6 +41,30 @@ module.exports = async function (fastify, opts) {
       })
   ).length;
 
+  const userIsMemberByReview = async (userId, reviewId) => !!(
+    await fastify.knex
+      .from("stakeholderReview")
+      .join("project", "project.id", "stakeholderReview.project_id")
+      .join("account_team", "account_team.team_id", "project.team_id")
+      .select("account_team.id")
+      .where({
+        "stakeholderReview.id": reviewId,
+        "account_team.account_id": userId,
+      })
+  ).length;
+
+  const userIsMemberByFile = async (userId, fileId) => !!(
+    await fastify.knex
+      .from("file")
+      .join("project", "project.id", "file.project_id")
+      .join("account_team", "account_team.team_id", "project.team_id")
+      .select("account_team.id")
+      .where({
+        "file.id": fileId,
+        "account_team.account_id": userId,
+      })
+  ).length;
+
   const userIsStakeholderByReqversion = async (userId, reqversionId) => !!(
     await fastify.knex
       .from("reqversion")
@@ -137,7 +161,7 @@ module.exports = async function (fastify, opts) {
       }
     });
 
-    socket.on('getCommentNotifications', async ({ jwt, data }) => {
+    socket.on('getReqversionCommentNotifications', async ({ jwt, data }) => {
       let timestamp = Date.now();
       const user = fastify.jwt.verify(jwt);
       const reqversionId = fastify.deobfuscateId(data.reqversionId);
@@ -148,7 +172,7 @@ module.exports = async function (fastify, opts) {
         .first();
 
 
-      const isStakeholder = await userIsStakeholderByReqversion(user.id, projectId);
+      const isStakeholder = await userIsStakeholderByReqversion(user.id, reqversionId);
       const isMember = await userIsMemberByReqversion(user.id, reqversionId);
 
       if (!isMember && !isStakeholder) {
@@ -172,6 +196,106 @@ module.exports = async function (fastify, opts) {
           .leftJoin("account", "account.id", "=", "comment.account_id")
           .where({
             "comment.reqversion_id": reqversionId
+          })
+          .where('comment.created_at', '>', new Date(timestamp - interval))
+        ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
+
+        newComments = await Promise.all(newComments.map(async comment => {
+          const authorScopes = await fastify.getScopes(comment.account_id, projectId);
+          return { ...comment, authorScopes };
+        }));
+
+        if (newComments.length) {
+          socket.emit('message', fastify.obfuscateIdsInJson(JSON.stringify(
+            newComments
+          )));
+        }
+        timestamp = Date.now();
+      }
+    });
+
+    socket.on('getReviewCommentNotifications', async ({ jwt, data }) => {
+      let timestamp = Date.now();
+      const user = fastify.jwt.verify(jwt);
+      const reviewId = fastify.deobfuscateId(data.reviewId);
+      const { project_id: projectId } = await fastify.knex.from("stakeholderReview")
+        .select("project_id")
+        .where("stakeholderReview.id", reviewId)
+        .first();
+
+      const isMember = await userIsMemberByReview(user.id, reviewId);
+
+      if (!isMember) {
+        console.log("Unauthorized socket.io access");
+        socket.disconnect();
+        return;
+      }
+
+      const interval = 2500;
+      while (true) { // eslint-disable-line no-constant-condition
+        await sleep(interval);
+        let newComments = (await fastify.knex
+          .from("comment")
+          .select(
+            "comment.*",
+            "account.name as authorName",
+            "account.email as authorEmail",
+            "account.imageName as authorImageName",
+            "account.placeholderImage as authorPlaceholderImage"
+          )
+          .leftJoin("account", "account.id", "=", "comment.account_id")
+          .where({
+            "comment.stakeholderReview_id": reviewId
+          })
+          .where('comment.created_at', '>', new Date(timestamp - interval))
+        ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));
+
+        newComments = await Promise.all(newComments.map(async comment => {
+          const authorScopes = await fastify.getScopes(comment.account_id, projectId);
+          return { ...comment, authorScopes };
+        }));
+
+        if (newComments.length) {
+          socket.emit('message', fastify.obfuscateIdsInJson(JSON.stringify(
+            newComments
+          )));
+        }
+        timestamp = Date.now();
+      }
+    });
+
+    socket.on('getFileCommentNotifications', async ({ jwt, data }) => {
+      let timestamp = Date.now();
+      const user = fastify.jwt.verify(jwt);
+      const fileId = fastify.deobfuscateId(data.fileId);
+      const { project_id: projectId } = await fastify.knex.from("file")
+        .select("project_id")
+        .where("file.id", fileId)
+        .first();
+
+      const isMember = await userIsMemberByFile(user.id, fileId);
+
+      if (!isMember) {
+        console.log("Unauthorized socket.io access");
+        socket.disconnect();
+        return;
+      }
+
+      const interval = 2500;
+      while (true) { // eslint-disable-line no-constant-condition
+        await sleep(interval);
+        let newComments = (await fastify.knex
+          .from("comment")
+          .select(
+            "comment.*",
+            "account.name as authorName",
+            "account.email as authorEmail",
+            "account.imageName as authorImageName",
+            "account.placeholderImage as authorPlaceholderImage"
+          )
+          .leftJoin("account", "account.id", "=", "comment.account_id")
+          .where({
+            "comment.file_id": fileId
           })
           .where('comment.created_at', '>', new Date(timestamp - interval))
         ).map(x => ({ ...x, id: fastify.obfuscateId(x.id) }));

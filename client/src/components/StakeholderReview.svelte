@@ -3,9 +3,10 @@
   import { format } from "date-fns";
 
   export let review;
+  let comments = [];
   export let isPreview = false;
 
-  import { post, get } from "../api.js";
+  import { stream, post, get } from "../api.js";
   import { reqgroupTypeLabels } from "../utils.js";
   import { modalContent, modalProps } from "../stores.js";
 
@@ -19,7 +20,7 @@
   import MakeDraftModal from "./MakeDraftModal.svelte";
   import ReviewClosed from "./ReviewClosed.svelte";
 
-  import { getContext } from "svelte";
+  import { getContext, onMount, onDestroy } from "svelte";
 
   let quillDelta;
   let plaintextComment = "";
@@ -31,7 +32,57 @@
       `/reviews/${review.id}`,
       $session.user && $session.user.jwt
     );
+    comments = review.responses;
   };
+
+  onMount(async () => {
+    await update();
+    if ($session.user && $session.user.jwt) {
+      startStream();
+    }
+  });
+
+  let closeStream;
+
+  const getUnique = (list) =>
+    Array.from(new Set(list.map((a) => a.id))).map((id) => {
+      return list.find((a) => a.id === id);
+    });
+
+  $: startStream = function () {
+    if (closeStream) {
+      closeStream();
+    }
+    if (review.id) {
+      closeStream = stream(
+        "getReviewCommentNotifications",
+        { reviewId: review.id },
+        $session.user.jwt,
+        (event) => {
+          const data = JSON.parse(event);
+          comments = getUnique([...comments, ...data]);
+          // scrollToBottom();
+        }
+      );
+    }
+  };
+
+  onDestroy(function () {
+    if (closeStream) {
+      closeStream();
+    }
+  });
+
+  $: {
+    if (
+      typeof window !== "undefined" &&
+      !closeStream &&
+      $session.user &&
+      $session.user.jwt
+    ) {
+      startStream();
+    }
+  }
 
   const postResponse = async () => {
     await post(
@@ -42,7 +93,7 @@
       },
       $session.user && $session.user.jwt
     );
-    await update();
+    // await update();
   };
 
   const getReqgroupType = (type) => {
@@ -181,8 +232,8 @@
     <div class="preview">
       {format(new Date(review.created_at), 'h:mm a, MMMM d, yyyy')}
       &bull;
-      {review.responses.length}
-      {review.responses.length === 1 ? 'response' : 'responses'}
+      {comments.length}
+      {comments.length === 1 ? 'response' : 'responses'}
     </div>
   {:else}
     <div class="entityWrapper">
@@ -222,10 +273,10 @@
     {/if}
     <div>
       <h4>Responses</h4>
-      {#each review.responses as response}
+      {#each comments as response}
         <Comment comment={response} {update} />
       {/each}
-      {#if !review.responses.length && review.status === 'pending'}
+      {#if !comments.length && review.status === 'pending'}
         <div class="secondary">No responses yet</div>
       {/if}
     </div>

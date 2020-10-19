@@ -449,7 +449,21 @@ module.exports = fp(async function (fastify, opts) {
         })
     ).length;
 
-    if (!membershipReqversion && !membershipReview) {
+    const membershipFile = (
+      await fastify.knex
+        .from("comment")
+        .join("file", "file.id", "comment.file_id")
+        .join("project", "project.id", "file.project_id")
+        .join("account_team", "account_team.team_id", "project.team_id")
+        .select("account_team.id")
+        .where({
+          "comment.id": request.params.commentId,
+          "account_team.account_id": request.user.id,
+          ...(isAdmin && { isAdmin }),
+        })
+    ).length;
+
+    if (!membershipReqversion && !membershipReview && !membershipFile) {
       throw new Error(`Not a team ${isAdmin ? "admin" : "member"}`);
     }
   };

@@ -1,5 +1,7 @@
 "use-strict";
 
+const QuillDeltaToHtmlConverter = require("quill-delta-to-html").QuillDeltaToHtmlConverter;
+const htmlToMrkdwn = require("html-to-mrkdwn");
 module.exports = async function (fastify, opts) {
   const { Storage } = require('@google-cloud/storage');
   const { v4: uuidv4 } = require('uuid');
@@ -37,8 +39,98 @@ module.exports = async function (fastify, opts) {
           "file.id": request.params.fileId,
         })
         .first();
+
+      const comments = await fastify.knex
+        .from("comment")
+        .select(
+          "comment.*",
+          "account.name as authorName",
+          "account.email as authorEmail",
+          "account.imageName as authorImageName",
+          "account.placeholderImage as authorPlaceholderImage"
+        )
+        .leftJoin("account", "account.id", "=", "comment.account_id")
+        .where({
+          file_id: request.params.fileId,
+        });
+
       const latestReview = await fastify.getLatestReview("file", request.params.fileId);
-      return { ...file, latestReview };
+      return { ...file, comments, latestReview };
+    }
+  );
+
+  const postCommentSchema = {
+    body: {
+      type: "object",
+      properties: {
+        quillDelta: { type: "string" },
+        plaintext: { type: "string" },
+      },
+      required: ["quillDelta", "plaintext", "type"],
+    },
+    queryString: {},
+    params: {
+      type: "object",
+      properties: {
+        fileId: { type: "string" },
+      },
+    },
+    headers: {
+      type: "object",
+      properties: {
+        Authorization: { type: "string" },
+      },
+      required: ["Authorization"],
+    },
+    response: {
+      200: {
+        type: "array",
+        items: { type: "string" },
+        maxItems: 1,
+      },
+    },
+  };
+  fastify.post(
+    "/:fileId/comments",
+    {
+      preValidation: [fastify.authenticate, fastify.hasProjectAccess],
+      schema: postCommentSchema,
+    },
+    async function (request, reply) {
+      const {
+        plaintext,
+        quillDelta
+      } = request.body;
+
+      const quillDeltaConverter = new QuillDeltaToHtmlConverter(
+        JSON.parse(quillDelta).ops,
+        {}
+      );
+      const html = quillDeltaConverter.convert();
+      const mrkdwn = JSON.stringify(htmlToMrkdwn(html));
+
+      const { project_id, name } = (
+        await fastify.knex
+          .from("file")
+          .select("file.project_id", "file.name")
+          .join('project', 'project.id', 'file.project_id')
+          .join('team', 'team.id', 'project.team_id')
+          .where({
+            "file.id": request.params.fileId,
+          })
+          .first()
+      );
+
+      await fastify.knex("comment").insert({
+        file_id: request.params.fileId,
+        account_id: request.user.id,
+        quillDelta,
+        plaintext,
+        html,
+        mrkdwn
+      });
+      await fastify.createAlert("comment", "file", name, request.params.fileId, project_id, request.user.id);
+      return ["success"];
     }
   );
 

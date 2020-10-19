@@ -34,7 +34,12 @@
   {#await file}
     <!-- loading -->
   {:then result}
-    <FilePreview file={result} {update} projectId={id} />
+    <FilePreview
+      comments={result.comments}
+      showComments={true}
+      file={result}
+      {update}
+      projectId={id} />
   {:catch error}
     <p style="color: var(--red)">{error.message}</p>
   {/await}

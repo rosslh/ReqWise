@@ -132,7 +132,7 @@
     }
     if (reqversionId) {
       closeStream = stream(
-        "getCommentNotifications",
+        "getReqversionCommentNotifications",
         { reqversionId },
         $session.user.jwt,
         (event) => {
@@ -336,7 +336,8 @@
 <div class="requirementContainer">
   <div class="column">
     <h2>
-      View requirement {#if loaded}<span class="reqModalPpuid">#{ppuid}</span>{/if}
+      View requirement
+      {#if loaded}<span class="reqModalPpuid">#{ppuid}</span>{/if}
     </h2>
     {#await requirement}
       <!-- loading -->
@@ -358,14 +359,16 @@
             class="button button-caution button-small">
             <span class="iconWrapper">
               <FaEdit />
-            </span> Edit
+            </span>
+            Edit
           </a>
           <button
             on:click={deleteRequirement}
             class="button-danger button-small">
             <span class="iconWrapper iconWrapper-padded">
               <FaTrashAlt />
-            </span> Delete
+            </span>
+            Delete
           </button>
         {/if}
         <a
@@ -376,7 +379,8 @@
           <span class="iconWrapper iconWrapper-padded">
             <MdFolder />
           </span>
-          {reqgroupTypeLabels()[requirement.reqgroupType]} #{reqgroup_ppuid}
+          {reqgroupTypeLabels()[requirement.reqgroupType]}
+          #{reqgroup_ppuid}
         </a>
         {#if parent_requirement_id}
           <a
@@ -388,7 +392,8 @@
               <span class="rotate90">
                 <MdSubdirectoryArrowLeft />
               </span>
-            </span> Parent Requirement #{parent_ppuid}
+            </span>
+            Parent Requirement #{parent_ppuid}
           </a>
         {/if}
         <a
@@ -398,7 +403,8 @@
           href={`/project/${project_id}/requirement/${id}/linked`}>
           <span class="iconWrapper iconWrapper-padded">
             <FaLink />
-          </span> Linked
+          </span>
+          Linked
         </a>
         <a
           rel="prefetch"
@@ -407,7 +413,8 @@
           href={`/project/${project_id}/requirement/${id}/history`}>
           <span class="iconWrapper">
             <MdHistory />
-          </span> History
+          </span>
+          History
         </a>
       </div>
     {:else}

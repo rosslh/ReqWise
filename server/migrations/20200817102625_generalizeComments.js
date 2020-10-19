@@ -9,7 +9,7 @@ exports.up = function (knex) {
         .references("stakeholderReview.id")
         .onUpdate("CASCADE")
         .onDelete("CASCADE")
-        .unsigned()
+        .unsigned();
     }),
     knex.schema.raw(`
       ALTER TABLE "comment" ALTER COLUMN "reqversion_id" DROP NOT NULL;
