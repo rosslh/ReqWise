@@ -215,7 +215,8 @@
     <div class="twoColumns">
       <div class="firstColumn">
         <h1 class="slogan">
-          An easier way for digital agencies to understand their clients' needs.
+          An easier way for web developers and digital agencies to understand
+          their clients' needs.
         </h1>
         <p class="subtitle">
           ReqWise allows teams to gather information about stakeholder needs,
