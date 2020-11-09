@@ -32,7 +32,7 @@ jobs:
           REQWISE_SLACK_SCOPES: ${{secrets.REQWISE_SLACK_SCOPES}}
           REQWISE_SLACK_CLIENT_ID: ${{secrets.REQWISE_SLACK_CLIENT_ID}}
           API_URL: https://reqwise.uc.r.appspot.com
-      - uses: w9jds/firebase-action@6d1a577caffa15dfad8cc3d95e8ea2ac7ff51f7f
+      - uses: w9jds/firebase-action@0a5173f97c956332c9e71750526e0ca6f38cbe3a
         with:
           args: deploy
         env:
