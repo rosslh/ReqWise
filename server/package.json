@@ -46,7 +46,7 @@
     "generate-avatar": "^1.4.5",
     "hashids": "^2.2.1",
     "html-to-mrkdwn": "^3.0.0",
-    "html-to-text": "^5.1.1",
+    "html-to-text": "^6.0.0",
     "json2csv": "^5.0.1",
     "jszip": "^3.5.0",
     "knex": "^0.21.5",
