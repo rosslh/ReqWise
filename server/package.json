@@ -35,7 +35,7 @@
     "dotenv": "^8.2.0",
     "fastify": "^3.6.0",
     "fastify-autoload": "^3.2.0",
-    "fastify-cli": "^2.3.0",
+    "fastify-cli": "^2.5.1",
     "fastify-cors": "^4.1.0",
     "fastify-formbody": "^5.0.0",
     "fastify-helmet": "^5.0.1",
