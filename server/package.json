@@ -33,7 +33,7 @@
     "cross-env": "^7.0.2",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
-    "fastify": "^3.6.0",
+    "fastify": "^3.8.0",
     "fastify-autoload": "^3.2.0",
     "fastify-cli": "^2.5.1",
     "fastify-cors": "^4.1.0",
