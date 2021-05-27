@@ -46,7 +46,7 @@
     "sapper-environment": "^1.0.1",
     "showdown": "^1.9.1",
     "sirv": "^1.0.6",
-    "socket.io-client": "^2.3.1"
+    "socket.io-client": "^2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
