@@ -19,7 +19,9 @@
     "seed": "knex migrate:latest --env=dev && knex seed:run --env=dev",
     "sql": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112",
     "sql-production": "cloud_sql_proxy_x64.exe -instances=reqwise:us-central1:reqwise-qa-1=tcp:1112,reqwise:us-central1:reqwise=tcp:1111",
-    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152 --options"
+    "start": "fastify start -l info -p $PORT -a 0.0.0.0 src/index.js --body-limit 2097152 --options",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "lint-staged": {
     "**/*.js": "eslint --fix"
@@ -62,7 +64,8 @@
     "sharp": "^0.26.0",
     "socket.io": "^2.3.0",
     "uuid": "^8.3.0",
-    "yargs-parser": "^20.2.1"
+    "yargs-parser": "^20.2.1",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
@@ -72,5 +75,6 @@
   },
   "engines": {
     "node": "12"
-  }
+  },
+  "snyk": true
 }
