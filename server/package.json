@@ -48,7 +48,7 @@
     "html-to-mrkdwn": "^3.0.0",
     "html-to-text": "^6.0.0",
     "json2csv": "^5.0.1",
-    "jszip": "^3.5.0",
+    "jszip": "^3.8.0",
     "knex": "^0.21.5",
     "make-promises-safe": "^5.0.0",
     "mjml": "^4.7.1",
